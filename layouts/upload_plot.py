@@ -35,7 +35,7 @@ def Body():
     )
 
 
-def Plot():
+def UploadPlot():
     return html.Div([
         Header(),
         NavBar(PathIndex.PLOT.value),

@@ -8,7 +8,14 @@ def FastaUploadCard():
         dbc.CardBody(
             [
                 html.H5("Fasta", className="card-title"),
-                html.P("Upload a FASTA file with the sequence of interest", className="card-text"),
+                html.P("Upload a FASTA file with the sequence of interest or paste the sequence",
+                       className="card-text"),
+                dbc.Textarea("fasta-text-area", className="mb-3", placeholder="Paste here your sequence"),
+                dbc.Collapse(
+                    dbc.Card(dbc.CardBody("Invalid FASTA sequence"), color="danger", outline=True),
+                    id="fasta-collapse",
+                ),
+                html.Br(),
                 UploadButton('fasta')
             ]
         )

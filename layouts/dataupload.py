@@ -11,6 +11,7 @@ import json
 from io import StringIO
 import dash_bootstrap_components as dbc
 from components import FastaUploadCard, ContactUploadCard
+from Bio import SeqIO
 
 
 def DataUpload(session_id):
@@ -79,3 +80,29 @@ def upload_sequence(list_of_contents, session_id):
     if list_of_contents is not None:
         cache.set('fasta-{}'.format(session_id), parse_sequence(list_of_contents))
         return None
+
+
+# TODO: Need to check user input for contacts!
+
+@app.callback([Output("fasta-text-area", "valid"),
+               Output("fasta-text-area", "invalid"),
+               Output("fasta-collapse", "is_open")],
+              [Input("fasta-text-area", "value")])
+def is_valid_fasta(contents):
+    if contents is None:
+        return False, False, False
+    # TODO: Need to capture invalid residues in the sequence
+    fasta = SeqIO.parse(StringIO(contents), "fasta")
+    if any(fasta):
+        return True, False, False
+    else:
+        return False, True, True
+
+
+@app.callback([Output("format-badge", "style")],
+              [Input("contact-format-select", "value")])
+def is_valid_fasta(format_selection):
+    if format_selection is not None:
+        return [{'display': 'none'}]
+    else:
+        return [None]

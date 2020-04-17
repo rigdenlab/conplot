@@ -25,7 +25,7 @@ app.layout = serve_layout
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
 def display_page(pathname, session_id):
-    if pathname == PathIndex.HOME.value:
+    if pathname == PathIndex.HOME.value or pathname == PathIndex.ROOT.value:
         return Home(session_id)
     elif pathname == PathIndex.DATAUPLOAD.value:
         return DataUpload(session_id)

@@ -2,6 +2,7 @@ import base64
 from conkit.io.psicov import PsicovParser
 from conkit.io.fasta import FastaParser
 import dash_html_components as html
+import dash_core_components as dcc
 from dash.dependencies import Input, Output, State
 from components import NavBar, Header, PathIndex
 from app import app, cache
@@ -13,6 +14,8 @@ from components import FastaUploadCard, ContactUploadCard
 
 
 def DataUpload(session_id):
+    cache.clear()
+
     return html.Div([
         Header(),
         NavBar(PathIndex.DATAUPLOAD.value),
@@ -30,17 +33,13 @@ def DataUpload(session_id):
                 ),
                 html.Br(),
                 html.Br(),
-                dbc.Button("Plot", id='plot-button', color="primary", block=True),
+                dcc.Link([dbc.Button("Plot", id='plot-button', color="primary", block=True)],
+                         href=PathIndex.PLOTDISPLAY.value),
                 html.Div(id='_cmap', style={'display': 'none'}),
                 html.Div(id='_fasta', style={'display': 'none'}),
             ]
         )
     ])
-
-
-@app.callback(Output('url', 'pathname'), [Input("plot-button", "n_clicks")])
-def redirect_plotdisplay(n_clicks):
-    return PathIndex.PLOTDISPLAY.value
 
 
 @app.callback(Output('_cmap', 'children'),

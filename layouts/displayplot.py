@@ -13,7 +13,10 @@ def DisplayPlot(session_id):
         NavBar(PathIndex.PLOTDISPLAY.value),
         html.Div([
             Body(session_id)
-        ])
+        ]),
+        html.Br(),
+        dcc.Link([dbc.Button("Go back", id='go-back-button', color="primary", block=True)],
+                 href=PathIndex.DATAUPLOAD.value),
     ])
 
 

@@ -2,19 +2,19 @@ import dash_html_components as html
 from components import NavBar, Header, PathIndex
 
 
-def Body():
+def Body(session_id):
     return html.Div(
         [
             html.Br(),
             html.H1(["Welcome to Conkit-Web"]),
-            html.H6(["This is a place holder"]),
+            html.H6(["Current session id is %s" % session_id]),
         ]
     )
 
 
-def Home():
+def Home(session_id):
     return html.Div([
         Header(),
         NavBar(PathIndex.HOME.value),
-        Body(),
+        Body(session_id),
     ])

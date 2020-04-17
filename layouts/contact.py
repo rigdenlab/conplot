@@ -48,7 +48,7 @@ def Body():
     )
 
 
-def Contact():
+def Contact(session_id):
     return html.Div([
         Header(),
         NavBar(PathIndex.CONTACT.value),

@@ -1,4 +1,5 @@
 from .nopage import noPage
 from .home import Home
-from .upload_plot import UploadPlot
 from .contact import Contact
+from .dataupload import DataUpload
+from .displayplot import DisplayPlot

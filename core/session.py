@@ -1,7 +1,6 @@
 from .contactloader import ContactLoader
 from .sequenceloader import SequenceLoader
 
-
 class Session(object):
     """Class with methods and data structures to store all the information related with a given session"""
 
@@ -9,3 +8,11 @@ class Session(object):
         self.id = id
         self.contact_loader = ContactLoader()
         self.sequence_loader = SequenceLoader()
+
+    def __iter__(self):
+        for loader in (self.contact_loader, self.sequence_loader):
+            yield loader
+
+    @property
+    def missing_data(self):
+        return [loader for loader in self if not loader.valid]

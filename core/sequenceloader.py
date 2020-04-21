@@ -53,5 +53,9 @@ class SequenceLoader(Loader):
             return True
 
     @property
+    def datatype(self):
+        return 'Sequence'
+
+    @property
     def layout_states(self):
         return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename

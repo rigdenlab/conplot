@@ -23,14 +23,19 @@ def DataUpload(session_id):
                 ),
                 html.Br(),
                 html.Br(),
-                dbc.Collapse(
-                    dbc.Card(dbc.CardBody("Some required fields are misssing!")),
-                    id="collapse-required-fields",
-                ),
-                dbc.NavLink([dbc.Button("Plot", id='plot-button', color="primary", block=True)], id='plot-navlink',
-                            href=PathIndex.PLOTDISPLAY.value, disabled=True),
-                html.Div(id='_cmap', style={'display': 'none'}),
-                html.Div(id='_fasta', style={'display': 'none'}),
+                dbc.Collapse([
+                    dbc.Alert([
+                        html.H4("Missing Inputs", className="alert-heading"),
+                        html.P(
+                            "Please ensure you fill in all required fields before trying to generate a plot. "
+                            "We detected problems on the following fields:"
+                        ),
+                        html.Hr(),
+                        html.Div(id='missing-fields-div'),
+                    ], color='danger')
+                ], id='missing-fields-collapse'),
+                html.Br(),
+                dbc.Button("Plot", id='plot-button', color="primary", block=True),
             ]
         )
     ])

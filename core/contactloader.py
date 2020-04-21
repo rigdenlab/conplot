@@ -61,6 +61,10 @@ class ContactLoader(Loader):
     def layout_states(self):
         return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected
 
+    @property
+    def datatype(self):
+        return 'Contact Map'
+
     @staticmethod
     def parse_map(text, cmap_format):
         try:

@@ -35,6 +35,11 @@ class Loader(ABC):
         pass
 
     @property
+    @abc.abstractmethod
+    def datatype(self):
+        pass
+
+    @property
     def invalid(self):
         if self.raw_file is not None or self.raw_text is not None:
             if not self.valid:

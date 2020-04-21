@@ -4,6 +4,7 @@ from app import app, server, cache
 from utils import initiate_session
 from callbacks import main_callbacks
 
+
 def serve_layout():
     session_id = initiate_session()
 

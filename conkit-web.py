@@ -1,14 +1,11 @@
 import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output, State
-from app import app, server
-from layouts import noPage, Home, DataUpload, Contact, DisplayPlot
-from components import PathIndex
-import uuid
-
+from app import app, server, cache
+from utils import initiate_session
+from callbacks import main_callbacks
 
 def serve_layout():
-    session_id = str(uuid.uuid4())
+    session_id = initiate_session()
 
     return html.Div([
         html.Div(session_id, id='session-id', style={'display': 'none'}),
@@ -20,23 +17,6 @@ def serve_layout():
 # serve_layout, not serve_layout()
 app.layout = serve_layout
 
-
-@app.callback(Output('page-content', 'children'),
-              [Input('url', 'pathname')],
-              [State('session-id', 'children')])
-def display_page(pathname, session_id):
-    if pathname == PathIndex.HOME.value or pathname == PathIndex.ROOT.value:
-        return Home(session_id)
-    elif pathname == PathIndex.DATAUPLOAD.value:
-        return DataUpload(session_id)
-    elif pathname == PathIndex.PLOTDISPLAY.value:
-        return DisplayPlot(session_id)
-    elif pathname == PathIndex.CONTACT.value:
-        return Contact(session_id)
-    else:
-        return noPage()
-
-
 # TODO: Clear cache after the app is closed!
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(debug=True, threaded=False)

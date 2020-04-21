@@ -10,11 +10,10 @@ class ContactLoader(Loader):
     def __init__(self):
 
         super(ContactLoader, self).__init__()
-        self.format = None
         self.cmap = None
 
     def load(self):
-        if self.format is None:
+        if self.input_format is None:
             return
         elif self.raw_text is not None:
             self.parse_text(self.raw_text)
@@ -27,7 +26,7 @@ class ContactLoader(Loader):
 
         text = text.split('\n')
 
-        self.cmap = self.parse_map(text, self.format)
+        self.cmap = self.parse_map(text, self.input_format)
 
         if self.valid:
             self.valid_text = True
@@ -38,7 +37,7 @@ class ContactLoader(Loader):
         content_type, content_string = self.raw_file.split(',')
         decoded = base64.b64decode(content_string)
         contents = str(decoded)
-        self.cmap = self.parse_map(contents.split('\\n'), self.format)
+        self.cmap = self.parse_map(contents.split('\\n'), self.input_format)
         if self.valid:
             self.valid_file = True
         else:
@@ -53,7 +52,7 @@ class ContactLoader(Loader):
 
     @property
     def format_selected(self):
-        if self.format is not None:
+        if self.input_format is not None:
             return None
         else:
             return 'danger'

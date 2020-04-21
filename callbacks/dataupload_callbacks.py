@@ -19,7 +19,7 @@ def upload_contact_map(filename, cmap_text, cmap_format, file_contents, session_
     if session is None:
         return False, False, False, False, False, 'danger'
 
-    session.contact_loader.register_input(cmap_format, cmap_text, file_contents, filename)
+    session.contact_loader.register_input(cmap_text, file_contents, filename, cmap_format)
     session.contact_loader.load()
     cache.set('session-{}'.format(session_id), session)
     return session.contact_loader.layout_states

@@ -11,7 +11,7 @@ import pandas as pd
 def DisplayPlot(session_id):
     return html.Div([
         Header(),
-        NavBar(PathIndex.PLOTDISPLAY.value),
+        NavBar(PathIndex.PLOT.value),
         html.Div([
             Body(session_id)
         ]),

@@ -7,7 +7,7 @@ from callbacks import dataupload_callbacks
 def DataUpload(session_id):
     return html.Div([
         Header(),
-        NavBar(PathIndex.DATAUPLOAD.value),
+        NavBar(PathIndex.PLOT.value),
         html.Div(
             [
                 html.Br(),

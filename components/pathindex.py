@@ -7,6 +7,6 @@ class PathIndex(Enum):
     HOME = '/conkit-web/home/'
     PLOT = '/conkit-web/plot/'
     DATAUPLOAD = '/conkit-web/plot/dataupload/'
-    PLOTDISPLAY = '//conkit-web/plot/display/'
+    PLOTDISPLAY = '/conkit-web/plot/display/'
     CONTACT = '/conkit-web/contact/'
     GITHUB = 'https://github.com/rigdenlab/conkit-web'

@@ -2,8 +2,8 @@ from dash.dependencies import Input, Output, State
 from app import app, cache
 from dash.dash import no_update
 from dash import callback_context
-from components import PathIndex
 import dash_html_components as html
+from components import PathIndex
 
 
 @app.callback([Output("contact-map-text-area", "valid"),
@@ -80,7 +80,7 @@ def remove_fasta_file(is_open, file_contents, session_id):
         return file_contents
 
 
-@app.callback([Output('url', 'pathname'),
+@app.callback([Output('plot-hidden-div', 'children'),
                Output('missing-fields-collapse', 'is_open'),
                Output('missing-fields-div', 'children')],
               [Input('plot-button', 'n_clicks')],
@@ -89,8 +89,9 @@ def plot(n_clicks, session_id):
     session = cache.get('session-{}'.format(session_id))
     ctx = callback_context
     if session is None or ctx.triggered[0]['value'] is None:
-        return no_update, False, False
+        return no_update, False, None
     elif not any(session.missing_data):
-        return PathIndex.PLOTDISPLAY.value, False, False
+        return PathIndex.PLOTDISPLAY.value, False, None
     else:
-        return no_update, True, [html.P('%s file' % missing_field.datatype) for missing_field in session.missing_data]
+        return no_update, True, [html.P('%s file' % missing_field.datatype) for missing_field in
+                                 session.missing_data]

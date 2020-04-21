@@ -5,6 +5,7 @@ import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 from components import Header, NavBar, PathIndex
 import dash_html_components as html
+import pandas as pd
 
 
 def DisplayPlot(session_id):
@@ -16,16 +17,15 @@ def DisplayPlot(session_id):
         ]),
         html.Br(),
         dcc.Link([dbc.Button("Go back", id='go-back-button', color="primary", block=True)],
-                 href=PathIndex.DATAUPLOAD.value),
+                 href=PathIndex.PLOT.value),
     ])
 
 
 def Body(session_id):
-    df = cache.get('contacts-{}'.format(session_id))
-    print(df)
-    seq = cache.get('fasta-{}'.format(session_id))
-    print(seq)
+    session = cache.get('session-{}'.format(session_id))
     print('Plotting! %s' % session_id)
+
+    df = pd.DataFrame(session.contact_loader.cmap.as_list())
 
     # TODO: Need to make this decent
     x_coords = df[0].tolist()[:100]

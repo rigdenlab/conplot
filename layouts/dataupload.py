@@ -1,7 +1,6 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex
+from components import NavBar, Header, PathIndex, FastaUploadCard, ContactUploadCard
 import dash_bootstrap_components as dbc
-from components import FastaUploadCard, ContactUploadCard
 from callbacks import dataupload_callbacks
 
 
@@ -35,7 +34,7 @@ def DataUpload(session_id):
                     ], color='danger')
                 ], id='missing-fields-collapse'),
                 html.Br(),
-                dbc.Button("Plot", id='plot-button', color="primary", block=True),
+                dbc.Button('Plot', id='plot-button', color="primary", block=True),
             ]
         )
     ])

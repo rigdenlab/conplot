@@ -24,13 +24,13 @@ class Loader(ABC):
     def parse_text(self, text):
         pass
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def layout_states(self):
         pass
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def valid(self):
         pass
 

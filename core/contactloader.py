@@ -59,7 +59,7 @@ class ContactLoader(Loader):
 
     @property
     def layout_states(self):
-        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected
+        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected, self.head_color
 
     @property
     def datatype(self):

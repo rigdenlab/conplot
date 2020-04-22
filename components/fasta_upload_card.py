@@ -9,7 +9,6 @@ def FastaUploadCard():
             [
                 dbc.Spinner(
                     html.Div([
-                        html.H5("Sequence", className="card-title"),
                         html.P("Upload a FASTA file with the sequence of interest or paste the sequence",
                                className="card-text"),
                         dbc.Textarea("fasta-text-area", className="mb-3", placeholder="Paste here your sequence",

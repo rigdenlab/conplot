@@ -18,7 +18,8 @@ def DataUpload(session_id):
                 html.Div([
                     dbc.ListGroup([
                         dbc.ListGroupItem([
-                            dbc.ListGroupItemHeading(dbc.Button('Sequence', block=True, id='sequence-upload-head')),
+                            dbc.ListGroupItemHeading(dbc.Button('Sequence', block=True, outline=True, color='dark',
+                                                                id='sequence-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
                                     FastaUploadCard()
@@ -27,7 +28,8 @@ def DataUpload(session_id):
                         ]),
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
-                                dbc.Button('Contact map', block=True, id='contact-map-upload-head')),
+                                dbc.Button('Contact map', block=True, outline=True, color='dark',
+                                           id='contact-map-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
                                     ContactUploadCard()
@@ -38,17 +40,18 @@ def DataUpload(session_id):
                 ], className='InputPanel', style={'height': '60vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
-                dbc.Collapse([
-                    dbc.Alert([
-                        html.H4("Missing Inputs", className="alert-heading"),
-                        html.P(
-                            "Please ensure you fill in all required fields before trying to generate a plot. "
-                            "We detected problems on the following fields:"
-                        ),
+                dbc.Modal([
+                    dbc.ModalHeader(
+                        html.H4("Missing Inputs", className="alert-heading", style={'color': 'red'}),
+                    ),
+                    dbc.ModalBody([
+                        html.P("Please ensure you fill in all required fields before trying to generate a plot. "
+                               "We detected problems on the following fields:"
+                               ),
                         html.Hr(),
                         html.Div(id='missing-fields-div'),
-                    ], color='danger')
-                ], id='missing-fields-collapse'),
+                    ]),
+                ], id='missing-fields-modal'),
                 html.Br(),
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),
 

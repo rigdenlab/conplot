@@ -10,8 +10,6 @@ def ContactUploadCard():
             [
                 dbc.Spinner(
                     html.Div([
-                        html.H5("Contact Map", className="card-title"),
-                        html.Br(),
                         html.P("Upload a file with the contact map of interest or copy paste the map",
                                className="card-text"),
                         dbc.Textarea(id="contact-map-text-area", className="mb-3",

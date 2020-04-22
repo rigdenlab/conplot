@@ -40,6 +40,16 @@ class Loader(ABC):
         pass
 
     @property
+    def head_color(self):
+        if self.raw_file is not None or self.raw_text is not None:
+            if not self.valid:
+                return 'danger'
+            else:
+                return 'success'
+        else:
+            return 'dark'
+
+    @property
     def invalid(self):
         if self.raw_file is not None or self.raw_text is not None:
             if not self.valid:

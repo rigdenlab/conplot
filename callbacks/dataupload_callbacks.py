@@ -27,7 +27,8 @@ def toggle(contact_click, sequence_click, contact_open, sequence_open):
                Output("contact-map-invalid-collapse", "is_open"),
                Output("contact-map-filename-alert", "is_open"),
                Output('contact-map-filename-alert', 'children'),
-               Output("format-selection-card", "color")],
+               Output("format-selection-card", "color"),
+               Output('contact-map-upload-head', 'color')],
               [Input('upload-contact-map', 'filename'),
                Input("contact-map-text-area", "value"),
                Input("contact-format-select", "value")],
@@ -37,7 +38,7 @@ def upload_contact_map(filename, cmap_text, cmap_format, file_contents, session_
     session = cache.get('session-{}'.format(session_id))
 
     if session is None:
-        return False, False, False, False, False, 'danger'
+        return False, False, False, False, False, 'danger', 'dark'
 
     session.contact_loader.register_input(cmap_text, file_contents, filename, cmap_format)
     session.contact_loader.load()
@@ -64,7 +65,8 @@ def remove_cmap_file(is_open, file_contents, session_id):
                Output("fasta-text-area", "invalid"),
                Output("fasta-invalid-collapse", "is_open"),
                Output("fasta-filename-alert", "is_open"),
-               Output('fasta-filename-alert', 'children')],
+               Output('fasta-filename-alert', 'children'),
+               Output('sequence-upload-head', 'color')],
               [Input('upload-fasta', 'filename'),
                Input("fasta-text-area", "value")],
               [State('upload-fasta', 'contents'),
@@ -73,7 +75,7 @@ def upload_sequence(filename, fasta_text, file_contents, session_id):
     session = cache.get('session-{}'.format(session_id))
 
     if session is None:
-        return False, False, False, False, False
+        return False, False, False, False, False, 'dark'
 
     session.sequence_loader.register_input(fasta_text, file_contents, filename)
     session.sequence_loader.load()
@@ -97,7 +99,7 @@ def remove_fasta_file(is_open, file_contents, session_id):
 
 
 @app.callback([Output('plot-div', 'children'),
-               Output('missing-fields-collapse', 'is_open'),
+               Output('missing-fields-modal', 'is_open'),
                Output('missing-fields-div', 'children')],
               [Input('plot-button', 'n_clicks')],
               [State('session-id', 'children')])

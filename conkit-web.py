@@ -22,4 +22,4 @@ app.layout = serve_layout
 
 # TODO: Clear cache after the app is closed!
 if __name__ == '__main__':
-    app.run_server(debug=True, threaded=False)
+    app.run_server(debug=True)

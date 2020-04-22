@@ -3,6 +3,7 @@ from Bio.Alphabet.IUPAC import protein
 from io import StringIO
 import base64
 from .loader import Loader
+from conkit.core import Sequence
 
 
 class SequenceLoader(Loader):
@@ -37,16 +38,17 @@ class SequenceLoader(Loader):
         else:
             self.valid_file = False
 
+    # TODO : Need to figure out how to read it directly with conkit instead of biopython
     @property
     def sequence(self):
         if any(self.records):
-            return self.records[0].seq
+            return Sequence('seq', self.records[0].seq)
         else:
             return None
 
     @property
     def valid(self):
-        if self.sequence is None or any([residue not in protein.letters for residue in self.sequence]) or \
+        if self.sequence is None or any([residue not in protein.letters for residue in self.sequence.seq]) or \
                 len(self.sequence) == 0:
             return False
         else:

@@ -1,9 +1,10 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from .uploadbutton import UploadButton
+from .filename_alert import FilenameAlert
 
 
-def FastaUploadCard():
+def SequenceUploadCard():
     return dbc.Card(
         dbc.CardBody(
             [
@@ -17,11 +18,7 @@ def FastaUploadCard():
                             dbc.Card(dbc.CardBody("Invalid FASTA sequence"), color="danger", outline=True),
                             id="fasta-invalid-collapse",
                         ),
-                        dbc.Alert(
-                            id='fasta-filename-alert',
-                            dismissable=True,
-                            color="success"
-                        ),
+                        FilenameAlert('fasta'),
                         html.Br(),
                         UploadButton('fasta')
                     ])

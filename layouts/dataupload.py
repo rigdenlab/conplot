@@ -1,5 +1,5 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex, FastaUploadCard, ContactUploadCard
+from components import NavBar, Header, PathIndex, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
 
@@ -22,7 +22,7 @@ def DataUpload(session_id):
                                                                 id='sequence-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    FastaUploadCard()
+                                    SequenceUploadCard()
                                 ], id='sequence-upload-collapse')
                             )
                         ]),
@@ -34,6 +34,16 @@ def DataUpload(session_id):
                                 dbc.Collapse([
                                     ContactUploadCard()
                                 ], id='contact-map-upload-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button('Membrane topology', block=True, outline=True, color='dark',
+                                           id='mem-upload-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    MembraneTopologyUploadCard()
+                                ], id='mem-upload-collapse')
                             )
                         ]),
                     ]),

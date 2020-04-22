@@ -8,20 +8,25 @@ from core import MakePlot
 
 
 @app.callback([Output('contact-map-upload-collapse', 'is_open'),
-               Output('sequence-upload-collapse', 'is_open')],
+               Output('sequence-upload-collapse', 'is_open'),
+               Output('mem-upload-collapse', 'is_open')],
               [Input('contact-map-upload-head', 'n_clicks'),
-               Input('sequence-upload-head', 'n_clicks')],
+               Input('sequence-upload-head', 'n_clicks'),
+               Input('mem-upload-head', 'n_clicks')],
               [State('contact-map-upload-collapse', 'is_open'),
-               State('sequence-upload-collapse', 'is_open')])
-def toggle(contact_click, sequence_click, contact_open, sequence_open):
+               State('sequence-upload-collapse', 'is_open'),
+               State('mem-upload-collapse', 'is_open')])
+def toggle(contact_click, sequence_click, mem_click, contact_open, sequence_open, mem_open):
     ctx = callback_context.triggered[0]
 
     if ctx['prop_id'] == '.':
-        return False, False
+        return False, False, False
     elif ctx['prop_id'] == 'contact-map-upload-head.n_clicks':
-        return not contact_open, False
+        return not contact_open, False, False
+    elif ctx['prop_id'] == 'mem-upload-head.n_clicks':
+        return False, False, not mem_open
     else:
-        return False, not sequence_open
+        return False, not sequence_open, False
 
 
 @app.callback([Output("contact-map-text-area", "valid"),

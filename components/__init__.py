@@ -3,7 +3,8 @@ from .uploadbutton import UploadButton
 from .error_alert import ErrorAlert
 from .header import Header
 from .pathindex import PathIndex
-from .fasta_upload_card import FastaUploadCard
+from .sequence_upload_card import SequenceUploadCard
 from .contact_upload_card import ContactUploadCard
 from .missinginputs_modal import MissingInput_Modal
 from .mismatchsequence_modal import MismatchSequence_Modal
+from .membranetopology_upload_card import MembraneTopologyUploadCard

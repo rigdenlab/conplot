@@ -37,8 +37,9 @@ spectrum = {1: '#f7fbff',
             }
 
 
-def MakePlot(cmap, factor=2):
-    cmap.remove_neighbors(inplace=True)
+def MakePlot(cmap, factor=2, remove_neighbors=True):
+    if remove_neighbors:
+        cmap.remove_neighbors(inplace=True)
     cmap.sort('raw_score', reverse=True, inplace=True)
 
     df = pd.DataFrame(cmap.as_list())

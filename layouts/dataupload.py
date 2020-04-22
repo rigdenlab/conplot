@@ -7,6 +7,7 @@ from callbacks import dataupload_callbacks
 def DataUpload(session_id):
     return html.Div([
         Header(),
+        html.Div(id='modal-div'),
         NavBar(PathIndex.PLOT.value),
         dbc.Row([
             dbc.Col([
@@ -39,21 +40,7 @@ def DataUpload(session_id):
                 ], className='InputPanel', style={'height': '60vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
-                dbc.Modal([
-                    dbc.ModalHeader(
-                        html.H4("Missing Inputs", className="alert-heading", style={'color': 'red'}),
-                    ),
-                    dbc.ModalBody([
-                        html.P("Please ensure you fill in all required fields before trying to generate a plot. "
-                               "We detected problems on the following fields:"
-                               ),
-                        html.Hr(),
-                        html.Div(id='missing-fields-div'),
-                    ]),
-                ], id='missing-fields-modal'),
-                html.Br(),
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),
-
             ], width=4),
             dbc.Col([
                 html.Br(),

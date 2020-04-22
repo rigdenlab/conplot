@@ -6,6 +6,22 @@ import dash_html_components as html
 from components import PathIndex
 
 
+@app.callback([Output('contact-map-upload-collapse', 'is_open'),
+               Output('sequence-upload-collapse', 'is_open')],
+              [Input('contact-map-upload-head', 'n_clicks'),
+               Input('sequence-upload-head', 'n_clicks')],
+              [State('contact-map-upload-collapse', 'is_open'),
+               State('sequence-upload-collapse', 'is_open')])
+def toggle(contact_click, sequence_click, contact_open, sequence_open):
+    ctx = callback_context.triggered[0]
+
+    if ctx['prop_id'] == '.':
+        return False, False
+    elif ctx['prop_id'] == 'contact-map-upload-head.n_clicks':
+        return not contact_open, False
+    else:
+        return False, not sequence_open
+
 @app.callback([Output("contact-map-text-area", "valid"),
                Output("contact-map-text-area", "invalid"),
                Output("contact-map-invalid-collapse", "is_open"),
@@ -80,7 +96,7 @@ def remove_fasta_file(is_open, file_contents, session_id):
         return file_contents
 
 
-@app.callback([Output('plot-hidden-div', 'children'),
+@app.callback([Output('plot-div', 'children'),
                Output('missing-fields-collapse', 'is_open'),
                Output('missing-fields-div', 'children')],
               [Input('plot-button', 'n_clicks')],
@@ -91,7 +107,6 @@ def plot(n_clicks, session_id):
     if session is None or ctx.triggered[0]['value'] is None:
         return no_update, False, None
     elif not any(session.missing_data):
-        return PathIndex.PLOTDISPLAY.value, False, None
+        return session.create_plot(), False, None
     else:
-        return no_update, True, [html.P('%s file' % missing_field.datatype) for missing_field in
-                                 session.missing_data]
+        return no_update, True, [html.P('%s file' % missing_field.datatype) for missing_field in session.missing_data]

@@ -1,9 +1,7 @@
 from app import app, cache
-import dash_html_components as html
-from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
-from components import Header, NavBar, PathIndex
+from components import Header, NavBar, PathIndex, DisplayControlCard
 import dash_html_components as html
 import pandas as pd
 
@@ -12,8 +10,12 @@ def DisplayPlot(session_id):
     return html.Div([
         Header(),
         NavBar(PathIndex.PLOT.value),
-        html.Div([
-            Body(session_id)
+        html.Br(),
+        dbc.CardDeck([
+            dbc.Card(
+                Graph(session_id)
+            ),
+            DisplayControlCard()
         ]),
         html.Br(),
         dcc.Link([dbc.Button("Go back", id='go-back-button', color="primary", block=True)],
@@ -21,7 +23,7 @@ def DisplayPlot(session_id):
     ])
 
 
-def Body(session_id):
+def Graph(session_id):
     session = cache.get('session-{}'.format(session_id))
     print('Plotting! %s' % session_id)
 

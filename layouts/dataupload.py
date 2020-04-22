@@ -2,7 +2,6 @@ import dash_html_components as html
 from components import NavBar, Header, PathIndex, FastaUploadCard, ContactUploadCard
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
-import dash_core_components as dcc
 
 
 def DataUpload(session_id):
@@ -59,14 +58,16 @@ def DataUpload(session_id):
             dbc.Col([
                 html.Br(),
                 html.Br(),
-                html.Div([
+                dbc.Spinner([
                     html.Div([
-                        html.Img(
-                            src='https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png',
-                            style={'margin': 'auto', 'vertical-align': 'middle'}
-                        )
-                    ], style={'display': 'flex', 'justify-content': 'center'})
-                ], id='plot-div', )
+                        html.Div([
+                            html.Img(
+                                src='https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png',
+                                style={'margin': 'auto', 'vertical-align': 'middle'}
+                            )
+                        ], style={'display': 'flex', 'justify-content': 'center'})
+                    ], id='plot-div')
+                ])
             ], id='plot-column', width=7)
         ]),
     ])

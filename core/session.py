@@ -23,8 +23,8 @@ class Session(object):
 
     def create_plot(self):
         df = pd.DataFrame(self.contact_loader.cmap.as_list())
-        x_coords = df[0].tolist()[:100]
-        y_coords = df[1].tolist()[:100]
+        x_coords = df[0].tolist()[:10]
+        y_coords = df[1].tolist()[:10]
         labels = [(x, y) for x, y in zip(x_coords, y_coords)]
 
         fig = go.Figure(

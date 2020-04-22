@@ -42,8 +42,8 @@ def MakePlot(cmap, factor=2):
     cmap.sort('raw_score', reverse=True, inplace=True)
 
     df = pd.DataFrame(cmap.as_list())
-    x_coords = df[0].tolist()[:cmap.sequence.seq_len * factor]
-    y_coords = df[1].tolist()[:cmap.sequence.seq_len * factor]
+    x_coords = df[0].tolist()[:cmap.sequence.seq_len * factor] + df[1].tolist()[:cmap.sequence.seq_len * factor]
+    y_coords = df[1].tolist()[:cmap.sequence.seq_len * factor] + df[0].tolist()[:cmap.sequence.seq_len * factor]
     labels = [(x, y) for x, y in zip(x_coords, y_coords)]
 
     fig = go.Figure(
@@ -55,16 +55,18 @@ def MakePlot(cmap, factor=2):
             marker={
                 'symbol': 'circle-dot',
                 'size': 5,
-                'line': {'width': 0.1, 'color': 'black'}
+                'color': 'black'
             }
         ),
-        layout=dict(
-            xaxis={'title': 'Residue 1'},
-            yaxis={'title': 'Residue 2'},
+        layout=go.Layout(
+            xaxis={'title': 'Residue 1', 'range': [0, cmap.sequence.seq_len + 1]},
+            yaxis={'title': 'Residue 2', 'range': [0, cmap.sequence.seq_len + 1]},
             autosize=True,
             margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
             hovermode='closest',
             showlegend=False,
+            plot_bgcolor='rgba(0,0,0,0)'
+
         )
     )
 

@@ -12,7 +12,7 @@ def noPage():
         html.P(["404 Page not found"]),
         html.Br(),
         html.Br(),
-        ErrorAlert()
+        ErrorAlert(True)
     ],
         className="no-page"
     )

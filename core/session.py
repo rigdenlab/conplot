@@ -1,6 +1,6 @@
 from .contactloader import ContactLoader
 from .sequenceloader import SequenceLoader
-
+from .membranetopologyloader import MembraneTopologyLoader
 
 class Session(object):
     """Class with methods and data structures to store all the information related with a given session"""
@@ -9,6 +9,7 @@ class Session(object):
         self.id = id
         self.contact_loader = ContactLoader()
         self.sequence_loader = SequenceLoader()
+        self.membrtopo_loader = MembraneTopologyLoader()
 
     def __iter__(self):
         for loader in (self.contact_loader, self.sequence_loader):

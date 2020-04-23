@@ -15,7 +15,6 @@ class MembraneTopologyLoader(Loader):
     def __init__(self):
         super(MembraneTopologyLoader, self).__init__()
         self.prediction = None
-        self.input_format = 'TOPCONS'
 
     def parse_text(self, text):
 
@@ -37,8 +36,7 @@ class MembraneTopologyLoader(Loader):
         decoded = decoded.decode()
         contents = decoded
 
-
-        parser = ParserFormats(self.input_format).value(contents)
+        parser = ParserFormats.__getattribute__(ParserFormats, self.input_format).value(contents)
         parser.parse()
 
         if not parser.error:

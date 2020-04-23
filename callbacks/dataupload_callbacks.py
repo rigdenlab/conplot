@@ -2,8 +2,9 @@ from dash.dependencies import Input, Output, State
 from app import app, cache
 from dash.dash import no_update
 from dash import callback_context
-from components import MissingInput_Modal, MismatchSequence_Modal, PlotPlaceHolder
-from core import MakePlot
+from components import PlotPlaceHolder
+from core import Plot
+import dash_core_components as dcc
 
 
 @app.callback([Output('contact-map-upload-collapse', 'is_open'),
@@ -100,18 +101,19 @@ def upload_membranetopology(filename, mem_text, file_contents, session_id):
                Output('modal-div', 'children')],
               [Input('plot-button', 'n_clicks')],
               [State('session-id', 'children')])
-def plot(n_clicks, session_id):
+def create_plot(n_clicks, session_id):
     session = cache.get('session-{}'.format(session_id))
     ctx = callback_context
 
     if session is None or ctx.triggered[0]['value'] is None:
         return no_update, None
 
-    session.integrate_data()
-    if session.error:
-        return PlotPlaceHolder(), session.error
+    error = session.lookup_input_errors()
+    if error is not None:
+        return PlotPlaceHolder(), error
     else:
-        return MakePlot(session), None
+        plot = Plot(cmap=session.contact_loader.cmap, mem_pred=session.membrtopo_loader.prediction)
+        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None
 
 
 @app.callback([Output('upload-contact-map', 'contents'),

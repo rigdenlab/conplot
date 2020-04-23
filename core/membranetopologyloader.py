@@ -18,7 +18,7 @@ class MembraneTopologyLoader(Loader):
 
     def parse_text(self, text):
 
-        parser = ParserFormats.__getattribute__(ParserFormats, self.input_format).value(text)
+        parser = ParserFormats.__getattr__(self.input_format).value(text)
         parser.parse()
 
         if not parser.error:
@@ -36,7 +36,7 @@ class MembraneTopologyLoader(Loader):
         decoded = decoded.decode()
         contents = decoded
 
-        parser = ParserFormats.__getattribute__(ParserFormats, self.input_format).value(contents)
+        parser = ParserFormats.__getattr__(self.input_format).value(contents)
         parser.parse()
 
         if not parser.error:

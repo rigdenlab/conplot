@@ -1,2 +1,2 @@
 from .session import Session
-from .plot import MakePlot
+from .plot import Plot

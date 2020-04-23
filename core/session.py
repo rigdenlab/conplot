@@ -1,7 +1,7 @@
 from .contactloader import ContactLoader
 from .sequenceloader import SequenceLoader
 from .membranetopologyloader import MembraneTopologyLoader
-from components import MismatchSequence_Modal, MissingInput_Modal
+from components import MismatchSequence_Modal, MissingInput_Modal, MismatchMembrane_Modal
 
 
 class Session(object):
@@ -12,7 +12,6 @@ class Session(object):
         self.contact_loader = ContactLoader()
         self.sequence_loader = SequenceLoader()
         self.membrtopo_loader = MembraneTopologyLoader()
-        self.error = False
 
     def __iter__(self):
         for loader in (self.contact_loader, self.sequence_loader):
@@ -23,16 +22,20 @@ class Session(object):
         """Data fields required to create a plot that are not present in the user input"""
         return [loader for loader in self if not loader.valid]
 
-    def integrate_data(self):
-        """Merge all the different sources of information and check they match"""
+    def lookup_input_errors(self):
+        """Check user input is coherent"""
 
         if any(self.missing_data):
-            self.error = MissingInput_Modal(*[missing.datatype for missing in self.missing_data])
-            return
+            return MissingInput_Modal(*[missing.datatype for missing in self.missing_data])
 
         try:
             self.contact_loader.cmap.sequence = self.sequence_loader.sequence
             self.contact_loader.cmap.set_sequence_register()
         except IndexError as e:
-            self.error = MismatchSequence_Modal()
-            return
+            return MismatchSequence_Modal()
+
+        if self.membrtopo_loader.prediction is not None and \
+                len(self.sequence_loader.sequence) != len(self.membrtopo_loader.prediction):
+            return MismatchMembrane_Modal()
+
+        return None

@@ -8,7 +8,7 @@ def PlotPlaceHolder():
             dbc.Container(
                 [
                     html.Img(
-                        src='https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png',
+                        src='/conkit-web/home/assets/conkit_small_logo.png',
                         style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}
                     )
                 ],

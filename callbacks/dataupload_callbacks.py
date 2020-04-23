@@ -3,7 +3,7 @@ from app import app, cache
 from dash.dash import no_update
 from dash import callback_context
 import dash_html_components as html
-from components import PathIndex, MissingInput_Modal, MismatchSequence_Modal
+from components import PathIndex, MissingInput_Modal, MismatchSequence_Modal, PlotPlaceHolder
 from core import MakePlot
 
 
@@ -114,7 +114,7 @@ def plot(n_clicks, session_id):
         except IndexError:
             return no_update, MismatchSequence_Modal()
     else:
-        return no_update, MissingInput_Modal(
+        return PlotPlaceHolder(), MissingInput_Modal(
             *['%s file' % missing_field.datatype for missing_field in session.missing_data])
 
 

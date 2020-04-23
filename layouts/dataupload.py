@@ -1,5 +1,6 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard
+from components import NavBar, Header, PathIndex, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard, \
+    PlotPlaceHolder
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
 
@@ -57,12 +58,7 @@ def DataUpload(session_id):
                 html.Br(),
                 dbc.Spinner([
                     html.Div([
-                        html.Div([
-                            html.Img(
-                                src='https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png',
-                                style={'margin': 'auto', 'vertical-align': 'middle'}
-                            )
-                        ], style={'display': 'flex', 'justify-content': 'center'})
+                        PlotPlaceHolder()
                     ], id='plot-div')
                 ])
             ], id='plot-column', width=7)

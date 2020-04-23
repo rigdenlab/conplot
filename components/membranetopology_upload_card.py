@@ -18,7 +18,7 @@ def MembraneTopologyUploadCard():
                             dbc.Card(dbc.CardBody("Invalid prediction format"), color="danger", outline=True),
                             id="mem-invalid-collapse",
                         ),
-                        FilenameAlert('mem-filename-alert'),
+                        FilenameAlert('mem'),
                         html.Br(),
                         UploadButton('mem')
                     ])

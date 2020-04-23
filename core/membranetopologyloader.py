@@ -61,3 +61,7 @@ class MembraneTopologyLoader(Loader):
     @property
     def layout_states(self):
         return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.head_color
+
+    @property
+    def to_clear(self):
+        return 'filename', 'raw_file', 'valid_file', 'prediction'

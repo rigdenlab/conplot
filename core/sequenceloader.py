@@ -41,7 +41,7 @@ class SequenceLoader(Loader):
     # TODO : Need to figure out how to read it directly with conkit instead of biopython
     @property
     def sequence(self):
-        if any(self.records):
+        if self.records is not None and any(self.records):
             return Sequence('seq', self.records[0].seq)
         else:
             return None
@@ -61,3 +61,7 @@ class SequenceLoader(Loader):
     @property
     def layout_states(self):
         return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.head_color
+
+    @property
+    def to_clear(self):
+        return 'filename', 'raw_file', 'valid_file', 'records'

@@ -73,3 +73,7 @@ class ContactLoader(Loader):
             return cmap.top_map
         except:
             return None
+
+    @property
+    def to_clear(self):
+        return 'filename', 'raw_file', 'valid_file', 'cmap'

@@ -53,21 +53,6 @@ def upload_contact_map(filename, cmap_text, cmap_format, file_contents, session_
     return session.contact_loader.layout_states
 
 
-@app.callback(Output('upload-contact-map', 'contents'),
-              [Input("contact-map-filename-alert", "is_open")],
-              [State('upload-contact-map', 'contents'),
-               State('session-id', 'children')])
-def remove_cmap_file(is_open, file_contents, session_id):
-    session = cache.get('session-{}'.format(session_id))
-
-    if session is not None and not is_open and session.contact_loader.valid and session.contact_loader.valid_file:
-        session.contact_loader.clear()
-        cache.set('session-{}'.format(session_id), session)
-        return None
-    else:
-        return file_contents
-
-
 @app.callback([Output("fasta-text-area", "valid"),
                Output("fasta-text-area", "invalid"),
                Output("fasta-invalid-collapse", "is_open"),
@@ -90,19 +75,26 @@ def upload_sequence(filename, fasta_text, file_contents, session_id):
     return session.sequence_loader.layout_states
 
 
-@app.callback(Output('upload-fasta', 'contents'),
-              [Input("fasta-filename-alert", "is_open")],
-              [State('upload-fasta', 'contents'),
+@app.callback([Output("mem-text-area", "valid"),
+               Output("mem-text-area", "invalid"),
+               Output("mem-invalid-collapse", "is_open"),
+               Output("mem-filename-alert", "is_open"),
+               Output('mem-filename-alert', 'children'),
+               Output('mem-upload-head', 'color')],
+              [Input('upload-mem', 'filename'),
+               Input("mem-text-area", "value")],
+              [State('upload-mem', 'contents'),
                State('session-id', 'children')])
-def remove_fasta_file(is_open, file_contents, session_id):
+def upload_membranetopology(filename, mem_text, file_contents, session_id):
     session = cache.get('session-{}'.format(session_id))
 
-    if session is not None and not is_open and session.sequence_loader.valid and session.sequence_loader.valid_file:
-        session.sequence_loader.clear()
-        cache.set('session-{}'.format(session_id), session)
-        return None
-    else:
-        return file_contents
+    if session is None:
+        return False, False, False, False, False, 'dark'
+
+    session.membrtopo_loader.register_input(mem_text, file_contents, filename, input_format='TOPCONS')
+    session.membrtopo_loader.load()
+    cache.set('session-{}'.format(session_id), session)
+    return session.membrtopo_loader.layout_states
 
 
 @app.callback([Output('plot-div', 'children'),
@@ -124,3 +116,44 @@ def plot(n_clicks, session_id):
     else:
         return no_update, MissingInput_Modal(
             *['%s file' % missing_field.datatype for missing_field in session.missing_data])
+
+
+@app.callback([Output('upload-contact-map', 'contents'),
+               Output('upload-fasta', 'contents'),
+               Output('upload-mem', 'contents')],
+              [Input("contact-map-filename-alert", "is_open"),
+               Input("fasta-filename-alert", "is_open"),
+               Input("mem-filename-alert", "is_open")],
+              [State('upload-contact-map', 'contents'),
+               State('upload-fasta', 'contents'),
+               State('upload-mem', 'contents'),
+               State('session-id', 'children')])
+def remove_file(contact_fname_open, fasta_fname_open, mem_fname_open, contact_fcontents, fasta_fcontents, mem_fcontents,
+                session_id):
+    session = cache.get('session-{}'.format(session_id))
+
+    if session is None:
+        return no_update, no_update, no_update
+
+    ctx = callback_context.triggered[0]
+
+    if ctx['prop_id'] == 'contact-map-filename-alert.is_open' and session.contact_loader.valid_file \
+            and contact_fcontents is not None and not contact_fname_open:
+        session.contact_loader.clear()
+        cache.set('session-{}'.format(session_id), session)
+        return None, no_update, no_update
+
+    elif ctx['prop_id'] == 'fasta-filename-alert.is_open' and session.sequence_loader.valid_file \
+            and fasta_fcontents is not None and not fasta_fname_open:
+        session.sequence_loader.clear()
+        cache.set('session-{}'.format(session_id), session)
+        return no_update, None, no_update
+
+    elif ctx['prop_id'] == 'mem-filename-alert.is_open' and session.membrtopo_loader.valid_file \
+            and mem_fcontents is not None and not mem_fname_open:
+        session.membrtopo_loader.clear()
+        cache.set('session-{}'.format(session_id), session)
+        return no_update, no_update, None
+
+    else:
+        return no_update, no_update, no_update

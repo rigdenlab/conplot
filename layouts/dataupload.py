@@ -1,36 +1,66 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex
+from components import NavBar, Header, PathIndex, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard, \
+    PlotPlaceHolder
 import dash_bootstrap_components as dbc
-from components import FastaUploadCard, ContactUploadCard
 from callbacks import dataupload_callbacks
 
 
 def DataUpload(session_id):
     return html.Div([
         Header(),
-        NavBar(PathIndex.DATAUPLOAD.value),
-        html.Div(
-            [
+        html.Div(id='modal-div'),
+        NavBar(PathIndex.PLOT.value),
+        dbc.Row([
+            dbc.Col([
                 html.Br(),
                 html.H1('Data Upload'),
                 html.H6(["Please upload the files of interest or paste their contents"]),
                 html.Br(),
-                dbc.CardDeck(
-                    [
-                        FastaUploadCard(),
-                        ContactUploadCard()
-                    ]
-                ),
+                html.Div([
+                    dbc.ListGroup([
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(dbc.Button('Sequence', block=True, outline=True, color='dark',
+                                                                id='sequence-upload-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    SequenceUploadCard()
+                                ], id='sequence-upload-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button('Contact map', block=True, outline=True, color='dark',
+                                           id='contact-map-upload-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    ContactUploadCard()
+                                ], id='contact-map-upload-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button('Membrane topology', block=True, outline=True, color='dark',
+                                           id='mem-upload-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    MembraneTopologyUploadCard()
+                                ], id='mem-upload-collapse')
+                            )
+                        ]),
+                    ]),
+                ], className='InputPanel', style={'height': '60vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
-                dbc.Collapse(
-                    dbc.Card(dbc.CardBody("Some required fields are misssing!")),
-                    id="collapse-required-fields",
-                ),
-                dbc.NavLink([dbc.Button("Plot", id='plot-button', color="primary", block=True)], id='plot-navlink',
-                            href=PathIndex.PLOTDISPLAY.value, disabled=True),
-                html.Div(id='_cmap', style={'display': 'none'}),
-                html.Div(id='_fasta', style={'display': 'none'}),
-            ]
-        )
+                dbc.Button('Plot', id='plot-button', color="primary", block=True),
+            ], width=4),
+            dbc.Col([
+                html.Br(),
+                html.Br(),
+                dbc.Spinner([
+                    html.Div([
+                        PlotPlaceHolder()
+                    ], id='plot-div')
+                ])
+            ], id='plot-column', width=7)
+        ]),
     ])

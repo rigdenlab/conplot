@@ -24,15 +24,35 @@ class Loader(ABC):
     def parse_text(self, text):
         pass
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def layout_states(self):
         pass
 
-    @abc.abstractmethod
     @property
+    @abc.abstractmethod
     def valid(self):
         pass
+
+    @property
+    @abc.abstractmethod
+    def datatype(self):
+        pass
+
+    @property
+    @abc.abstractmethod
+    def to_clear(self):
+        pass
+
+    @property
+    def head_color(self):
+        if self.raw_file is not None or self.raw_text is not None:
+            if not self.valid:
+                return 'danger'
+            else:
+                return 'success'
+        else:
+            return 'dark'
 
     @property
     def invalid(self):
@@ -57,9 +77,8 @@ class Loader(ABC):
             return False
 
     def clear(self):
-        self.filename = None
-        self.raw_file = None
-        self.valid_file = False
+        for attribute in self.to_clear:
+            self.__setattr__(attribute, None)
 
     def register_input(self, raw_text, raw_file, filename, input_format=None):
         self.input_format = input_format

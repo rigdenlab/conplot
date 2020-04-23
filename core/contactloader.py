@@ -10,11 +10,10 @@ class ContactLoader(Loader):
     def __init__(self):
 
         super(ContactLoader, self).__init__()
-        self.format = None
         self.cmap = None
 
     def load(self):
-        if self.format is None:
+        if self.input_format is None:
             return
         elif self.raw_text is not None:
             self.parse_text(self.raw_text)
@@ -27,7 +26,7 @@ class ContactLoader(Loader):
 
         text = text.split('\n')
 
-        self.cmap = self.parse_map(text, self.format)
+        self.cmap = self.parse_map(text, self.input_format)
 
         if self.valid:
             self.valid_text = True
@@ -38,7 +37,7 @@ class ContactLoader(Loader):
         content_type, content_string = self.raw_file.split(',')
         decoded = base64.b64decode(content_string)
         contents = str(decoded)
-        self.cmap = self.parse_map(contents.split('\\n'), self.format)
+        self.cmap = self.parse_map(contents.split('\\n'), self.input_format)
         if self.valid:
             self.valid_file = True
         else:
@@ -53,14 +52,18 @@ class ContactLoader(Loader):
 
     @property
     def format_selected(self):
-        if self.format is not None:
+        if self.input_format is not None:
             return None
         else:
             return 'danger'
 
     @property
     def layout_states(self):
-        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected
+        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected, self.head_color
+
+    @property
+    def datatype(self):
+        return 'Contact Map'
 
     @staticmethod
     def parse_map(text, cmap_format):
@@ -70,3 +73,7 @@ class ContactLoader(Loader):
             return cmap.top_map
         except:
             return None
+
+    @property
+    def to_clear(self):
+        return 'filename', 'raw_file', 'valid_file', 'cmap'

@@ -5,3 +5,4 @@ plotly~=4.6.0
 dash_core_components~=1.9.0
 dash_bootstrap_components~=0.9.2
 dash_html_components~=1.0.3
+flask_caching~=1.8.0

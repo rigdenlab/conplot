@@ -2,8 +2,7 @@ from dash.dependencies import Input, Output, State
 from app import app, cache
 from dash.dash import no_update
 from dash import callback_context
-import dash_html_components as html
-from components import PathIndex, MissingInput_Modal, MismatchSequence_Modal, PlotPlaceHolder
+from components import MissingInput_Modal, MismatchSequence_Modal, PlotPlaceHolder
 from core import MakePlot
 
 
@@ -104,18 +103,15 @@ def upload_membranetopology(filename, mem_text, file_contents, session_id):
 def plot(n_clicks, session_id):
     session = cache.get('session-{}'.format(session_id))
     ctx = callback_context
+
     if session is None or ctx.triggered[0]['value'] is None:
         return no_update, None
-    elif not any(session.missing_data):
-        try:
-            session.contact_loader.cmap.sequence = session.sequence_loader.sequence
-            session.contact_loader.cmap.set_sequence_register()
-            return MakePlot(cmap=session.contact_loader.cmap), None
-        except IndexError:
-            return no_update, MismatchSequence_Modal()
+
+    session.integrate_data()
+    if session.error:
+        return PlotPlaceHolder(), session.error
     else:
-        return PlotPlaceHolder(), MissingInput_Modal(
-            *['%s file' % missing_field.datatype for missing_field in session.missing_data])
+        return MakePlot(session), None
 
 
 @app.callback([Output('upload-contact-map', 'contents'),

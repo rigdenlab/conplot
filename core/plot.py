@@ -1,7 +1,5 @@
-import pandas as pd
 import plotly.graph_objects as go
 import dash_core_components as dcc
-import plotly.express as px
 
 aa_properties = {'A': 'Non-polar, aliphatic',
                  'R': 'Positively charged (basic; non-acidic); Polar; Hydrophilic; pK=12.5',
@@ -37,14 +35,15 @@ spectrum = {1: '#f7fbff',
             }
 
 
-def MakePlot(cmap, factor=2, remove_neighbors=True):
+def MakePlot(session, factor=2, remove_neighbors=True):
     if remove_neighbors:
-        cmap.remove_neighbors(inplace=True)
-    cmap.sort('raw_score', reverse=True, inplace=True)
+        session.contact_loader.cmap.remove_neighbors(inplace=True)
+    session.contact_loader.cmap.sort('raw_score', reverse=True, inplace=True)
 
-    df = pd.DataFrame(cmap.as_list())
-    x_coords = df[0].tolist()[:cmap.sequence.seq_len * factor] + df[1].tolist()[:cmap.sequence.seq_len * factor]
-    y_coords = df[1].tolist()[:cmap.sequence.seq_len * factor] + df[0].tolist()[:cmap.sequence.seq_len * factor]
+    contacts = session.contact_loader.cmap.as_list()[:session.contact_loader.cmap.sequence.seq_len * factor]
+
+    x_coords = [contact[0] for contact in contacts] + [contact[1] for contact in contacts]
+    y_coords = [contact[1] for contact in contacts] + [contact[0] for contact in contacts]
     labels = [(x, y) for x, y in zip(x_coords, y_coords)]
 
     fig = go.Figure(
@@ -60,8 +59,8 @@ def MakePlot(cmap, factor=2, remove_neighbors=True):
             }
         ),
         layout=go.Layout(
-            xaxis={'title': 'Residue 1', 'range': [0, cmap.sequence.seq_len + 1]},
-            yaxis={'title': 'Residue 2', 'range': [0, cmap.sequence.seq_len + 1]},
+            xaxis={'title': 'Residue 1', 'range': [0, session.contact_loader.cmap.sequence.seq_len + 1]},
+            yaxis={'title': 'Residue 2', 'range': [0, session.contact_loader.cmap.sequence.seq_len + 1]},
             autosize=True,
             margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
             hovermode='closest',

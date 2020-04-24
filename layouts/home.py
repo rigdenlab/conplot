@@ -1,5 +1,6 @@
 import dash_html_components as html
-from index import NavBar, Header, PathIndex
+from index import PathIndex
+from components import NavBar, Header
 
 
 def Body(session_id):

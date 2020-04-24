@@ -5,25 +5,21 @@ from dash import callback_context
 from components import PlotPlaceHolder
 from core import Plot
 import dash_core_components as dcc
+from index import TableCollapseInterfaceIndex, ContextReference
 
 
-@app.callback([Output('contact-map-upload-collapse', 'is_open'),
-               Output('sequence-upload-collapse', 'is_open'),
-               Output('mem-upload-collapse', 'is_open')],
-              [Input('contact-map-upload-head', 'n_clicks'),
-               Input('sequence-upload-head', 'n_clicks'),
-               Input('mem-upload-head', 'n_clicks')],
-              [State('contact-map-upload-collapse', 'is_open'),
-               State('sequence-upload-collapse', 'is_open'),
-               State('mem-upload-collapse', 'is_open')])
-def toggle(contact_click, sequence_click, mem_click, contact_open, sequence_open, mem_open):
-    ctx = callback_context.triggered[0]
+@app.callback(TableCollapseInterfaceIndex.OUTPUT.value,
+              TableCollapseInterfaceIndex.INPUT.value,
+              TableCollapseInterfaceIndex.STATE.value)
+def toggle(contact_click, sequence_click, mem_click, sequence_open, contact_open, mem_open):
+    context = callback_context.triggered[0]
+    prop_id = context['prop_id']
 
-    if ctx['prop_id'] == '.':
+    if prop_id == '.':
         return False, False, False
-    elif ctx['prop_id'] == 'contact-map-upload-head.n_clicks':
+    elif prop_id == ContextReference.CONTACT_HEAD_CLICK.value:
         return not contact_open, False, False
-    elif ctx['prop_id'] == 'mem-upload-head.n_clicks':
+    elif prop_id == ContextReference.MEM_HEAD_CLICK.value:
         return False, False, not mem_open
     else:
         return False, not sequence_open, False

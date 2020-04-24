@@ -1,7 +1,7 @@
 from dash.dependencies import Input, Output, State
 from app import app, cache
 from layouts import noPage, Home, DataUpload, Contact
-from components import PathIndex
+from index import PathIndex
 
 
 @app.callback(Output('page-content', 'children'),

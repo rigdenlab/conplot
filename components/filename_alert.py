@@ -5,5 +5,6 @@ def FilenameAlert(component_id):
     return dbc.Alert(
         id="{}-filename-alert".format(component_id),
         dismissable=True,
-        color="success"
+        color="success",
+        is_open=False
     )

@@ -51,7 +51,7 @@ class ContactLoader(Loader):
             return False
 
     @property
-    def format_selected(self):
+    def format_select_color(self):
         if self.input_format is not None:
             return None
         else:
@@ -59,7 +59,8 @@ class ContactLoader(Loader):
 
     @property
     def layout_states(self):
-        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.format_selected, self.head_color
+        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, \
+               self.format_select_color, self.head_color
 
     @property
     def datatype(self):

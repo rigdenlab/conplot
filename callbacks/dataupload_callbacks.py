@@ -5,153 +5,130 @@ from dash import callback_context
 from components import PlotPlaceHolder
 from core import Plot
 import dash_core_components as dcc
+from index import UploadInterfaceComponentIndex, TableCollapseInterfaceIndex, ContextReference, InputReference, \
+    OutputReference
 
 
-@app.callback([Output('contact-map-upload-collapse', 'is_open'),
-               Output('sequence-upload-collapse', 'is_open'),
-               Output('mem-upload-collapse', 'is_open')],
-              [Input('contact-map-upload-head', 'n_clicks'),
-               Input('sequence-upload-head', 'n_clicks'),
-               Input('mem-upload-head', 'n_clicks')],
-              [State('contact-map-upload-collapse', 'is_open'),
-               State('sequence-upload-collapse', 'is_open'),
-               State('mem-upload-collapse', 'is_open')])
-def toggle(contact_click, sequence_click, mem_click, contact_open, sequence_open, mem_open):
-    ctx = callback_context.triggered[0]
+@app.callback(TableCollapseInterfaceIndex.OUTPUT.value,
+              TableCollapseInterfaceIndex.INPUT.value,
+              TableCollapseInterfaceIndex.STATE.value)
+def toggle(contact_click, sequence_click, mem_click, sequence_open, contact_open, mem_open):
+    context = callback_context.triggered[0]
+    prop_id = context['prop_id']
 
-    if ctx['prop_id'] == '.':
+    if prop_id == '.':
         return False, False, False
-    elif ctx['prop_id'] == 'contact-map-upload-head.n_clicks':
+    elif prop_id == ContextReference.CONTACT_HEAD_CLICK.value:
         return not contact_open, False, False
-    elif ctx['prop_id'] == 'mem-upload-head.n_clicks':
+    elif prop_id == ContextReference.MEM_HEAD_CLICK.value:
         return False, False, not mem_open
     else:
         return False, not sequence_open, False
 
 
-@app.callback([Output("contact-map-text-area", "valid"),
-               Output("contact-map-text-area", "invalid"),
-               Output("contact-map-invalid-collapse", "is_open"),
-               Output("contact-map-filename-alert", "is_open"),
-               Output('contact-map-filename-alert', 'children'),
-               Output("format-selection-card", "color"),
-               Output('contact-map-upload-head', 'color')],
-              [Input('upload-contact-map', 'filename'),
-               Input("contact-map-text-area", "value"),
-               Input("contact-format-select", "value")],
-              [State('upload-contact-map', 'contents'),
-               State('session-id', 'children')])
-def upload_contact_map(filename, cmap_text, cmap_format, file_contents, session_id):
-    session = cache.get('session-{}'.format(session_id))
+@app.callback(UploadInterfaceComponentIndex.OUTPUT.value,
+              UploadInterfaceComponentIndex.INPUT.value,
+              UploadInterfaceComponentIndex.STATE.value)
+def user_input(*args):
+    session = cache.get('session-{}'.format(args[InputReference.SESSION_ID.value]))
+    context = callback_context.triggered[0]
+    prop_id = context['prop_id']
+    value = context['value']
+    layout_states = [no_update for x in UploadInterfaceComponentIndex.OUTPUT.value]
 
-    if session is None:
-        return False, False, False, False, False, 'danger', 'dark'
+    if session is None or prop_id == '.' or value is None:
+        pass
 
-    session.contact_loader.register_input(cmap_text, file_contents, filename, cmap_format)
-    session.contact_loader.load()
-    cache.set('session-{}'.format(session_id), session)
-    return session.contact_loader.layout_states
+    elif prop_id == ContextReference.CMAP_FORMAT_SELECT.value or prop_id == ContextReference.CMAP_TEXT_VALUE.value or prop_id == ContextReference.UPLOAD_CMAP_FNAME.value:
+        session.contact_loader.register_input(
+            args[InputReference.CMAP_TEXT_VALUE.value],
+            args[InputReference.UPLOAD_CMAP_FCONTENTS.value],
+            args[InputReference.UPLOAD_CMAP_FNAME.value],
+            args[InputReference.CMAP_FORMAT_SELECT.value]
+        )
+        session.contact_loader.load()
+        cache.set('session-{}'.format(args[InputReference.SESSION_ID.value]), session)
+        layout_states[OutputReference.CMAP_TEXT_VALID.value] = session.contact_loader.valid_text
+        layout_states[OutputReference.CMAP_TEXT_INVALID.value] = session.contact_loader.invalid_text
+        layout_states[OutputReference.CMAP_INVALID_COLLAPSE_OPEN.value] = session.contact_loader.invalid
+        layout_states[OutputReference.CMAP_FNAME_ALERT_OPEN.value] = session.contact_loader.valid_file
+        layout_states[OutputReference.CMAP_FNAME.value] = session.contact_loader.filename
+        layout_states[OutputReference.CMAP_FORMAT_SELECT_COLOR.value] = session.contact_loader.format_select_color
+        layout_states[OutputReference.CMAP_HEAD_COLOR.value] = session.contact_loader.head_color
 
+    elif prop_id == ContextReference.FASTA_TEXT_VALUE.value or prop_id == ContextReference.UPLOAD_FASTA_FNAME.value:
+        session.sequence_loader.register_input(
+            args[InputReference.FASTA_TEXT_VALUE.value],
+            args[InputReference.UPLOAD_FASTA_FCONTENTS.value],
+            args[InputReference.UPLOAD_FASTA_FNAME.value]
+        )
+        session.sequence_loader.load()
+        cache.set('session-{}'.format(args[InputReference.SESSION_ID.value]), session)
+        layout_states[OutputReference.FASTA_TEXT_VALID.value] = session.sequence_loader.valid_text
+        layout_states[OutputReference.FASTA_TEXT_INVALID.value] = session.sequence_loader.invalid_text
+        layout_states[OutputReference.FASTA_INVALID_COLLAPSE_OPEN.value] = session.sequence_loader.invalid
+        layout_states[OutputReference.FASTA_FNAME_ALERT_OPEN.value] = session.sequence_loader.valid_file
+        layout_states[OutputReference.FASTA_FNAME.value] = session.sequence_loader.filename
+        layout_states[OutputReference.SEQ_HEAD_COLOR.value] = session.sequence_loader.head_color
 
-@app.callback([Output("fasta-text-area", "valid"),
-               Output("fasta-text-area", "invalid"),
-               Output("fasta-invalid-collapse", "is_open"),
-               Output("fasta-filename-alert", "is_open"),
-               Output('fasta-filename-alert', 'children'),
-               Output('sequence-upload-head', 'color')],
-              [Input('upload-fasta', 'filename'),
-               Input("fasta-text-area", "value")],
-              [State('upload-fasta', 'contents'),
-               State('session-id', 'children')])
-def upload_sequence(filename, fasta_text, file_contents, session_id):
-    session = cache.get('session-{}'.format(session_id))
+    elif prop_id == ContextReference.MEM_TEXT_VALUE.value or prop_id == ContextReference.UPLOAD_MEM_FNAME.value:
+        session.membrtopo_loader.register_input(
+            args[InputReference.MEM_TEXT_VALUE.value],
+            args[InputReference.UPLOAD_MEM_FCONTENTS.value],
+            args[InputReference.UPLOAD_MEM_FNAME.value],
+            input_format='TOPCONS'
+        )
+        session.membrtopo_loader.load()
+        cache.set('session-{}'.format(args[InputReference.SESSION_ID.value]), session)
+        layout_states[OutputReference.MEM_TEXT_VALID.value] = session.membrtopo_loader.valid_text
+        layout_states[OutputReference.MEM_TEXT_INVALID.value] = session.membrtopo_loader.invalid_text
+        layout_states[OutputReference.MEM_INVALID_COLLAPSE_OPEN.value] = session.membrtopo_loader.invalid
+        layout_states[OutputReference.MEM_FNAME_ALERT_OPEN.value] = session.membrtopo_loader.valid_file
+        layout_states[OutputReference.MEM_FNAME.value] = session.membrtopo_loader.filename
+        layout_states[OutputReference.MEM_HEAD_COLOR.value] = session.membrtopo_loader.head_color
 
-    if session is None:
-        return False, False, False, False, False, 'dark'
+    elif prop_id == ContextReference.PLOT_CLICK.value:
+        error = session.lookup_input_errors()
+        if error is not None:
+            layout_states[OutputReference.PLOT_DIV.value] = PlotPlaceHolder()
+            layout_states[OutputReference.MODAL_DIV.value] = error
+        else:
+            plot = Plot(cmap=session.contact_loader.cmap, mem_pred=session.membrtopo_loader.prediction)
+            layout_states[OutputReference.PLOT_DIV.value] = dcc.Graph(id='plot-graph', style={'height': '80vh'},
+                                                                      figure=plot.get_figure())
+            layout_states[OutputReference.MODAL_DIV.value] = None
 
-    session.sequence_loader.register_input(fasta_text, file_contents, filename)
-    session.sequence_loader.load()
-    cache.set('session-{}'.format(session_id), session)
-    return session.sequence_loader.layout_states
-
-
-@app.callback([Output("mem-text-area", "valid"),
-               Output("mem-text-area", "invalid"),
-               Output("mem-invalid-collapse", "is_open"),
-               Output("mem-filename-alert", "is_open"),
-               Output('mem-filename-alert', 'children'),
-               Output('mem-upload-head', 'color')],
-              [Input('upload-mem', 'filename'),
-               Input("mem-text-area", "value")],
-              [State('upload-mem', 'contents'),
-               State('session-id', 'children')])
-def upload_membranetopology(filename, mem_text, file_contents, session_id):
-    session = cache.get('session-{}'.format(session_id))
-
-    if session is None:
-        return False, False, False, False, False, 'dark'
-
-    session.membrtopo_loader.register_input(mem_text, file_contents, filename, input_format='TOPCONS')
-    session.membrtopo_loader.load()
-    cache.set('session-{}'.format(session_id), session)
-    return session.membrtopo_loader.layout_states
-
-
-@app.callback([Output('plot-div', 'children'),
-               Output('modal-div', 'children')],
-              [Input('plot-button', 'n_clicks')],
-              [State('session-id', 'children')])
-def create_plot(n_clicks, session_id):
-    session = cache.get('session-{}'.format(session_id))
-    ctx = callback_context
-
-    if session is None or ctx.triggered[0]['value'] is None:
-        return no_update, None
-
-    error = session.lookup_input_errors()
-    if error is not None:
-        return PlotPlaceHolder(), error
-    else:
-        plot = Plot(cmap=session.contact_loader.cmap, mem_pred=session.membrtopo_loader.prediction)
-        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None
+    return layout_states
 
 
-@app.callback([Output('upload-contact-map', 'contents'),
-               Output('upload-fasta', 'contents'),
-               Output('upload-mem', 'contents')],
+@app.callback([Output('_hidden-div', 'children')],
               [Input("contact-map-filename-alert", "is_open"),
                Input("fasta-filename-alert", "is_open"),
                Input("mem-filename-alert", "is_open")],
-              [State('upload-contact-map', 'contents'),
-               State('upload-fasta', 'contents'),
-               State('upload-mem', 'contents'),
-               State('session-id', 'children')])
-def remove_file(contact_fname_open, fasta_fname_open, mem_fname_open, contact_fcontents, fasta_fcontents, mem_fcontents,
-                session_id):
+              [State('session-id', 'children')])
+def remove_file(contact_fname_open, fasta_fname_open, mem_fname_open, session_id):
     session = cache.get('session-{}'.format(session_id))
+    context = callback_context.triggered[0]
+    prop_id = context['prop_id']
+    value = context['value']
 
-    if session is None:
-        return no_update, no_update, no_update
+    if session is None or prop_id == '.' or value is None or value is True:
+        return no_update
 
-    ctx = callback_context.triggered[0]
-
-    if ctx['prop_id'] == 'contact-map-filename-alert.is_open' and session.contact_loader.valid_file \
-            and contact_fcontents is not None and not contact_fname_open:
+    if prop_id == ContextReference.CMAP_ALERT_OPEN.value and session.contact_loader.valid_file and not contact_fname_open:
         session.contact_loader.clear()
         cache.set('session-{}'.format(session_id), session)
-        return None, no_update, no_update
+        return no_update
 
-    elif ctx['prop_id'] == 'fasta-filename-alert.is_open' and session.sequence_loader.valid_file \
-            and fasta_fcontents is not None and not fasta_fname_open:
+    elif prop_id == ContextReference.FASTA_ALERT_OPEN.value and session.sequence_loader.valid_file and not fasta_fname_open:
         session.sequence_loader.clear()
         cache.set('session-{}'.format(session_id), session)
-        return no_update, None, no_update
+        return no_update
 
-    elif ctx['prop_id'] == 'mem-filename-alert.is_open' and session.membrtopo_loader.valid_file \
-            and mem_fcontents is not None and not mem_fname_open:
+    elif prop_id == ContextReference.MEM_ALERT_OPEN.value and session.membrtopo_loader.valid_file and not mem_fname_open:
         session.membrtopo_loader.clear()
         cache.set('session-{}'.format(session_id), session)
-        return no_update, no_update, None
+        return no_update
 
     else:
-        return no_update, no_update, no_update
+        return no_update

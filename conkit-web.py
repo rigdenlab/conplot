@@ -3,7 +3,7 @@ import dash_html_components as html
 from app import app, server, cache
 from utils import initiate_session
 from callbacks import main_callbacks
-from components import PathIndex
+from index import PathIndex
 
 def serve_layout():
     session_id = initiate_session()

@@ -38,7 +38,7 @@ def ContactUploadCard():
                                 [
                                     dbc.InputGroupAddon("L /", addon_type="prepend"),
                                     dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                              placeholder='1'),
+                                              placeholder='2'),
                                 ],
                             ),
                         ], outline=False),

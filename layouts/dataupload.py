@@ -8,6 +8,7 @@ from callbacks import dataupload_callbacks
 
 def DataUpload(session_id):
     return html.Div([
+        html.Div(id='_hidden-div', style={'display': 'none'}),
         Header(),
         html.Div(id='modal-div'),
         NavBar(PathIndex.PLOT.value),

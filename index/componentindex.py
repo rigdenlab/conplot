@@ -29,23 +29,27 @@ class ContextReference(Enum):
     CMAP_FORMAT_SELECT = "contact-format-select.value"
     UPLOAD_FASTA_FNAME = 'upload-fasta.filename'
     FASTA_TEXT_VALUE = "fasta-text-area.value"
+    UPLOAD_MEM_FNAME = 'upload-mem.filename'
+    MEM_TEXT_VALUE = "mem-text-area.value"
+    PLOT_CLICK = 'plot-button.n_clicks'
+    CMAP_ALERT_OPEN = 'contact-map-filename-alert.is_open'
+    FASTA_ALERT_OPEN = 'fasta-filename-alert.is_open'
+    MEM_ALERT_OPEN = 'mem-filename-alert.is_open'
 
 
 class InputReference(Enum):
     UPLOAD_CMAP_FNAME = 0
     CMAP_TEXT_VALUE = 1
     CMAP_FORMAT_SELECT = 2
-    CMAP_FILE_ALERT_OPEN = 3
-    UPLOAD_FASTA_FNAME = 4
-    FASTA_TEXT_VALUE = 5
-    FASTA_FILE_ALERT_OPEN = 6
-    UPLOAD_MEM_FNAME = 7
-    MEM_TEXT_VALUE = 8
-    MEM_FILE_ALERT_OPEN = 9
-    UPLOAD_CMAP_FCONTENTS = 10
-    UPLOAD_FASTA_FCONTENTS = 11
-    UPLOAD_MEM_FCONTENTS = 12
-    SESSION_ID = 13
+    UPLOAD_FASTA_FNAME = 3
+    FASTA_TEXT_VALUE = 4
+    UPLOAD_MEM_FNAME = 5
+    MEM_TEXT_VALUE = 6
+    PLOT_CLICK = 7
+    UPLOAD_CMAP_FCONTENTS = 8
+    UPLOAD_FASTA_FCONTENTS = 9
+    UPLOAD_MEM_FCONTENTS = 10
+    SESSION_ID = 11
 
 
 class OutputReference(Enum):
@@ -68,9 +72,11 @@ class OutputReference(Enum):
     MEM_FNAME_ALERT_OPEN = 16
     MEM_FNAME = 17
     MEM_HEAD_COLOR = 18
-    UPLOAD_FASTA_FCONTENTS = 19
-    UPLOAD_MEM_FCONTENTS = 20
-    SESSION_ID = 21
+    UPLOAD_CMAP_FCONTENTS = 19
+    UPLOAD_FASTA_FCONTENTS = 20
+    UPLOAD_MEM_FCONTENTS = 21
+    PLOT_DIV = 22
+    MODAL_DIV = 23
 
 
 class UploadInterfaceComponentIndex(Enum):
@@ -96,19 +102,19 @@ class UploadInterfaceComponentIndex(Enum):
         Output('mem-upload-head', 'color'),
         Output('upload-contact-map', 'contents'),
         Output('upload-fasta', 'contents'),
-        Output('upload-mem', 'contents')
+        Output('upload-mem', 'contents'),
+        Output('plot-div', 'children'),
+        Output('modal-div', 'children')
     ]
     INPUT = [
         Input('upload-contact-map', 'filename'),
         Input("contact-map-text-area", "value"),
         Input("contact-format-select", "value"),
-        Input("contact-map-filename-alert", "is_open"),
         Input('upload-fasta', 'filename'),
         Input("fasta-text-area", "value"),
-        Input("fasta-filename-alert", "is_open"),
         Input('upload-mem', 'filename'),
         Input("mem-text-area", "value"),
-        Input("mem-filename-alert", "is_open")
+        Input('plot-button', 'n_clicks')
     ]
 
     STATE = [

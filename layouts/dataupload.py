@@ -1,6 +1,7 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard, \
+from components import NavBar, Header, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard, \
     PlotPlaceHolder
+from index import PathIndex
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
 

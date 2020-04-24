@@ -2,7 +2,6 @@ from .navbar import NavBar
 from .uploadbutton import UploadButton
 from .error_alert import ErrorAlert
 from .header import Header
-from .pathindex import PathIndex
 from .sequence_upload_card import SequenceUploadCard
 from .contact_upload_card import ContactUploadCard
 from .missinginputs_modal import MissingInput_Modal

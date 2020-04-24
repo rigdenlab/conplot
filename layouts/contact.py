@@ -1,5 +1,6 @@
 import dash_html_components as html
-from components import NavBar, Header, PathIndex, ErrorAlert
+from components import NavBar, Header
+from index import PathIndex
 import dash_bootstrap_components as dbc
 from callbacks import contact_callbacks
 
@@ -59,7 +60,6 @@ def Body():
                     is_open=False,
                     id='bug-alert'
                 ),
-                html.Br(),
                 dbc.Button("Send", color="primary", block=True)
             ], width={"size": 8, "offset": 2}),
         ]

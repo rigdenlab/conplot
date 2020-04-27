@@ -1,1 +1,2 @@
-from .topcons import TopconsParser
+from .topconsparser import TopconsParser
+from .psipredparser import PsipredParser

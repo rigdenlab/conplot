@@ -3,6 +3,7 @@ import dash_html_components as html
 import dash_core_components as dcc
 from index import DatasetReference
 
+
 def DisplayControlCard():
     return dbc.Card(
         dbc.CardBody(

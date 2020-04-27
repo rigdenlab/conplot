@@ -17,7 +17,7 @@ def Body():
                 dbc.InputGroup(
                     [
                         dbc.InputGroupAddon("@", addon_type="prepend"),
-                        dbc.Input(placeholder="Email address"),
+                        dbc.Input(placeholder="Email address", type="email"),
                     ],
                     className="mb-3",
                 ),

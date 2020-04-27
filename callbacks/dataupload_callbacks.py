@@ -11,25 +11,30 @@ from utils import remove_file, store_dataset, is_valid_trigger
 
 @app.callback([Output('contact-map-upload-collapse', 'is_open'),
                Output('sequence-upload-collapse', 'is_open'),
-               Output('mem-upload-collapse', 'is_open')],
+               Output('mem-upload-collapse', 'is_open'),
+               Output('display-control-collapse', 'is_open')],
               [Input('contact-map-upload-head', 'n_clicks'),
                Input('sequence-upload-head', 'n_clicks'),
-               Input('mem-upload-head', 'n_clicks')],
-              State('sequence-upload-collapse', 'is_open'),
-              State('contact-map-upload-collapse', 'is_open'),
-              State('mem-upload-collapse', 'is_open'))
-def toggle(contact_click, sequence_click, mem_click, sequence_open, contact_open, mem_open):
+               Input('mem-upload-head', 'n_clicks'),
+               Input('display-control-head', 'n_clicks')],
+              [State('sequence-upload-collapse', 'is_open'),
+               State('contact-map-upload-collapse', 'is_open'),
+               State('mem-upload-collapse', 'is_open'),
+               State('display-control-collapse', 'is_open')])
+def toggle(contact_click, sequence_click, mem_click, display_click, sequence_open, contact_open, mem_open, display_open):
     context = callback_context.triggered[0]
     prop_id = context['prop_id']
 
     if prop_id == '.':
-        return False, False, False
+        return False, False, False, False
     elif prop_id == ContextReference.CONTACT_HEAD_CLICK.value:
-        return not contact_open, False, False
+        return not contact_open, False, False, False
     elif prop_id == ContextReference.MEM_HEAD_CLICK.value:
-        return False, False, not mem_open
+        return False, False, not mem_open, False
+    elif prop_id == ContextReference.DISPLAYHEAD_CLICK.value:
+        return False, False, False, not display_open
     else:
-        return False, not sequence_open, False
+        return False, not sequence_open, False, False
 
 
 @app.callback([Output("contact-map-text-area", "valid"),

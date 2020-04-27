@@ -30,19 +30,6 @@ def ContactUploadCard():
                             ),
                         ], id='format-selection-card', color="danger", outline=True),
                         html.Br(),
-                        html.Br(),
-                        html.P("Additional options", className="card-text"),
-                        html.Br(),
-                        dbc.Card([
-                            dbc.InputGroup(
-                                [
-                                    dbc.InputGroupAddon("L /", addon_type="prepend"),
-                                    dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                              placeholder='2'),
-                                ],
-                            ),
-                        ], outline=False),
-                        html.Br(),
                         dbc.Collapse(
                             dbc.Card(dbc.CardBody("Invalid Contact Map! Make sure the format is correct"),
                                      color="danger",

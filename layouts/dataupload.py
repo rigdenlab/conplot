@@ -1,6 +1,6 @@
 import dash_html_components as html
 from components import NavBar, Header, SequenceUploadCard, ContactUploadCard, MembraneTopologyUploadCard, \
-    PlotPlaceHolder
+    PlotPlaceHolder, DisplayControlCard
 from index import PathIndex
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
@@ -47,6 +47,16 @@ def DataUpload(session_id):
                                 dbc.Collapse([
                                     MembraneTopologyUploadCard()
                                 ], id='mem-upload-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-cog"), outline=True, color='primary', block=True,
+                                           id='display-control-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    DisplayControlCard()
+                                ], id='display-control-collapse')
                             )
                         ]),
                     ]),

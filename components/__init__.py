@@ -9,3 +9,4 @@ from .mismatchsequence_modal import MismatchSequence_Modal
 from .membranetopology_upload_card import MembraneTopologyUploadCard
 from .plotplaceholder import PlotPlaceHolder
 from .mismatchmembrane_modal import MismatchMembrane_Modal
+from .display_control_card import DisplayControlCard

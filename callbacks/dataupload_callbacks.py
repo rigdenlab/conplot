@@ -12,29 +12,48 @@ from utils import remove_file, store_dataset, is_valid_trigger
 @app.callback([Output('contact-map-upload-collapse', 'is_open'),
                Output('sequence-upload-collapse', 'is_open'),
                Output('mem-upload-collapse', 'is_open'),
+               Output('ss-upload-collapse', 'is_open'),
+               Output('disorder-upload-collapse', 'is_open'),
+               Output('conserv-upload-collapse', 'is_open'),
                Output('display-control-collapse', 'is_open')],
               [Input('contact-map-upload-head', 'n_clicks'),
                Input('sequence-upload-head', 'n_clicks'),
                Input('mem-upload-head', 'n_clicks'),
+               Input('ss-upload-head', 'n_clicks'),
+               Input('disorder-upload-head', 'n_clicks'),
+               Input('conserv-upload-head', 'n_clicks'),
                Input('display-control-head', 'n_clicks')],
               [State('sequence-upload-collapse', 'is_open'),
                State('contact-map-upload-collapse', 'is_open'),
                State('mem-upload-collapse', 'is_open'),
+               State('ss-upload-collapse', 'is_open'),
+               State('disorder-upload-collapse', 'is_open'),
+               State('conserv-upload-collapse', 'is_open'),
                State('display-control-collapse', 'is_open')])
-def toggle(contact_click, sequence_click, mem_click, display_click, sequence_open, contact_open, mem_open, display_open):
+def toggle(contact_click, sequence_click, mem_click, ss_click, disorder_click, conserv_click, display_click,
+           sequence_open, contact_open, mem_open, ss_open, disorder_open, conserv_open, display_open):
     context = callback_context.triggered[0]
     prop_id = context['prop_id']
+    layout = [False for x in range(0, 7)]
 
     if prop_id == '.':
-        return False, False, False, False
+        pass
     elif prop_id == ContextReference.CONTACT_HEAD_CLICK.value:
-        return not contact_open, False, False, False
+        layout[0] = not contact_open
+    elif prop_id == ContextReference.SEQUENCE_HEAD_CLICK.value:
+        layout[1] = not sequence_open
     elif prop_id == ContextReference.MEM_HEAD_CLICK.value:
-        return False, False, not mem_open, False
-    elif prop_id == ContextReference.DISPLAYHEAD_CLICK.value:
-        return False, False, False, not display_open
+        layout[2] = not mem_open
+    elif prop_id == ContextReference.SS_HEAD_CLICK.value:
+        layout[3] = not ss_open
+    elif prop_id == ContextReference.DISORDER_HEAD_CLICK.value:
+        layout[4] = not disorder_open
+    elif prop_id == ContextReference.CONSERV_HEAD_CLICK.value:
+        layout[5] = not conserv_open
     else:
-        return False, not sequence_open, False, False
+        layout[6] = not display_open
+
+    return layout
 
 
 @app.callback([Output("contact-map-text-area", "valid"),

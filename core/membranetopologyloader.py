@@ -1,10 +1,10 @@
-import base64
 from .loader import Loader
-from enum import Enum
+import base64
 from parsers import TopconsParser
+from enum import Enum
 
 
-class ParserFormats(Enum):
+class _ParserFormats(Enum):
     TOPCONS = TopconsParser
 
 
@@ -15,37 +15,6 @@ class MembraneTopologyLoader(Loader):
     def __init__(self):
         super(MembraneTopologyLoader, self).__init__()
         self.prediction = None
-
-    def parse_text(self, text):
-
-        parser = ParserFormats.__getattr__(self.input_format).value(text)
-        parser.parse()
-
-        if not parser.error:
-            self.prediction = parser.output
-
-        if self.valid:
-            self.valid_text = True
-        else:
-            self.valid_text = False
-
-    def parse_file(self):
-
-        content_type, content_string = self.raw_file.split(',')
-        decoded = base64.b64decode(content_string)
-        decoded = decoded.decode()
-        contents = decoded
-
-        parser = ParserFormats.__getattr__(self.input_format).value(contents)
-        parser.parse()
-
-        if not parser.error:
-            self.prediction = parser.output
-
-        if self.valid:
-            self.valid_file = True
-        else:
-            self.valid_file = False
 
     @property
     def valid(self):
@@ -65,3 +34,38 @@ class MembraneTopologyLoader(Loader):
     @property
     def to_clear(self):
         return 'filename', 'raw_file', 'valid_file', 'prediction'
+
+    @property
+    def parser_formats(self):
+        return _ParserFormats
+
+    def parse_text(self, text):
+
+        parser = self.parser_formats.__getattr__(self.input_format).value(text)
+        parser.parse()
+
+        if not parser.error:
+            self.prediction = parser.output
+
+        if self.valid:
+            self.valid_text = True
+        else:
+            self.valid_text = False
+
+    def parse_file(self):
+
+        content_type, content_string = self.raw_file.split(',')
+        decoded = base64.b64decode(content_string)
+        decoded = decoded.decode()
+        contents = decoded
+
+        parser = self.parser_formats.__getattr__(self.input_format).value(contents)
+        parser.parse()
+
+        if not parser.error:
+            self.prediction = parser.output
+
+        if self.valid:
+            self.valid_file = True
+        else:
+            self.valid_file = False

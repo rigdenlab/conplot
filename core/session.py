@@ -1,6 +1,7 @@
 from .contactloader import ContactLoader
 from .sequenceloader import SequenceLoader
 from .membranetopologyloader import MembraneTopologyLoader
+from .secondarystructureloader import SecondaryStructureLoader
 from components import MismatchSequence_Modal, MissingInput_Modal, MismatchMembrane_Modal
 
 
@@ -12,6 +13,7 @@ class Session(object):
         self.contact_loader = ContactLoader()
         self.sequence_loader = SequenceLoader()
         self.membrtopo_loader = MembraneTopologyLoader()
+        self.secondarystructure_loader = SecondaryStructureLoader()
 
     def __iter__(self):
         for loader in (self.contact_loader, self.sequence_loader):

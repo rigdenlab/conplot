@@ -2,11 +2,10 @@ from .navbar import NavBar
 from .uploadbutton import UploadButton
 from .error_alert import ErrorAlert
 from .header import Header
-from .sequence_upload_card import SequenceUploadCard
 from .contact_upload_card import ContactUploadCard
 from .missinginputs_modal import MissingInput_Modal
 from .mismatchsequence_modal import MismatchSequence_Modal
-from .membranetopology_upload_card import MembraneTopologyUploadCard
 from .plotplaceholder import PlotPlaceHolder
 from .mismatchmembrane_modal import MismatchMembrane_Modal
 from .display_control_card import DisplayControlCard
+from .upload_card import UploadCard

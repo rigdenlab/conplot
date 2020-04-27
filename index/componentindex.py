@@ -9,7 +9,10 @@ class DatasetReference(Enum):
 
 class ContextReference(Enum):
     CONTACT_HEAD_CLICK = 'contact-map-upload-head.n_clicks'
-    DISPLAYHEAD_CLICK = 'display-control-head.n_clicks'
+    DISPLAY_HEAD_CLICK = 'display-control-head.n_clicks'
+    SS_HEAD_CLICK = 'ss-upload-head.n_clicks'
+    DISORDER_HEAD_CLICK = 'disorder-upload-head.n_clicks'
+    CONSERV_HEAD_CLICK = 'conserv-upload-head.n_clicks'
     MEM_HEAD_CLICK = 'mem-upload-head.n_clicks'
     SEQUENCE_HEAD_CLICK = 'sequence-upload-head.n_clicks'
     UPLOAD_CMAP_FNAME = 'upload-contact-map.filename'

@@ -11,7 +11,8 @@ def MissingInput_Modal(*args):
             html.P("Please ensure you fill in all required fields before trying to generate a plot. "
                    "We detected problems on the following fields:"
                    ),
-            html.Hr(),
-            html.Div([html.P('%s file' % arg) for arg in args], id='missing-fields-div'),
+            html.Ul([
+                html.Li('%s file' % arg) for arg in args
+            ], id='missing-fields-div'),
         ]),
     ], id='missing-fields-modal', is_open=True),

@@ -1,11 +1,7 @@
 from .navbar import NavBar
 from .uploadbutton import UploadButton
-from .error_alert import ErrorAlert
+from .alerts import ErrorAlert, FilenameAlert
 from .header import Header
-from .contact_upload_card import ContactUploadCard
-from .missinginputs_modal import MissingInput_Modal
-from .mismatchsequence_modal import MismatchSequence_Modal
 from .plotplaceholder import PlotPlaceHolder
-from .mismatchmembrane_modal import MismatchMembrane_Modal
-from .display_control_card import DisplayControlCard
-from .upload_card import UploadCard
+from .uploadcards import UploadCard, ContactUploadCard, DisplayControlCard
+from .modals import MismatchModal, MissingInput_Modal

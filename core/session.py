@@ -2,6 +2,8 @@ from .contactloader import ContactLoader
 from .sequenceloader import SequenceLoader
 from .membranetopologyloader import MembraneTopologyLoader
 from .secondarystructureloader import SecondaryStructureLoader
+from .disorderloader import DisorderLoader
+from .conservationloader import ConservationLoader
 from components import MismatchSequence_Modal, MissingInput_Modal, MismatchMembrane_Modal
 
 
@@ -14,6 +16,8 @@ class Session(object):
         self.sequence_loader = SequenceLoader()
         self.membrtopo_loader = MembraneTopologyLoader()
         self.secondarystructure_loader = SecondaryStructureLoader()
+        self.disorder_loader = DisorderLoader()
+        self.conservation_loader = ConservationLoader()
 
     def __iter__(self):
         for loader in (self.contact_loader, self.sequence_loader):
@@ -36,6 +40,7 @@ class Session(object):
         except IndexError as e:
             return MismatchSequence_Modal()
 
+        # TODO: Need to check all predictions and return a list of those that do not match
         if self.membrtopo_loader.prediction is not None and \
                 len(self.sequence_loader.sequence) != len(self.membrtopo_loader.prediction):
             return MismatchMembrane_Modal()

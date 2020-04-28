@@ -25,3 +25,7 @@ class PsipredParser(Parser):
                 self.error = True
                 self.output = None
                 return
+
+        if not self.output:
+            self.error = True
+            self.output = None

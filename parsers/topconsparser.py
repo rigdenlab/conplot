@@ -13,10 +13,10 @@ class TopconsParser(Parser):
         try:
             topcons_prediction = contents[contents.index('TOPCONS predicted topology:') + 1].rstrip()
         except ValueError as e:
-            self.output = None
             self.error = True
             return
 
+        self.output = []
         for residue in topcons_prediction.rstrip().lstrip():
             if residue == 'i':
                 self.output.append(MembraneStates.INSIDE)

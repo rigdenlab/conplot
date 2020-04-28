@@ -110,7 +110,6 @@ or the confidence interval for the estimated score is equal to- or larger than- 
         self.assertFalse(parser.error)
         self.assertIsNotNone(parser.output)
         self.assertEquals(37, len(parser.output))
-        print(parser.output)
         self.assertListEqual(expected, parser.output)
 
     def test_2(self):

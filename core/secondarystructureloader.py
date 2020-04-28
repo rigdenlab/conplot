@@ -1,5 +1,6 @@
 from .membranetopologyloader import MembraneTopologyLoader
 from index.formatindex import SecondaryStructureFormats
+from index import DatasetReference
 
 
 class SecondaryStructureLoader(MembraneTopologyLoader):
@@ -12,7 +13,7 @@ class SecondaryStructureLoader(MembraneTopologyLoader):
 
     @property
     def datatype(self):
-        return 'Secondary Structure'
+        return DatasetReference.SECONDARY_STRUCTURE
 
     @property
     def parser_formats(self):

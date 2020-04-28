@@ -1,6 +1,7 @@
 from .loader import Loader
 import base64
 from index.formatindex import MembraneFormats
+from index import DatasetReference
 
 
 class MembraneTopologyLoader(Loader):
@@ -20,7 +21,7 @@ class MembraneTopologyLoader(Loader):
 
     @property
     def datatype(self):
-        return 'Membrane Topology'
+        return DatasetReference.MEMBRANE_TOPOLOGY
 
     @property
     def layout_states(self):

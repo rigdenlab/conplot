@@ -1,6 +1,7 @@
 import conkit.io
 from .loader import Loader
 import base64
+from index import DatasetReference
 
 
 class ContactLoader(Loader):
@@ -64,7 +65,7 @@ class ContactLoader(Loader):
 
     @property
     def datatype(self):
-        return 'Contact Map'
+        return DatasetReference.CONTACT_MAP
 
     @staticmethod
     def parse_map(text, cmap_format):

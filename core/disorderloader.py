@@ -1,5 +1,6 @@
 from .membranetopologyloader import MembraneTopologyLoader
 from index.formatindex import DisorderFormats
+from index import DatasetReference
 
 
 class DisorderLoader(MembraneTopologyLoader):
@@ -12,7 +13,7 @@ class DisorderLoader(MembraneTopologyLoader):
 
     @property
     def datatype(self):
-        return 'Disorder prediction'
+        return DatasetReference.DISORDER
 
     @property
     def parser_formats(self):

@@ -3,6 +3,7 @@ from Bio.Alphabet.IUPAC import protein
 from io import StringIO
 import base64
 from .loader import Loader
+from index import DatasetReference
 from conkit.core import Sequence
 
 
@@ -56,7 +57,7 @@ class SequenceLoader(Loader):
 
     @property
     def datatype(self):
-        return 'Sequence'
+        return DatasetReference.SEQUENCE
 
     @property
     def layout_states(self):

@@ -1,6 +1,7 @@
 import plotly.graph_objects as go
 from werkzeug.utils import cached_property
 from enum import Enum
+from index import DatasetReference, MembraneStates
 
 
 class MembraneTopologyColor(Enum):
@@ -17,12 +18,22 @@ class SecondaryStructureColor(Enum):
 
 class Plot(object):
 
-    def __init__(self, cmap, mem_pred=None, ss_pred=None, factor=2, remove_neighbors=True):
-        self.cmap = cmap
+    def __init__(self, session, factor=2, remove_neighbors=True):
+        self.session = session
         self.factor = factor
         self.remove_neighbors = remove_neighbors
-        self.mem_pred = mem_pred
-        self.ss_pred = ss_pred
+        self.cmap = session.contact_loader.cmap
+        self.mem_pred = session.membranetopology_loader.prediction
+        self.ss_pred = session.secondarystructure_loader.prediction
+        self.conserv_pred = session.conservation_loader.prediction
+        self.disorder_pred = session.disorder_loader.prediction
+
+        self.active_tracks = []
+        for track in self.session:
+            if track.datatype == DatasetReference.SEQUENCE or track.datatype == DatasetReference.CONTACT_MAP:
+                pass
+            elif track.prediction is not None:
+                self.active_tracks.append(track.datatype.name)
 
     @cached_property
     def axis_range(self):
@@ -100,7 +111,7 @@ class Plot(object):
         if self.mem_pred is None:
             return None
 
-        res_idx = [idx + 1 for idx, residue in enumerate(self.mem_pred) if residue == topology.value]
+        res_idx = [idx + 1 for idx, residue in enumerate(self.mem_pred) if residue == topology]
         residue_names = ['Residue: {} ({}) | {}'.format(self.cmap.sequence.seq[idx - 1], idx, topology.name)
                          for idx in res_idx]
 
@@ -109,28 +120,11 @@ class Plot(object):
             y=res_idx,
             hovertext=residue_names,
             hoverinfo='text',
-            mode='lines',
-            fill='toself',
-        )
-
-    def get_ss_trace(self, ss):
-
-        if self.ss_pred is None:
-            return None
-
-        res_idx = [idx + 1 for idx, residue in enumerate(self.ss_pred) if residue == ss.value]
-        # residue_names = ['Residue: {} ({}) | {}'.format(self.cmap.sequence.seq[idx - 1], idx, ss.name) for idx in res_idx]
-
-        return go.Scatter(
-            x=res_idx,
-            y=res_idx,
-            # hovertext=residue_names,
-            hoverinfo='text',
             mode='markers',
             marker={
-                'symbol': 'circle-dot',
-                'size': 7,
-                'color': SecondaryStructureColor.__getattr__(ss.name).value
+                'symbol': 'circle',
+                'size': 5,
+                'color': MembraneTopologyColor.__getattr__(topology.name).value
             }
         )
 
@@ -150,14 +144,9 @@ class Plot(object):
         )
 
         figure.add_trace(self.contact_trace)
-        if self.mem_pred is not None:
-            figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.INSIDE))
-            figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.OUTSIDE))
-            figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.INSERTED))
-
-        if self.ss_pred is not None:
-            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.HELIX))
-            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.COIL))
-            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.SHEET))
+        if self.mem_pred is not None and DatasetReference.MEMBRANE_TOPOLOGY.name in self.active_tracks:
+            figure.add_trace(self.get_membrane_trace(MembraneStates.INSIDE))
+            figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))
+            figure.add_trace(self.get_membrane_trace(MembraneStates.INSERTED))
 
         return figure

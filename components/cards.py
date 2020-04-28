@@ -71,37 +71,49 @@ def UploadCard(dataset):
     )
 
 
-def DisplayControlCard():
-    return dbc.Card(
-        dbc.CardBody(
-            [
-                dbc.Spinner(
-                    html.Div([
-                        html.P("Change the different data tracks", className="card-text"),
-                        html.Br(),
-                        dbc.Card([
-                            dbc.InputGroup(
-                                [
-                                    dbc.InputGroupAddon("L /", addon_type="prepend"),
-                                    dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                              placeholder='2'),
-                                ],
-                            ),
-                        ], outline=False),
-                        html.Br(),
-                        dcc.Dropdown(
-                            options=[
-                                {'label': 'Membrane Topology', 'value': DatasetReference.MEMBRANE_TOPOLOGY.value},
-                                {'label': 'Disorder', 'value': DatasetReference.SEQUENCE.value},
-                                {'label': 'Consercation', 'value': DatasetReference.CONTACT_MAP.value},
-                            ],
-                            value=[DatasetReference.MEMBRANE_TOPOLOGY.value],
-                            multi=True
-                        ),
-                        html.Br(),
-                        dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True)
-                    ])
-                )
-            ]
+def DisplayControlCard(available_tracks=None):
+    if available_tracks is None:
+        return dbc.Card([
+            dbc.CardBody("Need to create a plot first!"),
+            html.Div([
+                dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
+                dcc.Dropdown(id='track-selection-dropdown')
+            ], style={'display': 'none'})
+        ],
+            color="danger",
+            outline=True
         )
-    )
+    else:
+        return dbc.Card(
+            dbc.CardBody(
+                [
+                    dbc.Spinner(
+                        html.Div([
+                            html.P("Adjust contact map", className="card-text"),
+                            dbc.Card([
+                                dbc.InputGroup(
+                                    [
+                                        dbc.InputGroupAddon("L /", addon_type="prepend"),
+                                        dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
+                                                  placeholder='2'),
+                                    ],
+                                ),
+                            ], outline=False),
+                            html.Br(),
+                            html.Hr(),
+                            html.P("Active tracks", className="card-text"),
+                            dcc.Dropdown(
+                                id='track-selection-dropdown',
+                                options=[
+                                    {'label': dataset, 'value': dataset} for dataset in available_tracks
+                                ],
+                                value=[dataset for dataset in available_tracks],
+                                multi=True
+                            ),
+                            html.Br(),
+                            dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True)
+                        ])
+                    )
+                ]
+            )
+        )

@@ -15,20 +15,20 @@ class Session(object):
         self.id = id
         self.contact_loader = ContactLoader()
         self.sequence_loader = SequenceLoader()
-        self.membrtopo_loader = MembraneTopologyLoader()
+        self.membranetopology_loader = MembraneTopologyLoader()
         self.secondarystructure_loader = SecondaryStructureLoader()
         self.disorder_loader = DisorderLoader()
         self.conservation_loader = ConservationLoader()
 
     def __iter__(self):
         for loader in (self.contact_loader, self.sequence_loader, self.secondarystructure_loader,
-                       self.disorder_loader, self.conservation_loader, self.membrtopo_loader):
+                       self.disorder_loader, self.conservation_loader, self.membranetopology_loader):
             yield loader
 
     @property
     def missing_data(self):
         """Data fields required to create a plot that are not present in the user input"""
-        return [loader for loader in self if not loader.valid]
+        return [loader for loader in (self.contact_loader, self.sequence_loader) if not loader.valid]
 
     def lookup_input_errors(self):
         """Check user input is coherent"""
@@ -44,7 +44,9 @@ class Session(object):
 
         mismatched = []
         for loader in self:
-            if loader.prediction is not None and len(self.sequence_loader.sequence) != len(loader.prediction):
+            if loader.datatype == DatasetReference.CONTACT_MAP or loader.datatype == DatasetReference.SEQUENCE:
+                pass
+            elif loader.prediction is not None and len(self.sequence_loader.sequence) != len(loader.prediction):
                 mismatched.append(loader.datatype.name)
 
         if any(mismatched):

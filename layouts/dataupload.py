@@ -24,7 +24,7 @@ def DataUpload(session_id):
                                                                 id='sequence-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('fasta')
+                                    UploadCard('sequence')
                                 ], id='sequence-upload-collapse')
                             )
                         ]),
@@ -41,21 +41,21 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Membrane topology', block=True, outline=True, color='dark',
-                                           id='mem-upload-head')),
+                                           id='membranetopology-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('mem')
-                                ], id='mem-upload-collapse')
+                                    UploadCard('membranetopology')
+                                ], id='membranetopology-upload-collapse')
                             )
                         ]),
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Secondary structure', block=True, outline=True, color='dark',
-                                           id='ss-upload-head')),
+                                           id='secondarystructure-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('ss')
-                                ], id='ss-upload-collapse')
+                                    UploadCard('secondarystructure')
+                                ], id='secondarystructure-upload-collapse')
                             )
                         ]),
                         dbc.ListGroupItem([
@@ -71,11 +71,11 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Conservation', block=True, outline=True, color='dark',
-                                           id='conserv-upload-head')),
+                                           id='conservation-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('conserv')
-                                ], id='conserv-upload-collapse')
+                                    UploadCard('conservation')
+                                ], id='conservation-upload-collapse')
                             )
                         ]),
                         dbc.ListGroupItem([

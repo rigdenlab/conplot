@@ -3,5 +3,5 @@ from .uploadbutton import UploadButton
 from .alerts import ErrorAlert, FilenameAlert
 from .header import Header
 from .plotplaceholder import PlotPlaceHolder
-from .uploadcards import UploadCard, ContactUploadCard, DisplayControlCard
+from .cards import UploadCard, ContactUploadCard, DisplayControlCard
 from .modals import MismatchModal, MissingInput_Modal

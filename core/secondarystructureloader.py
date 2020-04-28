@@ -7,6 +7,12 @@ class _ParserFormats(Enum):
     PSIPRED = PsipredParser
 
 
+class SecondaryStructureStates(Enum):
+    HELIX = 1
+    COIL = 2
+    SHEET = 3
+
+
 class SecondaryStructureLoader(MembraneTopologyLoader):
     """Class with methods and data structures to store all the information related with a given secondary structure
     prediction and its validity"""

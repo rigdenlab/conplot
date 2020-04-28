@@ -1,4 +1,5 @@
 from .parser import Parser
+from core.secondarystructureloader import SecondaryStructureStates
 
 
 class PsipredParser(Parser):
@@ -8,16 +9,19 @@ class PsipredParser(Parser):
 
     def parse(self):
         contents = self.input.split('\n')
-        output = []
+        self.output = []
 
         for line in contents:
             line = line.split()
-            if line[0] == '#':
+            if len(line) != 6 or line[0] == '#':
                 continue
-            output.append(line[2])
-
-        if any([residue not in ('H', 'C', 'E') for residue in self.output]):
-            self.error = True
-            self.output = None
-        else:
-            self.output = output
+            elif line[2] == 'H':
+                self.output.append(SecondaryStructureStates.HELIX)
+            elif line[2] == 'C':
+                self.output.append(SecondaryStructureStates.COIL)
+            elif line[2] == 'E':
+                self.output.append(SecondaryStructureStates.SHEET)
+            else:
+                self.error = True
+                self.output = None
+                return

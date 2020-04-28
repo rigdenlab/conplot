@@ -8,6 +8,12 @@ class _ParserFormats(Enum):
     TOPCONS = TopconsParser
 
 
+class MembraneStates(Enum):
+    INSIDE = 1
+    OUTSIDE = 2
+    INSERTED = 3
+
+
 class MembraneTopologyLoader(Loader):
     """Class with methods and data structures to store all the information related with a given membrane topology
     prediction and its validity"""

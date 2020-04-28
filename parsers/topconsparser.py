@@ -1,4 +1,5 @@
 from .parser import Parser
+from core.membranetopologyloader import MembraneStates
 
 
 class TopconsParser(Parser):
@@ -8,11 +9,22 @@ class TopconsParser(Parser):
 
     def parse(self):
         contents = self.input.split('\n')
+
         try:
             topcons_prediction = contents[contents.index('TOPCONS predicted topology:') + 1].rstrip()
-            self.output = topcons_prediction.rstrip().lstrip()
-            if any([residue not in ('i', 'o', 'M') for residue in self.output]):
-                self.error = True
         except ValueError as e:
             self.output = None
             self.error = True
+            return
+
+        for residue in topcons_prediction.rstrip().lstrip():
+            if residue == 'i':
+                self.output.append(MembraneStates.INSIDE)
+            elif residue == 'o':
+                self.output.append(MembraneStates.OUTSIDE)
+            elif residue == 'M':
+                self.output.append(MembraneStates.INSERTED)
+            else:
+                self.error = True
+                self.output = None
+                return

@@ -3,7 +3,7 @@ from app import app, cache
 from dash.dash import no_update
 from dash import callback_context
 from components import PlotPlaceHolder
-from core import Plot
+from core.plot import Plot
 import dash_core_components as dcc
 from index import DatasetReference, ContextReference
 from utils import remove_file, store_dataset, is_valid_trigger
@@ -122,6 +122,28 @@ def upload_membranetopology(filename, mem_text, file_contents, session_id):
                          'TOPCONS')
 
 
+@app.callback([Output("ss-text-area", "valid"),
+               Output("ss-text-area", "invalid"),
+               Output("ss-invalid-collapse", "is_open"),
+               Output("ss-filename-alert", "is_open"),
+               Output('ss-filename-alert', 'children'),
+               Output('ss-upload-head', 'color')],
+              [Input('upload-ss', 'filename'),
+               Input("ss-text-area", "value")],
+              [State('upload-ss', 'contents'),
+               State('session-id', 'children')])
+def upload_secondarystructure(filename, ss_text, file_contents, session_id):
+    if not is_valid_trigger(callback_context.triggered):
+        return [no_update for x in range(0, 6)]
+
+    session = cache.get('session-{}'.format(session_id))
+    if session is None:
+        return [no_update for x in range(0, 6)]
+
+    return store_dataset(DatasetReference.SECONDARY_STRUCTURE.value, session, ss_text, file_contents, filename,
+                         'PSIPRED')
+
+
 @app.callback([Output('plot-div', 'children'),
                Output('modal-div', 'children')],
               [Input('plot-button', 'n_clicks')],
@@ -140,7 +162,8 @@ def create_plot(n_clicks, session_id):
     if error is not None:
         return PlotPlaceHolder(), error
     else:
-        plot = Plot(cmap=session.contact_loader.cmap, mem_pred=session.membrtopo_loader.prediction)
+        plot = Plot(cmap=session.contact_loader.cmap, mem_pred=session.membrtopo_loader.prediction,
+                    ss_pred=session.secondarystructure_loader.prediction)
         return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None
 
 

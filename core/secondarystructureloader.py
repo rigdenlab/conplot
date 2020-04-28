@@ -1,16 +1,5 @@
 from .membranetopologyloader import MembraneTopologyLoader
-from enum import Enum
-from parsers import PsipredParser
-
-
-class _ParserFormats(Enum):
-    PSIPRED = PsipredParser
-
-
-class SecondaryStructureStates(Enum):
-    HELIX = 1
-    COIL = 2
-    SHEET = 3
+from index.formatindex import SecondaryStructureFormats
 
 
 class SecondaryStructureLoader(MembraneTopologyLoader):
@@ -27,4 +16,4 @@ class SecondaryStructureLoader(MembraneTopologyLoader):
 
     @property
     def parser_formats(self):
-        return _ParserFormats
+        return SecondaryStructureFormats

@@ -3,25 +3,26 @@ from werkzeug.utils import cached_property
 from enum import Enum
 
 
-class MembraneTopologyStates(Enum):
-    INSIDE = 'i'
-    OUTSIDE = 'o'
-    INSERTED = 'M'
-
-
 class MembraneTopologyColor(Enum):
     INSIDE = 'green'
     OUTSIDE = 'yellow'
     INSERTED = 'red'
 
 
+class SecondaryStructureColor(Enum):
+    HELIX = 'orange'
+    COIL = 'blue'
+    SHEET = 'pink'
+
+
 class Plot(object):
 
-    def __init__(self, cmap, mem_pred=None, factor=2, remove_neighbors=True):
+    def __init__(self, cmap, mem_pred=None, ss_pred=None, factor=2, remove_neighbors=True):
         self.cmap = cmap
         self.factor = factor
         self.remove_neighbors = remove_neighbors
         self.mem_pred = mem_pred
+        self.ss_pred = ss_pred
 
     @cached_property
     def axis_range(self):
@@ -88,7 +89,7 @@ class Plot(object):
             hoverinfo='none',
             mode='markers',
             marker={
-                'symbol': 'circle-dot',
+                'symbol': 'circle',
                 'size': 5,
                 'color': 'black'
             }
@@ -108,11 +109,28 @@ class Plot(object):
             y=res_idx,
             hovertext=residue_names,
             hoverinfo='text',
+            mode='lines',
+            fill='toself',
+        )
+
+    def get_ss_trace(self, ss):
+
+        if self.ss_pred is None:
+            return None
+
+        res_idx = [idx + 1 for idx, residue in enumerate(self.ss_pred) if residue == ss.value]
+        # residue_names = ['Residue: {} ({}) | {}'.format(self.cmap.sequence.seq[idx - 1], idx, ss.name) for idx in res_idx]
+
+        return go.Scatter(
+            x=res_idx,
+            y=res_idx,
+            # hovertext=residue_names,
+            hoverinfo='text',
             mode='markers',
             marker={
                 'symbol': 'circle-dot',
-                'size': 5,
-                'color': MembraneTopologyColor.__getattr__(topology.name).value
+                'size': 7,
+                'color': SecondaryStructureColor.__getattr__(ss.name).value
             }
         )
 
@@ -136,5 +154,10 @@ class Plot(object):
             figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.INSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.OUTSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneTopologyStates.INSERTED))
+
+        if self.ss_pred is not None:
+            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.HELIX))
+            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.COIL))
+            figure.add_trace(self.get_ss_trace(SecondaryStructureStates.SHEET))
 
         return figure

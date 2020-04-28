@@ -1,17 +1,6 @@
 from .loader import Loader
 import base64
-from parsers import TopconsParser
-from enum import Enum
-
-
-class _ParserFormats(Enum):
-    TOPCONS = TopconsParser
-
-
-class MembraneStates(Enum):
-    INSIDE = 1
-    OUTSIDE = 2
-    INSERTED = 3
+from index.formatindex import MembraneFormats
 
 
 class MembraneTopologyLoader(Loader):
@@ -43,7 +32,7 @@ class MembraneTopologyLoader(Loader):
 
     @property
     def parser_formats(self):
-        return _ParserFormats
+        return MembraneFormats
 
     def parse_text(self, text):
 

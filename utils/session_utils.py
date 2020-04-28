@@ -1,5 +1,5 @@
 import uuid
-from core import Session
+from core.session import Session
 from app import cache
 
 

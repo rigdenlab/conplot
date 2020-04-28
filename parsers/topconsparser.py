@@ -1,5 +1,5 @@
 from .parser import Parser
-from core.membranetopologyloader import MembraneStates
+from index.statesindex import MembraneStates
 
 
 class TopconsParser(Parser):

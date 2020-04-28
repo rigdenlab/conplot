@@ -5,6 +5,7 @@ class DatasetReference(Enum):
     SEQUENCE = 'sequence'
     CONTACT_MAP = 'contact'
     MEMBRANE_TOPOLOGY = 'membrtopo'
+    SECONDARY_STRUCTURE = 'secondarystructure'
 
 
 class ContextReference(Enum):

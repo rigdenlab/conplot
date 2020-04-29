@@ -13,6 +13,8 @@ class DatasetReference(Enum):
 class ContextReference(Enum):
     CONTACT_HEAD_CLICK = 'contact-map-upload-head.n_clicks'
     DISPLAY_HEAD_CLICK = 'display-control-head.n_clicks'
+    HELP_HEAD_CLICK = 'help-head.n_clicks'
+    WARNING_HEAD_CLICK = 'warning-head.n_clicks'
     SS_HEAD_CLICK = 'secondarystructure-upload-head.n_clicks'
     DISORDER_HEAD_CLICK = 'disorder-upload-head.n_clicks'
     CONSERV_HEAD_CLICK = 'conservation-upload-head.n_clicks'

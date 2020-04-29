@@ -117,3 +117,15 @@ def DisplayControlCard(available_tracks=None):
                 ]
             )
         )
+
+
+def HelpCard():
+    return dbc.Card([
+        dbc.CardBody("Some hints will go here..."),
+    ], color="dark", outline=True)
+
+
+def WarningsCard(warnings=None):
+    return dbc.Card([
+        dbc.CardBody("There are no warnigns registered"),
+    ], color="success", outline=True)

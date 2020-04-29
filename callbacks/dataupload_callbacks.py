@@ -14,27 +14,24 @@ from utils import store_dataset, ensure_triggered
                Output('membranetopology-upload-collapse', 'is_open'),
                Output('secondarystructure-upload-collapse', 'is_open'),
                Output('disorder-upload-collapse', 'is_open'),
-               Output('conservation-upload-collapse', 'is_open'),
-               Output('display-control-collapse', 'is_open')],
+               Output('conservation-upload-collapse', 'is_open')],
               [Input('contact-map-upload-head', 'n_clicks'),
                Input('sequence-upload-head', 'n_clicks'),
                Input('membranetopology-upload-head', 'n_clicks'),
                Input('secondarystructure-upload-head', 'n_clicks'),
                Input('disorder-upload-head', 'n_clicks'),
-               Input('conservation-upload-head', 'n_clicks'),
-               Input('display-control-head', 'n_clicks')],
+               Input('conservation-upload-head', 'n_clicks')],
               [State('sequence-upload-collapse', 'is_open'),
                State('contact-map-upload-collapse', 'is_open'),
                State('membranetopology-upload-collapse', 'is_open'),
                State('secondarystructure-upload-collapse', 'is_open'),
                State('disorder-upload-collapse', 'is_open'),
-               State('conservation-upload-collapse', 'is_open'),
-               State('display-control-collapse', 'is_open')])
-def toggle_cards(contact_click, sequence_click, mem_click, ss_click, disorder_click, conserv_click, display_click,
-                 sequence_open, contact_open, mem_open, ss_open, disorder_open, conserv_open, display_open):
+               State('conservation-upload-collapse', 'is_open')])
+def toggle_input_cards(contact_click, sequence_click, mem_click, ss_click, disorder_click, conserv_click, sequence_open,
+                       contact_open, mem_open, ss_open, disorder_open, conserv_open):
     context = callback_context.triggered[0]
     prop_id = context['prop_id']
-    layout = [False for x in range(0, 7)]
+    layout = [False for x in range(0, 6)]
 
     if prop_id == '.':
         pass
@@ -48,10 +45,34 @@ def toggle_cards(contact_click, sequence_click, mem_click, ss_click, disorder_cl
         layout[3] = not ss_open
     elif prop_id == ContextReference.DISORDER_HEAD_CLICK.value:
         layout[4] = not disorder_open
-    elif prop_id == ContextReference.CONSERV_HEAD_CLICK.value:
-        layout[5] = not conserv_open
     else:
-        layout[6] = not display_open
+        layout[5] = not conserv_open
+
+    return layout
+
+
+@app.callback([Output('display-control-collapse', 'is_open'),
+               Output('warning-collapse', 'is_open'),
+               Output('help-collapse', 'is_open')],
+              [Input('display-control-head', 'n_clicks'),
+               Input('warning-head', 'n_clicks'),
+               Input('help-head', 'n_clicks')],
+              [State('display-control-collapse', 'is_open'),
+               State('warning-collapse', 'is_open'),
+               State('help-collapse', 'is_open')])
+def toggle_extra_cards(display_click, warning_click, help_click, display_open, warning_open, help_open):
+    context = callback_context.triggered[0]
+    prop_id = context['prop_id']
+    layout = [False for x in range(0, 3)]
+
+    if prop_id == '.':
+        pass
+    elif prop_id == ContextReference.DISPLAY_HEAD_CLICK.value:
+        layout[0] = not display_open
+    elif prop_id == ContextReference.WARNING_HEAD_CLICK.value:
+        layout[1] = not warning_open
+    elif prop_id == ContextReference.HELP_HEAD_CLICK.value:
+        layout[2] = not help_open
 
     return layout
 
@@ -232,7 +253,8 @@ def create_plot(*args):
         return PlotPlaceHolder(), error, DisplayControlCard()
     elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
         plot = Plot(session)
-        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, DisplayControlCard(available_tracks=plot.active_tracks)
+        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, DisplayControlCard(
+            available_tracks=plot.active_tracks)
     else:
         selected_tracks = args[-2]
         plot = Plot(session)

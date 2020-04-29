@@ -22,7 +22,7 @@ def remove_file(dataset, session):
     cache.set('session-{}'.format(session.id), session)
 
 
-def is_valid_trigger(trigger):
+def ensure_triggered(trigger):
     context = trigger[0]
     prop_id = context['prop_id']
     value = context['value']

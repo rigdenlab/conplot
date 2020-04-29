@@ -19,3 +19,12 @@ def ErrorAlert(is_open=False):
     )
 
     return alert
+
+
+def FilenameAlert(component_id):
+    return dbc.Alert(
+        id="{}-filename-alert".format(component_id),
+        dismissable=True,
+        color="success",
+        is_open=False
+    )

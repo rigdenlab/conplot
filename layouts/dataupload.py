@@ -1,5 +1,6 @@
 import dash_html_components as html
-from components import NavBar, Header, UploadCard, PlotPlaceHolder, DisplayControlCard, ContactUploadCard
+from components import NavBar, Header, UploadCard, PlotPlaceHolder, DisplayControlCard, ContactUploadCard, WarningsCard, \
+    HelpCard
 from index import PathIndex
 import dash_bootstrap_components as dbc
 from callbacks import dataupload_callbacks
@@ -14,8 +15,6 @@ def DataUpload(session_id):
         dbc.Row([
             dbc.Col([
                 html.Br(),
-                html.H1('Data Upload'),
-                html.H6(["Please upload the files of interest or paste their contents"]),
                 html.Br(),
                 html.Div([
                     dbc.ListGroup([
@@ -24,7 +23,7 @@ def DataUpload(session_id):
                                                                 id='sequence-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('fasta')
+                                    UploadCard('sequence')
                                 ], id='sequence-upload-collapse')
                             )
                         ]),
@@ -41,21 +40,21 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Membrane topology', block=True, outline=True, color='dark',
-                                           id='mem-upload-head')),
+                                           id='membranetopology-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('mem')
-                                ], id='mem-upload-collapse')
+                                    UploadCard('membranetopology')
+                                ], id='membranetopology-upload-collapse')
                             )
                         ]),
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Secondary structure', block=True, outline=True, color='dark',
-                                           id='ss-upload-head')),
+                                           id='secondarystructure-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('ss')
-                                ], id='ss-upload-collapse')
+                                    UploadCard('secondarystructure')
+                                ], id='secondarystructure-upload-collapse')
                             )
                         ]),
                         dbc.ListGroupItem([
@@ -71,29 +70,19 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button('Conservation', block=True, outline=True, color='dark',
-                                           id='conserv-upload-head')),
+                                           id='conservation-upload-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
-                                    UploadCard('conserv')
-                                ], id='conserv-upload-collapse')
-                            )
-                        ]),
-                        dbc.ListGroupItem([
-                            dbc.ListGroupItemHeading(
-                                dbc.Button(html.I(className="fas fa-cog"), outline=True, color='dark', block=True,
-                                           id='display-control-head')),
-                            dbc.ListGroupItemText(
-                                dbc.Collapse([
-                                    DisplayControlCard()
-                                ], id='display-control-collapse')
+                                    UploadCard('conservation')
+                                ], id='conservation-upload-collapse')
                             )
                         ]),
                     ]),
-                ], className='InputPanel', style={'height': '60vh', 'overflow-y': 'scroll'}),
+                ], className='InputPanel', style={'height': '64vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),
-            ], width=4),
+            ], width=3),
             dbc.Col([
                 html.Br(),
                 html.Br(),
@@ -102,6 +91,46 @@ def DataUpload(session_id):
                         PlotPlaceHolder()
                     ], id='plot-div')
                 ])
-            ], id='plot-column', width=7),
-        ]),
+            ], id='plot-column', width=5),
+            dbc.Col([
+                html.Br(),
+                html.Br(),
+                html.Div([
+                    dbc.ListGroup([
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-cog fa-2x"), outline=True, color='dark',
+                                           id='display-control-head', style={'height': '13em', 'width': '100%'})),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    DisplayControlCard()
+                                ], id='display-control-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-exclamation-circle fa-2x"), outline=True,
+                                           color='dark', block=True, id='warning-head',
+                                           style={'height': '13em', 'width': '100%'})),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    WarningsCard()
+                                ], id='warning-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-question-circle fa-2x"), outline=True, color='dark',
+                                           block=True, style={'height': '13em', 'width': '100%'},
+                                           id='help-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    HelpCard()
+                                ], id='help-collapse')
+                            )
+                        ]),
+                    ]),
+                ], className='InputPanel', style={'height': '73vh', 'overflow-y': 'scroll'}),
+            ], width=3),
+        ], justify="between"),
     ])

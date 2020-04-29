@@ -1,5 +1,6 @@
 from .membranetopologyloader import MembraneTopologyLoader
 from index.formatindex import ConservationFormats
+from index import DatasetReference
 
 
 class ConservationLoader(MembraneTopologyLoader):
@@ -12,7 +13,7 @@ class ConservationLoader(MembraneTopologyLoader):
 
     @property
     def datatype(self):
-        return 'Sequence conservation'
+        return DatasetReference.CONSERVATION
 
     @property
     def parser_formats(self):

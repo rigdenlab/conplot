@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 from werkzeug.utils import cached_property
 from enum import Enum
-from index import DatasetReference, MembraneStates
+from index import DatasetReference, MembraneStates, SecondaryStructureStates
 
 
 class MembraneTopologyColor(Enum):
@@ -11,9 +11,9 @@ class MembraneTopologyColor(Enum):
 
 
 class SecondaryStructureColor(Enum):
-    HELIX = 'orange'
-    COIL = 'blue'
-    SHEET = 'pink'
+    HELIX = 'rgba(0,80,100,0.2)'
+    COIL = 'rgba(100,80,0,0.2)'
+    SHEET = 'rgba(0,100,80,0.2)'
 
 
 class Plot(object):
@@ -38,7 +38,7 @@ class Plot(object):
     @cached_property
     def axis_range(self):
         # TODO: NEED TO THINK AGAIN ABOUT NUMBERING
-        return (1, self.cmap.sequence.seq_len + 1)
+        return (0, self.cmap.sequence.seq_len + 1)
 
     @cached_property
     def aa_properties(self):
@@ -111,25 +111,79 @@ class Plot(object):
         if self.mem_pred is None:
             return None
 
-        res_idx = [idx + 1 for idx, residue in enumerate(self.mem_pred) if residue == topology]
+        x = [idx for idx in range(1, len(self.mem_pred) + 1)]
+        y = [idx if residue == topology else None for idx, residue in enumerate(self.mem_pred, 1)]
+
         residue_names = ['Residue: {} ({}) | {}'.format(self.cmap.sequence.seq[idx - 1], idx, topology.name)
-                         for idx in res_idx]
+                         for idx in x]
 
         return go.Scatter(
-            x=res_idx,
-            y=res_idx,
+            x=x,
+            y=y,
             hovertext=residue_names,
             hoverinfo='text',
-            mode='markers',
-            marker={
-                'symbol': 'circle',
-                'size': 5,
-                'color': MembraneTopologyColor.__getattr__(topology.name).value
+            mode='lines',
+            line={
+                'color': MembraneTopologyColor.__getattr__(topology.name).value,
+                'width': 5
             }
         )
 
-    def get_figure(self):
+    def transform_ycoords_diagonal_axis(self, y, distance, lower_bound=False, ratio=1.439):
 
+        factor = ratio * (distance / (1 + ratio ** 2))
+
+        if y is None:
+            return None
+        elif lower_bound:
+            return y - factor
+        else:
+            return y + factor
+
+    def transform_xcoords_diagonal_axis(self, x, distance, lower_bound=False, ratio=1.439):
+
+        factor = distance / (1 + ratio ** 2)
+
+        if lower_bound:
+            return x + factor
+        else:
+            return x - factor
+
+    @property
+    def ss_traces(self):
+
+        traces = []
+
+        if self.ss_pred is not None:
+            x_diagonal = [idx for idx in range(1, len(self.ss_pred) + 1)]
+
+            for ss_element in SecondaryStructureStates:
+                y_diagonal = [idx if residue == ss_element else None for idx, residue in enumerate(self.ss_pred, 1)]
+                if not any(y_diagonal):
+                    continue
+
+                trace_y_lower = [self.transform_ycoords_diagonal_axis(y, 1.4, True) for y in y_diagonal]
+                trace_y_upper = [self.transform_ycoords_diagonal_axis(y, 1.4, False) for y in y_diagonal]
+                trace_x_lower = [self.transform_xcoords_diagonal_axis(x, 1.4, True) for x in x_diagonal]
+                trace_x_upper = [self.transform_xcoords_diagonal_axis(x, 1.4, False) for x in x_diagonal]
+
+                traces += [
+                    go.Scatter(
+                        x=x,
+                        y=y,
+                        hovertext=['%s | (%s , %s)' % (ss_element.name, x[idx], y[idx]) for idx, z in enumerate(x)],
+                        hoverinfo='text',
+                        mode='lines',
+                        line={
+                            'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
+                            'width': 10
+                        }
+                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
+                ]
+
+        yield from traces
+
+    def get_figure(self):
         figure = go.Figure(
             layout=go.Layout(
                 xaxis={'title': 'Residue 1', 'range': self.axis_range},
@@ -149,4 +203,10 @@ class Plot(object):
             figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneStates.INSERTED))
 
+        if self.ss_pred is not None and DatasetReference.SECONDARY_STRUCTURE.name in self.active_tracks:
+            for trace in self.ss_traces:
+                figure.add_trace(trace)
+
         return figure
+
+

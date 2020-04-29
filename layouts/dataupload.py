@@ -14,8 +14,6 @@ def DataUpload(session_id):
         dbc.Row([
             dbc.Col([
                 html.Br(),
-                html.H1('Data Upload'),
-                html.H6(["Please upload the files of interest or paste their contents"]),
                 html.Br(),
                 html.Div([
                     dbc.ListGroup([
@@ -89,7 +87,7 @@ def DataUpload(session_id):
                             )
                         ]),
                     ]),
-                ], className='InputPanel', style={'height': '60vh', 'overflow-y': 'scroll'}),
+                ], className='InputPanel', style={'height': '64vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),

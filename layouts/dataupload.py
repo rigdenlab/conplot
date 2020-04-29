@@ -76,16 +76,6 @@ def DataUpload(session_id):
                                 ], id='conservation-upload-collapse')
                             )
                         ]),
-                        dbc.ListGroupItem([
-                            dbc.ListGroupItemHeading(
-                                dbc.Button(html.I(className="fas fa-cog"), outline=True, color='dark', block=True,
-                                           id='display-control-head')),
-                            dbc.ListGroupItemText(
-                                dbc.Collapse([
-                                    DisplayControlCard()
-                                ], id='display-control-collapse')
-                            )
-                        ]),
                     ]),
                 ], className='InputPanel', style={'height': '64vh', 'overflow-y': 'scroll'}),
                 html.Br(),
@@ -100,6 +90,44 @@ def DataUpload(session_id):
                         PlotPlaceHolder()
                     ], id='plot-div')
                 ])
-            ], id='plot-column', width=7),
+            ], id='plot-column', width=5),
+            dbc.Col([
+                html.Br(),
+                html.Br(),
+                html.Div([
+                    dbc.ListGroup([
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-cog fa-2x"), outline=True, color='dark', block=True,
+                                           id='display-control-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    DisplayControlCard()
+                                ], id='display-control-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-exclamation-circle fa-2x"), outline=True, color='dark', block=True,
+                                           id='warning-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    DisplayControlCard()
+                                ], id='warning-collapse')
+                            )
+                        ]),
+                        dbc.ListGroupItem([
+                            dbc.ListGroupItemHeading(
+                                dbc.Button(html.I(className="fas fa-question-circle fa-2x"), outline=True, color='dark', block=True,
+                                           id='help-head')),
+                            dbc.ListGroupItemText(
+                                dbc.Collapse([
+                                    DisplayControlCard()
+                                ], id='help-collapse')
+                            )
+                        ]),
+                    ]),
+                ], className='InputPanel', style={'height': '64vh', 'overflow-y': 'scroll'}),
+            ], width=3),
         ]),
     ])

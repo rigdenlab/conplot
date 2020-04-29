@@ -133,15 +133,16 @@ class Plot(object):
             y=y,
             hovertext=residue_names,
             hoverinfo='text',
-            mode='lines',
-            line={
+            mode="markers",
+            marker={
+                'symbol': 'diamond',
+                'size': 7,
                 'color': MembraneTopologyColor.__getattr__(topology.name).value,
-                'width': 5
-            }
+            },
         )
 
     @staticmethod
-    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1.439, y_axis=True):
+    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
 
         if coord is None:
             return None
@@ -183,11 +184,12 @@ class Plot(object):
                         y=y,
                         hovertext=['%s' % ss_element.name for idx in enumerate(x)],
                         hoverinfo='text',
-                        mode='lines',
-                        line={
-                            'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
-                            'width': 10
-                        }
+                        mode="markers",
+                        marker={
+                            'symbol': 'diamond',
+                            'size': 7,
+                            'color':  SecondaryStructureColor.__getattr__(ss_element.name).value,
+                        },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]
 
@@ -206,11 +208,11 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4.5, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4.5, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4.5, lower_bound=True, y_axis=False) for x in
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4.3, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4.3, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4.3, lower_bound=True, y_axis=False) for x in
                                  x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4.5, lower_bound=False, y_axis=False) for x in
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4.3, lower_bound=False, y_axis=False) for x in
                                  x_diagonal]
 
                 traces += [
@@ -219,11 +221,12 @@ class Plot(object):
                         y=y,
                         hovertext=['%s' % state.name for idx in enumerate(x)],
                         hoverinfo='text',
-                        mode='lines',
-                        line={
-                            'color': DisorderColor.__getattr__(state.name).value,
-                            'width': 10
-                        }
+                        mode="markers",
+                        marker={
+                            'symbol': 'diamond',
+                            'size': 7,
+                            'color':  DisorderColor.__getattr__(state.name).value,
+                        },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]
 
@@ -242,11 +245,11 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 7.5, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 7.5, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 7.5, lower_bound=True, y_axis=False) for x in
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 6.3, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 6.3, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 6.3, lower_bound=True, y_axis=False) for x in
                                  x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 7.5, lower_bound=False, y_axis=False) for x in
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 6.3, lower_bound=False, y_axis=False) for x in
                                  x_diagonal]
 
                 traces += [
@@ -255,11 +258,12 @@ class Plot(object):
                         y=y,
                         hovertext=['%s' % state.name for idx in enumerate(x)],
                         hoverinfo='text',
-                        mode='lines',
-                        line={
-                            'color': ConservationColor.__getattr__(state.name).value,
-                            'width': 10
-                        }
+                        mode="markers",
+                        marker={
+                            'symbol': 'diamond',
+                            'size': 7,
+                            'color':  ConservationColor.__getattr__(state.name).value,
+                        },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]
 

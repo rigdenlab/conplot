@@ -1,7 +1,7 @@
 import plotly.graph_objects as go
 from werkzeug.utils import cached_property
 from enum import Enum
-from index import DatasetReference, MembraneStates, SecondaryStructureStates
+from index import DatasetReference, MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
 
 
 class MembraneTopologyColor(Enum):
@@ -10,10 +10,21 @@ class MembraneTopologyColor(Enum):
     INSERTED = 'red'
 
 
+class DisorderColor(Enum):
+    DISORDER = 'rgba(120,0,0,0.2)'
+    ORDER = 'rgba(0,120,0,0.2)'
+
+
+class ConservationColor(Enum):
+    CONSERVED = 'rgba(0, 30, 255,0.2)'
+    AVERAGE = 'rgba(0, 130, 255,0.2)'
+    VARIABLE = 'rgba(0, 225, 255,0.2)'
+
+
 class SecondaryStructureColor(Enum):
-    HELIX = 'rgba(0,80,100,0.2)'
-    COIL = 'rgba(100,80,0,0.2)'
-    SHEET = 'rgba(0,100,80,0.2)'
+    HELIX = 'rgba(135, 16, 232, 0.2)'
+    COIL = 'rgba(255, 136, 0,0.2)'
+    SHEET = 'rgba(232, 16, 149,0.2)'
 
 
 class Plot(object):
@@ -129,25 +140,22 @@ class Plot(object):
             }
         )
 
-    def transform_ycoords_diagonal_axis(self, y, distance, lower_bound=False, ratio=1.439):
+    @staticmethod
+    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1.439, y_axis=True):
 
-        factor = ratio * (distance / (1 + ratio ** 2))
-
-        if y is None:
+        if coord is None:
             return None
-        elif lower_bound:
-            return y - factor
+
+        if y_axis:
+            factor = ratio * (distance / (1 + ratio ** 2))
+            if lower_bound:
+                factor = factor * -1
         else:
-            return y + factor
+            factor = distance / (1 + ratio ** 2)
+            if not lower_bound:
+                factor = factor * -1
 
-    def transform_xcoords_diagonal_axis(self, x, distance, lower_bound=False, ratio=1.439):
-
-        factor = distance / (1 + ratio ** 2)
-
-        if lower_bound:
-            return x + factor
-        else:
-            return x - factor
+        return coord + factor
 
     @property
     def ss_traces(self):
@@ -162,20 +170,94 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_ycoords_diagonal_axis(y, 1.4, True) for y in y_diagonal]
-                trace_y_upper = [self.transform_ycoords_diagonal_axis(y, 1.4, False) for y in y_diagonal]
-                trace_x_lower = [self.transform_xcoords_diagonal_axis(x, 1.4, True) for x in x_diagonal]
-                trace_x_upper = [self.transform_xcoords_diagonal_axis(x, 1.4, False) for x in x_diagonal]
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 1.5, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 1.5, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 1.5, lower_bound=True, y_axis=False) for x in
+                                 x_diagonal]
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 1.5, lower_bound=False, y_axis=False) for x in
+                                 x_diagonal]
 
                 traces += [
                     go.Scatter(
                         x=x,
                         y=y,
-                        hovertext=['%s | (%s , %s)' % (ss_element.name, x[idx], y[idx]) for idx, z in enumerate(x)],
+                        hovertext=['%s' % ss_element.name for idx in enumerate(x)],
                         hoverinfo='text',
                         mode='lines',
                         line={
                             'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
+                            'width': 10
+                        }
+                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
+                ]
+
+        yield from traces
+
+    @property
+    def disorder_traces(self):
+
+        traces = []
+
+        if self.disorder_pred is not None:
+            x_diagonal = [idx for idx in range(1, len(self.disorder_pred) + 1)]
+
+            for state in DisorderStates:
+                y_diagonal = [idx if residue == state else None for idx, residue in enumerate(self.disorder_pred, 1)]
+                if not any(y_diagonal):
+                    continue
+
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4.5, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4.5, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4.5, lower_bound=True, y_axis=False) for x in
+                                 x_diagonal]
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4.5, lower_bound=False, y_axis=False) for x in
+                                 x_diagonal]
+
+                traces += [
+                    go.Scatter(
+                        x=x,
+                        y=y,
+                        hovertext=['%s' % state.name for idx in enumerate(x)],
+                        hoverinfo='text',
+                        mode='lines',
+                        line={
+                            'color': DisorderColor.__getattr__(state.name).value,
+                            'width': 10
+                        }
+                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
+                ]
+
+        yield from traces
+
+    @property
+    def conservation_traces(self):
+
+        traces = []
+
+        if self.conserv_pred is not None:
+            x_diagonal = [idx for idx in range(1, len(self.conserv_pred) + 1)]
+
+            for state in ConservationStates:
+                y_diagonal = [idx if residue == state else None for idx, residue in enumerate(self.conserv_pred, 1)]
+                if not any(y_diagonal):
+                    continue
+
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 7.5, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 7.5, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 7.5, lower_bound=True, y_axis=False) for x in
+                                 x_diagonal]
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 7.5, lower_bound=False, y_axis=False) for x in
+                                 x_diagonal]
+
+                traces += [
+                    go.Scatter(
+                        x=x,
+                        y=y,
+                        hovertext=['%s' % state.name for idx in enumerate(x)],
+                        hoverinfo='text',
+                        mode='lines',
+                        line={
+                            'color': ConservationColor.__getattr__(state.name).value,
                             'width': 10
                         }
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
@@ -207,6 +289,12 @@ class Plot(object):
             for trace in self.ss_traces:
                 figure.add_trace(trace)
 
+        if self.disorder_pred is not None and DatasetReference.DISORDER.name in self.active_tracks:
+            for trace in self.disorder_traces:
+                figure.add_trace(trace)
+
+        if self.conserv_pred is not None and DatasetReference.CONSERVATION.name in self.active_tracks:
+            for trace in self.conservation_traces:
+                figure.add_trace(trace)
+
         return figure
-
-

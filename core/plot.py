@@ -11,20 +11,20 @@ class MembraneTopologyColor(Enum):
 
 
 class DisorderColor(Enum):
-    DISORDER = 'rgba(120,0,0,0.2)'
-    ORDER = 'rgba(0,120,0,0.2)'
+    DISORDER = 'rgba(120,0,0,0.4)'
+    ORDER = 'rgba(0,120,0,0.4)'
 
 
 class ConservationColor(Enum):
-    CONSERVED = 'rgba(0, 30, 255,0.2)'
-    AVERAGE = 'rgba(0, 130, 255,0.2)'
-    VARIABLE = 'rgba(0, 225, 255,0.2)'
+    CONSERVED = 'rgba(0, 30, 255,0.4)'
+    AVERAGE = 'rgba(0, 130, 255,0.4)'
+    VARIABLE = 'rgba(0, 225, 255,0.4)'
 
 
 class SecondaryStructureColor(Enum):
-    HELIX = 'rgba(135, 16, 232, 0.2)'
-    COIL = 'rgba(255, 136, 0,0.2)'
-    SHEET = 'rgba(232, 16, 149,0.2)'
+    HELIX = 'rgba(247, 0, 255, 0.4)'
+    COIL = 'rgba(255, 162, 0,0.4)'
+    SHEET = 'rgba(0, 4, 255,0.4)'
 
 
 class Plot(object):
@@ -76,19 +76,33 @@ class Plot(object):
             'V': 'Aromatic'
         }
 
-    @cached_property
-    def spectrum(self):
-        return {
-            1: '#f7fbff',
-            2: '#deebf7',
-            3: '#c6dbef',
-            4: '#9ecae1',
-            5: '#6baed6',
-            6: '#4292c6',
-            7: '#2171b5',
-            8: '#08519c',
-            9: '#08306b'
-        }
+    @property
+    def y_axis_trace(self):
+        return go.Scatter(
+            x=[0 for x in range(*self.axis_range, 10)],
+            y=[y for y in range(*self.axis_range, 10)],
+            hoverinfo='none',
+            mode='lines+markers',
+            marker={
+                'symbol': 'triangle-right',
+                'size': 5,
+                'color': 'black'
+            }
+        )
+
+    @property
+    def x_axis_trace(self):
+        return go.Scatter(
+            x=[x for x in range(*self.axis_range, 10)],
+            y=[0 for y in range(*self.axis_range, 10)],
+            hoverinfo='none',
+            mode='lines+markers',
+            marker={
+                'symbol': 'triangle-up',
+                'size': 5,
+                'color': 'black'
+            }
+        )
 
     @property
     def contact_trace(self):
@@ -143,23 +157,6 @@ class Plot(object):
             },
         )
 
-    @staticmethod
-    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
-
-        if coord is None:
-            return None
-
-        if y_axis:
-            factor = ratio * (distance / (1 + ratio ** 2))
-            if lower_bound:
-                factor = factor * -1
-        else:
-            factor = distance / (1 + ratio ** 2)
-            if not lower_bound:
-                factor = factor * -1
-
-        return coord + factor
-
     @property
     def ss_traces(self):
 
@@ -173,11 +170,11 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 1.5, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 1.5, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 1.5, lower_bound=True, y_axis=False) for x in
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 2, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 2, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 2, lower_bound=True, y_axis=False) for x in
                                  x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 1.5, lower_bound=False, y_axis=False) for x in
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 2, lower_bound=False, y_axis=False) for x in
                                  x_diagonal]
 
                 traces += [
@@ -210,11 +207,11 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4.3, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4.3, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4.3, lower_bound=True, y_axis=False) for x in
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4, lower_bound=True, y_axis=False) for x in
                                  x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4.3, lower_bound=False, y_axis=False) for x in
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4, lower_bound=False, y_axis=False) for x in
                                  x_diagonal]
 
                 traces += [
@@ -247,11 +244,11 @@ class Plot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 6.3, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 6.3, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 6.3, lower_bound=True, y_axis=False) for x in
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, 6, lower_bound=True) for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, 6, lower_bound=False) for y in y_diagonal]
+                trace_x_lower = [self.transform_coords_diagonal_axis(x, 6, lower_bound=True, y_axis=False) for x in
                                  x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 6.3, lower_bound=False, y_axis=False) for x in
+                trace_x_upper = [self.transform_coords_diagonal_axis(x, 6, lower_bound=False, y_axis=False) for x in
                                  x_diagonal]
 
                 traces += [
@@ -286,6 +283,8 @@ class Plot(object):
         )
 
         figure.add_trace(self.contact_trace)
+        figure.add_trace(self.x_axis_trace)
+        figure.add_trace(self.y_axis_trace)
         if self.mem_pred is not None and DatasetReference.MEMBRANE_TOPOLOGY.name in self.active_tracks:
             figure.add_trace(self.get_membrane_trace(MembraneStates.INSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))
@@ -304,3 +303,20 @@ class Plot(object):
                 figure.add_trace(trace)
 
         return figure
+
+    @staticmethod
+    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
+
+        if coord is None:
+            return None
+
+        if y_axis:
+            factor = ratio * (distance / (1 + ratio ** 2))
+            if lower_bound:
+                factor = factor * -1
+        else:
+            factor = distance / (1 + ratio ** 2)
+            if not lower_bound:
+                factor = factor * -1
+
+        return coord + factor

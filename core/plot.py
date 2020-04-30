@@ -100,7 +100,7 @@ class Plot(object):
         else:
             cmap = self.cmap.sort('raw_score', reverse=True, inplace=False)
 
-        contacts = cmap.as_list()[:cmap.sequence.seq_len * self.factor]
+        contacts = cmap.as_list()[:int(round(cmap.sequence.seq_len / self.factor, 0))]
 
         res1_list = [contact[0] for contact in contacts]
         res2_list = [contact[1] for contact in contacts]
@@ -108,7 +108,9 @@ class Plot(object):
         return go.Scatter(
             x=res1_list + res2_list,
             y=res2_list + res1_list,
-            hoverinfo='none',
+            hoverinfo='text',
+            hovertext=['Contact: %s - %s | Confidence: %s' % (contact.res1_seq, contact.res2_seq, contact.raw_score) for
+                       contact in cmap],
             mode='markers',
             marker={
                 'symbol': 'circle',
@@ -188,7 +190,7 @@ class Plot(object):
                         marker={
                             'symbol': 'diamond',
                             'size': 7,
-                            'color':  SecondaryStructureColor.__getattr__(ss_element.name).value,
+                            'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]
@@ -225,7 +227,7 @@ class Plot(object):
                         marker={
                             'symbol': 'diamond',
                             'size': 7,
-                            'color':  DisorderColor.__getattr__(state.name).value,
+                            'color': DisorderColor.__getattr__(state.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]
@@ -262,7 +264,7 @@ class Plot(object):
                         marker={
                             'symbol': 'diamond',
                             'size': 7,
-                            'color':  ConservationColor.__getattr__(state.name).value,
+                            'color': ConservationColor.__getattr__(state.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
                 ]

@@ -238,6 +238,7 @@ def remove_file(*args):
               [Input('plot-button', 'n_clicks'),
                Input('refresh-button', 'n_clicks')],
               [State('track-selection-dropdown', 'value'),
+               State('L-cutoff-input', 'value'),
                State('session-id', 'children')])
 def create_plot(*args):
     trigger = callback_context.triggered
@@ -254,9 +255,9 @@ def create_plot(*args):
     elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
         plot = Plot(session)
         return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, DisplayControlCard(
-            available_tracks=plot.active_tracks)
+            available_tracks=plot.active_tracks, factor=plot.factor)
     else:
-        selected_tracks = args[-2]
         plot = Plot(session)
-        plot.active_tracks = selected_tracks
+        plot.factor = args[-2]
+        plot.active_tracks = args[-3]
         return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, no_update

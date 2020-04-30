@@ -71,13 +71,14 @@ def UploadCard(dataset):
     )
 
 
-def DisplayControlCard(available_tracks=None):
+def DisplayControlCard(available_tracks=None, factor=2):
     if available_tracks is None:
         return dbc.Card([
             dbc.CardBody("Need to create a plot first!"),
             html.Div([
                 dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
-                dcc.Dropdown(id='track-selection-dropdown')
+                dcc.Dropdown(id='track-selection-dropdown'),
+                dbc.Input(id='L-cutoff-input'),
             ], style={'display': 'none'})
         ],
             color="danger",
@@ -95,7 +96,7 @@ def DisplayControlCard(available_tracks=None):
                                     [
                                         dbc.InputGroupAddon("L /", addon_type="prepend"),
                                         dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                                  placeholder='2'),
+                                                  value=factor),
                                     ],
                                 ),
                             ], outline=False),

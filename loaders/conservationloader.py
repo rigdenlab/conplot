@@ -1,6 +1,6 @@
-from .membranetopologyloader import MembraneTopologyLoader
-from index.formatindex import ConservationFormats
-from index import DatasetReference
+from loaders import DatasetReference
+from parsers import ConservationFormats
+from loaders.membranetopologyloader import MembraneTopologyLoader
 
 
 class ConservationLoader(MembraneTopologyLoader):

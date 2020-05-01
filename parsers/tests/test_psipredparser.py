@@ -1,6 +1,5 @@
 import unittest
-from parsers.psipredparser import PsipredParser
-from index.statesindex import SecondaryStructureStates
+from parsers import PsipredParser, SecondaryStructureStates
 
 
 class PsipredParserTestCase(unittest.TestCase):

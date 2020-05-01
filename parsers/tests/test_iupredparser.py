@@ -1,6 +1,5 @@
 import unittest
-from parsers.iupredparser import IupredParser
-from index.statesindex import DisorderStates
+from parsers import IupredParser, DisorderStates
 
 
 class IupredParserTestCase(unittest.TestCase):

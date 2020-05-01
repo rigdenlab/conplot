@@ -1,7 +1,7 @@
-from .loader import Loader
 import base64
-from index.formatindex import MembraneFormats
-from index import DatasetReference
+from loaders import DatasetReference
+from loaders.loader import Loader
+from parsers import MembraneFormats
 
 
 class MembraneTopologyLoader(Loader):
@@ -37,7 +37,7 @@ class MembraneTopologyLoader(Loader):
 
     def parse_text(self, text):
 
-        parser = self.parser_formats.__getattr__(self.input_format).value(text)
+        parser = self.parser_formats.__dict__[self.input_format](text)
         parser.parse()
 
         if not parser.error:
@@ -55,7 +55,7 @@ class MembraneTopologyLoader(Loader):
         decoded = decoded.decode()
         contents = decoded
 
-        parser = self.parser_formats.__getattr__(self.input_format).value(contents)
+        parser = self.parser_formats.__dict__[self.input_format](contents)
         parser.parse()
 
         if not parser.error:

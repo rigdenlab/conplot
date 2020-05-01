@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-
+from core import PathIndex
 
 def PlotPlaceHolder():
     return dbc.Jumbotron(
@@ -8,7 +8,7 @@ def PlotPlaceHolder():
             dbc.Container(
                 [
                     html.Img(
-                        src='/conkit-web/home/assets/conkit_small_logo.png',
+                        src=PathIndex.CONKIT_LOGO.value,
                         style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}
                     )
                 ],

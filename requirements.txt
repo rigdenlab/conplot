@@ -12,3 +12,7 @@ dash_html_components~=1.0.3
 flask_caching~=1.8.0
 gunicorn~=20.0.4
 nbformat~=5.0.6
+werkzeug~=1.0.1
+flask~=1.1.2
+psutil~=5.7.0
+redis~=3.5.0

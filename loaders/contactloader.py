@@ -1,7 +1,7 @@
 import conkit.io
-from .loader import Loader
 import base64
-from index import DatasetReference
+from loaders.loader import Loader
+from loaders import DatasetReference
 
 
 class ContactLoader(Loader):

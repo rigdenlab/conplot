@@ -1,8 +1,7 @@
+from core import PathIndex
 import dash_html_components as html
 from components import NavBar, Header
-from index import PathIndex
 import dash_bootstrap_components as dbc
-from callbacks import contact_callbacks
 
 
 def Body():

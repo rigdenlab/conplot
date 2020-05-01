@@ -1,11 +1,5 @@
-from .contactloader import ContactLoader
-from .sequenceloader import SequenceLoader
-from .membranetopologyloader import MembraneTopologyLoader
-from .secondarystructureloader import SecondaryStructureLoader
-from .disorderloader import DisorderLoader
-from .conservationloader import ConservationLoader
+from loaders import ContactLoader, SequenceLoader,  MembraneTopologyLoader, SecondaryStructureLoader, DisorderLoader, ConservationLoader, DatasetReference
 from components import MismatchModal, MissingInput_Modal
-from index import DatasetReference
 
 
 class Session(object):

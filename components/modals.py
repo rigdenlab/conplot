@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from index import DatasetReference
+from loaders import DatasetReference
 
 
 def MismatchModal(*args):

@@ -1,15 +1,12 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from index import PathIndex
-
-GITHUB_LOGO = '/conkit-web/home/assets/github_logo.png'
-CONKIT_LOGO = '/conkit-web/home/assets/conkit_small_logo.png'
+from core import PathIndex
 
 
 def github_link():
     return dbc.Row(
         [
-            dbc.Col(html.A(html.Img(src=GITHUB_LOGO, height="30px"), href=PathIndex.GITHUB.value)),
+            dbc.Col(html.A(html.Img(src=PathIndex.GITHUB_LOGO.value, height="30px"), href=PathIndex.GITHUB.value)),
         ],
         no_gutters=True,
         className="ml-auto flex-nowrap mt-3 mt-md-0",
@@ -23,7 +20,7 @@ def Header():
             html.A(
                 dbc.Row(
                     [
-                        dbc.Col(html.Img(src=CONKIT_LOGO, height="40px")),
+                        dbc.Col(html.Img(src=PathIndex.CONKIT_LOGO.value, height="40px")),
                         dbc.Col(dbc.NavbarBrand('Conkit-Web', className="ml-2")),
                     ],
                     align="center",

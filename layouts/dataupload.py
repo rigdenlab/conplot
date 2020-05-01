@@ -1,9 +1,8 @@
+from core import PathIndex
 import dash_html_components as html
 from components import NavBar, Header, UploadCard, PlotPlaceHolder, DisplayControlCard, ContactUploadCard, WarningsCard, \
     HelpCard
-from index import PathIndex
 import dash_bootstrap_components as dbc
-from callbacks import dataupload_callbacks
 
 
 def DataUpload(session_id):
@@ -100,7 +99,7 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button(html.I(className="fas fa-cog fa-2x"), outline=True, color='dark',
-                                           id='display-control-head', style={'height': '13em', 'width': '100%'})),
+                                           id='display-control-head', block=True)),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
                                     DisplayControlCard()
@@ -110,8 +109,7 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button(html.I(className="fas fa-exclamation-circle fa-2x"), outline=True,
-                                           color='dark', block=True, id='warning-head',
-                                           style={'height': '13em', 'width': '100%'})),
+                                           color='dark', block=True, id='warning-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
                                     WarningsCard()
@@ -121,8 +119,7 @@ def DataUpload(session_id):
                         dbc.ListGroupItem([
                             dbc.ListGroupItemHeading(
                                 dbc.Button(html.I(className="fas fa-question-circle fa-2x"), outline=True, color='dark',
-                                           block=True, style={'height': '13em', 'width': '100%'},
-                                           id='help-head')),
+                                           block=True, id='help-head')),
                             dbc.ListGroupItemText(
                                 dbc.Collapse([
                                     HelpCard()

@@ -1,3 +1,4 @@
+import os
 import dash
 import uuid
 from dash.dash import no_update
@@ -49,6 +50,7 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'redis',
+    'CACHE_REDIS_URL' : os.environ.get('REDIS_URL')
 
 })
 app.layout = serve_layout

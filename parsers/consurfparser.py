@@ -1,5 +1,5 @@
-from .parser import Parser
-from index.statesindex import ConservationStates
+from parsers.parser import Parser
+from parsers import ConservationStates
 
 
 class ConsurfParser(Parser):

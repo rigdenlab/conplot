@@ -1,7 +1,8 @@
 import plotly.graph_objects as go
 from werkzeug.utils import cached_property
 from enum import Enum
-from index import DatasetReference, MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
+from loaders import DatasetReference
+from parsers import MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
 
 
 class MembraneTopologyColor(Enum):

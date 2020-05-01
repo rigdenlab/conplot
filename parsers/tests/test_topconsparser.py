@@ -1,6 +1,5 @@
 import unittest
-from parsers.topconsparser import TopconsParser
-from index.statesindex import MembraneStates
+from parsers import TopconsParser, MembraneStates
 
 
 class TopconsParserTestCase(unittest.TestCase):

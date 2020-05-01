@@ -1,5 +1,5 @@
+from core import PathIndex
 import dash_html_components as html
-from index import PathIndex
 from components import NavBar, Header
 
 

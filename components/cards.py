@@ -1,10 +1,8 @@
+import conkit.io
+import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from .uploadbutton import UploadButton
-import conkit.io
-from .alerts import FilenameAlert
-import dash_core_components as dcc
-from index import DatasetReference
+from components import UploadButton, FilenameAlert
 
 
 def ContactUploadCard():

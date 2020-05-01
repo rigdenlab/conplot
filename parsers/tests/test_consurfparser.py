@@ -1,6 +1,5 @@
 import unittest
-from parsers.consurfparser import ConsurfParser
-from index.statesindex import ConservationStates
+from parsers import ConsurfParser, ConservationStates
 
 
 class ConsurfParserTestCase(unittest.TestCase):

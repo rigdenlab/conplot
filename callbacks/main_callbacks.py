@@ -10,4 +10,4 @@ def display_page(url, session_id):
     elif url == PathIndex.PLOT.value:
         return DataUpload(session_id)
     else:
-        return noPage()
+        return noPage(url)

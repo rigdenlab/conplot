@@ -24,10 +24,10 @@ class ContextReference(Enum):
     MEM_ALERT_OPEN = 'membranetopology-filename-alert.is_open'
 
 
-def noPage():
+def noPage(*args, **kwargs):
     from layouts.nopage import noPage
 
-    return noPage()
+    return noPage(*args, **kwargs)
 
 
 def Home(*args, **kwargs):

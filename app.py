@@ -43,15 +43,13 @@ def initiate_session():
 # ==============================================================
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_AWESOME.value],
-                url_base_pathname=PathIndex.HOME.value)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_AWESOME.value])
 app.title = 'Conkit-Web'
 server = app.server
 app.config.suppress_callback_exceptions = True
 cache = Cache(app.server, config={
-    'CACHE_TYPE': 'filesystem',
-    'CACHE_DIR': 'cache-directory',
-    'CACHE_THRESHOLD': 2
+    'CACHE_TYPE': 'redis',
+
 })
 app.layout = serve_layout
 

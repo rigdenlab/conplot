@@ -50,7 +50,7 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'redis',
-    'REDIS_URL' : os.environ.get('REDISCLOUD_URL')
+    'CACHE_REDIS_URL' : os.environ.get('REDIS_URL')
 
 })
 app.layout = serve_layout

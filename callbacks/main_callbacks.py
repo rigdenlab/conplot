@@ -1,14 +1,8 @@
-from dash.dependencies import Input, Output, State
-from app import app, cache
+from core import PathIndex
 from layouts import noPage, Home, DataUpload, Contact
-from index import PathIndex
 
 
-@app.callback(Output('page-content', 'children'),
-              [Input('url', 'pathname'),
-               Input('plot-hidden-div', 'children')],
-              [State('session-id', 'children')])
-def display_page(url, url_plot, session_id):
+def display_page(url, session_id):
     if url == PathIndex.HOME.value or url == PathIndex.ROOT.value:
         return Home(session_id)
     elif url == PathIndex.CONTACT.value:
@@ -16,4 +10,4 @@ def display_page(url, url_plot, session_id):
     elif url == PathIndex.PLOT.value:
         return DataUpload(session_id)
     else:
-        return noPage()
+        return noPage(url)

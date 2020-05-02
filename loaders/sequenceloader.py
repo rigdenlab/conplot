@@ -1,10 +1,10 @@
+import base64
 from Bio import SeqIO
 from Bio.Alphabet.IUPAC import protein
-from io import StringIO
-import base64
-from .loader import Loader
-from index import DatasetReference
 from conkit.core import Sequence
+from io import StringIO
+from loaders.loader import Loader
+from loaders import DatasetReference
 
 
 class SequenceLoader(Loader):

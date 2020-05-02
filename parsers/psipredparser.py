@@ -1,6 +1,5 @@
-from .parser import Parser
-from index.statesindex import SecondaryStructureStates
-
+from parsers import SecondaryStructureStates
+from parsers.parser import Parser
 
 class PsipredParser(Parser):
 

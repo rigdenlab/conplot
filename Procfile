@@ -1,1 +1,1 @@
-web: gunicorn conkit-web:server
+web: gunicorn app:server

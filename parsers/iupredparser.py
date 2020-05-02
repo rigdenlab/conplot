@@ -1,6 +1,5 @@
-from .parser import Parser
-from index.statesindex import DisorderStates
-
+from parsers import DisorderStates
+from parsers.parser import Parser
 
 class IupredParser(Parser):
 

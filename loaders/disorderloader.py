@@ -1,6 +1,6 @@
-from .membranetopologyloader import MembraneTopologyLoader
-from index.formatindex import DisorderFormats
-from index import DatasetReference
+from loaders import DatasetReference
+from loaders.membranetopologyloader import MembraneTopologyLoader
+from parsers import DisorderFormats
 
 
 class DisorderLoader(MembraneTopologyLoader):

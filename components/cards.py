@@ -1,10 +1,8 @@
+import conkit.io
+import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from .uploadbutton import UploadButton
-import conkit.io
-from .alerts import FilenameAlert
-import dash_core_components as dcc
-from index import DatasetReference
+from components import UploadButton, FilenameAlert
 
 
 def ContactUploadCard():
@@ -71,13 +69,14 @@ def UploadCard(dataset):
     )
 
 
-def DisplayControlCard(available_tracks=None):
+def DisplayControlCard(available_tracks=None, factor=2):
     if available_tracks is None:
         return dbc.Card([
             dbc.CardBody("Need to create a plot first!"),
             html.Div([
                 dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
-                dcc.Dropdown(id='track-selection-dropdown')
+                dcc.Dropdown(id='track-selection-dropdown'),
+                dbc.Input(id='L-cutoff-input'),
             ], style={'display': 'none'})
         ],
             color="danger",
@@ -95,7 +94,7 @@ def DisplayControlCard(available_tracks=None):
                                     [
                                         dbc.InputGroupAddon("L /", addon_type="prepend"),
                                         dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                                  placeholder='2'),
+                                                  value=factor),
                                     ],
                                 ),
                             ], outline=False),

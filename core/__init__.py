@@ -4,7 +4,6 @@ from enum import Enum
 
 class PathIndex(Enum):
     """An enumerator with an index of all the paths in conkit-web"""
-    # ROOT = 'https://random-cheesecake.herokuapp.com/'
     ROOT = '/'
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')

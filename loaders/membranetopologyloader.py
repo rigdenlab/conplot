@@ -51,8 +51,7 @@ class MembraneTopologyLoader(Loader):
     def parse_file(self):
 
         content_type, content_string = self.raw_file.split(',')
-        decoded = base64.b64decode(content_string)
-        decoded = decoded.decode()
+        decoded = base64.b64decode(content_string).decode()
         contents = decoded
 
         parser = self.parser_formats.__dict__[self.input_format](contents)

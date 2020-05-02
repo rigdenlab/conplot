@@ -2,6 +2,7 @@ import conkit.io
 import base64
 from loaders.loader import Loader
 from loaders import DatasetReference
+from io import StringIO
 
 
 class ContactLoader(Loader):
@@ -25,9 +26,7 @@ class ContactLoader(Loader):
 
     def parse_text(self, text):
 
-        text = text.split('\n')
-
-        self.cmap = self.parse_map(text, self.input_format)
+        self.cmap = self.parse_map(StringIO(text), self.input_format)
 
         if self.valid:
             self.valid_text = True
@@ -36,9 +35,9 @@ class ContactLoader(Loader):
 
     def parse_file(self):
         content_type, content_string = self.raw_file.split(',')
-        decoded = base64.b64decode(content_string)
-        contents = str(decoded)
-        self.cmap = self.parse_map(contents.split('\\n'), self.input_format)
+        decoded = base64.b64decode(content_string).decode()
+
+        self.cmap = self.parse_map(StringIO(decoded), self.input_format)
         if self.valid:
             self.valid_file = True
         else:
@@ -68,10 +67,10 @@ class ContactLoader(Loader):
         return DatasetReference.CONTACT_MAP
 
     @staticmethod
-    def parse_map(text, cmap_format):
+    def parse_map(fhandle, cmap_format):
         try:
             parser = conkit.io.PARSER_CACHE.import_class(cmap_format)()
-            cmap = parser.read(f_handle=text)
+            cmap = parser.read(f_handle=fhandle)
             return cmap.top_map
         except:
             return None

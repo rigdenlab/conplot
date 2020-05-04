@@ -1,5 +1,5 @@
 import unittest
-from parsers import PsipredParser, SecondaryStructureStates
+from parsers import PsipredParser, SecondaryStructureStates, InvalidFormat
 
 
 class PsipredParserTestCase(unittest.TestCase):
@@ -33,12 +33,9 @@ class PsipredParserTestCase(unittest.TestCase):
             SecondaryStructureStates.HELIX.value,
         ]
 
-        parser = PsipredParser(dummy_prediction)
-        parser.parse()
-        self.assertFalse(parser.error)
-        self.assertIsNotNone(parser.output)
-        self.assertEquals(10, len(parser.output))
-        self.assertListEqual(expected, parser.output)
+        output = PsipredParser(dummy_prediction)
+        self.assertEquals(10, len(output))
+        self.assertListEqual(expected, output)
 
     def test_2(self):
         dummy_prediction = """# PSIPRED VFORMAT (PSIPRED V4.0)
@@ -55,7 +52,5 @@ class PsipredParserTestCase(unittest.TestCase):
           10 L H   0.021  0.984  0.000
 
 """
-        parser = PsipredParser(dummy_prediction)
-        parser.parse()
-        self.assertTrue(parser.error)
-        self.assertIsNone(parser.output)
+        with self.assertRaises(InvalidFormat):
+            output = PsipredParser(dummy_prediction)

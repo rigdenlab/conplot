@@ -1,5 +1,5 @@
 import unittest
-from parsers import IupredParser, DisorderStates
+from parsers import IupredParser, DisorderStates, InvalidFormat
 
 
 class IupredParserTestCase(unittest.TestCase):
@@ -37,12 +37,9 @@ class IupredParserTestCase(unittest.TestCase):
             DisorderStates.ORDER.value,
         ]
 
-        parser = IupredParser(dummy_prediction)
-        parser.parse()
-        self.assertFalse(parser.error)
-        self.assertIsNotNone(parser.output)
-        self.assertEquals(10, len(parser.output))
-        self.assertListEqual(expected, parser.output)
+        output = IupredParser(dummy_prediction)
+        self.assertEquals(10, len(output))
+        self.assertListEqual(expected, output)
 
     def test_2(self):
         dummy_prediction = """# IUPred2A: context-dependent prediction of protein disorder as a function of redox state and protein binding
@@ -64,10 +61,8 @@ class IupredParserTestCase(unittest.TestCase):
 
 """
 
-        parser = IupredParser(dummy_prediction)
-        parser.parse()
-        self.assertTrue(parser.error)
-        self.assertIsNone(parser.output)
+        with self.assertRaises(InvalidFormat):
+            output = IupredParser(dummy_prediction)
 
     def test_3(self):
         dummy_prediction = """# IUPred2A: context-dependent prediction of protein disorder as a function of redox state and protein binding
@@ -79,7 +74,5 @@ class IupredParserTestCase(unittest.TestCase):
     
     """
 
-        parser = IupredParser(dummy_prediction)
-        parser.parse()
-        self.assertTrue(parser.error)
-        self.assertIsNone(parser.output)
+        with self.assertRaises(InvalidFormat):
+            output = IupredParser(dummy_prediction)

@@ -1,30 +1,26 @@
-from parsers import MembraneStates
-from parsers.parser import Parser
+from parsers import MembraneStates, InvalidFormat
 
 
-class TopconsParser(Parser):
+def TopconsParser(input):
+    contents = input.split('\n')
 
-    def __init__(self, input):
-        super(TopconsParser, self).__init__(input)
+    try:
+        topcons_prediction = contents[contents.index('TOPCONS predicted topology:') + 1].rstrip()
+    except ValueError as e:
+        raise InvalidFormat
 
-    def parse(self):
-        contents = self.input.split('\n')
+    output = []
+    for residue in topcons_prediction.rstrip().lstrip():
+        if residue == 'i':
+            output.append(MembraneStates.INSIDE.value)
+        elif residue == 'o':
+            output.append(MembraneStates.OUTSIDE.value)
+        elif residue == 'M':
+            output.append(MembraneStates.INSERTED.value)
+        else:
+            raise InvalidFormat('Invalid residue topology {}'.format(residue))
 
-        try:
-            topcons_prediction = contents[contents.index('TOPCONS predicted topology:') + 1].rstrip()
-        except ValueError as e:
-            self.error = True
-            return
-
-        self.output = []
-        for residue in topcons_prediction.rstrip().lstrip():
-            if residue == 'i':
-                self.output.append(MembraneStates.INSIDE.value)
-            elif residue == 'o':
-                self.output.append(MembraneStates.OUTSIDE.value)
-            elif residue == 'M':
-                self.output.append(MembraneStates.INSERTED.value)
-            else:
-                self.error = True
-                self.output = None
-                return
+    if not output:
+        raise InvalidFormat('Unable to parse prediction in topcons file')
+    else:
+        return output

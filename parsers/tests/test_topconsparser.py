@@ -1,5 +1,5 @@
 import unittest
-from parsers import TopconsParser, MembraneStates
+from parsers import TopconsParser, MembraneStates, InvalidFormat
 
 
 class TopconsParserTestCase(unittest.TestCase):
@@ -67,12 +67,9 @@ Predicted TOPCONS reliability (left column=sequence position; right column=relia
             MembraneStates.INSERTED.value,
         ]
 
-        parser = TopconsParser(dummy_prediction)
-        parser.parse()
-        self.assertFalse(parser.error)
-        self.assertIsNotNone(parser.output)
-        self.assertEquals(10, len(parser.output))
-        self.assertListEqual(expected, parser.output)
+        output = TopconsParser(dummy_prediction)
+        self.assertEquals(10, len(output))
+        self.assertListEqual(expected, output)
 
     def test_2(self):
         dummy_prediction = """##############################################################################
@@ -123,7 +120,5 @@ Predicted TOPCONS reliability (left column=sequence position; right column=relia
 ##############################################################################
 
 """
-        parser = TopconsParser(dummy_prediction)
-        parser.parse()
-        self.assertTrue(parser.error)
-        self.assertIsNone(parser.output)
+        with self.assertRaises(InvalidFormat):
+            output = TopconsParser(dummy_prediction)

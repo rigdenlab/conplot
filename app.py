@@ -1,5 +1,4 @@
 import os
-import importlib
 from enum import Enum
 import dash
 import utils
@@ -10,7 +9,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 from flask_caching import Cache
 from dash.dependencies import Input, Output, State
-from loaders import DatasetReference
+from loaders import DatasetReference, SequenceLoader, Loader
 from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered
 
 
@@ -20,12 +19,12 @@ from utils import initiate_session, PathIndex, compress_session, decompress_sess
 
 
 class LoaderReference(Enum):
-    CONTACT_MAP = importlib.import_module('loaders').__dict__['ContactLoader']
-    SEQUENCE = importlib.import_module('loaders').__dict__['SequenceLoader']
-    MEMBRANE_TOPOLOGY = importlib.import_module('loaders').__dict__['MembraneTopologyLoader']
-    SECONDARY_STRUCTURE = importlib.import_module('loaders').__dict__['SecondaryStructureLoader']
-    CONSERVATION = importlib.import_module('loaders').__dict__['ConservationLoader']
-    DISORDER = importlib.import_module('loaders').__dict__['DisorderLoader']
+    CONTACT_MAP = Loader
+    SEQUENCE = SequenceLoader
+    MEMBRANE_TOPOLOGY = Loader
+    SECONDARY_STRUCTURE = Loader
+    CONSERVATION = Loader
+    DISORDER = Loader
 
 
 def serve_layout():
@@ -44,15 +43,13 @@ def upload_dataset(*args):
     dataset = args.pop(0)
     session_compressed = cache.get(session_id)
     session = decompress_session(session_compressed)
-    loader = LoaderReference.__dict__[dataset.name](*args)
+    data, *layout_states = LoaderReference.__dict__[dataset.name](*args)
 
     if not ensure_triggered(callback_context.triggered) or session is None:
-        return [no_update for x in loader.layout_states]
+        return [no_update for x in layout_states]
 
-    loader.load()
-    session[dataset.value] = loader.data
-    layout_states = loader.layout_states
-    del loader
+    session[dataset.value] = data
+    layout_states = layout_states
     session_compressed = compress_session(session)
     cache.set(session_id, session_compressed)
     return layout_states

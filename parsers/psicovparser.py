@@ -1,15 +1,11 @@
-from parsers.parser import Parser
+from parsers import InvalidFormat
 from operator import itemgetter
 
 
-class PsicovParser(Parser):
+def PsicovParser(input):
 
-    def __init__(self, input):
-        super(PsicovParser, self).__init__(input)
-
-    def parse(self):
-        contents = self.input.split('\n')
-        self.output = []
+        contents = input.split('\n')
+        output = []
 
         for line in contents:
 
@@ -19,11 +15,10 @@ class PsicovParser(Parser):
                 continue
             elif line[0].isdigit():
                 if abs(int(line[0]) - int(line[1])) >= 5:
-                    self.output.append((int(line[0]), int(line[1]), float(line[4])))
+                    output.append((int(line[0]), int(line[1]), float(line[4])))
 
-        if not self.output:
-            self.error = True
-            self.output = None
+        if not output:
+            raise InvalidFormat('Unable to parse contacts')
         else:
-            self.output = sorted(self.output, key=itemgetter(2), reverse=True)
-            self.output = tuple(self.output)
+            output = sorted(output, key=itemgetter(2), reverse=True)
+            return tuple(output)

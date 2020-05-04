@@ -1,6 +1,10 @@
 from enum import Enum
 
 
+class InvalidFormat(Exception):
+    pass
+
+
 def ConsurfParser(*args, **kwargs):
     from parsers.consurfparser import ConsurfParser
 
@@ -31,20 +35,14 @@ def IupredParser(*args, **kwargs):
     return IupredParser(*args, **kwargs)
 
 
-class MembraneFormats(Enum):
+class ParserFormats(Enum):
     TOPCONS = TopconsParser
-
-
-class ConservationFormats(Enum):
     CONSURF = ConsurfParser
-
-
-class SecondaryStructureFormats(Enum):
     PSIPRED = PsipredParser
-
-
-class DisorderFormats(Enum):
     IUPRED = IupredParser
+    PSICOV = PsicovParser
+    METAPSICOV = PsicovParser
+    NEBCON = PsicovParser
 
 
 class ContactFormats(Enum):

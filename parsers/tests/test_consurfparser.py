@@ -1,5 +1,5 @@
 import unittest
-from parsers import ConsurfParser, ConservationStates
+from parsers import ConsurfParser, ConservationStates, InvalidFormat
 
 
 class ConsurfParserTestCase(unittest.TestCase):
@@ -104,12 +104,9 @@ or the confidence interval for the estimated score is equal to- or larger than- 
             ConservationStates.AVERAGE.value,
         ]
 
-        parser = ConsurfParser(dummy_prediction)
-        parser.parse()
-        self.assertFalse(parser.error)
-        self.assertIsNotNone(parser.output)
-        self.assertEquals(37, len(parser.output))
-        self.assertListEqual(expected, parser.output)
+        output = ConsurfParser(dummy_prediction)
+        self.assertEquals(37, len(output))
+        self.assertListEqual(expected, output)
 
     def test_2(self):
         dummy_prediction = """	 Amino Acid Conservation Scores
@@ -126,7 +123,5 @@ or the confidence interval for the estimated score is equal to- or larger than- 
 - MSA DATA: The number of aligned sequences having an amino acid (non-gapped) from the overall number of sequences at each position.
 - RESIDUE VARIETY: The residues variety at each position of the multiple sequence alignment.
 """
-        parser = ConsurfParser(dummy_prediction)
-        parser.parse()
-        self.assertTrue(parser.error)
-        self.assertIsNone(parser.output)
+        with self.assertRaises(InvalidFormat):
+            output = ConsurfParser(dummy_prediction)

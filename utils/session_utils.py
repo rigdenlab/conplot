@@ -1,6 +1,6 @@
 import uuid
 import json
-from utils import decompressBytesToString, compressStringToBytes
+from utils import decompressBytesToString, compressStringToBytes, SessionTimeOut
 
 
 def initiate_session():
@@ -12,6 +12,8 @@ def initiate_session():
 
 def decompress_session(compressed_session):
     decompressed = decompressBytesToString(compressed_session)
+    if decompressed is None:
+        raise SessionTimeOut
     return json.loads(decompressed)
 
 

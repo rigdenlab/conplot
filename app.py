@@ -10,8 +10,8 @@ import dash_html_components as html
 from flask_caching import Cache
 from dash.dependencies import Input, Output, State
 from loaders import DatasetReference, SequenceLoader, Loader
-from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered
-
+from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered, SessionTimeOut
+import gc
 
 # ==============================================================
 # Define functions of general use
@@ -54,6 +54,7 @@ def upload_dataset(*args):
     cache.set(session_id, session_compressed)
     del data
     del session
+    gc.collect()
     return layout_states
 
 

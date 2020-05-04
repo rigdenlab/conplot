@@ -52,6 +52,8 @@ def upload_dataset(*args):
     layout_states = layout_states
     session_compressed = compress_session(session)
     cache.set(session_id, session_compressed)
+    del data
+    del session
     return layout_states
 
 

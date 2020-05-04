@@ -1,8 +1,8 @@
-import conkit.io
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from components import UploadButton, FilenameAlert
+from parsers import ContactFormats
 
 
 def ContactUploadCard():
@@ -20,7 +20,7 @@ def ContactUploadCard():
                                     dbc.Select(
                                         id="contact-format-select",
                                         options=[{"label": map_format, "value": map_format} for map_format in
-                                                 conkit.io.CONTACT_FILE_PARSERS.keys()]
+                                                 ContactFormats.__dict__.keys() if '_' not in map_format]
                                     ),
                                     dbc.InputGroupAddon("Format", addon_type="append"),
                                 ]

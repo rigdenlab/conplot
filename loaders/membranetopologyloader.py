@@ -10,7 +10,6 @@ class MembraneTopologyLoader(Loader):
 
     def __init__(self, *args, **kwargs):
         super(MembraneTopologyLoader, self).__init__(*args, **kwargs)
-        self.input_format = 'TOPCONS'
 
     @property
     def valid(self):

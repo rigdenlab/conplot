@@ -19,6 +19,12 @@ def PsipredParser(*args, **kwargs):
     return PsipredParser(*args, **kwargs)
 
 
+def PsicovParser(*args, **kwargs):
+    from parsers.psicovparser import PsicovParser
+
+    return PsicovParser(*args, **kwargs)
+
+
 def IupredParser(*args, **kwargs):
     from parsers.iupredparser import IupredParser
 
@@ -39,6 +45,12 @@ class SecondaryStructureFormats(Enum):
 
 class DisorderFormats(Enum):
     IUPRED = IupredParser
+
+
+class ContactFormats(Enum):
+    PSICOV = PsicovParser
+    METAPSICOV = PsicovParser
+    NEBCON = PsicovParser
 
 
 class MembraneStates(Enum):

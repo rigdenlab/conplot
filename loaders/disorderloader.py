@@ -9,7 +9,6 @@ class DisorderLoader(MembraneTopologyLoader):
 
     def __init__(self, *args, **kwargs):
         super(DisorderLoader, self).__init__(*args, **kwargs)
-        self.input_format = 'IUPRED'
 
     @property
     def datatype(self):

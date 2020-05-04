@@ -9,7 +9,6 @@ class ConservationLoader(MembraneTopologyLoader):
 
     def __init__(self, *args, **kwargs):
         super(ConservationLoader, self).__init__(*args, **kwargs)
-        self.input_format = 'CONSURF'
 
     @property
     def datatype(self):

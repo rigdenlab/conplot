@@ -51,9 +51,11 @@ def upload_dataset(*args):
 
     loader.load()
     session[dataset.value] = loader.data
+    layout_states = loader.layout_states
+    del loader
     session_compressed = compress_session(session)
     cache.set(session_id, session_compressed)
-    return loader.layout_states
+    return layout_states
 
 
 # ==============================================================
@@ -167,6 +169,8 @@ def upload_sequence(*args):
               [State('upload-membranetopology', 'contents'),
                State('session-id', 'children')])
 def upload_membranetopology(*args):
+    args = list(args)
+    args.insert(2, 'TOPCONS')
     return upload_dataset(DatasetReference.MEMBRANE_TOPOLOGY, *args)
 
 
@@ -178,6 +182,8 @@ def upload_membranetopology(*args):
               [State('upload-secondarystructure', 'contents'),
                State('session-id', 'children')])
 def upload_secondarystructure(*args):
+    args = list(args)
+    args.insert(2, 'PSIPRED')
     return upload_dataset(DatasetReference.SECONDARY_STRUCTURE, *args)
 
 
@@ -189,6 +195,8 @@ def upload_secondarystructure(*args):
               [State('upload-disorder', 'contents'),
                State('session-id', 'children')])
 def upload_disorder(*args):
+    args = list(args)
+    args.insert(2, 'IUPRED')
     return upload_dataset(DatasetReference.DISORDER, *args)
 
 
@@ -200,6 +208,8 @@ def upload_disorder(*args):
               [State('upload-conservation', 'contents'),
                State('session-id', 'children')])
 def upload_conservation(*args):
+    args = list(args)
+    args.insert(2, 'CONSURF')
     return upload_dataset(DatasetReference.CONSERVATION, *args)
 
 

@@ -9,7 +9,6 @@ class SecondaryStructureLoader(MembraneTopologyLoader):
 
     def __init__(self, *args, **kwargs):
         super(SecondaryStructureLoader, self).__init__(*args, **kwargs)
-        self.input_format = 'PSIPRED'
 
     @property
     def datatype(self):

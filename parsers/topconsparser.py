@@ -19,11 +19,11 @@ class TopconsParser(Parser):
         self.output = []
         for residue in topcons_prediction.rstrip().lstrip():
             if residue == 'i':
-                self.output.append(MembraneStates.INSIDE)
+                self.output.append(MembraneStates.INSIDE.value)
             elif residue == 'o':
-                self.output.append(MembraneStates.OUTSIDE)
+                self.output.append(MembraneStates.OUTSIDE.value)
             elif residue == 'M':
-                self.output.append(MembraneStates.INSERTED)
+                self.output.append(MembraneStates.INSERTED.value)
             else:
                 self.error = True
                 self.output = None

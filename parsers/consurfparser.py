@@ -21,11 +21,11 @@ class ConsurfParser(Parser):
                 score = int(line[3][0])
 
             if score <= 3:
-                self.output.append(ConservationStates.VARIABLE)
+                self.output.append(ConservationStates.VARIABLE.value)
             elif score < 7:
-                self.output.append(ConservationStates.AVERAGE)
+                self.output.append(ConservationStates.AVERAGE.value)
             elif score >= 7:
-                self.output.append(ConservationStates.CONSERVED)
+                self.output.append(ConservationStates.CONSERVED.value)
 
         if not self.output:
             self.error = True

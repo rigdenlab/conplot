@@ -25,16 +25,16 @@ class IupredParserTestCase(unittest.TestCase):
 """
 
         expected = [
-            DisorderStates.DISORDER,
-            DisorderStates.ORDER,
-            DisorderStates.DISORDER,
-            DisorderStates.DISORDER,
-            DisorderStates.ORDER,
-            DisorderStates.ORDER,
-            DisorderStates.DISORDER,
-            DisorderStates.DISORDER,
-            DisorderStates.ORDER,
-            DisorderStates.ORDER,
+            DisorderStates.DISORDER.value,
+            DisorderStates.ORDER.value,
+            DisorderStates.DISORDER.value,
+            DisorderStates.DISORDER.value,
+            DisorderStates.ORDER.value,
+            DisorderStates.ORDER.value,
+            DisorderStates.DISORDER.value,
+            DisorderStates.DISORDER.value,
+            DisorderStates.ORDER.value,
+            DisorderStates.ORDER.value,
         ]
 
         parser = IupredParser(dummy_prediction)

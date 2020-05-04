@@ -8,20 +8,15 @@ class Loader(ABC):
     This class contains general methods and data structures to extract information from the the user input
     """
 
-    def __init__(self):
-        self.raw_file = None
-        self.filename = None
-        self.valid_file = False
-        self.raw_text = None
-        self.valid_text = False
-        self.input_format = None
+    def __init__(self, filename, raw_file, input_format=None):
+
+        self.raw_file = raw_file
+        self.filename = filename
+        self.input_format = input_format
+        self.data = None
 
     @abc.abstractmethod
-    def parse_file(self):
-        pass
-
-    @abc.abstractmethod
-    def parse_text(self, text):
+    def parse(self):
         pass
 
     @property
@@ -40,58 +35,21 @@ class Loader(ABC):
         pass
 
     @property
-    @abc.abstractmethod
-    def to_clear(self):
-        pass
-
-    @property
     def head_color(self):
-        if self.raw_file is not None or self.raw_text is not None:
-            if not self.valid:
-                return 'danger'
-            else:
-                return 'success'
+        if self.raw_file is not None and not self.valid:
+            return 'danger'
+        elif self.raw_file is not None:
+            return 'success'
         else:
             return 'dark'
 
     @property
     def invalid(self):
-        if self.raw_file is not None or self.raw_text is not None:
-            if not self.valid:
-                return True
-        else:
-            return False
-
-    @property
-    def filename_alert_open(self):
-        if self.filename is None:
-            return False
-        else:
-            return True
-
-    @property
-    def invalid_text(self):
-        if self.raw_text is not None and not self.valid_text:
+        if self.raw_file is not None and not self.valid:
             return True
         else:
             return False
-
-    def clear(self):
-        for attribute in self.to_clear:
-            self.__setattr__(attribute, None)
-
-    def register_input(self, raw_text, raw_file, filename, input_format=None):
-        self.input_format = input_format
-        self.raw_text = raw_text
-        if raw_file is not None:
-            self.raw_file = raw_file
-        if filename is not None:
-            self.filename = filename
 
     def load(self):
-        if self.raw_text is not None:
-            self.parse_text(self.raw_text)
-            if not self.valid_text and self.raw_file is not None:
-                self.parse_file()
-        elif self.raw_file is not None:
-            self.parse_file()
+        if self.raw_file is not None:
+            self.parse()

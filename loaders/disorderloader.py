@@ -7,9 +7,9 @@ class DisorderLoader(MembraneTopologyLoader):
     """Class with methods and data structures to store all the information related with disorder scores obtained
     for a given sequence and its validity"""
 
-    def __init__(self):
-        super(DisorderLoader, self).__init__()
-        self.prediction = None
+    def __init__(self, *args, **kwargs):
+        super(DisorderLoader, self).__init__(*args, **kwargs)
+        self.input_format = 'IUPRED'
 
     @property
     def datatype(self):

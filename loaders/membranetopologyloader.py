@@ -8,13 +8,13 @@ class MembraneTopologyLoader(Loader):
     """Class with methods and data structures to store all the information related with a given membrane topology
     prediction and its validity"""
 
-    def __init__(self):
-        super(MembraneTopologyLoader, self).__init__()
-        self.prediction = None
+    def __init__(self, *args, **kwargs):
+        super(MembraneTopologyLoader, self).__init__(*args, **kwargs)
+        self.input_format = 'TOPCONS'
 
     @property
     def valid(self):
-        if self.prediction is None or len(self.prediction) == 0:
+        if self.data is None or len(self.data) == 0:
             return False
         else:
             return True
@@ -25,30 +25,13 @@ class MembraneTopologyLoader(Loader):
 
     @property
     def layout_states(self):
-        return self.valid_text, self.invalid_text, self.invalid, self.valid_file, self.filename, self.head_color
-
-    @property
-    def to_clear(self):
-        return 'filename', 'raw_file', 'valid_file', 'prediction'
+        return self.invalid, self.valid, self.filename, self.head_color
 
     @property
     def parser_formats(self):
         return MembraneFormats
 
-    def parse_text(self, text):
-
-        parser = self.parser_formats.__dict__[self.input_format](text)
-        parser.parse()
-
-        if not parser.error:
-            self.prediction = parser.output
-
-        if self.valid:
-            self.valid_text = True
-        else:
-            self.valid_text = False
-
-    def parse_file(self):
+    def parse(self):
 
         content_type, content_string = self.raw_file.split(',')
         decoded = base64.b64decode(content_string).decode()
@@ -58,9 +41,4 @@ class MembraneTopologyLoader(Loader):
         parser.parse()
 
         if not parser.error:
-            self.prediction = parser.output
-
-        if self.valid:
-            self.valid_file = True
-        else:
-            self.valid_file = False
+            self.data = parser.output

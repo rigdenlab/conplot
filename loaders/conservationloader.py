@@ -7,9 +7,9 @@ class ConservationLoader(MembraneTopologyLoader):
     """Class with methods and data structures to store all the information related with conservation scores obtained
     for a given sequence and its validity"""
 
-    def __init__(self):
-        super(ConservationLoader, self).__init__()
-        self.prediction = None
+    def __init__(self, *args, **kwargs):
+        super(ConservationLoader, self).__init__(*args, **kwargs)
+        self.input_format = 'CONSURF'
 
     @property
     def datatype(self):

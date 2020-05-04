@@ -11,10 +11,8 @@ def ContactUploadCard():
             [
                 dbc.Spinner(
                     html.Div([
-                        html.P("Upload a file with the contact map of interest or copy paste the map",
+                        html.P("Upload a file with the contact map of interest",
                                className="card-text"),
-                        dbc.Textarea(id="contact-map-text-area", className="mb-3",
-                                     placeholder="Paste here your contact map", debounce=True),
                         html.Br(),
                         dbc.Card([
                             dbc.InputGroup(
@@ -37,7 +35,7 @@ def ContactUploadCard():
                         ),
                         FilenameAlert('contact-map'),
                         html.Br(),
-                        UploadButton('contact-map')
+                        UploadButton('contact-map', disabled=True)
                     ])
                 )
             ]
@@ -51,10 +49,8 @@ def UploadCard(dataset):
             [
                 dbc.Spinner(
                     html.Div([
-                        html.P("Choose a file to upload or paste its contents.",
+                        html.P("Choose a file to upload",
                                className="card-text"),
-                        dbc.Textarea("{}-text-area".format(dataset), className="mb-3",
-                                     placeholder="Paste here your prediction", debounce=True),
                         dbc.Collapse(
                             dbc.Card(dbc.CardBody("Invalid format, unable to load"), color="danger", outline=True),
                             id="{}-invalid-collapse".format(dataset),

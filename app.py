@@ -1,14 +1,17 @@
 import os
+import importlib
+from enum import Enum
 import dash
-import uuid
+import utils
 from dash.dash import no_update
-from core import Session, PathIndex
+from dash import callback_context
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from flask_caching import Cache
 from dash.dependencies import Input, Output, State
-from callbacks import contact_callbacks, dataupload_callbacks, main_callbacks
+from loaders import DatasetReference
+from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered
 
 
 # ==============================================================
@@ -16,15 +19,18 @@ from callbacks import contact_callbacks, dataupload_callbacks, main_callbacks
 # ==============================================================
 
 
-def store_dataset(dataset, session, *args):
-    session.__getattribute__('{}_loader'.format(dataset)).register_input(*args)
-    session.__getattribute__('{}_loader'.format(dataset)).load()
-    cache.set('session-{}'.format(session.id), session)
-    return session.__getattribute__('{}_loader'.format(dataset)).layout_states
+class LoaderReference(Enum):
+    CONTACT_MAP = importlib.import_module('loaders').__dict__['ContactLoader']
+    SEQUENCE = importlib.import_module('loaders').__dict__['SequenceLoader']
+    MEMBRANE_TOPOLOGY = importlib.import_module('loaders').__dict__['MembraneTopologyLoader']
+    SECONDARY_STRUCTURE = importlib.import_module('loaders').__dict__['SecondaryStructureLoader']
+    CONSERVATION = importlib.import_module('loaders').__dict__['ConservationLoader']
+    DISORDER = importlib.import_module('loaders').__dict__['DisorderLoader']
 
 
 def serve_layout():
-    session_id = initiate_session()
+    session_id, session = initiate_session()
+    cache.set(session_id, session)
     return html.Div([
         html.Div(session_id, id='session-id', style={'display': 'none'}),
         dcc.Location(id='url', refresh=False),
@@ -32,11 +38,22 @@ def serve_layout():
     ])
 
 
-def initiate_session():
-    session_id = str(uuid.uuid4())
-    session = Session(session_id)
-    cache.set('session-{}'.format(session_id), session)
-    return session_id
+def upload_dataset(*args):
+    args = list(args)
+    session_id = args.pop(-1)
+    dataset = args.pop(0)
+    session_compressed = cache.get(session_id)
+    session = decompress_session(session_compressed)
+    loader = LoaderReference.__dict__[dataset.name](*args)
+
+    if not ensure_triggered(callback_context.triggered) or session is None:
+        return [no_update for x in loader.layout_states]
+
+    loader.load()
+    session[dataset.value] = loader.data
+    session_compressed = compress_session(session)
+    cache.set(session_id, session_compressed)
+    return loader.layout_states
 
 
 # ==============================================================
@@ -50,7 +67,7 @@ server = app.server
 app.config.suppress_callback_exceptions = True
 cache = Cache(app.server, config={
     'CACHE_TYPE': 'redis',
-    'CACHE_REDIS_URL' : os.environ.get('REDIS_URL')
+    'CACHE_REDIS_URL': os.environ.get('REDIS_URL')
 
 })
 app.layout = serve_layout
@@ -64,14 +81,14 @@ app.layout = serve_layout
 @app.callback(Output('bug-alert', 'is_open'),
               [Input('issue-select', 'value')])
 def toggle_alert(*args):
-    return contact_callbacks.toggle_alert(*args)
+    return utils.toggle_alert(*args)
 
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
 def display_page(*args):
-    return main_callbacks.display_page(*args)
+    return utils.display_page(*args)
 
 
 @app.callback([Output('contact-map-upload-collapse', 'is_open'),
@@ -93,7 +110,7 @@ def display_page(*args):
                State('disorder-upload-collapse', 'is_open'),
                State('conservation-upload-collapse', 'is_open')])
 def toggle_input_cards(*args):
-    return dataupload_callbacks.toggle_input_cards(*args)
+    return utils.toggle_input_cards(*args)
 
 
 @app.callback([Output('display-control-collapse', 'is_open'),
@@ -106,123 +123,84 @@ def toggle_input_cards(*args):
                State('warning-collapse', 'is_open'),
                State('help-collapse', 'is_open')])
 def toggle_extra_cards(*args):
-    return dataupload_callbacks.toggle_extra_cards(*args)
+    return utils.toggle_extra_cards(*args)
 
 
-@app.callback([Output("contact-map-text-area", "valid"),
-               Output("contact-map-text-area", "invalid"),
-               Output("contact-map-invalid-collapse", "is_open"),
+@app.callback([Output("format-selection-card", "color"),
+               Output('upload-contact-map', 'disabled')],
+              [Input("contact-format-select", "value")])
+def toggle_format_alert(format_selection):
+    if format_selection is not None:
+        return None, False
+    else:
+        return 'danger', True
+
+
+@app.callback([Output("contact-map-invalid-collapse", "is_open"),
                Output("contact-map-filename-alert", "is_open"),
                Output('contact-map-filename-alert', 'children'),
-               Output("format-selection-card", "color"),
                Output('contact-map-upload-head', 'color')],
-              [Input('upload-contact-map', 'filename'),
-               Input("contact-map-text-area", "value"),
-               Input("contact-format-select", "value")],
+              [Input('upload-contact-map', 'filename')],
               [State('upload-contact-map', 'contents'),
+               State("contact-format-select", "value"),
                State('session-id', 'children')])
 def upload_contact_map(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    layout = dataupload_callbacks.upload_contact_map(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.CONTACT_MAP, *args)
 
 
-@app.callback([Output("sequence-text-area", "valid"),
-               Output("sequence-text-area", "invalid"),
-               Output("sequence-invalid-collapse", "is_open"),
+@app.callback([Output("sequence-invalid-collapse", "is_open"),
                Output("sequence-filename-alert", "is_open"),
                Output('sequence-filename-alert', 'children'),
                Output('sequence-upload-head', 'color')],
-              [Input('upload-sequence', 'filename'),
-               Input("sequence-text-area", "value")],
+              [Input('upload-sequence', 'filename')],
               [State('upload-sequence', 'contents'),
                State('session-id', 'children')])
 def upload_sequence(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    layout = dataupload_callbacks.upload_sequence(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.SEQUENCE, *args)
 
 
-@app.callback([Output("membranetopology-text-area", "valid"),
-               Output("membranetopology-text-area", "invalid"),
-               Output("membranetopology-invalid-collapse", "is_open"),
+@app.callback([Output("membranetopology-invalid-collapse", "is_open"),
                Output("membranetopology-filename-alert", "is_open"),
                Output('membranetopology-filename-alert', 'children'),
                Output('membranetopology-upload-head', 'color')],
-              [Input('upload-membranetopology', 'filename'),
-               Input("membranetopology-text-area", "value")],
+              [Input('upload-membranetopology', 'filename')],
               [State('upload-membranetopology', 'contents'),
                State('session-id', 'children')])
 def upload_membranetopology(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    layout = dataupload_callbacks.upload_membranetopology(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.MEMBRANE_TOPOLOGY, *args)
 
 
-@app.callback([Output("secondarystructure-text-area", "valid"),
-               Output("secondarystructure-text-area", "invalid"),
-               Output("secondarystructure-invalid-collapse", "is_open"),
+@app.callback([Output("secondarystructure-invalid-collapse", "is_open"),
                Output("secondarystructure-filename-alert", "is_open"),
                Output('secondarystructure-filename-alert', 'children'),
                Output('secondarystructure-upload-head', 'color')],
-              [Input('upload-secondarystructure', 'filename'),
-               Input("secondarystructure-text-area", "value")],
+              [Input('upload-secondarystructure', 'filename')],
               [State('upload-secondarystructure', 'contents'),
                State('session-id', 'children')])
 def upload_secondarystructure(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    if session is None:
-        return no_update
-    layout = dataupload_callbacks.upload_secondarystructure(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.SECONDARY_STRUCTURE, *args)
 
 
-@app.callback([Output("disorder-text-area", "valid"),
-               Output("disorder-text-area", "invalid"),
-               Output("disorder-invalid-collapse", "is_open"),
+@app.callback([Output("disorder-invalid-collapse", "is_open"),
                Output("disorder-filename-alert", "is_open"),
                Output('disorder-filename-alert', 'children'),
                Output('disorder-upload-head', 'color')],
-              [Input('upload-disorder', 'filename'),
-               Input("disorder-text-area", "value")],
+              [Input('upload-disorder', 'filename')],
               [State('upload-disorder', 'contents'),
                State('session-id', 'children')])
 def upload_disorder(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    if session is None:
-        return no_update
-    layout = dataupload_callbacks.upload_disorder(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.DISORDER, *args)
 
 
-@app.callback([Output("conservation-text-area", "valid"),
-               Output("conservation-text-area", "invalid"),
-               Output("conservation-invalid-collapse", "is_open"),
+@app.callback([Output("conservation-invalid-collapse", "is_open"),
                Output("conservation-filename-alert", "is_open"),
                Output('conservation-filename-alert', 'children'),
                Output('conservation-upload-head', 'color')],
-              [Input('upload-conservation', 'filename'),
-               Input("conservation-text-area", "value")],
+              [Input('upload-conservation', 'filename')],
               [State('upload-conservation', 'contents'),
                State('session-id', 'children')])
 def upload_conservation(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    if session is None:
-        return no_update
-    layout = dataupload_callbacks.upload_conservation(*args, session)
-    cache.set('session-{}'.format(session.id), session)
-    return layout
+    return upload_dataset(DatasetReference.CONSERVATION, *args)
 
 
 @app.callback([Output('_hidden-div', 'children')],
@@ -235,11 +213,20 @@ def upload_conservation(*args):
               [State('session-id', 'children')])
 def remove_file(*args):
     args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    if session is None:
+    session_id = args.pop(-1)
+    compressed_session = cache.get(session_id)
+    session = decompress_session(compressed_session)
+    prop_id = callback_context.triggered[0]['prop_id']
+    value = callback_context.triggered[0]['value']
+
+    if session is None or prop_id == '.' or value is None or value:
         return no_update
-    dataupload_callbacks.remove_file(*args, session)
-    cache.set('session-{}'.format(session.id), session)
+    else:
+        dataset = prop_id.split('-')[0]
+        del session[dataset]
+
+    compressed_session = compress_session(session)
+    cache.set(session_id, compressed_session)
     return no_update
 
 
@@ -252,12 +239,14 @@ def remove_file(*args):
                State('L-cutoff-input', 'value'),
                State('session-id', 'children')])
 def create_plot(*args):
-    args = list(args)
-    session = cache.get('session-{}'.format(args.pop(-1)))
-    if session is None:
-        return no_update
-    layout = dataupload_callbacks.create_plot(*args, session)
-    return layout
+    session_id = args[-1]
+    factor = args[-2]
+    active_tracks = args[-3]
+    compressed_session = cache.get(session_id)
+    session = decompress_session(compressed_session)
+    trigger = callback_context.triggered
+
+    return utils.create_plot(session, trigger, factor, active_tracks)
 
 
 # ==============================================================

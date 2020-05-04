@@ -3,6 +3,11 @@ from werkzeug.utils import cached_property
 from enum import Enum
 from loaders import DatasetReference
 from parsers import MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
+from components import MissingInput_Modal, MismatchModal, PlotPlaceHolder, DisplayControlCard
+from layouts import ContextReference
+from utils import ensure_triggered
+import dash_core_components as dcc
+from dash.dash import no_update
 
 
 class MembraneTopologyColor(Enum):
@@ -28,54 +33,55 @@ class SecondaryStructureColor(Enum):
     SHEET = 'rgba(0, 4, 255,0.4)'
 
 
+def create_plot(session, trigger, factor, active_tracks):
+    if session is None or not ensure_triggered(trigger):
+        return PlotPlaceHolder(), None, DisplayControlCard()
+
+    plot = Plot(session)
+    if plot.error is not None:
+        return PlotPlaceHolder(), plot.error, DisplayControlCard()
+    elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
+        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, DisplayControlCard(
+            available_tracks=plot.active_tracks, factor=plot.factor)
+    else:
+        plot.factor = factor
+        plot.active_tracks = active_tracks
+        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, no_update
+
+
 class Plot(object):
 
     def __init__(self, session, factor=2, remove_neighbors=True):
         self.session = session
         self.factor = factor
         self.remove_neighbors = remove_neighbors
-        self.cmap = session.contact_loader.cmap
-        self.mem_pred = session.membranetopology_loader.prediction
-        self.ss_pred = session.secondarystructure_loader.prediction
-        self.conserv_pred = session.conservation_loader.prediction
-        self.disorder_pred = session.disorder_loader.prediction
-
         self.active_tracks = []
-        for track in self.session:
-            if track.datatype == DatasetReference.SEQUENCE or track.datatype == DatasetReference.CONTACT_MAP:
+        self.error = None
+        self._lookup_input_errors()
+
+        for track in self.session.keys():
+            if track == DatasetReference.SEQUENCE.value or track == DatasetReference.CONTACT_MAP.value:
                 pass
-            elif track.prediction is not None:
-                self.active_tracks.append(track.datatype.name)
+            elif self.session[track] is not None:
+                self.active_tracks.append(track)
+
+    @property
+    def missing_data(self):
+        return [dataset for dataset in (DatasetReference.SEQUENCE, DatasetReference.CONTACT_MAP)
+                if dataset.value not in self.session.keys() or self.session[dataset.value] is None]
+
+    @cached_property
+    def cmap_max_register(self):
+        return max(
+            self.session[DatasetReference.CONTACT_MAP.value][0] + self.session[DatasetReference.CONTACT_MAP.value][1])
+
+    @cached_property
+    def seq_length(self):
+        return len(self.session[DatasetReference.SEQUENCE.value])
 
     @cached_property
     def axis_range(self):
-        # TODO: NEED TO THINK AGAIN ABOUT NUMBERING
-        return (0, self.cmap.sequence.seq_len + 1)
-
-    @cached_property
-    def aa_properties(self):
-        return {
-            'A': 'Non-polar, aliphatic',
-            'R': 'Positively charged (basic; non-acidic); Polar; Hydrophilic; pK=12.5',
-            'N': 'Polar, non-charged',
-            'D': 'Negatively charged (acidic); Polar; Hydrophilic; pK=3.9',
-            'C': 'Polar, non-charged',
-            'E': 'Negatively charged (acidic); Polar; Hydrophilic; pK=4.2',
-            'Q': 'Polar, non-charged',
-            'G': 'Non-polar, aliphatic',
-            'H': 'Positively charged (basic; non-acidic); Polar; Hydrophilic; pK=6.0',
-            'I': 'Non-polar, aliphatic',
-            'L': 'Non-polar, aliphatic',
-            'K': 'Positively charged (basic; non-acidic); Polar; Hydrophilic; pK=10.5',
-            'M': 'Polar, non-charged',
-            'F': 'Aromatic',
-            'P': 'Non-polar, aliphatic',
-            'S': 'Polar, non-charged',
-            'T': 'Polar, non-charged',
-            'W': 'Aromatic',
-            'Y': 'Aromatic',
-            'V': 'Aromatic'
-        }
+        return (0, self.seq_length + 1)
 
     @property
     def y_axis_trace(self):
@@ -108,24 +114,22 @@ class Plot(object):
     @property
     def contact_trace(self):
 
-        if self.remove_neighbors:
-            cmap = self.cmap.remove_neighbors(inplace=False)
-            cmap.sort('raw_score', reverse=True, inplace=True)
-
-        else:
-            cmap = self.cmap.sort('raw_score', reverse=True, inplace=False)
-
-        contacts = cmap.as_list()[:int(round(cmap.sequence.seq_len / self.factor, 0))]
-
-        res1_list = [contact[0] for contact in contacts]
-        res2_list = [contact[1] for contact in contacts]
+        contacts = self.session[DatasetReference.CONTACT_MAP.value][:int(round(self.seq_length / self.factor, 0))]
+        res1_list = []
+        res2_list = []
+        hover_1 = []
+        hover_2 = []
+        for contact in contacts:
+            res1_list.append(contact[0])
+            res2_list.append(contact[1])
+            hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
+            hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
 
         return go.Scatter(
             x=res1_list + res2_list,
             y=res2_list + res1_list,
             hoverinfo='text',
-            hovertext=['Contact: %s - %s | Confidence: %s' % (contact.res1_seq, contact.res2_seq, contact.raw_score) for
-                       contact in cmap],
+            hovertext=hover_1 + hover_2,
             mode='markers',
             marker={
                 'symbol': 'circle',
@@ -136,13 +140,15 @@ class Plot(object):
 
     def get_membrane_trace(self, topology):
 
-        if self.mem_pred is None:
+        if self.session[DatasetReference.MEMBRANE_TOPOLOGY.value] is None:
             return None
+        else:
+            mem_pred = self.session[DatasetReference.MEMBRANE_TOPOLOGY.value]
 
-        x = [idx for idx in range(1, len(self.mem_pred) + 1)]
-        y = [idx if residue == topology else None for idx, residue in enumerate(self.mem_pred, 1)]
-
-        residue_names = ['Residue: {} ({}) | {}'.format(self.cmap.sequence.seq[idx - 1], idx, topology.name)
+        x = [idx for idx in range(1, len(mem_pred) + 1)]
+        y = [idx if residue == topology.value else None for idx, residue in enumerate(mem_pred, 1)]
+        residue_names = ['Residue: {} ({}) | {}' \
+                         ''.format(self.session[DatasetReference.SEQUENCE.value][idx - 1], idx, topology.name)
                          for idx in x]
 
         return go.Scatter(
@@ -163,11 +169,13 @@ class Plot(object):
 
         traces = []
 
-        if self.ss_pred is not None:
-            x_diagonal = [idx for idx in range(1, len(self.ss_pred) + 1)]
+        if self.session[DatasetReference.MEMBRANE_TOPOLOGY.value] is not None:
+
+            ss_pred = self.session[DatasetReference.MEMBRANE_TOPOLOGY.value]
+            x_diagonal = [idx for idx in range(1, len(ss_pred) + 1)]
 
             for ss_element in SecondaryStructureStates:
-                y_diagonal = [idx if residue == ss_element else None for idx, residue in enumerate(self.ss_pred, 1)]
+                y_diagonal = [idx if residue == ss_element.value else None for idx, residue in enumerate(ss_pred, 1)]
                 if not any(y_diagonal):
                     continue
 
@@ -200,11 +208,12 @@ class Plot(object):
 
         traces = []
 
-        if self.disorder_pred is not None:
-            x_diagonal = [idx for idx in range(1, len(self.disorder_pred) + 1)]
+        if self.session[DatasetReference.DISORDER.value] is not None:
+            disorder_pred = self.session[DatasetReference.DISORDER.value]
+            x_diagonal = [idx for idx in range(1, len(disorder_pred) + 1)]
 
             for state in DisorderStates:
-                y_diagonal = [idx if residue == state else None for idx, residue in enumerate(self.disorder_pred, 1)]
+                y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(disorder_pred, 1)]
                 if not any(y_diagonal):
                     continue
 
@@ -237,11 +246,12 @@ class Plot(object):
 
         traces = []
 
-        if self.conserv_pred is not None:
-            x_diagonal = [idx for idx in range(1, len(self.conserv_pred) + 1)]
+        if self.session[DatasetReference.CONSERVATION.value] is not None:
+            conserv_pred = self.session[DatasetReference.CONSERVATION.value]
+            x_diagonal = [idx for idx in range(1, len(conserv_pred) + 1)]
 
             for state in ConservationStates:
-                y_diagonal = [idx if residue == state else None for idx, residue in enumerate(self.conserv_pred, 1)]
+                y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(conserv_pred, 1)]
                 if not any(y_diagonal):
                     continue
 
@@ -269,7 +279,26 @@ class Plot(object):
 
         yield from traces
 
+    def _lookup_input_errors(self):
+        """Check user input is coherent"""
+
+        if any(self.missing_data):
+            self.error = MissingInput_Modal(*[missing.name for missing in self.missing_data])
+        elif self.cmap_max_register > self.seq_length - 1:
+            self.error = MismatchModal(DatasetReference.SEQUENCE)
+
+        mismatched = []
+        for dataset in self.session.keys():
+            if dataset == DatasetReference.CONTACT_MAP.value or dataset == DatasetReference.SEQUENCE.value:
+                pass
+            elif self.session[dataset] is not None and len(self.session[dataset]) != self.seq_length:
+                mismatched.append(dataset)
+
+        if any(mismatched):
+            self.error = MismatchModal(*mismatched)
+
     def get_figure(self):
+
         figure = go.Figure(
             layout=go.Layout(
                 xaxis={'title': 'Residue 1', 'range': self.axis_range},
@@ -286,20 +315,20 @@ class Plot(object):
         figure.add_trace(self.contact_trace)
         figure.add_trace(self.x_axis_trace)
         figure.add_trace(self.y_axis_trace)
-        if self.mem_pred is not None and DatasetReference.MEMBRANE_TOPOLOGY.name in self.active_tracks:
+        if DatasetReference.MEMBRANE_TOPOLOGY.value in self.active_tracks:
             figure.add_trace(self.get_membrane_trace(MembraneStates.INSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneStates.INSERTED))
 
-        if self.ss_pred is not None and DatasetReference.SECONDARY_STRUCTURE.name in self.active_tracks:
+        if DatasetReference.SECONDARY_STRUCTURE.value in self.active_tracks:
             for trace in self.ss_traces:
                 figure.add_trace(trace)
 
-        if self.disorder_pred is not None and DatasetReference.DISORDER.name in self.active_tracks:
+        if DatasetReference.DISORDER.value in self.active_tracks:
             for trace in self.disorder_traces:
                 figure.add_trace(trace)
 
-        if self.conserv_pred is not None and DatasetReference.CONSERVATION.name in self.active_tracks:
+        if DatasetReference.CONSERVATION.value in self.active_tracks:
             for trace in self.conservation_traces:
                 figure.add_trace(trace)
 

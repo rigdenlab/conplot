@@ -1,33 +1,26 @@
-from parsers import DisorderStates
-from parsers.parser import Parser
+from parsers import DisorderStates, InvalidFormat
 
-class IupredParser(Parser):
 
-    def __init__(self, input):
-        super(IupredParser, self).__init__(input)
+def IupredParser(input):
+    contents = input.split('\n')
+    output = []
 
-    def parse(self):
-        contents = self.input.split('\n')
-        self.output = []
+    for line in contents:
 
-        for line in contents:
+        line = line.lstrip().split()
+        if len(line) < 1 or line[0] == '#' or len(line) < 3:
+            continue
+        else:
+            try:
+                score = float(line[2])
+            except ValueError:
+                raise InvalidFormat('Invalid score field {}'.format(line[2]))
+        if score >= 0.5:
+            output.append(DisorderStates.DISORDER.value)
+        else:
+            output.append(DisorderStates.ORDER.value)
 
-            line = line.lstrip().split()
-            if len(line) < 1 or line[0] == '#' or len(line) < 3:
-                continue
-            else:
-                try:
-                    score = float(line[2])
-                except ValueError:
-                    self.error = True
-                    self.output = None
-                    return
-
-            if score >= 0.5:
-                self.output.append(DisorderStates.DISORDER.value)
-            else:
-                self.output.append(DisorderStates.ORDER.value)
-
-        if not self.output:
-            self.error = True
-            self.output = None
+    if not output:
+        raise InvalidFormat('Unable to parse prediction on iupred file')
+    else:
+        return output

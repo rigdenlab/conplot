@@ -1,4 +1,5 @@
 from enum import Enum
+import base64
 
 
 class DatasetReference(Enum):
@@ -10,37 +11,27 @@ class DatasetReference(Enum):
     DISORDER = 'disorder'
 
 
-def ConservationLoader(*args, **kwargs):
-    from loaders.conservationloader import ConservationLoader
+class LayoutFieldsReference(Enum):
+    VALID = 1
+    INVALID = 2
+    HEAD_COLOR = 3
+    FILENAME = 4
 
-    return ConservationLoader(*args, **kwargs)
+
+def decode_raw_file(raw_file):
+    content_type, content_string = raw_file.split(',')
+    decoded = base64.b64decode(content_string)
+    decoded = decoded.decode()
+    return decoded
 
 
-def ContactLoader(*args, **kwargs):
-    from loaders.contactloader import ContactLoader
+def Loader(*args, **kwargs):
+    from loaders.loader import Loader
 
-    return ContactLoader(*args, **kwargs)
+    return Loader(*args, **kwargs)
 
 
 def SequenceLoader(*args, **kwargs):
     from loaders.sequenceloader import SequenceLoader
 
     return SequenceLoader(*args, **kwargs)
-
-
-def DisorderLoader(*args, **kwargs):
-    from loaders.disorderloader import DisorderLoader
-
-    return DisorderLoader(*args, **kwargs)
-
-
-def SecondaryStructureLoader(*args, **kwargs):
-    from loaders.secondarystructureloader import SecondaryStructureLoader
-
-    return SecondaryStructureLoader(*args, **kwargs)
-
-
-def MembraneTopologyLoader(*args, **kwargs):
-    from loaders.membranetopologyloader import MembraneTopologyLoader
-
-    return MembraneTopologyLoader(*args, **kwargs)

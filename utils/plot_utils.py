@@ -8,6 +8,7 @@ from layouts import ContextReference
 from utils import ensure_triggered
 import dash_core_components as dcc
 from dash.dash import no_update
+from operator import itemgetter
 
 
 class MembraneTopologyColor(Enum):
@@ -51,10 +52,9 @@ def create_plot(session, trigger, factor, active_tracks):
 
 class Plot(object):
 
-    def __init__(self, session, factor=2, remove_neighbors=True):
+    def __init__(self, session, factor=2):
         self.session = session
         self.factor = factor
-        self.remove_neighbors = remove_neighbors
         self.active_tracks = []
         self.error = None
         self._lookup_input_errors()
@@ -72,8 +72,8 @@ class Plot(object):
 
     @cached_property
     def cmap_max_register(self):
-        return max(
-            self.session[DatasetReference.CONTACT_MAP.value][0] + self.session[DatasetReference.CONTACT_MAP.value][1])
+        return max((max(self.session[DatasetReference.CONTACT_MAP.value], key=itemgetter(0))[0],
+                    max(self.session[DatasetReference.CONTACT_MAP.value], key=itemgetter(1))[0]))
 
     @cached_property
     def seq_length(self):

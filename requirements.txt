@@ -1,10 +1,5 @@
 dash~=1.11.0
-pandas~=0.25.1
-numpy>=1.13.3
-pybind11~=2.4.3
-cython>=0.28.2
-scipy>=0.13.3
-conkit~=0.11.3
+biopython~=1.74
 plotly~=4.6.0
 dash_core_components~=1.9.0
 dash_bootstrap_components~=0.9.2

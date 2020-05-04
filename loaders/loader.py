@@ -1,55 +1,26 @@
-import abc
+from loaders import decode_raw_file, LayoutFieldsReference
+from parsers import ParserFormats, InvalidFormat
 
-ABC = abc.ABCMeta('ABC', (object,), {})
 
+def Loader(filename, raw_file, input_format):
+    result = {
+        LayoutFieldsReference.VALID.value: False,
+        LayoutFieldsReference.INVALID.value: False,
+        LayoutFieldsReference.HEAD_COLOR.value: 'dark',
+        LayoutFieldsReference.FILENAME.value: filename,
+    }
 
-class Loader(ABC):
-    """Loader abstract class
-    This class contains general methods and data structures to extract information from the the user input
-    """
+    data = None
 
-    def __init__(self, filename, raw_file, input_format=None):
+    if raw_file is not None:
+        decoded = decode_raw_file(raw_file)
+        try:
+            data = ParserFormats.__dict__[input_format](decoded)
+            result[LayoutFieldsReference.INVALID.value] = False
+            result[LayoutFieldsReference.HEAD_COLOR.value] = 'success'
+            result[LayoutFieldsReference.VALID.value] = True
+        except InvalidFormat:
+            pass
 
-        self.raw_file = raw_file
-        self.filename = filename
-        self.input_format = input_format
-        self.data = None
-
-    @abc.abstractmethod
-    def parse(self):
-        pass
-
-    @property
-    @abc.abstractmethod
-    def layout_states(self):
-        pass
-
-    @property
-    @abc.abstractmethod
-    def valid(self):
-        pass
-
-    @property
-    @abc.abstractmethod
-    def datatype(self):
-        pass
-
-    @property
-    def head_color(self):
-        if self.raw_file is not None and not self.valid:
-            return 'danger'
-        elif self.raw_file is not None:
-            return 'success'
-        else:
-            return 'dark'
-
-    @property
-    def invalid(self):
-        if self.raw_file is not None and not self.valid:
-            return True
-        else:
-            return False
-
-    def load(self):
-        if self.raw_file is not None:
-            self.parse()
+    return data, result[LayoutFieldsReference.INVALID.value], result[LayoutFieldsReference.VALID.value], \
+           result[LayoutFieldsReference.FILENAME.value], result[LayoutFieldsReference.HEAD_COLOR.value]

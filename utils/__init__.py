@@ -2,6 +2,10 @@ import urllib.parse
 from enum import Enum
 
 
+class SessionTimeOut(Exception):
+    pass
+
+
 class PathIndex(Enum):
     """An enumerator with an index of all the paths in conkit-web"""
     ROOT = '/'

@@ -1,32 +1,27 @@
-from parsers.parser import Parser
-from parsers import ConservationStates
+from parsers import ConservationStates, InvalidFormat
 
 
-class ConsurfParser(Parser):
+def ConsurfParser(input):
+    contents = input.split('\n')
+    output = []
 
-    def __init__(self, input):
-        super(ConsurfParser, self).__init__(input)
+    for line in contents:
 
-    def parse(self):
-        contents = self.input.split('\n')
-        self.output = []
+        line = line.lstrip().split()
 
-        for line in contents:
+        if len(line) < 4 or not line[0].isnumeric() or not line[3][0].isnumeric():
+            continue
+        else:
+            score = int(line[3][0])
 
-            line = line.lstrip().split()
+        if score <= 3:
+            output.append(ConservationStates.VARIABLE.value)
+        elif score < 7:
+            output.append(ConservationStates.AVERAGE.value)
+        elif score >= 7:
+            output.append(ConservationStates.CONSERVED.value)
 
-            if len(line) < 4 or not line[0].isnumeric() or not line[3][0].isnumeric():
-                continue
-            else:
-                score = int(line[3][0])
-
-            if score <= 3:
-                self.output.append(ConservationStates.VARIABLE.value)
-            elif score < 7:
-                self.output.append(ConservationStates.AVERAGE.value)
-            elif score >= 7:
-                self.output.append(ConservationStates.CONSERVED.value)
-
-        if not self.output:
-            self.error = True
-            self.output = None
+    if not output:
+        raise InvalidFormat('Unable to parse prediction on consurf file')
+    else:
+        return output

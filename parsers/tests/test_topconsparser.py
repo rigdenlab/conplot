@@ -55,16 +55,16 @@ Predicted TOPCONS reliability (left column=sequence position; right column=relia
 """
 
         expected = [
-            MembraneStates.INSIDE,
-            MembraneStates.INSIDE,
-            MembraneStates.INSERTED,
-            MembraneStates.INSERTED,
-            MembraneStates.INSERTED,
-            MembraneStates.OUTSIDE,
-            MembraneStates.OUTSIDE,
-            MembraneStates.OUTSIDE,
-            MembraneStates.INSIDE,
-            MembraneStates.INSERTED,
+            MembraneStates.INSIDE.value,
+            MembraneStates.INSIDE.value,
+            MembraneStates.INSERTED.value,
+            MembraneStates.INSERTED.value,
+            MembraneStates.INSERTED.value,
+            MembraneStates.OUTSIDE.value,
+            MembraneStates.OUTSIDE.value,
+            MembraneStates.OUTSIDE.value,
+            MembraneStates.INSIDE.value,
+            MembraneStates.INSERTED.value,
         ]
 
         parser = TopconsParser(dummy_prediction)

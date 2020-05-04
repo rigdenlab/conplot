@@ -15,11 +15,11 @@ class PsipredParser(Parser):
             if len(line) != 6 or line[0] == '#':
                 continue
             elif line[2] == 'H':
-                self.output.append(SecondaryStructureStates.HELIX)
+                self.output.append(SecondaryStructureStates.HELIX.value)
             elif line[2] == 'C':
-                self.output.append(SecondaryStructureStates.COIL)
+                self.output.append(SecondaryStructureStates.COIL.value)
             elif line[2] == 'E':
-                self.output.append(SecondaryStructureStates.SHEET)
+                self.output.append(SecondaryStructureStates.SHEET.value)
             else:
                 self.error = True
                 self.output = None

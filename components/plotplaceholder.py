@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from core import PathIndex
+from utils import PathIndex
 
 def PlotPlaceHolder():
     return dbc.Jumbotron(

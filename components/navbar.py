@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from core import PathIndex
+from utils import PathIndex
 
 
 def NavBar(pathname=None):

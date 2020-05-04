@@ -1,4 +1,4 @@
-from core import PathIndex
+from utils import PathIndex
 import dash_html_components as html
 from components import NavBar, Header
 

@@ -24,9 +24,9 @@ class IupredParser(Parser):
                     return
 
             if score >= 0.5:
-                self.output.append(DisorderStates.DISORDER)
+                self.output.append(DisorderStates.DISORDER.value)
             else:
-                self.output.append(DisorderStates.ORDER)
+                self.output.append(DisorderStates.ORDER.value)
 
         if not self.output:
             self.error = True

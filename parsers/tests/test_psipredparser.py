@@ -21,16 +21,16 @@ class PsipredParserTestCase(unittest.TestCase):
 """
 
         expected = [
-            SecondaryStructureStates.COIL,
-            SecondaryStructureStates.COIL,
-            SecondaryStructureStates.HELIX,
-            SecondaryStructureStates.HELIX,
-            SecondaryStructureStates.HELIX,
-            SecondaryStructureStates.SHEET,
-            SecondaryStructureStates.SHEET,
-            SecondaryStructureStates.COIL,
-            SecondaryStructureStates.HELIX,
-            SecondaryStructureStates.HELIX
+            SecondaryStructureStates.COIL.value,
+            SecondaryStructureStates.COIL.value,
+            SecondaryStructureStates.HELIX.value,
+            SecondaryStructureStates.HELIX.value,
+            SecondaryStructureStates.HELIX.value,
+            SecondaryStructureStates.SHEET.value,
+            SecondaryStructureStates.SHEET.value,
+            SecondaryStructureStates.COIL.value,
+            SecondaryStructureStates.HELIX.value,
+            SecondaryStructureStates.HELIX.value,
         ]
 
         parser = PsipredParser(dummy_prediction)

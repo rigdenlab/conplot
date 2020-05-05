@@ -88,7 +88,7 @@ def DataUpload(session_id, aspect_ratio):
                         PlotPlaceHolder()
                     ], id='plot-div', className='square-box')
                 ])
-            ], id='plot-column', width=5),
+            ], id='plot-column', width=5, style={'align-items': 'center', 'text-align': 'center', 'display': 'flex'}),
             dbc.Col([
                 html.Div([
                     dbc.ListGroup([

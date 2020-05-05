@@ -6,7 +6,7 @@ def PlotPlaceHolder():
     return html.Div([
         html.Img(
             src=PathIndex.CONKIT_LOGO.value,
-            style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto', 'vertical-align': 'middle',
-                   'position': 'absolute', 'top': '0', 'bottom': '0', 'margin': 'auto', 'left': '0', 'right': '0'}
+            style={'display': 'block', 'vertical-align': 'middle', 'margin': 'auto', 'position': 'absolute',
+                   'top': '0', 'bottom': '0', 'left': '0', 'right': '0'}
         )
     ], className='square-content')

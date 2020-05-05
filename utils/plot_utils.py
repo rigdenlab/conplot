@@ -287,7 +287,7 @@ class Plot(object):
                 yaxis={'range': self.axis_range, 'scaleanchor': "x", 'scaleratio': 1,
                        'tickvals': [x for x in range(*self.axis_range, 100)], 'ticks': 'inside',
                        'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-                margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand':False},
+                margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
                 hovermode='closest',
                 showlegend=False,
                 plot_bgcolor='rgba(0,0,0,0)',

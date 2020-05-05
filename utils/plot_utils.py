@@ -42,12 +42,20 @@ def create_plot(session, trigger, factor, active_tracks):
     if plot.error is not None:
         return PlotPlaceHolder(), plot.error, DisplayControlCard()
     elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
-        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, DisplayControlCard(
+        graph = dcc.Graph(
+            id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure(),
+            config={"toImageButtonOptions": {"width": None, "height": None}}
+        )
+        return graph, None, DisplayControlCard(
             available_tracks=plot.active_tracks, factor=plot.factor)
     else:
         plot.factor = factor
         plot.active_tracks = active_tracks
-        return dcc.Graph(id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure()), None, no_update
+        graph = dcc.Graph(
+            id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure(),
+            config={"toImageButtonOptions": {"width": None, "height": None}}
+        )
+        return graph, None, no_update
 
 
 class Plot(object):

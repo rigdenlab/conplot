@@ -21,16 +21,3 @@
     right: 0;
     text-align: center;
 }
-
- .column {
-  float: left;
-}
-
-.left, .right {
-  width: 25%;
-}
-
-.middle {
-  width: 50%;
-}
-

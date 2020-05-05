@@ -43,7 +43,7 @@ def create_plot(session, trigger, factor, active_tracks):
         return PlotPlaceHolder(), plot.error, DisplayControlCard()
     elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
         graph = dcc.Graph(
-            id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure(),
+            className='square-content', id='plot-graph', figure=plot.get_figure(),
             config={"toImageButtonOptions": {"width": None, "height": None}}
         )
         return graph, None, DisplayControlCard(
@@ -52,7 +52,7 @@ def create_plot(session, trigger, factor, active_tracks):
         plot.factor = factor
         plot.active_tracks = active_tracks
         graph = dcc.Graph(
-            id='plot-graph', style={'height': '80vh'}, figure=plot.get_figure(),
+            className='square-content', id='plot-graph', figure=plot.get_figure(),
             config={"toImageButtonOptions": {"width": None, "height": None}}
         )
         return graph, None, no_update
@@ -90,34 +90,6 @@ class Plot(object):
     @cached_property
     def axis_range(self):
         return (0, self.seq_length + 1)
-
-    @property
-    def y_axis_trace(self):
-        return go.Scatter(
-            x=[0 for x in range(*self.axis_range, 10)],
-            y=[y for y in range(*self.axis_range, 10)],
-            hoverinfo='none',
-            mode='lines+markers',
-            marker={
-                'symbol': 'triangle-right',
-                'size': 5,
-                'color': 'black'
-            }
-        )
-
-    @property
-    def x_axis_trace(self):
-        return go.Scatter(
-            x=[x for x in range(*self.axis_range, 10)],
-            y=[0 for y in range(*self.axis_range, 10)],
-            hoverinfo='none',
-            mode='lines+markers',
-            marker={
-                'symbol': 'triangle-up',
-                'size': 5,
-                'color': 'black'
-            }
-        )
 
     @property
     def contact_trace(self):
@@ -309,20 +281,20 @@ class Plot(object):
 
         figure = go.Figure(
             layout=go.Layout(
-                xaxis={'title': 'Residue 1', 'range': self.axis_range},
-                yaxis={'title': 'Residue 2', 'range': self.axis_range},
-                autosize=True,
-                margin={'l': 40, 'b': 40, 't': 10, 'r': 10},
+                xaxis={'range': self.axis_range, 'scaleanchor': "y", 'scaleratio': 1,
+                       'tickvals': [x for x in range(*self.axis_range, 100)], 'ticks': 'inside',
+                       'showline': True, 'linewidth': 2, 'linecolor': 'black'},
+                yaxis={'range': self.axis_range, 'scaleanchor': "x", 'scaleratio': 1,
+                       'tickvals': [x for x in range(*self.axis_range, 100)], 'ticks': 'inside',
+                       'showline': True, 'linewidth': 2, 'linecolor': 'black'},
+                margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand':False},
                 hovermode='closest',
                 showlegend=False,
-                plot_bgcolor='rgba(0,0,0,0)'
-
+                plot_bgcolor='rgba(0,0,0,0)',
             )
         )
 
         figure.add_trace(self.contact_trace)
-        figure.add_trace(self.x_axis_trace)
-        figure.add_trace(self.y_axis_trace)
         if DatasetReference.MEMBRANE_TOPOLOGY.value in self.active_tracks:
             figure.add_trace(self.get_membrane_trace(MembraneStates.INSIDE))
             figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))

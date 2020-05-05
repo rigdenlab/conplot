@@ -5,16 +5,16 @@ from components import NavBar, Header, UploadCard, PlotPlaceHolder, DisplayContr
 import dash_bootstrap_components as dbc
 
 
-def DataUpload(session_id):
+def DataUpload(session_id, aspect_ratio):
     return html.Div([
         html.Div(id='_hidden-div', style={'display': 'none'}),
         Header(),
         html.Div(id='modal-div'),
         NavBar(PathIndex.PLOT.value),
+        html.Br(),
+        html.Br(),
         dbc.Row([
             dbc.Col([
-                html.Br(),
-                html.Br(),
                 html.Div([
                     dbc.ListGroup([
                         dbc.ListGroupItem([
@@ -77,23 +77,19 @@ def DataUpload(session_id):
                             )
                         ]),
                     ]),
-                ], className='InputPanel', style={'height': '64vh', 'overflow-y': 'scroll'}),
+                ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),
-            ], width=3),
+            ], width=3, style={'height': '100%'}),
             dbc.Col([
-                html.Br(),
-                html.Br(),
                 dbc.Spinner([
                     html.Div([
                         PlotPlaceHolder()
-                    ], id='plot-div')
+                    ], id='plot-div', className='square-box')
                 ])
             ], id='plot-column', width=5),
             dbc.Col([
-                html.Br(),
-                html.Br(),
                 html.Div([
                     dbc.ListGroup([
                         dbc.ListGroupItem([
@@ -128,6 +124,6 @@ def DataUpload(session_id):
                         ]),
                     ]),
                 ], className='InputPanel', style={'height': '73vh', 'overflow-y': 'scroll'}),
-            ], width=3),
-        ], justify="between"),
+            ], width=3, style={'height': '100%'}),
+        ], justify="between", style={'display': 'flex'}),
     ])

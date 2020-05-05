@@ -19,7 +19,7 @@ class PathIndex(Enum):
     HELP = urllib.parse.urljoin(ROOT, 'help')
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/github_logo.png'
-    CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conkit-web/development/assets/conkit_small_logo.png'
+    CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png'
 
 
 def create_plot(*args, **kwargs):

@@ -62,12 +62,12 @@ def toggle_alert(value):
         return False
 
 
-def display_page(url, session_id):
+def display_page(url, session_id, aspect_ratio):
     if url == PathIndex.HOME.value or url == PathIndex.ROOT.value:
         return Home(session_id)
     elif url == PathIndex.CONTACT.value:
         return Contact(session_id)
     elif url == PathIndex.PLOT.value:
-        return DataUpload(session_id)
+        return DataUpload(session_id, aspect_ratio)
     else:
         return noPage(url)

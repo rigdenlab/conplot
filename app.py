@@ -13,6 +13,7 @@ from loaders import DatasetReference, SequenceLoader, Loader
 from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered, SessionTimeOut
 import gc
 
+
 # ==============================================================
 # Define functions of general use
 # ==============================================================
@@ -31,6 +32,7 @@ def serve_layout():
     session_id, session = initiate_session()
     cache.set(session_id, session)
     return html.Div([
+        html.Div(id='_screen-size', style={'display': 'none'}),
         html.Div(session_id, id='session-id', style={'display': 'none'}),
         dcc.Location(id='url', refresh=False),
         html.Div(id='page-content'),
@@ -74,10 +76,28 @@ cache = Cache(app.server, config={
 })
 app.layout = serve_layout
 
-
 # ==============================================================
 # Define callbacks for the app
 # ==============================================================
+
+
+app.clientside_callback(
+    """
+    function GetScreenSize() {
+
+    function gcd(a, b) {
+        return (b == 0) ? a : gcd(b, a % b);
+    }
+
+    var w = screen.width;
+    var h = screen.height;
+    var r = gcd(w, h);
+    var aspect = w / r + ":" + h / r
+    return (aspect);
+}
+    """,
+    Output('_screen-size', 'children'),
+    [Input('session-id', 'children')])
 
 
 @app.callback(Output('bug-alert', 'is_open'),
@@ -88,7 +108,8 @@ def toggle_alert(*args):
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
-              [State('session-id', 'children')])
+              [State('session-id', 'children'),
+               State('_screen-size', 'children')])
 def display_page(*args):
     return utils.display_page(*args)
 

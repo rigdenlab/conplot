@@ -1,5 +1,6 @@
 import unittest
-from parsers import IupredParser, DisorderStates, InvalidFormat
+from parsers import IupredParser, DisorderStates
+from utils.exceptions import InvalidFormat
 
 
 class IupredParserTestCase(unittest.TestCase):

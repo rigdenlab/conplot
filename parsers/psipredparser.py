@@ -1,4 +1,5 @@
-from parsers import SecondaryStructureStates, InvalidFormat
+from parsers import SecondaryStructureStates
+from utils.exceptions import InvalidFormat
 
 
 def PsipredParser(input):

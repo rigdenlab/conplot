@@ -1,4 +1,5 @@
-from parsers import MembraneStates, InvalidFormat
+from parsers import MembraneStates
+from utils.exceptions import InvalidFormat
 
 
 def TopconsParser(input):

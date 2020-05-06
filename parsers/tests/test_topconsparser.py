@@ -1,5 +1,6 @@
 import unittest
-from parsers import TopconsParser, MembraneStates, InvalidFormat
+from parsers import TopconsParser, MembraneStates
+from utils.exceptions import InvalidFormat
 
 
 class TopconsParserTestCase(unittest.TestCase):

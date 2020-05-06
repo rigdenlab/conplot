@@ -1,4 +1,5 @@
-from parsers import ConservationStates, InvalidFormat
+from parsers import ConservationStates
+from utils.exceptions import InvalidFormat
 
 
 def ConsurfParser(input):

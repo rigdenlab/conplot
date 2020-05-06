@@ -21,10 +21,14 @@ def ErrorAlert(is_open=False):
     return alert
 
 
-def FilenameAlert(component_id):
+def FilenameAlert(filename, dataset):
     return dbc.Alert(
-        id="{}-filename-alert".format(component_id),
+        '{}: {}'.format(dataset, filename),
+        id={
+            'type': 'filename-alert',
+            'index': '{}|{}'.format(filename, dataset)
+        },
         dismissable=True,
         color="success",
-        is_open=False
+        is_open=True
     )

@@ -1,5 +1,6 @@
 import unittest
-from parsers import ConsurfParser, ConservationStates, InvalidFormat
+from parsers import ConsurfParser, ConservationStates
+from utils.exceptions import InvalidFormat
 
 
 class ConsurfParserTestCase(unittest.TestCase):

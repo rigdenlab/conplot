@@ -1,6 +1,7 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from loaders import DatasetReference
+from app import PathIndex
 
 
 def MismatchModal(*args):
@@ -34,17 +35,42 @@ def MismatchModal(*args):
         ], id='mismatch-modal', is_open=True),
 
 
-def MissingInput_Modal(*args):
+def MissingInputModal(*args):
     return dbc.Modal([
         dbc.ModalHeader(
             html.H4("Missing Inputs", className="alert-heading", style={'color': 'red'}),
         ),
         dbc.ModalBody([
             html.P("Please ensure you fill in all required fields before trying to generate a plot. "
-                   "We detected problems on the following fields:"
-                   ),
+                   "We detected problems on the following fields:"),
             html.Ul([
                 html.Li('%s file' % arg) for arg in args
             ], id='missing-fields-div'),
         ]),
     ], id='missing-fields-modal', is_open=True),
+
+
+def RepeatedInputModal(dataset):
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4("Already uploaded", className="alert-heading", style={'color': 'red'}),
+        ),
+        dbc.ModalBody([
+            html.P("A file for the dataset {} was already provided. To upload a different one you will need to delete"
+                   " the current one first.".format(dataset))
+        ]),
+    ], id='missing-fields-modal', is_open=True),
+
+
+def SessionTimedOutModal():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4("Session timed-out", className="alert-heading", style={'color': 'red'}),
+        ),
+        dbc.ModalBody([
+            html.P("More than 5 minutes have passed since you last interacted with the website and your session has"
+                   "timed-out."),
+            html.A(dbc.Button("Start new session", block=True, color='danger'), href=PathIndex.ROOT.value,
+                   style={"text-decoration": "none"})
+        ]),
+    ], id='missing-fields-modal', is_open=True)

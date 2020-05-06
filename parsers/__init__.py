@@ -1,10 +1,6 @@
 from enum import Enum
 
 
-class InvalidFormat(Exception):
-    pass
-
-
 def ConsurfParser(*args, **kwargs):
     from parsers.consurfparser import ConsurfParser
 

@@ -1,126 +1,145 @@
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from components import UploadButton, FilenameAlert
 from parsers import ContactFormats
+from components import UploadButton, AddTrackButton
+from loaders import DatasetReference, AdditionalTracks
 
 
-def ContactUploadCard():
-    return dbc.Card(
-        dbc.CardBody(
-            [
-                dbc.Spinner(
-                    html.Div([
-                        html.P("Upload a file with the contact map of interest",
-                               className="card-text"),
-                        html.Br(),
-                        dbc.Card([
-                            dbc.InputGroup(
-                                [
-                                    dbc.Select(
-                                        id="contact-format-select",
-                                        options=[{"label": map_format, "value": map_format} for map_format in
-                                                 ContactFormats.__dict__.keys() if '_' not in map_format]
-                                    ),
-                                    dbc.InputGroupAddon("Format", addon_type="append"),
-                                ]
+def MandatoryUploadCard():
+    return dbc.Spinner(
+        dbc.Card(
+            dbc.CardBody(
+                [
+                    html.H4("Mandatory input", className="card-text", style={'text-align': "center"}),
+                    html.Br(),
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H5('Sequence', style={'text-align': "center"}),
+                            html.Br(),
+                            html.Div(id={'type': 'file-div', 'index': DatasetReference.SEQUENCE.value}),
+                            UploadButton(DatasetReference.SEQUENCE.value),
+                        ], id='format-selection-card'),
+                    ]),
+                    html.Br(),
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H5('Contact Map', style={'text-align': "center"}),
+                            html.Br(),
+                            dbc.Card([
+                                dbc.InputGroup(
+                                    [
+                                        dbc.Select(
+                                            id='contact-format-selector',
+                                            options=[{"label": map_format, "value": map_format} for map_format in
+                                                     ContactFormats.__dict__.keys() if '_' not in map_format]
+                                        ),
+                                        dbc.InputGroupAddon("Format", addon_type="append"),
+                                    ]
+                                ),
+                            ], id='format-selection-card', color="danger", outline=True),
+                            html.Br(),
+                            html.Div(id={'type': 'file-div', 'index': DatasetReference.CONTACT_MAP.value}),
+                            html.Br(),
+                            UploadButton(DatasetReference.CONTACT_MAP.value, disabled=True)
+                        ], id='format-selection-card'),
+                    ]),
+                ]
+            )
+        )
+    )
+
+
+def AdditionalTracksUploadCard():
+    return dbc.Spinner(
+        dbc.Card([
+            dbc.CardBody([
+                html.H4("Additional tracks", className="card-text", style={'text-align': "center"}),
+                html.Br(),
+                html.Div([
+                    NoAdditionalTracksCard()
+                ], id='additional-tracks-filenames'),
+                html.Br(),
+                dbc.Card([
+                    dbc.InputGroup(
+                        [
+                            dbc.Select(
+                                id='track-selector',
+                                options=[{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
+                                         for track in AdditionalTracks]
                             ),
-                        ], id='format-selection-card', color="danger", outline=True),
-                        html.Br(),
-                        dbc.Collapse(
-                            dbc.Card(dbc.CardBody("Invalid Contact Map! Make sure the format is correct"),
-                                     color="danger",
-                                     outline=True),
-                            id="contact-map-invalid-collapse",
-                        ),
-                        FilenameAlert('contact-map'),
-                        html.Br(),
-                        UploadButton('contact-map', disabled=True)
-                    ])
-                )
-            ]
-        )
+                            dbc.InputGroupAddon("Track", addon_type="append"),
+                        ]
+                    ),
+                ], id='track-selection-card', color="danger", outline=True),
+                html.Br(),
+                AddTrackButton(disabled=True)
+            ]),
+        ])
     )
 
 
-def UploadCard(dataset):
-    return dbc.Card(
-        dbc.CardBody(
-            [
-                dbc.Spinner(
-                    html.Div([
-                        html.P("Choose a file to upload",
-                               className="card-text"),
-                        dbc.Collapse(
-                            dbc.Card(dbc.CardBody("Invalid format, unable to load"), color="danger", outline=True),
-                            id="{}-invalid-collapse".format(dataset),
-                        ),
-                        FilenameAlert(dataset),
-                        html.Br(),
-                        UploadButton(dataset)
-                    ])
-                )
-            ]
-        )
-    )
+def NoAdditionalTracksCard():
+    return dbc.Card(dbc.CardBody("No additional tracks"), color="danger", outline=True, id='no-tracks-card')
 
 
 def DisplayControlCard(available_tracks=None, factor=2):
     if available_tracks is None:
-        return dbc.Card([
-            dbc.CardBody("Need to create a plot first!"),
-            html.Div([
-                dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
-                dcc.Dropdown(id='track-selection-dropdown'),
-                dbc.Input(id='L-cutoff-input'),
-            ], style={'display': 'none'})
-        ],
-            color="danger",
-            outline=True
-        )
-    else:
         return dbc.Card(
             dbc.CardBody(
                 [
-                    dbc.Spinner(
+                    html.H4('Display control', className="card-text", style={'text-align': "center"}),
+                    html.Br(),
+                    dbc.Card([
+                        dbc.CardBody("Need to create a plot first!"),
                         html.Div([
-                            html.P("Adjust contact map", className="card-text"),
-                            dbc.Card([
-                                dbc.InputGroup(
-                                    [
-                                        dbc.InputGroupAddon("L /", addon_type="prepend"),
-                                        dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
-                                                  value=factor),
-                                    ],
-                                ),
-                            ], outline=False),
-                            html.Br(),
-                            html.Hr(),
-                            html.P("Active tracks", className="card-text"),
-                            dcc.Dropdown(
-                                id='track-selection-dropdown',
-                                options=[
-                                    {'label': dataset, 'value': dataset} for dataset in available_tracks
-                                ],
-                                value=[dataset for dataset in available_tracks],
-                                multi=True
-                            ),
-                            html.Br(),
-                            dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True)
-                        ])
+                            dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
+                            dcc.Dropdown(id='track-selection-dropdown'),
+                            dbc.Input(id='L-cutoff-input'),
+                        ], style={'display': 'none'})
+                    ],
+                        color="danger",
+                        outline=True
                     )
                 ]
             )
         )
-
-
-def HelpCard():
-    return dbc.Card([
-        dbc.CardBody("Some hints will go here..."),
-    ], color="dark", outline=True)
-
-
-def WarningsCard(warnings=None):
-    return dbc.Card([
-        dbc.CardBody("There are no warnigns registered"),
-    ], color="success", outline=True)
+    else:
+        return html.Div([
+            html.H4('Display control', className="card-text", style={'text-align': "center"}),
+            html.Br(),
+            dbc.Card(
+                dbc.CardBody(
+                    [
+                        dbc.Spinner(
+                            html.Div([
+                                html.P("Adjust contact map", className="card-text"),
+                                dbc.Card([
+                                    dbc.InputGroup(
+                                        [
+                                            dbc.InputGroupAddon("L /", addon_type="prepend"),
+                                            dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1,
+                                                      value=factor),
+                                        ],
+                                    ),
+                                ], outline=False),
+                                html.Br(),
+                                html.Hr(),
+                                html.P("Active tracks", className="card-text"),
+                                dcc.Dropdown(
+                                    id='track-selection-dropdown',
+                                    options=[
+                                        {'label': dataset, 'value': dataset} for dataset in available_tracks
+                                    ],
+                                    value=[dataset for dataset in available_tracks],
+                                    multi=True
+                                ),
+                                html.Br(),
+                                dbc.Button('Refresh', id='refresh-button', outline=True, color='primary',
+                                           block=True)
+                            ])
+                        )
+                    ]
+                )
+            )
+        ])

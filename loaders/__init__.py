@@ -11,11 +11,11 @@ class DatasetReference(Enum):
     DISORDER = 'disorder'
 
 
-class LayoutFieldsReference(Enum):
-    VALID = 1
-    INVALID = 2
-    HEAD_COLOR = 3
-    FILENAME = 4
+class AdditionalTracks(Enum):
+    TOPCONS = DatasetReference.MEMBRANE_TOPOLOGY.value
+    CONSURF = DatasetReference.CONSERVATION.value
+    PSIPRED = DatasetReference.SECONDARY_STRUCTURE.value
+    IUPRED = DatasetReference.DISORDER.value
 
 
 def decode_raw_file(raw_file):

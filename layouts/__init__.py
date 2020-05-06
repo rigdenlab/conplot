@@ -42,7 +42,7 @@ def Contact(*args, **kwargs):
     return Contact(*args, **kwargs)
 
 
-def DataUpload(*args, **kwargs):
-    from layouts.dataupload import DataUpload
+def Plot(*args, **kwargs):
+    from layouts.plot import Plot
 
-    return DataUpload(*args, **kwargs)
+    return Plot(*args, **kwargs)

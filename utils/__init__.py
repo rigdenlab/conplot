@@ -2,17 +2,11 @@ import urllib.parse
 from enum import Enum
 
 
-class SessionTimeOut(Exception):
-    pass
-
-
 class PathIndex(Enum):
     """An enumerator with an index of all the paths in conkit-web"""
     ROOT = '/'
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')
-    DATAUPLOAD = urllib.parse.urljoin(PLOT, 'dataupload')
-    PLOTDISPLAY = urllib.parse.urljoin(PLOT, 'display')
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
     GITHUB = 'https://github.com/rigdenlab/conkit-web'
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
@@ -32,6 +26,30 @@ def compressStringToBytes(*args, **kwargs):
     from utils.cache_utils import compressStringToBytes
 
     return compressStringToBytes(*args, **kwargs)
+
+
+def get_upload_id(*args, **kwargs):
+    from utils.callback_utils import get_upload_id
+
+    return get_upload_id(*args, **kwargs)
+
+
+def get_remove_trigger(*args, **kwargs):
+    from utils.callback_utils import get_remove_trigger
+
+    return get_remove_trigger(*args, **kwargs)
+
+
+def remove_unused_fname_alerts(*args, **kwargs):
+    from utils.callback_utils import remove_unused_fname_alerts
+
+    return remove_unused_fname_alerts(*args, **kwargs)
+
+
+def toggle_selection_alert(*args, **kwargs):
+    from utils.callback_utils import toggle_selection_alert
+
+    return toggle_selection_alert(*args, **kwargs)
 
 
 def decompressBytesToString(*args, **kwargs):
@@ -56,18 +74,6 @@ def decompress_session(*args, **kwargs):
     from utils.session_utils import decompress_session
 
     return decompress_session(*args, **kwargs)
-
-
-def toggle_input_cards(*args, **kwargs):
-    from utils.callback_utils import toggle_input_cards
-
-    return toggle_input_cards(*args, **kwargs)
-
-
-def toggle_extra_cards(*args, **kwargs):
-    from utils.callback_utils import toggle_extra_cards
-
-    return toggle_extra_cards(*args, **kwargs)
 
 
 def ensure_triggered(*args, **kwargs):

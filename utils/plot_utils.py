@@ -3,7 +3,7 @@ from werkzeug.utils import cached_property
 from enum import Enum
 from loaders import DatasetReference
 from parsers import MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
-from components import MissingInput_Modal, MismatchModal, PlotPlaceHolder, DisplayControlCard
+from components import MissingInputModal, MismatchModal, PlotPlaceHolder, DisplayControlCard
 from layouts import ContextReference
 from utils import ensure_triggered
 import dash_core_components as dcc
@@ -38,16 +38,15 @@ def create_plot(session, trigger, factor, active_tracks):
     if session is None or not ensure_triggered(trigger):
         return PlotPlaceHolder(), None, DisplayControlCard()
 
-    plot = Plot(session)
+    plot = ConkitPlot(session)
     if plot.error is not None:
         return PlotPlaceHolder(), plot.error, DisplayControlCard()
-    elif trigger[0]['prop_id'] == ContextReference.PLOT_CLICK.value:
+    elif trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         graph = dcc.Graph(
             className='square-content', id='plot-graph', figure=plot.get_figure(),
             config={"toImageButtonOptions": {"width": None, "height": None}}
         )
-        return graph, None, DisplayControlCard(
-            available_tracks=plot.active_tracks, factor=plot.factor)
+        return graph, None, DisplayControlCard(available_tracks=plot.active_tracks, factor=plot.factor)
     else:
         plot.factor = factor
         plot.active_tracks = active_tracks
@@ -58,7 +57,7 @@ def create_plot(session, trigger, factor, active_tracks):
         return graph, None, no_update
 
 
-class Plot(object):
+class ConkitPlot(object):
 
     def __init__(self, session, factor=2):
         self.session = session
@@ -263,7 +262,7 @@ class Plot(object):
         """Check user input is coherent"""
 
         if any(self.missing_data):
-            self.error = MissingInput_Modal(*[missing.name for missing in self.missing_data])
+            self.error = MissingInputModal(*[missing.name for missing in self.missing_data])
         elif self.cmap_max_register > self.seq_length - 1:
             self.error = MismatchModal(DatasetReference.SEQUENCE)
 

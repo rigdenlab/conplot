@@ -1,54 +1,44 @@
 from utils import PathIndex
-from layouts import noPage, Home, DataUpload, Contact
-from dash import callback_context
-from layouts import ContextReference
+from layouts import noPage, Home, Plot, Contact
+import json
 
 
-def toggle_input_cards(contact_click, sequence_click, mem_click, ss_click, disorder_click, conserv_click, sequence_open,
-                       contact_open, mem_open, ss_open, disorder_open, conserv_open):
-    context = callback_context.triggered[0]
-    prop_id = context['prop_id']
-    layout = [False for x in range(0, 6)]
-
-    if prop_id == '.':
-        pass
-    elif prop_id == ContextReference.CONTACT_HEAD_CLICK.value:
-        layout[0] = not contact_open
-    elif prop_id == ContextReference.SEQUENCE_HEAD_CLICK.value:
-        layout[1] = not sequence_open
-    elif prop_id == ContextReference.MEM_HEAD_CLICK.value:
-        layout[2] = not mem_open
-    elif prop_id == ContextReference.SS_HEAD_CLICK.value:
-        layout[3] = not ss_open
-    elif prop_id == ContextReference.DISORDER_HEAD_CLICK.value:
-        layout[4] = not disorder_open
+def toggle_selection_alert(format_selection):
+    if format_selection is not None:
+        return None, False
     else:
-        layout[5] = not conserv_open
-
-    return layout
+        return 'danger', True
 
 
-def toggle_extra_cards(display_click, warning_click, help_click, display_open, warning_open, help_open):
-    context = callback_context.triggered[0]
-    prop_id = context['prop_id']
-    layout = [False for x in range(0, 3)]
+def get_remove_trigger(trigger):
+    is_open = trigger['value']
+    prop_id = json.loads(trigger['prop_id'].replace('.is_open', ''))
+    fname = prop_id['index'].split('|')[0]
+    dataset = prop_id['index'].split('|')[1]
+    return fname, dataset, is_open
 
-    if prop_id == '.':
-        pass
-    elif prop_id == ContextReference.DISPLAY_HEAD_CLICK.value:
-        layout[0] = not display_open
-    elif prop_id == ContextReference.WARNING_HEAD_CLICK.value:
-        layout[1] = not warning_open
-    elif prop_id == ContextReference.HELP_HEAD_CLICK.value:
-        layout[2] = not help_open
 
-    return layout
+def remove_unused_fname_alerts(falerts):
+    new_falerts = []
+    for alert in falerts:
+        if 'is_open' in alert['props'].keys() and alert['props']['is_open']:
+            new_falerts.append(alert)
+    return new_falerts
+
+
+def get_upload_id(trigger, fnames, fcontents):
+    fname = trigger['value']
+    prop_id = json.loads(trigger['prop_id'].replace('.filename', ''))
+    dataset = prop_id['index']
+    index = fnames.index(fname)
+    fcontent = fcontents[index]
+
+    return dataset, fname, fcontent, index
 
 
 def ensure_triggered(trigger):
-    context = trigger[0]
-    prop_id = context['prop_id']
-    value = context['value']
+    prop_id = trigger['prop_id']
+    value = trigger['value']
     if prop_id == '.' or value is None:
         return False
     else:
@@ -62,12 +52,12 @@ def toggle_alert(value):
         return False
 
 
-def display_page(url, session_id, aspect_ratio):
+def display_page(url, session_id):
     if url == PathIndex.HOME.value or url == PathIndex.ROOT.value:
         return Home(session_id)
     elif url == PathIndex.CONTACT.value:
         return Contact(session_id)
     elif url == PathIndex.PLOT.value:
-        return DataUpload(session_id, aspect_ratio)
+        return Plot(session_id)
     else:
         return noPage(url)

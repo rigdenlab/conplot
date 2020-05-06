@@ -1,7 +1,19 @@
-def MissingInput_Modal(*args, **kwargs):
-    from components.modals import MissingInput_Modal
+def MissingInputModal(*args, **kwargs):
+    from components.modals import MissingInputModal
 
-    return MissingInput_Modal(*args, **kwargs)
+    return MissingInputModal(*args, **kwargs)
+
+
+def RepeatedInputModal(*args, **kwargs):
+    from components.modals import RepeatedInputModal
+
+    return RepeatedInputModal(*args, **kwargs)
+
+
+def SessionTimedOutModal(*args, **kwargs):
+    from components.modals import SessionTimedOutModal
+
+    return SessionTimedOutModal(*args, **kwargs)
 
 
 def MismatchModal(*args, **kwargs):
@@ -10,22 +22,34 @@ def MismatchModal(*args, **kwargs):
     return MismatchModal(*args, **kwargs)
 
 
-def HelpCard(*args, **kwargs):
-    from components.cards import HelpCard
+def InvalidAddTrackCollapse(*args, **kwargs):
+    from components.collapse import InvalidAddTrackCollapse
 
-    return HelpCard(*args, **kwargs)
-
-
-def WarningsCard(*args, **kwargs):
-    from components.cards import WarningsCard
-
-    return WarningsCard(*args, **kwargs)
+    return InvalidAddTrackCollapse(*args, **kwargs)
 
 
-def ContactUploadCard(*args, **kwargs):
-    from components.cards import ContactUploadCard
+def InvalidFileCollapse(*args, **kwargs):
+    from components.collapse import InvalidFileCollapse
 
-    return ContactUploadCard(*args, **kwargs)
+    return InvalidFileCollapse(*args, **kwargs)
+
+
+def AdditionalTracksUploadCard(*args, **kwargs):
+    from components.cards import AdditionalTracksUploadCard
+
+    return AdditionalTracksUploadCard(*args, **kwargs)
+
+
+def MandatoryUploadCard(*args, **kwargs):
+    from components.cards import MandatoryUploadCard
+
+    return MandatoryUploadCard(*args, **kwargs)
+
+
+def NoAdditionalTracksCard(*args, **kwargs):
+    from components.cards import NoAdditionalTracksCard
+
+    return NoAdditionalTracksCard(*args, **kwargs)
 
 
 def ContactDisplayControlCard(*args, **kwargs):
@@ -47,9 +71,15 @@ def Header(*args, **kwargs):
 
 
 def UploadButton(*args, **kwargs):
-    from components.uploadbutton import UploadButton
+    from components.buttons import UploadButton
 
     return UploadButton(*args, **kwargs)
+
+
+def AddTrackButton(*args, **kwargs):
+    from components.buttons import AddTrackButton
+
+    return AddTrackButton(*args, **kwargs)
 
 
 def FilenameAlert(*args, **kwargs):
@@ -68,12 +98,6 @@ def PlotPlaceHolder(*args, **kwargs):
     from components.plotplaceholder import PlotPlaceHolder
 
     return PlotPlaceHolder(*args, **kwargs)
-
-
-def UploadCard(*args, **kwargs):
-    from components.cards import UploadCard
-
-    return UploadCard(*args, **kwargs)
 
 
 def DisplayControlCard(*args, **kwargs):

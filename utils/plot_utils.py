@@ -34,36 +34,43 @@ class SecondaryStructureColor(Enum):
     SHEET = 'rgba(0, 4, 255,0.4)'
 
 
-def create_plot(session, trigger, factor, active_tracks):
+def create_plot(session, trigger, active_tracks, factor, contact_marker_size, track_marker_size, track_separation):
+
     if session is None or not ensure_triggered(trigger):
-        return PlotPlaceHolder(), None, DisplayControlCard()
+        return PlotPlaceHolder(), None, DisplayControlCard(), True
 
     plot = ConkitPlot(session)
     if plot.error is not None:
-        return PlotPlaceHolder(), plot.error, DisplayControlCard()
+        return PlotPlaceHolder(), plot.error, DisplayControlCard(), True
     elif trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         graph = dcc.Graph(
             className='square-content', id='plot-graph', figure=plot.get_figure(),
             config={"toImageButtonOptions": {"width": None, "height": None}}
         )
-        return graph, None, DisplayControlCard(available_tracks=plot.active_tracks, factor=plot.factor)
+        return graph, None, DisplayControlCard(available_tracks=plot.active_tracks, factor=plot.factor), False
     else:
         plot.factor = factor
+        plot.contact_marker_size = contact_marker_size
+        plot.track_marker_size = track_marker_size
+        plot.track_separation = track_separation
         plot.active_tracks = active_tracks
         graph = dcc.Graph(
             className='square-content', id='plot-graph', figure=plot.get_figure(),
             config={"toImageButtonOptions": {"width": None, "height": None}}
         )
-        return graph, None, no_update
+        return graph, None, no_update, False
 
 
 class ConkitPlot(object):
 
-    def __init__(self, session, factor=2):
+    def __init__(self, session, factor=2, contact_marker_size=5, track_marker_size=7, track_separation=2):
         self.session = session
         self.factor = factor
         self.active_tracks = []
         self.error = None
+        self.contact_marker_size = contact_marker_size
+        self.track_marker_size = track_marker_size
+        self.track_separation = track_separation
         self._lookup_input_errors()
 
         for track in self.session.keys():
@@ -112,7 +119,7 @@ class ConkitPlot(object):
             mode='markers',
             marker={
                 'symbol': 'circle',
-                'size': 5,
+                'size': self.contact_marker_size,
                 'color': 'black'
             }
         )
@@ -138,7 +145,7 @@ class ConkitPlot(object):
             mode="markers",
             marker={
                 'symbol': 'diamond',
-                'size': 7,
+                'size': self.track_marker_size,
                 'color': MembraneTopologyColor.__getattr__(topology.name).value,
             },
         )
@@ -158,12 +165,18 @@ class ConkitPlot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 2, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 2, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 2, lower_bound=True, y_axis=False) for x in
-                                 x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 2, lower_bound=False, y_axis=False) for x in
-                                 x_diagonal]
+                trace_y_lower = [self.transform_coords_diagonal_axis(y, self.track_separation, lower_bound=True)
+                                 for y in y_diagonal]
+                trace_y_upper = [self.transform_coords_diagonal_axis(y, self.track_separation, lower_bound=False)
+                                 for y in y_diagonal]
+                trace_x_lower = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation, lower_bound=True, y_axis=False)
+                    for x in
+                    x_diagonal]
+                trace_x_upper = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation, lower_bound=False, y_axis=False)
+                    for x in
+                    x_diagonal]
 
                 traces += [
                     go.Scatter(
@@ -174,7 +187,7 @@ class ConkitPlot(object):
                         mode="markers",
                         marker={
                             'symbol': 'diamond',
-                            'size': 7,
+                            'size': self.track_marker_size,
                             'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
@@ -196,12 +209,20 @@ class ConkitPlot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 4, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 4, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 4, lower_bound=True, y_axis=False) for x in
-                                 x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 4, lower_bound=False, y_axis=False) for x in
-                                 x_diagonal]
+                trace_y_lower = [
+                    self.transform_coords_diagonal_axis(y, self.track_separation * 2, lower_bound=True) for y in
+                    y_diagonal]
+                trace_y_upper = [
+                    self.transform_coords_diagonal_axis(y, self.track_separation * 2, lower_bound=False) for y in
+                    y_diagonal]
+                trace_x_lower = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation * 2, lower_bound=True,
+                                                        y_axis=False) for x in
+                    x_diagonal]
+                trace_x_upper = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation * 2, lower_bound=False,
+                                                        y_axis=False) for x in
+                    x_diagonal]
 
                 traces += [
                     go.Scatter(
@@ -212,7 +233,7 @@ class ConkitPlot(object):
                         mode="markers",
                         marker={
                             'symbol': 'diamond',
-                            'size': 7,
+                            'size': self.track_marker_size,
                             'color': DisorderColor.__getattr__(state.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
@@ -234,12 +255,20 @@ class ConkitPlot(object):
                 if not any(y_diagonal):
                     continue
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, 6, lower_bound=True) for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, 6, lower_bound=False) for y in y_diagonal]
-                trace_x_lower = [self.transform_coords_diagonal_axis(x, 6, lower_bound=True, y_axis=False) for x in
-                                 x_diagonal]
-                trace_x_upper = [self.transform_coords_diagonal_axis(x, 6, lower_bound=False, y_axis=False) for x in
-                                 x_diagonal]
+                trace_y_lower = [
+                    self.transform_coords_diagonal_axis(y, self.track_separation * 3, lower_bound=True) for y in
+                    y_diagonal]
+                trace_y_upper = [
+                    self.transform_coords_diagonal_axis(y, self.track_separation * 3, lower_bound=False) for y in
+                    y_diagonal]
+                trace_x_lower = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation * 3, lower_bound=True,
+                                                        y_axis=False) for x in
+                    x_diagonal]
+                trace_x_upper = [
+                    self.transform_coords_diagonal_axis(x, self.track_separation * 3, lower_bound=False,
+                                                        y_axis=False) for x in
+                    x_diagonal]
 
                 traces += [
                     go.Scatter(
@@ -250,7 +279,7 @@ class ConkitPlot(object):
                         mode="markers",
                         marker={
                             'symbol': 'diamond',
-                            'size': 7,
+                            'size': self.track_marker_size,
                             'color': ConservationColor.__getattr__(state.name).value,
                         },
                     ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])

@@ -9,10 +9,10 @@ def Plot(session_id):
     return html.Div([
         html.Div(id='_hidden-div', style={'display': 'none'}),
         Header(),
-        html.Div(id='inputs-modal-div'),
-        html.Div(id='removefiles-modal-div'),
-        html.Div(id='plot-modal-div'),
-        html.Div(id='addtrack-modal-div'),
+        dbc.Spinner(html.Div(id='inputs-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='addtrack-modal-div'), fullscreen=True),
         NavBar(PathIndex.PLOT.value),
         html.Br(),
         html.Br(),
@@ -33,22 +33,21 @@ def Plot(session_id):
                 dbc.Button('Plot', id='plot-button', color="primary", block=True),
             ], width=3, style={'height': '100%'}),
             dbc.Col([
-                dbc.Spinner([
-                    html.Div([
-                        PlotPlaceHolder()
-                    ], id='plot-div', className='square-box')
-                ])
+                html.Div([
+                    PlotPlaceHolder()
+                ], id='plot-div', className='square-box')
             ], id='plot-column', width=5, style={'align-items': 'center', 'text-align': 'center', 'display': 'flex'}),
             dbc.Col([
                 html.Div([
-                    dbc.Spinner([
-                        dbc.Card([
-                            dbc.CardBody(
-                                DisplayControlCard(), id='display-control-cardbody'
-                            )
-                        ])
+                    dbc.Card([
+                        dbc.CardBody(
+                            DisplayControlCard(), id='display-control-cardbody'
+                        )
                     ])
-                ], className='InputPanel', style={'height': '73vh', 'overflow-y': 'scroll'}),
+                ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
+                html.Br(),
+                html.Br(),
+                dbc.Button('Refresh', outline=True, color='primary', block=True, id='refresh-button-2', disabled=True)
             ], width=3, style={'height': '100%'}),
         ], justify="between", style={'display': 'flex'}),
     ])

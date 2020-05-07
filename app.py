@@ -11,8 +11,10 @@ import dash_bootstrap_components as dbc
 from utils.exceptions import SessionTimeOut
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
-from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, InvalidAddTrackCollapse
-from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered, get_remove_trigger, get_upload_id, remove_unused_fname_alerts
+from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
+    InvalidAddTrackCollapse
+from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered, \
+    get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
 
 # ==============================================================
@@ -190,21 +192,24 @@ def remove_dataset(alerts_open, session_id):
 
 @app.callback([Output('plot-div', 'children'),
                Output('plot-modal-div', 'children'),
-               Output('display-control-cardbody', 'children')],
+               Output('display-control-cardbody', 'children'),
+               Output('refresh-button-2', 'disabled')],
               [Input('plot-button', 'n_clicks'),
-               Input('refresh-button', 'n_clicks')],
+               Input('refresh-button-2', 'n_clicks')],
               [State('track-selection-dropdown', 'value'),
                State('L-cutoff-input', 'value'),
+               State('contact-marker-size-input', 'value'),
+               State('track-marker-size-input', 'value'),
+               State('track-separation-size-input', 'value'),
                State('session-id', 'children')])
-def create_plot(*args):
-    session_id = args[-1]
-    factor = args[-2]
-    active_tracks = args[-3]
+def create_plot(plot_click, refresh_click, active_tracks, factor, contact_marker_size, track_marker_size,
+                track_separation, session_id):
     compressed_session = cache.get(session_id)
     session = decompress_session(compressed_session)
     trigger = callback_context.triggered[0]
 
-    return utils.create_plot(session, trigger, factor, active_tracks)
+    return utils.create_plot(session, trigger, active_tracks, factor, contact_marker_size, track_marker_size,
+                             track_separation)
 
 
 # ==============================================================

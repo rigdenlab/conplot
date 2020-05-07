@@ -11,7 +11,7 @@ def MandatoryUploadCard():
         dbc.Card(
             dbc.CardBody(
                 [
-                    html.H4("Mandatory input", className="card-text", style={'text-align': "center"}),
+                    html.H4("Required input", className="card-text", style={'text-align': "center"}),
                     html.Br(),
                     dbc.Card([
                         dbc.CardBody([
@@ -40,7 +40,6 @@ def MandatoryUploadCard():
                             ], id='format-selection-card', color="danger", outline=True),
                             html.Br(),
                             html.Div(id={'type': 'file-div', 'index': DatasetReference.CONTACT_MAP.value}),
-                            html.Br(),
                             UploadButton(DatasetReference.CONTACT_MAP.value, disabled=True)
                         ], id='format-selection-card'),
                     ]),

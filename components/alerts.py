@@ -26,7 +26,7 @@ def FilenameAlert(filename, dataset):
         '{}: {}'.format(dataset, filename),
         id={
             'type': 'filename-alert',
-            'index': '{}|{}'.format(filename, dataset)
+            'index': '["{}", "{}"]'.format(filename, dataset)
         },
         dismissable=True,
         color="success",

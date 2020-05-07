@@ -21,6 +21,4 @@ def InvalidAddTrackCollapse():
         dbc.Card(
             dbc.CardBody("Invalid format, unable to load"),
             color="danger", outline=True
-        ),
-        id='invalid-track-collapse', is_open=True
-    )
+        ), id='invalid-track-collapse', is_open=True)

@@ -13,15 +13,18 @@ def toggle_selection_alert(format_selection):
 def get_remove_trigger(trigger):
     is_open = trigger['value']
     prop_id = json.loads(trigger['prop_id'].replace('.is_open', ''))
-    fname = prop_id['index'].split('|')[0]
-    dataset = prop_id['index'].split('|')[1]
+    index = json.loads(prop_id['index'])
+    fname = index[0]
+    dataset = index[1]
     return fname, dataset, is_open
 
 
 def remove_unused_fname_alerts(falerts):
     new_falerts = []
     for alert in falerts:
-        if 'is_open' in alert['props'].keys() and alert['props']['is_open']:
+        if 'is_open' not in alert['props'].keys():
+            new_falerts.append(alert)
+        elif alert['props']['is_open']:
             new_falerts.append(alert)
     return new_falerts
 

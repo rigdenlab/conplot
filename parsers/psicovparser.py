@@ -12,7 +12,7 @@ def PsicovParser(input):
 
         if not line or line[0].isalpha():
             continue
-        elif line[0].isdigit() and line[1].isdigit():
+        elif line[0].isdigit() and line[1].isdigit() and len(line) >= 5:
             if abs(int(line[0]) - int(line[1])) >= 5:
                 output.append((int(line[0]), int(line[1]), float(line[4])))
 

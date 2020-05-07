@@ -48,7 +48,10 @@ def Plot(session_id):
                             )
                         ])
                     ])
-                ], className='InputPanel', style={'height': '73vh', 'overflow-y': 'scroll'}),
+                ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
+                html.Br(),
+                html.Br(),
+                dbc.Button('Refresh', outline=True, color='primary', block=True, id='refresh-button-2', disabled=True)
             ], width=3, style={'height': '100%'}),
         ], justify="between", style={'display': 'flex'}),
     ])

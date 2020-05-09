@@ -39,7 +39,7 @@ def create_plot(session, trigger, active_tracks, factor, contact_marker_size, tr
     if session is None or not ensure_triggered(trigger):
         return PlotPlaceHolder(), None, DisplayControlCard(), True
 
-    plot = ConkitPlot(session)
+    plot = ConPlot(session)
     if plot.error is not None:
         return PlotPlaceHolder(), plot.error, DisplayControlCard(), True
     elif trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
@@ -61,7 +61,7 @@ def create_plot(session, trigger, active_tracks, factor, contact_marker_size, tr
         return graph, None, no_update, False
 
 
-class ConkitPlot(object):
+class ConPlot(object):
 
     def __init__(self, session, factor=2, contact_marker_size=5, track_marker_size=7, track_separation=2):
         self.session = session

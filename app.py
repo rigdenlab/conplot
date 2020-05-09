@@ -38,7 +38,7 @@ def serve_layout():
 
 
 app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_AWESOME.value])
-app.title = 'Conkit-Web'
+app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
 cache = Cache(app.server, config={

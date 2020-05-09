@@ -21,7 +21,7 @@ def Header():
                 dbc.Row(
                     [
                         dbc.Col(html.Img(src=PathIndex.CONKIT_LOGO.value, height="40px")),
-                        dbc.Col(dbc.NavbarBrand('Conkit-Web', className="ml-2")),
+                        dbc.Col(dbc.NavbarBrand('ConPlot', className="ml-2")),
                     ],
                     align="center",
                     no_gutters=True,

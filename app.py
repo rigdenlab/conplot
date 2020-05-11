@@ -43,7 +43,6 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_A
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
-os.environ['REDISCLOUD_URL'] = "redis://localhost:6379"
 url = urllib.parse.urlparse(os.environ.get('REDISCLOUD_URL'))
 cache = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 

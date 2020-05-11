@@ -16,10 +16,10 @@ class PathIndex(Enum):
     CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conplot/master/assets/conkit_small_logo.png'
 
 
-def create_plot(*args, **kwargs):
-    from utils.plot_utils import create_plot
+def create_ConPlot(*args, **kwargs):
+    from utils.plot_utils import create_ConPlot
 
-    return create_plot(*args, **kwargs)
+    return create_ConPlot(*args, **kwargs)
 
 
 def compressStringToBytes(*args, **kwargs):

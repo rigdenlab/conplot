@@ -78,7 +78,8 @@ def NoAdditionalTracksCard():
     return dbc.Card(dbc.CardBody("No additional tracks"), color="danger", outline=True, id='no-tracks-card')
 
 
-def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, track_marker_size=7, track_separation=2):
+def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, contact_marker_size=5,
+                       track_marker_size=7, track_separation=2):
     if available_tracks is None:
         return dbc.Card(
             dbc.CardBody(
@@ -90,10 +91,10 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                         html.Div([
                             dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
                             dcc.Dropdown(id='track-selection-dropdown'),
-                            dbc.Input(id='L-cutoff-input'),
-                            dbc.Input(id='contact-marker-size-input'),
-                            dbc.Input(id='track-marker-size-input'),
-                            dbc.Input(id='track-separation-size-input'),
+                            dbc.Input(id='L-cutoff-input', value=2),
+                            dbc.Input(id='contact-marker-size-input', value=5),
+                            dbc.Input(id='track-marker-size-input', value=7),
+                            dbc.Input(id='track-separation-size-input', value=2),
                         ], style={'display': 'none'})
                     ],
                         color="danger",
@@ -102,7 +103,7 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                 ]
             )
         )
-    else:
+    elif selected_tracks is not None and len(selected_tracks) >= 7:
         return html.Div([
             html.H4('Display control', className="card-text", style={'text-align': "center"}),
             html.Br(),
@@ -125,7 +126,7 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                                 dbc.InputGroup(
                                     [
                                         dbc.InputGroupAddon("Size", addon_type="prepend"),
-                                        dbc.Input(id='contact-marker-size-input', type="number", min=1, max=10,
+                                        dbc.Input(id='contact-marker-size-input', type="number", min=1, max=15,
                                                   step=1, value=contact_marker_size),
                                     ],
                                 ),
@@ -137,7 +138,7 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                                 dbc.InputGroup(
                                     [
                                         dbc.InputGroupAddon("Size", addon_type="prepend"),
-                                        dbc.Input(id='track-marker-size-input', type="number", min=1, max=10,
+                                        dbc.Input(id='track-marker-size-input', type="number", min=1, max=15,
                                                   step=1, value=track_marker_size),
                                     ],
                                 ),
@@ -147,7 +148,7 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                                 dbc.InputGroup(
                                     [
                                         dbc.InputGroupAddon("Separation", addon_type="prepend"),
-                                        dbc.Input(id='track-separation-size-input', type="number", min=1, max=10,
+                                        dbc.Input(id='track-separation-size-input', type="number", min=1, max=15,
                                                   step=1, value=track_separation),
                                     ],
                                 ),
@@ -155,16 +156,42 @@ def DisplayControlCard(available_tracks=None, factor=2, contact_marker_size=5, t
                             html.Br(),
                             html.Hr(),
                             html.P("Active tracks", className="card-text"),
-                            dcc.Dropdown(
-                                id='track-selection-dropdown',
-                                options=[
-                                    {'label': dataset, 'value': dataset} for dataset in available_tracks
-                                ],
-                                value=[dataset for dataset in available_tracks],
-                                multi=True
-                            ),
+                            TrackSelectionCard('-1', selected_tracks[0], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('-2', selected_tracks[1], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('-3', selected_tracks[2], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('0', selected_tracks[3], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('+1', selected_tracks[4], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('+2', selected_tracks[5], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('+3', selected_tracks[6], available_tracks=available_tracks),
+                            html.Br(),
                         ])
                     ]
                 )
             )
         ])
+    else:
+        raise ValueError('Available tracks detected but not enough were selected!')
+
+
+def TrackSelectionCard(track_idx, track_value, available_tracks):
+    track_options = [{'label': 'None', 'value': None}]
+    track_options += [{'label': dataset, 'value': dataset} for dataset in available_tracks]
+
+    return dbc.Card([
+        dbc.InputGroup(
+            [
+                dbc.InputGroupAddon("Track {}".format(track_idx), addon_type="prepend"),
+                dbc.Select(
+                    id={'type': 'track-select'.format(track_idx), 'index': track_idx},
+                    options=track_options,
+                    value=track_value
+                ),
+            ],
+        ),
+    ], outline=False)

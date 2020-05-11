@@ -1,8 +1,7 @@
 import plotly.graph_objects as go
-from werkzeug.utils import cached_property
 from enum import Enum
 from loaders import DatasetReference
-from parsers import MembraneStates, SecondaryStructureStates, DisorderStates, ConservationStates
+from parsers import DatasetStates
 from components import MissingInputModal, MismatchModal, PlotPlaceHolder, DisplayControlCard
 from layouts import ContextReference
 from utils import ensure_triggered
@@ -11,350 +10,228 @@ from dash.dash import no_update
 from operator import itemgetter
 
 
-class MembraneTopologyColor(Enum):
+class ColorReference(Enum):
     INSIDE = 'green'
     OUTSIDE = 'yellow'
     INSERTED = 'red'
-
-
-class DisorderColor(Enum):
     DISORDER = 'rgba(120,0,0,0.4)'
     ORDER = 'rgba(0,120,0,0.4)'
-
-
-class ConservationColor(Enum):
     CONSERVED = 'rgba(0, 30, 255,0.4)'
     AVERAGE = 'rgba(0, 130, 255,0.4)'
     VARIABLE = 'rgba(0, 225, 255,0.4)'
-
-
-class SecondaryStructureColor(Enum):
     HELIX = 'rgba(247, 0, 255, 0.4)'
     COIL = 'rgba(255, 162, 0,0.4)'
     SHEET = 'rgba(0, 4, 255,0.4)'
 
 
-def create_plot(session, trigger, active_tracks, factor, contact_marker_size, track_marker_size, track_separation):
-
+def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=7,
+                   track_separation=2):
     if session is None or not ensure_triggered(trigger):
         return PlotPlaceHolder(), None, DisplayControlCard(), True
 
-    plot = ConPlot(session)
-    if plot.error is not None:
-        return PlotPlaceHolder(), plot.error, DisplayControlCard(), True
-    elif trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
-        graph = dcc.Graph(
-            className='square-content', id='plot-graph', figure=plot.get_figure(),
-            config={"toImageButtonOptions": {"width": None, "height": None}}
-        )
-        return graph, None, DisplayControlCard(available_tracks=plot.active_tracks, factor=plot.factor), False
+    available_tracks = get_available_tracks(session)
+    selected_tracks = get_track_selection(selected_tracks)
+    error = lookup_input_errors(session)
+
+    if error is not None:
+        return PlotPlaceHolder(), error, DisplayControlCard(), True
+
+    axis_range = (0, len(session[DatasetReference.SEQUENCE.value]) + 1)
+    figure = create_figure(axis_range)
+    figure.add_trace(create_contact_trace(cmap=session[DatasetReference.CONTACT_MAP.value],
+                                          seq_length=len(session[DatasetReference.SEQUENCE.value]),
+                                          marker_size=contact_marker_size, factor=factor))
+
+    for idx, dataset in enumerate(selected_tracks):
+        if dataset is None:
+            continue
+        elif idx == 3:
+            traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value], dataset=dataset,
+                                         marker_size=track_marker_size, prediction=session[dataset])
+        else:
+            traces = get_traces(track_idx=idx, track_separation=track_separation, marker_size=track_marker_size,
+                                dataset=dataset, prediction=session[dataset])
+
+        for trace in traces:
+            figure.add_trace(trace)
+
+    graph = dcc.Graph(
+        className='square-content', id='plot-graph', figure=figure,
+        config={"toImageButtonOptions": {"width": None, "height": None}}
+    )
+
+    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
+        return graph, None, DisplayControlCard(available_tracks=available_tracks,
+                                               selected_tracks=selected_tracks), False
     else:
-        plot.factor = factor
-        plot.contact_marker_size = contact_marker_size
-        plot.track_marker_size = track_marker_size
-        plot.track_separation = track_separation
-        plot.active_tracks = active_tracks
-        graph = dcc.Graph(
-            className='square-content', id='plot-graph', figure=plot.get_figure(),
-            config={"toImageButtonOptions": {"width": None, "height": None}}
-        )
         return graph, None, no_update, False
 
 
-class ConPlot(object):
+def get_available_tracks(session):
+    available_tracks = []
+    for track in session.keys():
+        if track == DatasetReference.SEQUENCE.value or track == DatasetReference.CONTACT_MAP.value:
+            pass
+        elif session[track] is not None:
+            available_tracks.append(track)
+    return available_tracks
 
-    def __init__(self, session, factor=2, contact_marker_size=5, track_marker_size=7, track_separation=2):
-        self.session = session
-        self.factor = factor
-        self.active_tracks = []
-        self.error = None
-        self.contact_marker_size = contact_marker_size
-        self.track_marker_size = track_marker_size
-        self.track_separation = track_separation
-        self._lookup_input_errors()
 
-        for track in self.session.keys():
-            if track == DatasetReference.SEQUENCE.value or track == DatasetReference.CONTACT_MAP.value:
-                pass
-            elif self.session[track] is not None:
-                self.active_tracks.append(track)
+def get_missing_data(session):
+    return [dataset for dataset in (DatasetReference.SEQUENCE, DatasetReference.CONTACT_MAP)
+            if dataset.value not in session.keys() or session[dataset.value] is None]
 
-    @property
-    def missing_data(self):
-        return [dataset for dataset in (DatasetReference.SEQUENCE, DatasetReference.CONTACT_MAP)
-                if dataset.value not in self.session.keys() or self.session[dataset.value] is None]
 
-    @cached_property
-    def cmap_max_register(self):
-        return max((max(self.session[DatasetReference.CONTACT_MAP.value], key=itemgetter(0))[0],
-                    max(self.session[DatasetReference.CONTACT_MAP.value], key=itemgetter(1))[0]))
+def lookup_input_errors(session):
+    """Check user input is coherent"""
 
-    @cached_property
-    def seq_length(self):
-        return len(self.session[DatasetReference.SEQUENCE.value])
+    missing_data = get_missing_data(session)
 
-    @cached_property
-    def axis_range(self):
-        return (0, self.seq_length + 1)
+    if any(missing_data):
+        return MissingInputModal(*[missing.name for missing in missing_data])
 
-    @property
-    def contact_trace(self):
+    seq_length = len(session[DatasetReference.SEQUENCE.value])
+    cmap_max_register = max((max(session[DatasetReference.CONTACT_MAP.value], key=itemgetter(0))[0],
+                             max(session[DatasetReference.CONTACT_MAP.value], key=itemgetter(1))[0]))
+    if cmap_max_register > seq_length - 1:
+        return MismatchModal(DatasetReference.SEQUENCE)
 
-        contacts = self.session[DatasetReference.CONTACT_MAP.value][:int(round(self.seq_length / self.factor, 0))]
-        res1_list = []
-        res2_list = []
-        hover_1 = []
-        hover_2 = []
-        for contact in contacts:
-            res1_list.append(contact[0])
-            res2_list.append(contact[1])
-            hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
-            hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+    mismatched = []
+    for dataset in session.keys():
+        if dataset == DatasetReference.CONTACT_MAP.value or dataset == DatasetReference.SEQUENCE.value:
+            pass
+        elif session[dataset] is not None and len(session[dataset]) != seq_length:
+            mismatched.append(dataset)
 
-        return go.Scatter(
-            x=res1_list + res2_list,
-            y=res2_list + res1_list,
-            hoverinfo='text',
-            hovertext=hover_1 + hover_2,
-            mode='markers',
-            marker={
-                'symbol': 'circle',
-                'size': self.contact_marker_size,
-                'color': 'black'
-            }
+    if any(mismatched):
+        return MismatchModal(*mismatched)
+
+    return None
+
+
+def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
+    return go.Scatter(
+        x=x,
+        y=y,
+        hovertext=hovertext,
+        hoverinfo='text' if hovertext is not None else 'none',
+        mode="markers",
+        marker={
+            'symbol': symbol,
+            'size': marker_size,
+            'color': color
+        },
+    )
+
+
+def create_figure(axis_range):
+    figure = go.Figure(
+        layout=go.Layout(
+            xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1,
+                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
+                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
+            yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1,
+                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
+                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
+            margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
+            hovermode='closest',
+            showlegend=False,
+            plot_bgcolor='rgba(0,0,0,0)',
         )
+    )
 
-    def get_membrane_trace(self, topology):
+    return figure
 
-        if self.session[DatasetReference.MEMBRANE_TOPOLOGY.value] is None:
-            return None
-        else:
-            mem_pred = self.session[DatasetReference.MEMBRANE_TOPOLOGY.value]
 
-        x = [idx for idx in range(1, len(mem_pred) + 1)]
-        y = [idx if residue == topology.value else None for idx, residue in enumerate(mem_pred, 1)]
-        residue_names = ['Residue: {} ({}) | {}' \
-                         ''.format(self.session[DatasetReference.SEQUENCE.value][idx - 1], idx, topology.name)
-                         for idx in x]
+def create_contact_trace(cmap, seq_length, marker_size=5, factor=2):
+    contacts = cmap[:int(round(seq_length / factor, 0))]
+    res1_list = []
+    res2_list = []
+    hover_1 = []
+    hover_2 = []
+    for contact in contacts:
+        res1_list.append(contact[0])
+        res2_list.append(contact[1])
+        hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
+        hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
 
-        return go.Scatter(
-            x=x,
-            y=y,
-            hovertext=residue_names,
-            hoverinfo='text',
-            mode="markers",
-            marker={
-                'symbol': 'diamond',
-                'size': self.track_marker_size,
-                'color': MembraneTopologyColor.__getattr__(topology.name).value,
-            },
-        )
+    x = res1_list + res2_list
+    y = res2_list + res1_list
+    hovertext = hover_1 + hover_2
 
-    @property
-    def ss_traces(self):
+    return create_scatter(x=x, y=y, symbol='circle', hovertext=hovertext, marker_size=marker_size, color='black')
 
-        traces = []
 
-        if self.session[DatasetReference.MEMBRANE_TOPOLOGY.value] is not None:
+def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
+    if coord is None:
+        return None
 
-            ss_pred = self.session[DatasetReference.MEMBRANE_TOPOLOGY.value]
-            x_diagonal = [idx for idx in range(1, len(ss_pred) + 1)]
+    if y_axis:
+        factor = ratio * (distance / (1 + ratio ** 2))
+        if lower_bound:
+            factor = factor * -1
+    else:
+        factor = distance / (1 + ratio ** 2)
+        if not lower_bound:
+            factor = factor * -1
 
-            for ss_element in SecondaryStructureStates:
-                y_diagonal = [idx if residue == ss_element.value else None for idx, residue in enumerate(ss_pred, 1)]
-                if not any(y_diagonal):
-                    continue
+    return coord + factor
 
-                trace_y_lower = [self.transform_coords_diagonal_axis(y, self.track_separation, lower_bound=True)
-                                 for y in y_diagonal]
-                trace_y_upper = [self.transform_coords_diagonal_axis(y, self.track_separation, lower_bound=False)
-                                 for y in y_diagonal]
-                trace_x_lower = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation, lower_bound=True, y_axis=False)
-                    for x in
-                    x_diagonal]
-                trace_x_upper = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation, lower_bound=False, y_axis=False)
-                    for x in
-                    x_diagonal]
 
-                traces += [
-                    go.Scatter(
-                        x=x,
-                        y=y,
-                        hovertext=['%s' % ss_element.name for idx in enumerate(x)],
-                        hoverinfo='text',
-                        mode="markers",
-                        marker={
-                            'symbol': 'diamond',
-                            'size': self.track_marker_size,
-                            'color': SecondaryStructureColor.__getattr__(ss_element.name).value,
-                        },
-                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
-                ]
+def get_diagonal_traces(prediction, dataset, marker_size, sequence):
+    if prediction is None:
+        return None
 
-        yield from traces
+    x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
+    states = DatasetStates.__getattr__(dataset).value
+    traces = []
 
-    @property
-    def disorder_traces(self):
+    for state in states:
+        y = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
+        if not any(y):
+            continue
 
-        traces = []
+        hovertext = ['Residue: {} ({}) | {}'.format(sequence[idx - 1], idx, state.name) for idx in x_diagonal]
+        color = ColorReference.__getattr__(state.name).value
 
-        if self.session[DatasetReference.DISORDER.value] is not None:
-            disorder_pred = self.session[DatasetReference.DISORDER.value]
-            x_diagonal = [idx for idx in range(1, len(disorder_pred) + 1)]
+        traces.append(
+            create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
-            for state in DisorderStates:
-                y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(disorder_pred, 1)]
-                if not any(y_diagonal):
-                    continue
+    return traces
 
-                trace_y_lower = [
-                    self.transform_coords_diagonal_axis(y, self.track_separation * 2, lower_bound=True) for y in
-                    y_diagonal]
-                trace_y_upper = [
-                    self.transform_coords_diagonal_axis(y, self.track_separation * 2, lower_bound=False) for y in
-                    y_diagonal]
-                trace_x_lower = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation * 2, lower_bound=True,
-                                                        y_axis=False) for x in
-                    x_diagonal]
-                trace_x_upper = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation * 2, lower_bound=False,
-                                                        y_axis=False) for x in
-                    x_diagonal]
 
-                traces += [
-                    go.Scatter(
-                        x=x,
-                        y=y,
-                        hovertext=['%s' % state.name for idx in enumerate(x)],
-                        hoverinfo='text',
-                        mode="markers",
-                        marker={
-                            'symbol': 'diamond',
-                            'size': self.track_marker_size,
-                            'color': DisorderColor.__getattr__(state.name).value,
-                        },
-                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
-                ]
+def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
+    if prediction is None:
+        return None
 
-        yield from traces
+    traces = []
+    x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
+    states = DatasetStates.__getattr__(dataset).value
+    track_origin = abs(3 - track_idx)
+    track_distance = track_separation * track_origin
+    if track_idx > 3:
+        lower_bound = True
+    else:
+        lower_bound = False
 
-    @property
-    def conservation_traces(self):
+    for state in states:
+        y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
+        if not any(y_diagonal):
+            continue
 
-        traces = []
+        y = [transform_coords_diagonal_axis(y, track_distance, lower_bound=lower_bound) for y in y_diagonal]
+        x = [transform_coords_diagonal_axis(x, track_distance, lower_bound=lower_bound, y_axis=False) for x in
+             x_diagonal]
+        hovertext = ['%s' % state.name for idx in enumerate(x)]
+        color = ColorReference.__getattr__(state.name).value
 
-        if self.session[DatasetReference.CONSERVATION.value] is not None:
-            conserv_pred = self.session[DatasetReference.CONSERVATION.value]
-            x_diagonal = [idx for idx in range(1, len(conserv_pred) + 1)]
+        traces.append(create_scatter(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
-            for state in ConservationStates:
-                y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(conserv_pred, 1)]
-                if not any(y_diagonal):
-                    continue
+    return traces
 
-                trace_y_lower = [
-                    self.transform_coords_diagonal_axis(y, self.track_separation * 3, lower_bound=True) for y in
-                    y_diagonal]
-                trace_y_upper = [
-                    self.transform_coords_diagonal_axis(y, self.track_separation * 3, lower_bound=False) for y in
-                    y_diagonal]
-                trace_x_lower = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation * 3, lower_bound=True,
-                                                        y_axis=False) for x in
-                    x_diagonal]
-                trace_x_upper = [
-                    self.transform_coords_diagonal_axis(x, self.track_separation * 3, lower_bound=False,
-                                                        y_axis=False) for x in
-                    x_diagonal]
 
-                traces += [
-                    go.Scatter(
-                        x=x,
-                        y=y,
-                        hovertext=['%s' % state.name for idx in enumerate(x)],
-                        hoverinfo='text',
-                        mode="markers",
-                        marker={
-                            'symbol': 'diamond',
-                            'size': self.track_marker_size,
-                            'color': ConservationColor.__getattr__(state.name).value,
-                        },
-                    ) for x, y in zip([trace_x_lower, trace_x_upper], [trace_y_lower, trace_y_upper])
-                ]
-
-        yield from traces
-
-    def _lookup_input_errors(self):
-        """Check user input is coherent"""
-
-        if any(self.missing_data):
-            self.error = MissingInputModal(*[missing.name for missing in self.missing_data])
-        elif self.cmap_max_register > self.seq_length - 1:
-            self.error = MismatchModal(DatasetReference.SEQUENCE)
-
-        mismatched = []
-        for dataset in self.session.keys():
-            if dataset == DatasetReference.CONTACT_MAP.value or dataset == DatasetReference.SEQUENCE.value:
-                pass
-            elif self.session[dataset] is not None and len(self.session[dataset]) != self.seq_length:
-                mismatched.append(dataset)
-
-        if any(mismatched):
-            self.error = MismatchModal(*mismatched)
-
-    def get_figure(self):
-
-        figure = go.Figure(
-            layout=go.Layout(
-                xaxis={'range': self.axis_range, 'scaleanchor': "y", 'scaleratio': 1,
-                       'tickvals': [x for x in range(*self.axis_range, 100)], 'ticks': 'inside',
-                       'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-                yaxis={'range': self.axis_range, 'scaleanchor': "x", 'scaleratio': 1,
-                       'tickvals': [x for x in range(*self.axis_range, 100)], 'ticks': 'inside',
-                       'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-                margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
-                hovermode='closest',
-                showlegend=False,
-                plot_bgcolor='rgba(0,0,0,0)',
-            )
-        )
-
-        figure.add_trace(self.contact_trace)
-        if DatasetReference.MEMBRANE_TOPOLOGY.value in self.active_tracks:
-            figure.add_trace(self.get_membrane_trace(MembraneStates.INSIDE))
-            figure.add_trace(self.get_membrane_trace(MembraneStates.OUTSIDE))
-            figure.add_trace(self.get_membrane_trace(MembraneStates.INSERTED))
-
-        if DatasetReference.SECONDARY_STRUCTURE.value in self.active_tracks:
-            for trace in self.ss_traces:
-                figure.add_trace(trace)
-
-        if DatasetReference.DISORDER.value in self.active_tracks:
-            for trace in self.disorder_traces:
-                figure.add_trace(trace)
-
-        if DatasetReference.CONSERVATION.value in self.active_tracks:
-            for trace in self.conservation_traces:
-                figure.add_trace(trace)
-
-        return figure
-
-    @staticmethod
-    def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
-
-        if coord is None:
-            return None
-
-        if y_axis:
-            factor = ratio * (distance / (1 + ratio ** 2))
-            if lower_bound:
-                factor = factor * -1
-        else:
-            factor = distance / (1 + ratio ** 2)
-            if not lower_bound:
-                factor = factor * -1
-
-        return coord + factor
+def get_track_selection(selection):
+    if len(selection) == 0:
+        return [None] * 7
+    else:
+        return [track if track != 'None' else None for track in selection]

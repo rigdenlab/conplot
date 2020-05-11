@@ -196,20 +196,22 @@ def remove_dataset(alerts_open, session_id):
                Output('refresh-button-2', 'disabled')],
               [Input('plot-button', 'n_clicks'),
                Input('refresh-button-2', 'n_clicks')],
-              [State('track-selection-dropdown', 'value'),
-               State('L-cutoff-input', 'value'),
+              [State('L-cutoff-input', 'value'),
                State('contact-marker-size-input', 'value'),
                State('track-marker-size-input', 'value'),
                State('track-separation-size-input', 'value'),
+               State({'type': "track-select", 'index': ALL}, 'value'),
                State('session-id', 'children')])
-def create_plot(plot_click, refresh_click, active_tracks, factor, contact_marker_size, track_marker_size,
-                track_separation, session_id):
+def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
+                   track_separation, track_selection, session_id):
     compressed_session = cache.get(session_id)
     session = decompress_session(compressed_session)
     trigger = callback_context.triggered[0]
 
-    return utils.create_plot(session, trigger, active_tracks, factor, contact_marker_size, track_marker_size,
-                             track_separation)
+    print(track_selection)
+
+    return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,
+                                track_separation)
 
 
 # ==============================================================

@@ -71,7 +71,6 @@ def get_track_info(session, trigger, selected_tracks):
     available_tracks = get_available_tracks(session)
     if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         selected_tracks = default_track_layout(available_tracks)
-        print(selected_tracks)
     else:
         selected_tracks = get_track_user_selection(selected_tracks)
 

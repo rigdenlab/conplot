@@ -48,7 +48,6 @@ cache = Cache(app.server, config={
 })
 app.layout = serve_layout
 
-
 # ==============================================================
 # Define callbacks for the app
 # ==============================================================
@@ -207,8 +206,6 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     compressed_session = cache.get(session_id)
     session = decompress_session(compressed_session)
     trigger = callback_context.triggered[0]
-
-    print(track_selection)
 
     return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,
                                 track_separation)

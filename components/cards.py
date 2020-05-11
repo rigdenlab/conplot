@@ -176,7 +176,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
             )
         ])
     else:
-        raise ValueError('Available tracks detected but not enough were selected!')
+        raise ValueError('Available tracks detected but not enough were selected! Please report.')
 
 
 def TrackSelectionCard(track_idx, track_value, available_tracks):

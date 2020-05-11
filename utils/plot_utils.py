@@ -11,9 +11,9 @@ from operator import itemgetter
 
 
 class ColorReference(Enum):
-    INSIDE = 'green'
-    OUTSIDE = 'yellow'
-    INSERTED = 'red'
+    INSIDE = 'rgba(0,255,0,0.4)'
+    OUTSIDE = 'rgba(255,255,0,0.4)'
+    INSERTED = 'rgba(255,0,0,0.4)'
     DISORDER = 'rgba(120,0,0,0.4)'
     ORDER = 'rgba(0,120,0,0.4)'
     CONSERVED = 'rgba(0, 30, 255,0.4)'
@@ -29,8 +29,8 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
     if session is None or not ensure_triggered(trigger):
         return PlotPlaceHolder(), None, DisplayControlCard(), True
 
-    available_tracks = get_available_tracks(session)
-    selected_tracks = get_track_selection(selected_tracks)
+    available_tracks, selected_tracks = get_track_info(session=session, selected_tracks=selected_tracks,
+                                                       trigger=trigger)
     error = lookup_input_errors(session)
 
     if error is not None:
@@ -65,6 +65,17 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
                                                selected_tracks=selected_tracks), False
     else:
         return graph, None, no_update, False
+
+
+def get_track_info(session, trigger, selected_tracks):
+    available_tracks = get_available_tracks(session)
+    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
+        selected_tracks = default_track_layout(available_tracks)
+        print(selected_tracks)
+    else:
+        selected_tracks = get_track_user_selection(selected_tracks)
+
+    return available_tracks, selected_tracks
 
 
 def get_available_tracks(session):
@@ -230,8 +241,28 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
     return traces
 
 
-def get_track_selection(selection):
+def get_track_user_selection(selection):
     if len(selection) == 0:
         return [None] * 7
     else:
         return [track if track != 'None' else None for track in selection]
+
+
+def default_track_layout(available_tracks):
+    tracks = []
+
+    if DatasetReference.MEMBRANE_TOPOLOGY.value in available_tracks:
+        tracks.append(DatasetReference.MEMBRANE_TOPOLOGY.value)
+    if DatasetReference.SECONDARY_STRUCTURE.value in available_tracks:
+        tracks.append(DatasetReference.SECONDARY_STRUCTURE.value)
+    if DatasetReference.DISORDER.value in available_tracks:
+        tracks.append(DatasetReference.DISORDER.value)
+    if DatasetReference.CONSERVATION.value in available_tracks:
+        tracks.append(DatasetReference.CONSERVATION.value)
+
+    if not any(tracks):
+        return [None] * 7
+    else:
+        missing_tracks = [None for missing in range(0, 4-len(tracks))]
+        tracks += missing_tracks
+        return tracks[1:][::-1] + tracks

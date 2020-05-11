@@ -93,13 +93,12 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     file_divs = [no_update for x in range(0, len(fcontents))]
     cleared_fcontents = [None for x in range(0, len(fcontents))]
 
-    if not cache.exists(session_id):
+    if not ensure_triggered(trigger):
+        return file_divs, cleared_fcontents, None
+    elif not cache.exists(session_id):
         return file_divs, cleared_fcontents, SessionTimedOutModal()
     else:
         cache.expire(session_id, 300)
-
-    if not ensure_triggered(trigger):
-        return file_divs, cleared_fcontents, None
 
     dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
 
@@ -127,14 +126,13 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
                State('additional-tracks-filenames', 'children'),
                State('session-id', 'children')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
-    if not cache.exists(session_id):
-        return SessionTimedOutModal(), no_update
-    else:
-        cache.expire(session_id, 300)
-
     trigger = callback_context.triggered[0]
     if not ensure_triggered(trigger):
         return None, no_update
+    elif not cache.exists(session_id):
+        return SessionTimedOutModal(), no_update
+    else:
+        cache.expire(session_id, 300)
 
     dataset = AdditionalTracks.__getattr__(input_format).value
 
@@ -163,14 +161,12 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [State('session-id', 'children')])
 def remove_dataset(alerts_open, session_id):
     trigger = callback_context.triggered[0]
-
-    if not cache.exists(session_id):
+    if not ensure_triggered(trigger):
+        return None
+    elif not cache.exists(session_id):
         return SessionTimedOutModal()
     else:
         cache.expire(session_id, 300)
-
-    if not ensure_triggered(trigger):
-        return None
 
     fname, dataset, is_open = get_remove_trigger(trigger)
 
@@ -196,15 +192,13 @@ def remove_dataset(alerts_open, session_id):
                State('session-id', 'children')])
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
                    track_separation, track_selection, session_id):
-    if not cache.exists(session_id):
+    trigger = callback_context.triggered[0]
+    if not ensure_triggered(trigger):
+        return PlotPlaceHolder(), None, DisplayControlCard(), True
+    elif not cache.exists(session_id):
         return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
     else:
         cache.expire(session_id, 300)
-
-    trigger = callback_context.triggered[0]
-
-    if not ensure_triggered(trigger):
-        return PlotPlaceHolder(), None, DisplayControlCard(), True
 
     session = cache.hgetall(session_id)
 

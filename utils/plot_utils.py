@@ -4,7 +4,7 @@ from loaders import DatasetReference
 from parsers import DatasetStates
 from components import MissingInputModal, MismatchModal, PlotPlaceHolder, DisplayControlCard
 from layouts import ContextReference
-from utils import ensure_triggered
+from utils import decompress_session
 import dash_core_components as dcc
 from dash.dash import no_update
 from operator import itemgetter
@@ -26,9 +26,7 @@ class ColorReference(Enum):
 
 def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=7,
                    track_separation=2):
-    if session is None or not ensure_triggered(trigger):
-        return PlotPlaceHolder(), None, DisplayControlCard(), True
-
+    session = decompress_session(session)
     available_tracks, selected_tracks = get_track_info(session=session, selected_tracks=selected_tracks,
                                                        trigger=trigger)
     error = lookup_input_errors(session)
@@ -36,21 +34,21 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
 
-    axis_range = (0, len(session[DatasetReference.SEQUENCE.value]) + 1)
+    axis_range = (0, len(session[DatasetReference.SEQUENCE.value.encode()]) + 1)
     figure = create_figure(axis_range)
-    figure.add_trace(create_contact_trace(cmap=session[DatasetReference.CONTACT_MAP.value],
-                                          seq_length=len(session[DatasetReference.SEQUENCE.value]),
+    figure.add_trace(create_contact_trace(cmap=session[DatasetReference.CONTACT_MAP.value.encode()],
+                                          seq_length=len(session[DatasetReference.SEQUENCE.value.encode()]),
                                           marker_size=contact_marker_size, factor=factor))
 
     for idx, dataset in enumerate(selected_tracks):
         if dataset is None:
             continue
         elif idx == 3:
-            traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value], dataset=dataset,
-                                         marker_size=track_marker_size, prediction=session[dataset])
+            traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value.encode()], dataset=dataset,
+                                         marker_size=track_marker_size, prediction=session[dataset.encode()])
         else:
             traces = get_traces(track_idx=idx, track_separation=track_separation, marker_size=track_marker_size,
-                                dataset=dataset, prediction=session[dataset])
+                                dataset=dataset, prediction=session[dataset.encode()])
 
         for trace in traces:
             figure.add_trace(trace)
@@ -80,16 +78,16 @@ def get_track_info(session, trigger, selected_tracks):
 def get_available_tracks(session):
     available_tracks = []
     for track in session.keys():
-        if track == DatasetReference.SEQUENCE.value or track == DatasetReference.CONTACT_MAP.value:
+        if track == DatasetReference.SEQUENCE.value.encode() or track == DatasetReference.CONTACT_MAP.value.encode():
             pass
         elif session[track] is not None:
-            available_tracks.append(track)
+            available_tracks.append(track.decode())
     return available_tracks
 
 
 def get_missing_data(session):
     return [dataset for dataset in (DatasetReference.SEQUENCE, DatasetReference.CONTACT_MAP)
-            if dataset.value not in session.keys() or session[dataset.value] is None]
+            if dataset.value.encode() not in session.keys() or session[dataset.value.encode()] is None]
 
 
 def lookup_input_errors(session):
@@ -100,15 +98,15 @@ def lookup_input_errors(session):
     if any(missing_data):
         return MissingInputModal(*[missing.name for missing in missing_data])
 
-    seq_length = len(session[DatasetReference.SEQUENCE.value])
-    cmap_max_register = max((max(session[DatasetReference.CONTACT_MAP.value], key=itemgetter(0))[0],
-                             max(session[DatasetReference.CONTACT_MAP.value], key=itemgetter(1))[0]))
+    seq_length = len(session[DatasetReference.SEQUENCE.value.encode()])
+    cmap_max_register = max((max(session[DatasetReference.CONTACT_MAP.value.encode()], key=itemgetter(0))[0],
+                             max(session[DatasetReference.CONTACT_MAP.value.encode()], key=itemgetter(1))[0]))
     if cmap_max_register > seq_length - 1:
         return MismatchModal(DatasetReference.SEQUENCE)
 
     mismatched = []
     for dataset in session.keys():
-        if dataset == DatasetReference.CONTACT_MAP.value or dataset == DatasetReference.SEQUENCE.value:
+        if dataset == DatasetReference.CONTACT_MAP.value.encode() or dataset == DatasetReference.SEQUENCE.value.encode():
             pass
         elif session[dataset] is not None and len(session[dataset]) != seq_length:
             mismatched.append(dataset)
@@ -262,6 +260,6 @@ def default_track_layout(available_tracks):
     if not any(tracks):
         return [None] * 7
     else:
-        missing_tracks = [None for missing in range(0, 4-len(tracks))]
+        missing_tracks = [None for missing in range(0, 4 - len(tracks))]
         tracks += missing_tracks
         return tracks[1:][::-1] + tracks

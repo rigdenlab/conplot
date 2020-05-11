@@ -28,6 +28,18 @@ def compressStringToBytes(*args, **kwargs):
     return compressStringToBytes(*args, **kwargs)
 
 
+def decompress_data(*args, **kwargs):
+    from utils.cache_utils import decompress_data
+
+    return decompress_data(*args, **kwargs)
+
+
+def compress_data(*args, **kwargs):
+    from utils.cache_utils import compress_data
+
+    return compress_data(*args, **kwargs)
+
+
 def get_upload_id(*args, **kwargs):
     from utils.callback_utils import get_upload_id
 
@@ -56,18 +68,6 @@ def decompressBytesToString(*args, **kwargs):
     from utils.cache_utils import decompressBytesToString
 
     return decompressBytesToString(*args, **kwargs)
-
-
-def initiate_session():
-    from utils.session_utils import initiate_session
-
-    return initiate_session()
-
-
-def compress_session(*args, **kwargs):
-    from utils.session_utils import compress_session
-
-    return compress_session(*args, **kwargs)
 
 
 def decompress_session(*args, **kwargs):

@@ -138,7 +138,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                                 dbc.InputGroup(
                                     [
                                         dbc.InputGroupAddon("Size", addon_type="prepend"),
-                                        dbc.Input(id='track-marker-size-input', type="number", min=1, max=15,
+                                        dbc.Input(id='track-marker-size-input', type="number", min=1, max=20,
                                                   step=1, value=track_marker_size),
                                     ],
                                 ),
@@ -148,7 +148,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                                 dbc.InputGroup(
                                     [
                                         dbc.InputGroupAddon("Separation", addon_type="prepend"),
-                                        dbc.Input(id='track-separation-size-input', type="number", min=1, max=15,
+                                        dbc.Input(id='track-separation-size-input', type="number", min=1, max=150,
                                                   step=1, value=track_separation),
                                     ],
                                 ),

@@ -1,25 +1,8 @@
-import uuid
-import json
-from utils import decompressBytesToString, compressStringToBytes
-from utils.exceptions import SessionTimeOut
+from utils import decompress_data
 
 
-def initiate_session():
-    session_id = str(uuid.uuid4())
-    session = {}
-    compressed_session = compress_session(session)
-    return session_id, compressed_session
-
-
-def decompress_session(compressed_session):
-    decompressed = decompressBytesToString(compressed_session)
-    try:
-        json.loads(decompressed)
-    except json.decoder.JSONDecodeError:
-        raise SessionTimeOut
-    return json.loads(decompressed)
-
-
-def compress_session(session):
-    session_json = json.dumps(session)
-    return compressStringToBytes(session_json)
+def decompress_session(session):
+    for key in session:
+        session[key] = decompress_data(session[key])
+    del session['id'.encode()]
+    return session

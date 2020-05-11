@@ -16,16 +16,28 @@ class PathIndex(Enum):
     CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conplot/master/assets/conkit_small_logo.png'
 
 
-def create_plot(*args, **kwargs):
-    from utils.plot_utils import create_plot
+def create_ConPlot(*args, **kwargs):
+    from utils.plot_utils import create_ConPlot
 
-    return create_plot(*args, **kwargs)
+    return create_ConPlot(*args, **kwargs)
 
 
 def compressStringToBytes(*args, **kwargs):
     from utils.cache_utils import compressStringToBytes
 
     return compressStringToBytes(*args, **kwargs)
+
+
+def decompress_data(*args, **kwargs):
+    from utils.cache_utils import decompress_data
+
+    return decompress_data(*args, **kwargs)
+
+
+def compress_data(*args, **kwargs):
+    from utils.cache_utils import compress_data
+
+    return compress_data(*args, **kwargs)
 
 
 def get_upload_id(*args, **kwargs):
@@ -56,18 +68,6 @@ def decompressBytesToString(*args, **kwargs):
     from utils.cache_utils import decompressBytesToString
 
     return decompressBytesToString(*args, **kwargs)
-
-
-def initiate_session():
-    from utils.session_utils import initiate_session
-
-    return initiate_session()
-
-
-def compress_session(*args, **kwargs):
-    from utils.session_utils import compress_session
-
-    return compress_session(*args, **kwargs)
 
 
 def decompress_session(*args, **kwargs):

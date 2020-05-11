@@ -1,19 +1,20 @@
 import os
+import uuid
 import dash
 import utils
-from flask_caching import Cache
+import redis
+import urllib.parse
 from dash.dash import no_update
 from dash import callback_context
 import dash_core_components as dcc
 import dash_html_components as html
 from loaders import AdditionalTracks
 import dash_bootstrap_components as dbc
-from utils.exceptions import SessionTimeOut
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
-    InvalidAddTrackCollapse
-from utils import initiate_session, PathIndex, compress_session, decompress_session, ensure_triggered, \
+    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard
+from utils import PathIndex, compress_data, ensure_triggered, \
     get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
 
@@ -23,8 +24,9 @@ from utils import initiate_session, PathIndex, compress_session, decompress_sess
 #
 
 def serve_layout():
-    session_id, session = initiate_session()
-    cache.set(session_id, session)
+    session_id = str(uuid.uuid4())
+    cache.hset(session_id, 'id', compress_data(session_id))
+    cache.expire(session_id, 300)
     return html.Div([
         html.Div(session_id, id='session-id', style={'display': 'none'}),
         dcc.Location(id='url', refresh=False),
@@ -41,11 +43,10 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_A
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
-cache = Cache(app.server, config={
-    'CACHE_TYPE': 'redis',
-    'CACHE_REDIS_URL': os.environ.get('REDIS_URL')
+os.environ['REDISCLOUD_URL'] = "redis://localhost:6379"
+url = urllib.parse.urlparse(os.environ.get('REDISCLOUD_URL'))
+cache = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
-})
 app.layout = serve_layout
 
 
@@ -92,18 +93,16 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     file_divs = [no_update for x in range(0, len(fcontents))]
     cleared_fcontents = [None for x in range(0, len(fcontents))]
 
-    try:
-        session_compressed = cache.get(session_id)
-        session = decompress_session(session_compressed)
-    except SessionTimeOut:
-        return file_divs, cleared_fcontents, SessionTimedOutModal()
-
-    if not ensure_triggered(trigger) or session is None:
+    if not ensure_triggered(trigger):
         return file_divs, cleared_fcontents, None
+    elif not cache.exists(session_id):
+        return file_divs, cleared_fcontents, SessionTimedOutModal()
+    else:
+        cache.expire(session_id, 300)
 
     dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
 
-    if dataset in session.keys() and session[dataset] is not None:
+    if cache.hexists(session_id, dataset):
         return file_divs, cleared_fcontents, RepeatedInputModal(dataset)
     elif dataset == DatasetReference.SEQUENCE.value:
         data, invalid = SequenceLoader(fcontent)
@@ -115,9 +114,7 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
         return file_divs, cleared_fcontents, None
     else:
         file_divs[index] = FilenameAlert(fname, dataset)
-        session[dataset] = data
-        session_compressed = compress_session(session)
-        cache.set(session_id, session_compressed)
+        cache.hset(session_id, dataset, data)
         return file_divs, cleared_fcontents, None
 
 
@@ -129,19 +126,17 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
                State('additional-tracks-filenames', 'children'),
                State('session-id', 'children')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
-    try:
-        session_compressed = cache.get(session_id)
-        session = decompress_session(session_compressed)
-    except SessionTimeOut:
-        return SessionTimedOutModal(), no_update
-
     trigger = callback_context.triggered[0]
-    if not ensure_triggered(trigger) or session is None:
+    if not ensure_triggered(trigger):
         return None, no_update
+    elif not cache.exists(session_id):
+        return SessionTimedOutModal(), no_update
+    else:
+        cache.expire(session_id, 300)
 
     dataset = AdditionalTracks.__getattr__(input_format).value
 
-    if dataset in session.keys() and session[dataset] is not None:
+    if cache.hexists(session_id, dataset):
         return RepeatedInputModal(dataset), no_update
 
     data, invalid = Loader(fcontent, input_format)
@@ -157,9 +152,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
                         if alert['props']['id'] != 'no-tracks-card'
                         and alert['props']['id'] != 'invalid-track-collapse']
         fname_alerts.append(FilenameAlert(fname, dataset))
-        session[dataset] = data
-        session_compressed = compress_session(session)
-        cache.set(session_id, session_compressed)
+        cache.hset(session_id, dataset, data)
         return None, fname_alerts
 
 
@@ -168,25 +161,20 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [State('session-id', 'children')])
 def remove_dataset(alerts_open, session_id):
     trigger = callback_context.triggered[0]
-
-    try:
-        session_compressed = cache.get(session_id)
-        session = decompress_session(session_compressed)
-    except SessionTimeOut:
-        return SessionTimedOutModal()
-
-    if not ensure_triggered(trigger) or session is None:
+    if not ensure_triggered(trigger):
         return None
+    elif not cache.exists(session_id):
+        return SessionTimedOutModal()
+    else:
+        cache.expire(session_id, 300)
 
     fname, dataset, is_open = get_remove_trigger(trigger)
 
     if is_open:
         return None
     else:
-        del session[dataset]
+        cache.hdel(session_id, dataset)
 
-    compressed_session = compress_session(session)
-    cache.set(session_id, compressed_session)
     return None
 
 
@@ -196,20 +184,26 @@ def remove_dataset(alerts_open, session_id):
                Output('refresh-button-2', 'disabled')],
               [Input('plot-button', 'n_clicks'),
                Input('refresh-button-2', 'n_clicks')],
-              [State('track-selection-dropdown', 'value'),
-               State('L-cutoff-input', 'value'),
+              [State('L-cutoff-input', 'value'),
                State('contact-marker-size-input', 'value'),
                State('track-marker-size-input', 'value'),
                State('track-separation-size-input', 'value'),
+               State({'type': "track-select", 'index': ALL}, 'value'),
                State('session-id', 'children')])
-def create_plot(plot_click, refresh_click, active_tracks, factor, contact_marker_size, track_marker_size,
-                track_separation, session_id):
-    compressed_session = cache.get(session_id)
-    session = decompress_session(compressed_session)
+def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
+                   track_separation, track_selection, session_id):
     trigger = callback_context.triggered[0]
+    if not ensure_triggered(trigger):
+        return PlotPlaceHolder(), None, DisplayControlCard(), True
+    elif not cache.exists(session_id):
+        return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
+    else:
+        cache.expire(session_id, 300)
 
-    return utils.create_plot(session, trigger, active_tracks, factor, contact_marker_size, track_marker_size,
-                             track_separation)
+    session = cache.hgetall(session_id)
+
+    return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,
+                                track_separation)
 
 
 # ==============================================================

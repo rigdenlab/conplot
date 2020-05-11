@@ -68,3 +68,10 @@ class SecondaryStructureStates(Enum):
     HELIX = 1
     COIL = 2
     SHEET = 3
+
+
+class DatasetStates(Enum):
+    membranetopology = MembraneStates
+    secondarystructure = SecondaryStructureStates
+    conservation = ConservationStates
+    disorder = DisorderStates

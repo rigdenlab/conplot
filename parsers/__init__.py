@@ -30,6 +30,11 @@ def IupredParser(*args, **kwargs):
 
     return IupredParser(*args, **kwargs)
 
+def EvfoldParser(*args, **kwargs):
+    from parsers.evfoldparser import EvfoldParser
+
+    return EvfoldParser(*args, **kwargs)
+
 
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
@@ -39,6 +44,7 @@ class ParserFormats(Enum):
     PSICOV = PsicovParser
     METAPSICOV = PsicovParser
     NEBCON = PsicovParser
+    EVFOLD = EvfoldParser
 
 
 class ContactFormats(Enum):

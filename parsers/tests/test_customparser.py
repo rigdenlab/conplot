@@ -76,3 +76,29 @@ LEN 46
 """
         with self.assertRaises(InvalidFormat):
             output = CustomParser(dummy_prediction)
+
+    def test_6(self):
+        dummy_prediction = """LEN 46
+1 5 10
+6 10 2
+11 35 5
+36 37 12
+39 39 8
+40 40 9
+42 45 1
+"""
+        with self.assertRaises(InvalidFormat):
+            output = CustomParser(dummy_prediction)
+
+    def test_7(self):
+        dummy_prediction = """LEN 46
+1 5 10
+6 10 2
+11 35 5
+36 37 0
+39 39 8
+40 40 9
+42 45 10
+"""
+        with self.assertRaises(InvalidFormat):
+            output = CustomParser(dummy_prediction)

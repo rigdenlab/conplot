@@ -103,7 +103,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                 ]
             )
         )
-    elif selected_tracks is not None and len(selected_tracks) >= 7:
+    elif selected_tracks is not None and len(selected_tracks) >= 9:
         return html.Div([
             html.H4('Display control', className="card-text", style={'text-align': "center"}),
             html.Br(),
@@ -156,19 +156,23 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                             html.Br(),
                             html.Hr(),
                             html.P("Active tracks", className="card-text"),
-                            TrackSelectionCard('-1', selected_tracks[0], available_tracks=available_tracks),
+                            TrackSelectionCard('-4', selected_tracks[0], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('-2', selected_tracks[1], available_tracks=available_tracks),
+                            TrackSelectionCard('-3', selected_tracks[1], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('-3', selected_tracks[2], available_tracks=available_tracks),
+                            TrackSelectionCard('-2', selected_tracks[2], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('0', selected_tracks[3], available_tracks=available_tracks),
+                            TrackSelectionCard('-1', selected_tracks[3], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('+1', selected_tracks[4], available_tracks=available_tracks),
+                            TrackSelectionCard('0', selected_tracks[4], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('+2', selected_tracks[5], available_tracks=available_tracks),
+                            TrackSelectionCard('+1', selected_tracks[5], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('+3', selected_tracks[6], available_tracks=available_tracks),
+                            TrackSelectionCard('+2', selected_tracks[6], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('+3', selected_tracks[7], available_tracks=available_tracks),
+                            html.Br(),
+                            TrackSelectionCard('+4', selected_tracks[8], available_tracks=available_tracks),
                             html.Br(),
                         ])
                     ]

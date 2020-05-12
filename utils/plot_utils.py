@@ -13,35 +13,35 @@ import dash_core_components as dcc
 
 
 class ColorReference(Enum):
-    INSIDE = 'rgba(0, 255, 0, 0.4)'
-    OUTSIDE = 'rgba(255, 255, 0, 0.4)'
-    INSERTED = 'rgba(255, 0, 0, 0.4)'
-    DISORDER = 'rgba(120, 0, 0, 0.4)'
-    ORDER = 'rgba(0, 120, 0, 0.4)'
-    HELIX = 'rgba(247, 0, 255, 0.4)'
-    COIL = 'rgba(255, 162, 0, 0.4)'
-    SHEET = 'rgba(0, 4, 255, 0.4)'
-    CUSTOM_1 = diverging.Spectral[0].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_2 = diverging.Spectral[1].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_3 = diverging.Spectral[2].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_4 = diverging.Spectral[3].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_5 = diverging.Spectral[4].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_6 = diverging.Spectral[5].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_7 = diverging.Spectral[6].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_8 = diverging.Spectral[7].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_9 = diverging.Spectral[8].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_10 = diverging.Spectral[9].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CUSTOM_11 = diverging.Spectral[10].replace(')', ',0.4)').replace('rgb', 'rgba')
+    INSIDE = 'rgba(0, 255, 0,  0.6)'
+    OUTSIDE = 'rgba(255, 255, 0,  0.6)'
+    INSERTED = 'rgba(255, 0, 0,  0.6)'
+    DISORDER = 'rgba(120, 0, 0,  0.6)'
+    ORDER = 'rgba(0, 120, 0,  0.6)'
+    HELIX = 'rgba(247, 0, 255,  0.6)'
+    COIL = 'rgba(255, 162, 0,  0.6)'
+    SHEET = 'rgba(0, 4, 255,  0.6)'
+    CUSTOM_1 = diverging.Spectral[0].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_2 = diverging.Spectral[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_3 = diverging.Spectral[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_4 = diverging.Spectral[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_5 = diverging.Spectral[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_6 = diverging.Spectral[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_7 = diverging.Spectral[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_8 = diverging.Spectral[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_9 = diverging.Spectral[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_10 = diverging.Spectral[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_11 = diverging.Spectral[10].replace(')', ', 0.6)').replace('rgb', 'rgba')
     CUSTOM_NAN = 'rgba(0, 0, 0, 0)'
-    VARIABLE_1 = sequential.ice[9].replace(')', ',0.4)').replace('rgb', 'rgba')
-    VARIABLE_2 = sequential.ice[8].replace(')', ',0.4)').replace('rgb', 'rgba')
-    VARIABLE_3 = sequential.ice[7].replace(')', ',0.4)').replace('rgb', 'rgba')
-    AVERAGE_4 = sequential.ice[6].replace(')', ',0.4)').replace('rgb', 'rgba')
-    AVERAGE_5 = sequential.ice[5].replace(')', ',0.4)').replace('rgb', 'rgba')
-    AVERAGE_6 = sequential.ice[4].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CONSERVED_7 = sequential.ice[3].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CONSERVED_8 = sequential.ice[2].replace(')', ',0.4)').replace('rgb', 'rgba')
-    CONSERVED_9 = sequential.ice[1].replace(')', ',0.4)').replace('rgb', 'rgba')
+    VARIABLE_1 = sequential.ice[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    VARIABLE_2 = sequential.ice[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    VARIABLE_3 = sequential.ice[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_4 = sequential.ice[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_5 = sequential.ice[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_6 = sequential.ice[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_7 = sequential.ice[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_8 = sequential.ice[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_9 = sequential.ice[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
 
 
 def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=7,
@@ -63,7 +63,7 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
     for idx, dataset in enumerate(selected_tracks):
         if dataset is None:
             continue
-        elif idx == 3:
+        elif idx == 4:
             traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value.encode()], dataset=dataset,
                                          marker_size=track_marker_size, prediction=session[dataset.encode()])
         else:
@@ -139,7 +139,7 @@ def get_available_tracks(session):
 
 def get_track_user_selection(selection):
     if len(selection) == 0:
-        return [None] * 7
+        return [None] * 9
     else:
         return [track if track != 'None' else None for track in selection]
 
@@ -155,11 +155,13 @@ def default_track_layout(available_tracks):
         tracks.append(DatasetReference.DISORDER.value)
     if DatasetReference.CONSERVATION.value in available_tracks:
         tracks.append(DatasetReference.CONSERVATION.value)
+    if DatasetReference.CUSTOM.value in available_tracks:
+        tracks.append(DatasetReference.CUSTOM.value)
 
     if not any(tracks):
-        return [None] * 7
+        return [None] * 9
     else:
-        missing_tracks = [None for missing in range(0, 4 - len(tracks))]
+        missing_tracks = [None for missing in range(0, 5 - len(tracks))]
         tracks += missing_tracks
         return tracks[1:][::-1] + tracks
 
@@ -260,9 +262,9 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
     traces = []
     x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
-    track_origin = abs(3 - track_idx)
+    track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
-    if track_idx > 3:
+    if track_idx > 4:
         lower_bound = True
     else:
         lower_bound = False

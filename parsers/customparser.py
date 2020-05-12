@@ -21,7 +21,8 @@ def CustomParser(input):
 
         if not line:
             continue
-        elif len(line) != 3 or any([not x.isnumeric() for x in line]) or int(line[0]) > int(line[1]):
+        elif len(line) != 3 or any([not x.isnumeric() for x in line]) or int(line[0]) > int(line[1]) \
+                or 1 > int(line[2]) or int(line[2]) > 11:
             raise InvalidFormat('Invalid line detected: {}'.format(' '.join(line)))
 
         try:

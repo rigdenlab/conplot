@@ -79,7 +79,7 @@ def NoAdditionalTracksCard():
 
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, contact_marker_size=5,
-                       track_marker_size=7, track_separation=2):
+                       track_marker_size=5, track_separation=2):
     if available_tracks is None:
         return dbc.Card(
             dbc.CardBody(
@@ -92,9 +92,9 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                             dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
                             dcc.Dropdown(id='track-selection-dropdown'),
                             dbc.Input(id='L-cutoff-input', value=2),
-                            dbc.Input(id='contact-marker-size-input', value=5),
-                            dbc.Input(id='track-marker-size-input', value=7),
-                            dbc.Input(id='track-separation-size-input', value=2),
+                            dbc.Input(id='contact-marker-size-input', value=contact_marker_size),
+                            dbc.Input(id='track-marker-size-input', value=track_marker_size),
+                            dbc.Input(id='track-separation-size-input', value=track_separation),
                         ], style={'display': 'none'})
                     ],
                         color="danger",
@@ -164,7 +164,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                             html.Br(),
                             TrackSelectionCard('-1', selected_tracks[3], available_tracks=available_tracks),
                             html.Br(),
-                            TrackSelectionCard('0', selected_tracks[4], available_tracks=available_tracks),
+                            TrackSelectionCard(' 0', selected_tracks[4], available_tracks=available_tracks),
                             html.Br(),
                             TrackSelectionCard('+1', selected_tracks[5], available_tracks=available_tracks),
                             html.Br(),

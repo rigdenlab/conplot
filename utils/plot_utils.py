@@ -44,7 +44,7 @@ class ColorReference(Enum):
     CONSERVED_9 = sequential.ice[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
 
 
-def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=7,
+def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
                    track_separation=2):
     session = decompress_session(session)
     available_tracks, selected_tracks = get_track_info(session=session, selected_tracks=selected_tracks,
@@ -53,6 +53,15 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
 
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
+
+    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
+        contact_marker_size, track_separation = get_default_display_setup(
+            len(session[DatasetReference.SEQUENCE.value.encode()]))
+        display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
+                                          contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
+                                          track_separation=track_separation)
+    else:
+        display_card = no_update
 
     axis_range = (0, len(session[DatasetReference.SEQUENCE.value.encode()]) + 1)
     figure = create_figure(axis_range)
@@ -78,11 +87,17 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
         config={"toImageButtonOptions": {"width": None, "height": None}}
     )
 
-    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
-        return graph, None, DisplayControlCard(available_tracks=available_tracks,
-                                               selected_tracks=selected_tracks), False
+    return graph, None, display_card, False
+
+
+def get_default_display_setup(seq_len):
+    if seq_len >= 700:
+        contact_marker_size = 2
     else:
-        return graph, None, no_update, False
+        contact_marker_size = 3
+    track_separation = round(seq_len / 100)
+
+    return contact_marker_size, track_separation
 
 
 def get_missing_data(session):

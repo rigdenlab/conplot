@@ -3,7 +3,7 @@ from parsers import CustomParser
 from utils.exceptions import InvalidFormat
 
 
-class ConsurfParserTestCase(unittest.TestCase):
+class CustomParserTestCase(unittest.TestCase):
 
     def test_1(self):
         dummy_prediction = """

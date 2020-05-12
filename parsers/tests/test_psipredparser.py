@@ -1,5 +1,6 @@
 import unittest
-from parsers import PsipredParser, SecondaryStructureStates, InvalidFormat
+from parsers import PsipredParser, SecondaryStructureStates
+from utils.exceptions import InvalidFormat
 
 
 class PsipredParserTestCase(unittest.TestCase):

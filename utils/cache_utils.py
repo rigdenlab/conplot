@@ -1,5 +1,16 @@
+import json
 import gzip
 from io import BytesIO
+
+
+def compress_data(data_raw):
+    data_json = json.dumps(data_raw)
+    return compressStringToBytes(data_json)
+
+
+def decompress_data(data_compressed):
+    decompressed = decompressBytesToString(data_compressed)
+    return json.loads(decompressed)
 
 
 def compressStringToBytes(inputString):
@@ -36,4 +47,3 @@ def decompressBytesToString(inputBytes):
             return bio.read().decode("utf-8")
         bio.write(chunk)
     return None
-

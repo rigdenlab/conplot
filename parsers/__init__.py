@@ -1,10 +1,6 @@
 from enum import Enum
 
 
-class InvalidFormat(Exception):
-    pass
-
-
 def ConsurfParser(*args, **kwargs):
     from parsers.consurfparser import ConsurfParser
 
@@ -72,3 +68,10 @@ class SecondaryStructureStates(Enum):
     HELIX = 1
     COIL = 2
     SHEET = 3
+
+
+class DatasetStates(Enum):
+    membranetopology = MembraneStates
+    secondarystructure = SecondaryStructureStates
+    conservation = ConservationStates
+    disorder = DisorderStates

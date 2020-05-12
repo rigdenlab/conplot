@@ -2,30 +2,24 @@ import urllib.parse
 from enum import Enum
 
 
-class SessionTimeOut(Exception):
-    pass
-
-
 class PathIndex(Enum):
-    """An enumerator with an index of all the paths in conkit-web"""
+    """An enumerator with an index of all the paths in conplot-web"""
     ROOT = '/'
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')
-    DATAUPLOAD = urllib.parse.urljoin(PLOT, 'dataupload')
-    PLOTDISPLAY = urllib.parse.urljoin(PLOT, 'display')
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
-    GITHUB = 'https://github.com/rigdenlab/conkit-web'
+    GITHUB = 'https://github.com/rigdenlab/conplot'
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
-    GITHUB_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/github_logo.png'
-    CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conkit-web/master/assets/conkit_small_logo.png'
+    GITHUB_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conplot/master/assets/github_logo.png'
+    CONKIT_LOGO = 'https://raw.githubusercontent.com/rigdenlab/conplot/master/assets/conkit_small_logo.png'
 
 
-def create_plot(*args, **kwargs):
-    from utils.plot_utils import create_plot
+def create_ConPlot(*args, **kwargs):
+    from utils.plot_utils import create_ConPlot
 
-    return create_plot(*args, **kwargs)
+    return create_ConPlot(*args, **kwargs)
 
 
 def compressStringToBytes(*args, **kwargs):
@@ -34,40 +28,52 @@ def compressStringToBytes(*args, **kwargs):
     return compressStringToBytes(*args, **kwargs)
 
 
+def decompress_data(*args, **kwargs):
+    from utils.cache_utils import decompress_data
+
+    return decompress_data(*args, **kwargs)
+
+
+def compress_data(*args, **kwargs):
+    from utils.cache_utils import compress_data
+
+    return compress_data(*args, **kwargs)
+
+
+def get_upload_id(*args, **kwargs):
+    from utils.callback_utils import get_upload_id
+
+    return get_upload_id(*args, **kwargs)
+
+
+def get_remove_trigger(*args, **kwargs):
+    from utils.callback_utils import get_remove_trigger
+
+    return get_remove_trigger(*args, **kwargs)
+
+
+def remove_unused_fname_alerts(*args, **kwargs):
+    from utils.callback_utils import remove_unused_fname_alerts
+
+    return remove_unused_fname_alerts(*args, **kwargs)
+
+
+def toggle_selection_alert(*args, **kwargs):
+    from utils.callback_utils import toggle_selection_alert
+
+    return toggle_selection_alert(*args, **kwargs)
+
+
 def decompressBytesToString(*args, **kwargs):
     from utils.cache_utils import decompressBytesToString
 
     return decompressBytesToString(*args, **kwargs)
 
 
-def initiate_session():
-    from utils.session_utils import initiate_session
-
-    return initiate_session()
-
-
-def compress_session(*args, **kwargs):
-    from utils.session_utils import compress_session
-
-    return compress_session(*args, **kwargs)
-
-
 def decompress_session(*args, **kwargs):
     from utils.session_utils import decompress_session
 
     return decompress_session(*args, **kwargs)
-
-
-def toggle_input_cards(*args, **kwargs):
-    from utils.callback_utils import toggle_input_cards
-
-    return toggle_input_cards(*args, **kwargs)
-
-
-def toggle_extra_cards(*args, **kwargs):
-    from utils.callback_utils import toggle_extra_cards
-
-    return toggle_extra_cards(*args, **kwargs)
 
 
 def ensure_triggered(*args, **kwargs):

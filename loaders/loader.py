@@ -1,26 +1,20 @@
-from loaders import decode_raw_file, LayoutFieldsReference
-from parsers import ParserFormats, InvalidFormat
+from loaders import decode_raw_file
+from parsers import ParserFormats
+from utils.exceptions import InvalidFormat
+from utils import compress_data
 
 
-def Loader(filename, raw_file, input_format):
-    result = {
-        LayoutFieldsReference.VALID.value: False,
-        LayoutFieldsReference.INVALID.value: False,
-        LayoutFieldsReference.HEAD_COLOR.value: 'dark',
-        LayoutFieldsReference.FILENAME.value: filename,
-    }
-
+def Loader(raw_file, input_format):
     data = None
+    invalid = False
 
     if raw_file is not None:
         decoded = decode_raw_file(raw_file)
         try:
-            data = ParserFormats.__dict__[input_format](decoded)
-            result[LayoutFieldsReference.INVALID.value] = False
-            result[LayoutFieldsReference.HEAD_COLOR.value] = 'success'
-            result[LayoutFieldsReference.VALID.value] = True
+            data_raw = ParserFormats.__dict__[input_format](decoded)
+            data = compress_data(data_raw)
         except InvalidFormat:
-            pass
+            data = None
+            invalid = True
 
-    return data, result[LayoutFieldsReference.INVALID.value], result[LayoutFieldsReference.VALID.value], \
-           result[LayoutFieldsReference.FILENAME.value], result[LayoutFieldsReference.HEAD_COLOR.value]
+    return data, invalid

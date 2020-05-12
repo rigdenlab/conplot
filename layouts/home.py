@@ -7,7 +7,7 @@ def Body(session_id):
     return html.Div(
         [
             html.Br(),
-            html.H1(["Welcome to Conkit-Web"]),
+            html.H1(["Welcome to ConPlot"]),
             html.H6(["Current session id is %s" % session_id]),
         ]
     )

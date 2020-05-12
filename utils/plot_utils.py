@@ -13,14 +13,14 @@ import dash_core_components as dcc
 
 
 class ColorReference(Enum):
-    INSIDE = 'rgba(0,255,0,0.4)'
-    OUTSIDE = 'rgba(255,255,0,0.4)'
-    INSERTED = 'rgba(255,0,0,0.4)'
-    DISORDER = 'rgba(120,0,0,0.4)'
-    ORDER = 'rgba(0,120,0,0.4)'
+    INSIDE = 'rgba(0, 255, 0, 0.4)'
+    OUTSIDE = 'rgba(255, 255, 0, 0.4)'
+    INSERTED = 'rgba(255, 0, 0, 0.4)'
+    DISORDER = 'rgba(120, 0, 0, 0.4)'
+    ORDER = 'rgba(0, 120, 0, 0.4)'
     HELIX = 'rgba(247, 0, 255, 0.4)'
-    COIL = 'rgba(255, 162, 0,0.4)'
-    SHEET = 'rgba(0, 4, 255,0.4)'
+    COIL = 'rgba(255, 162, 0, 0.4)'
+    SHEET = 'rgba(0, 4, 255, 0.4)'
     CUSTOM_1 = diverging.Spectral[0].replace(')', ',0.4)').replace('rgb', 'rgba')
     CUSTOM_2 = diverging.Spectral[1].replace(')', ',0.4)').replace('rgb', 'rgba')
     CUSTOM_3 = diverging.Spectral[2].replace(')', ',0.4)').replace('rgb', 'rgba')
@@ -32,6 +32,7 @@ class ColorReference(Enum):
     CUSTOM_9 = diverging.Spectral[8].replace(')', ',0.4)').replace('rgb', 'rgba')
     CUSTOM_10 = diverging.Spectral[9].replace(')', ',0.4)').replace('rgb', 'rgba')
     CUSTOM_11 = diverging.Spectral[10].replace(')', ',0.4)').replace('rgb', 'rgba')
+    CUSTOM_NAN = 'rgba(0, 0, 0, 0)'
     VARIABLE_1 = sequential.ice[9].replace(')', ',0.4)').replace('rgb', 'rgba')
     VARIABLE_2 = sequential.ice[8].replace(')', ',0.4)').replace('rgb', 'rgba')
     VARIABLE_3 = sequential.ice[7].replace(')', ',0.4)').replace('rgb', 'rgba')

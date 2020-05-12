@@ -54,9 +54,15 @@ class MembraneStates(Enum):
 
 
 class ConservationStates(Enum):
-    CONSERVED = 1
-    AVERAGE = 2
-    VARIABLE = 3
+    VARIABLE_1 = 1
+    VARIABLE_2 = 2
+    VARIABLE_3 = 3
+    AVERAGE_4 = 4
+    AVERAGE_5 = 5
+    AVERAGE_6 = 6
+    CONSERVED_7 = 7
+    CONSERVED_8 = 8
+    CONSERVED_9 = 9
 
 
 class DisorderStates(Enum):

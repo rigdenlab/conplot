@@ -6,6 +6,7 @@ from components import UploadButton, AddTrackButton, HelpToolTip
 from loaders import DatasetReference, AdditionalTracks
 from utils import PathIndex
 
+
 def MandatoryUploadCard():
     return dbc.Card(
         dbc.CardBody(
@@ -86,7 +87,8 @@ def AdditionalTracksUploadCard():
 
 
 def NoAdditionalTracksCard():
-    return dbc.Card(dbc.CardBody("No additional tracks"), color="danger", outline=True, id='no-tracks-card')
+    return dbc.Card(dbc.CardBody("No additional tracks"), color="danger", outline=True, id='no-tracks-card',
+                    style={'text-align': "center"})
 
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, contact_marker_size=5,
@@ -103,7 +105,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                                                      ' the refresh button.')),
                     html.Br(),
                     dbc.Card([
-                        dbc.CardBody("Need to create a plot first!"),
+                        dbc.CardBody("Need to create a plot first!", style={'text-align': "center"}),
                         html.Div([
                             dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
                             dcc.Dropdown(id='track-selection-dropdown'),

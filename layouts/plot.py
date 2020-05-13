@@ -5,15 +5,13 @@ from components import NavBar, Header, PlotPlaceHolder, DisplayControlCard, Mand
 import dash_bootstrap_components as dbc
 
 
-def Plot(session_id):
+def Body():
     return html.Div([
         html.Div(id='_hidden-div', style={'display': 'none'}),
-        Header(),
         dbc.Spinner(html.Div(id='inputs-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='addtrack-modal-div'), fullscreen=True),
-        NavBar(PathIndex.PLOT.value),
         html.Br(),
         html.Br(),
         dbc.Row([
@@ -49,5 +47,13 @@ def Plot(session_id):
                 html.Br(),
                 dbc.Button('Refresh', outline=True, color='primary', block=True, id='refresh-button-2', disabled=True)
             ], width=3, style={'height': '100%'}),
-        ], justify="between", style={'display': 'flex'}),
+        ], justify="between", style={'display': 'flex'})
+    ])
+
+
+def Plot(session_id):
+    return html.Div([
+        Header(),
+        NavBar(PathIndex.PLOT.value),
+        Body()
     ])

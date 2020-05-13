@@ -20,7 +20,7 @@ def Header():
             html.A(
                 dbc.Row(
                     [
-                        dbc.Col(html.Img(src=PathIndex.CONKIT_LOGO.value, height="40px")),
+                        dbc.Col(html.Img(src=PathIndex.CONPLOT_LOGO.value, height="40px")),
                         dbc.Col(dbc.NavbarBrand('ConPlot', className="ml-2")),
                     ],
                     align="center",

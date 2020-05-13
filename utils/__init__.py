@@ -13,7 +13,7 @@ class PathIndex(Enum):
     HELP = urllib.parse.urljoin(ROOT, 'help')
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
-    CONKIT_LOGO = '/assets/conplot_logo.png'
+    CONPLOT_LOGO = '/assets/conplot_logo.png'
     STATIC_DATA = 'https://github.com/rigdenlab/conplot/tree/master/static/data'
 
 

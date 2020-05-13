@@ -3,7 +3,7 @@ import unittest
 from app import app, url
 
 
-class TestAppTestCase(unittest.TestCase):
+class AppTestCase(unittest.TestCase):
 
     def test_1(self):
         stylesheets = ['https://stackpath.bootstrapcdn.com/bootswatch/4.4.1/lux/bootstrap.min.css',

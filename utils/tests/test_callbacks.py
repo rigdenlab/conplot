@@ -2,7 +2,7 @@ import unittest
 from utils import callback_utils
 
 
-class TestAppTestCase(unittest.TestCase):
+class CallbacksTestCase(unittest.TestCase):
 
     def test_1(self):
         self.assertTupleEqual(('danger', True), callback_utils.toggle_selection_alert(None))

@@ -19,3 +19,6 @@ def EvfoldParser(input):
         output = sorted(output, key=itemgetter(2), reverse=True)
         return tuple(output)
 
+test=open('/Users/shahrammesdaghi/Downloads/w9dy28.evfold','r')
+text=test.read()
+print(EvfoldParser(text))

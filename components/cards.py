@@ -2,15 +2,21 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from parsers import ContactFormats
-from components import UploadButton, AddTrackButton
+from components import UploadButton, AddTrackButton, HelpToolTip
 from loaders import DatasetReference, AdditionalTracks
-
+from utils import PathIndex
 
 def MandatoryUploadCard():
     return dbc.Card(
         dbc.CardBody(
             [
-                html.H4("Required input", className="card-text", style={'text-align': "center"}),
+                html.H4(className="card-text", style={'text-align': "center"},
+                        children=HelpToolTip(id='required-input',
+                                             text="Required input ",
+                                             example_url=PathIndex.STATIC_DATA.value,
+                                             msg='A sequence and a contact map are the minimum two inputs '
+                                                 'required to produce a plot. Remember that you need to select a '
+                                                 'format before attempting to upload the contact map!')),
                 html.Br(),
                 dbc.Card([
                     dbc.CardBody([
@@ -50,7 +56,12 @@ def MandatoryUploadCard():
 def AdditionalTracksUploadCard():
     return dbc.Card([
         dbc.CardBody([
-            html.H4("Additional tracks", className="card-text", style={'text-align': "center"}),
+            html.H4(className="card-text", style={'text-align': "center"},
+                    children=HelpToolTip(id='additional-input',
+                                         text="Additional tracks ",
+                                         msg='Here you can upload files with the data for additional tracks of '
+                                             'information to be displayed on your plot. Remember that you will need '
+                                             'to select a track format before attempting to upload a file!')),
             html.Br(),
             html.Div([
                 NoAdditionalTracksCard()
@@ -84,7 +95,12 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
         return dbc.Card(
             dbc.CardBody(
                 [
-                    html.H4('Display control', className="card-text", style={'text-align': "center"}),
+                    html.H4(className="card-text", style={'text-align': "center"},
+                            children=HelpToolTip(id='display-control',
+                                                 text='Display control ',
+                                                 msg='Here you can adjust the layout of your plot after it is '
+                                                     'generated. Just adjust the parameters of interest and click on'
+                                                     ' the refresh button.')),
                     html.Br(),
                     dbc.Card([
                         dbc.CardBody("Need to create a plot first!"),

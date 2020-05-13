@@ -104,3 +104,21 @@ def DisplayControlCard(*args, **kwargs):
     from components.cards import DisplayControlCard
 
     return DisplayControlCard(*args, **kwargs)
+
+
+def HelpToolTip(*args, **kwargs):
+    from components.tooltips import HelpToolTip
+
+    return HelpToolTip(*args, **kwargs)
+
+
+def ExampleLinkBadge(*args, **kwargs):
+    from components.badges import ExampleLinkBadge
+
+    return ExampleLinkBadge(*args, **kwargs)
+
+
+def HelpBadge(*args, **kwargs):
+    from components.badges import HelpBadge
+
+    return HelpBadge(*args, **kwargs)

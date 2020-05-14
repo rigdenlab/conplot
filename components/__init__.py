@@ -124,6 +124,12 @@ def PlotPlaceHolder(*args, **kwargs):
     return PlotPlaceHolder(*args, **kwargs)
 
 
+def NoPageFoundCard(*args, **kwargs):
+    from components.cards import NoPageFoundCard
+
+    return NoPageFoundCard(*args, **kwargs)
+
+
 def DisplayControlCard(*args, **kwargs):
     from components.cards import DisplayControlCard
 
@@ -206,3 +212,33 @@ def ConPlotLink(*args, **kwargs):
     from components.links import ConPlotLink
 
     return ConPlotLink(*args, **kwargs)
+
+
+def ContactBugAlert(*args, **kwargs):
+    from components.alerts import ContactBugAlert
+
+    return ContactBugAlert(*args, **kwargs)
+
+
+def EmailInput(*args, **kwargs):
+    from components.inputgroups import EmailInput
+
+    return EmailInput(*args, **kwargs)
+
+
+def NameInput(*args, **kwargs):
+    from components.inputgroups import NameInput
+
+    return NameInput(*args, **kwargs)
+
+
+def ProblemDescriptionInput(*args, **kwargs):
+    from components.inputgroups import ProblemDescriptionInput
+
+    return ProblemDescriptionInput(*args, **kwargs)
+
+
+def EmailIssueSelect(*args, **kwargs):
+    from components.inputgroups import EmailIssueSelect
+
+    return EmailIssueSelect(*args, **kwargs)

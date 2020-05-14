@@ -20,7 +20,7 @@ def GitHubLink():
 
 
 def ConPlotLink():
-    html.A(
+    return html.A(
         dbc.Row(
             [
                 dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="40px")),

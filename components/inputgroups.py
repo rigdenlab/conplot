@@ -54,3 +54,31 @@ def TrackLayoutSelector(idx, options, value):
             dbc.Select(id={'type': 'track-select'.format(idx), 'index': idx}, options=options, value=value)
         ]
     )
+
+
+def EmailInput():
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("@", addon_type="prepend"),
+        dbc.Input(placeholder="Email address", type="email")
+    ], className="mb-3")
+
+
+def NameInput():
+    return dbc.InputGroup(dbc.Input(placeholder="First Name"), className="mb-3")
+
+
+def ProblemDescriptionInput():
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("Description", addon_type="prepend"),
+        dbc.Textarea()
+    ], className="mb-3")
+
+
+def EmailIssueSelect():
+    return dbc.InputGroup([
+        dbc.Select(
+            id='issue-select',
+            options=[{"label": "Bug report", "value": 1}, {"label": "General inquiry", "value": 2}]
+        ),
+        dbc.InputGroupAddon("Subject", addon_type="prepend"),
+    ])

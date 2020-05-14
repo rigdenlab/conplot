@@ -1,10 +1,24 @@
 from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
     DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
-    TrackLayoutSelector
+    TrackLayoutSelector, ErrorAlert
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from loaders import DatasetReference
+
+
+def NoPageFoundCard(url):
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2('Something went wrong...', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            html.P(["404 Page not found: {}".format(url)]),
+            html.Br(),
+            ErrorAlert(True)
+
+        ])
+    ])
 
 
 def SequenceUploadCard():

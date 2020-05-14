@@ -71,9 +71,27 @@ def NavBar(*args, **kwargs):
 
 
 def Header(*args, **kwargs):
-    from components.header import Header
+    from components.headers import Header
 
     return Header(*args, **kwargs)
+
+
+def MandatoryInputHeader(*args, **kwargs):
+    from components.headers import MandatoryInputHeader
+
+    return MandatoryInputHeader(*args, **kwargs)
+
+
+def AdditionalInputHeader(*args, **kwargs):
+    from components.headers import AdditionalInputHeader
+
+    return AdditionalInputHeader(*args, **kwargs)
+
+
+def DisplayControlHeader(*args, **kwargs):
+    from components.headers import DisplayControlHeader
+
+    return DisplayControlHeader(*args, **kwargs)
 
 
 def UploadButton(*args, **kwargs):
@@ -101,7 +119,7 @@ def ErrorAlert(*args, **kwargs):
 
 
 def PlotPlaceHolder(*args, **kwargs):
-    from components.plotplaceholder import PlotPlaceHolder
+    from components.misc import PlotPlaceHolder
 
     return PlotPlaceHolder(*args, **kwargs)
 
@@ -128,3 +146,63 @@ def HelpBadge(*args, **kwargs):
     from components.badges import HelpBadge
 
     return HelpBadge(*args, **kwargs)
+
+
+def InvalidFormatCard(*args, **kwargs):
+    from components.cards import InvalidFormatCard
+
+    return InvalidFormatCard(*args, **kwargs)
+
+
+def TrackLayoutSelector(*args, **kwargs):
+    from components.inputgroups import TrackLayoutSelector
+
+    return TrackLayoutSelector(*args, **kwargs)
+
+
+def ContactFormatSelector(*args, **kwargs):
+    from components.inputgroups import ContactFormatSelector
+
+    return ContactFormatSelector(*args, **kwargs)
+
+
+def LFactorSelector(*args, **kwargs):
+    from components.inputgroups import LFactorSelector
+
+    return LFactorSelector(*args, **kwargs)
+
+
+def SizeSelector(*args, **kwargs):
+    from components.inputgroups import SizeSelector
+
+    return SizeSelector(*args, **kwargs)
+
+
+def Button(*args, **kwargs):
+    from components.buttons import Button
+
+    return Button(*args, **kwargs)
+
+
+def AdditionalTrackFormatSelector(*args, **kwargs):
+    from components.inputgroups import AdditionalTrackFormatSelector
+
+    return AdditionalTrackFormatSelector(*args, **kwargs)
+
+
+def StartNewSessionLink(*args, **kwargs):
+    from components.links import StartNewSessionLink
+
+    return StartNewSessionLink(*args, **kwargs)
+
+
+def GitHubLink(*args, **kwargs):
+    from components.links import GitHubLink
+
+    return GitHubLink(*args, **kwargs)
+
+
+def ConPlotLink(*args, **kwargs):
+    from components.links import ConPlotLink
+
+    return ConPlotLink(*args, **kwargs)

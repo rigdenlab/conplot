@@ -124,7 +124,7 @@ def lookup_input_errors(session):
         if dataset == DatasetReference.CONTACT_MAP.value.encode() or dataset == DatasetReference.SEQUENCE.value.encode():
             pass
         elif session[dataset] is not None and len(session[dataset]) != seq_length:
-            mismatched.append(dataset)
+            mismatched.append(dataset.decode())
 
     if any(mismatched):
         return MismatchModal(*mismatched)

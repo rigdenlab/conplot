@@ -1,4 +1,4 @@
-from utils import PathIndex
+from utils import UrlIndex
 import dash_html_components as html
 from components import NavBar, Header, PlotPlaceHolder, DisplayControlCard, MandatoryUploadCard, \
     AdditionalTracksUploadCard
@@ -54,6 +54,6 @@ def Body():
 def Plot(session_id):
     return html.Div([
         Header(),
-        NavBar(PathIndex.PLOT.value),
+        NavBar(UrlIndex.PLOT.value),
         Body()
     ])

@@ -1,4 +1,4 @@
-from utils import PathIndex
+from utils import UrlIndex
 import dash_html_components as html
 from components import NavBar, Header
 import dash_bootstrap_components as dbc
@@ -55,7 +55,7 @@ def Body():
                             html.H4('Info', className="alert-heading"),
                             html.P([
                                 "If you suspect a bug, you can also create an issue on the project's ",
-                                html.A("Github repository", href=PathIndex.GITHUB.value, className="alert-link")
+                                html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
                             ]),
                         ],
                             dismissable=True,
@@ -75,6 +75,6 @@ def Body():
 def Contact(session_id):
     return html.Div([
         Header(),
-        NavBar(PathIndex.CONTACT.value),
+        NavBar(UrlIndex.CONTACT.value),
         Body(),
     ])

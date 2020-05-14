@@ -1,5 +1,5 @@
-from utils import PathIndex
-from layouts import noPage, Home, Plot, Contact
+from utils import UrlIndex
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab
 import json
 
 
@@ -56,11 +56,15 @@ def toggle_alert(value):
 
 
 def display_page(url, session_id):
-    if url == PathIndex.HOME.value or url == PathIndex.ROOT.value:
+    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
         return Home(session_id)
-    elif url == PathIndex.CONTACT.value:
+    elif url == UrlIndex.CONTACT.value:
         return Contact(session_id)
-    elif url == PathIndex.PLOT.value:
+    elif url == UrlIndex.PLOT.value:
         return Plot(session_id)
+    elif url == UrlIndex.HELP.value:
+        return Help(session_id)
+    elif url == UrlIndex.RIGDEN.value:
+        return RigdenLab(session_id)
     else:
         return noPage(url)

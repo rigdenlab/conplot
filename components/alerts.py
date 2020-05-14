@@ -1,6 +1,6 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from utils import PathIndex
+from utils import UrlIndex
 
 
 def ErrorAlert(is_open=False):
@@ -8,7 +8,7 @@ def ErrorAlert(is_open=False):
         html.H4('ERROR', className="alert-heading"),
         html.P([
             "If you suspect a bug, please report this to email@me.com or on the project's ",
-            html.A("Github repository", href=PathIndex.GITHUB.value, className="alert-link")
+            html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
     ],
         dismissable=True,

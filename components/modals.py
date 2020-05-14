@@ -1,7 +1,7 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from loaders import DatasetReference
-from app import PathIndex
+from app import UrlIndex
 
 
 def MismatchModal(*args):
@@ -70,7 +70,7 @@ def SessionTimedOutModal():
         dbc.ModalBody([
             html.P("More than 5 minutes have passed since you last interacted with the website and your session has"
                    "timed-out."),
-            html.A(dbc.Button("Start new session", block=True, color='danger'), href=PathIndex.ROOT.value,
+            html.A(dbc.Button("Start new session", block=True, color='danger'), href=UrlIndex.ROOT.value,
                    style={"text-decoration": "none"})
         ]),
     ], id='missing-fields-modal', is_open=True)

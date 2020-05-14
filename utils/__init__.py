@@ -2,12 +2,13 @@ import urllib.parse
 from enum import Enum
 
 
-class PathIndex(Enum):
+class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
     ROOT = '/'
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
+    RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
@@ -15,6 +16,7 @@ class PathIndex(Enum):
     GITHUB_LOGO = '/assets/github_logo.png'
     CONPLOT_LOGO = '/assets/conplot_logo.png'
     STATIC_DATA = 'https://github.com/rigdenlab/conplot/tree/master/static/data'
+    UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
 
 
 def create_ConPlot(*args, **kwargs):

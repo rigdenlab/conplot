@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
     InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard
-from utils import PathIndex, compress_data, ensure_triggered, \
+from utils import UrlIndex, compress_data, ensure_triggered, \
     get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
 
@@ -39,7 +39,7 @@ def serve_layout():
 # ==============================================================
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_AWESOME.value])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, UrlIndex.FONT_AWESOME.value])
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True

@@ -4,7 +4,7 @@ import dash_html_components as html
 from parsers import ContactFormats
 from components import UploadButton, AddTrackButton, HelpToolTip
 from loaders import DatasetReference, AdditionalTracks
-from utils import PathIndex
+from utils import UrlIndex
 
 
 def MandatoryUploadCard():
@@ -14,7 +14,7 @@ def MandatoryUploadCard():
                 html.H4(className="card-text", style={'text-align': "center"},
                         children=HelpToolTip(id='required-input',
                                              text="Required input ",
-                                             example_url=PathIndex.STATIC_DATA.value,
+                                             example_url=UrlIndex.STATIC_DATA.value,
                                              msg='A sequence and a contact map are the minimum two inputs '
                                                  'required to produce a plot. Remember that you need to select a '
                                                  'format before attempting to upload the contact map!')),

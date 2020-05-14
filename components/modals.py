@@ -32,7 +32,7 @@ def MismatchModal(*args):
                        "Please ensure that the provided the sequence corresponds with the protein of the given contact map."
                        ),
             ]),
-        ], id='mismatch-modal', is_open=True),
+        ], id='mismatch-modal', is_open=True)
 
 
 def MissingInputModal(*args):
@@ -47,7 +47,7 @@ def MissingInputModal(*args):
                 html.Li('%s file' % arg) for arg in args
             ], id='missing-fields-div'),
         ]),
-    ], id='missing-fields-modal', is_open=True),
+    ], id='missing-fields-modal', is_open=True)
 
 
 def RepeatedInputModal(dataset):
@@ -59,8 +59,19 @@ def RepeatedInputModal(dataset):
             html.P("A file for the dataset {} was already provided. To upload a different one you will need to delete"
                    " the current one first.".format(dataset))
         ]),
-    ], id='missing-fields-modal', is_open=True),
+    ], id='missing-fields-modal', is_open=True)
 
+def InvalidInputModal():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4("Invalid input", className="alert-heading", style={'color': 'red'}),
+        ),
+        dbc.ModalBody([
+            html.P("Some of the values you have selected on the display control tab are invalid, either because they "
+                   "are out of the permitted range or the input is non-numeric. Check your selection on those"
+                   " selectors highlighted on red and make sure the value you introduce is correct.")
+        ]),
+    ], id='invalid-input-modal', is_open=True)
 
 def SessionTimedOutModal():
     return dbc.Modal([

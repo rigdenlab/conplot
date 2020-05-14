@@ -10,6 +10,12 @@ def RepeatedInputModal(*args, **kwargs):
     return RepeatedInputModal(*args, **kwargs)
 
 
+def InvalidInputModal(*args, **kwargs):
+    from components.modals import InvalidInputModal
+
+    return InvalidInputModal(*args, **kwargs)
+
+
 def SessionTimedOutModal(*args, **kwargs):
     from components.modals import SessionTimedOutModal
 

@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
-    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard
+    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard, InvalidInputModal
 from utils import UrlIndex, compress_data, ensure_triggered, \
     get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
@@ -202,6 +202,9 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
         return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
     else:
         cache.expire(session_id, 300)
+
+    if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
+        return no_update, InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
 

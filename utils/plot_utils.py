@@ -1,5 +1,4 @@
 from components import MissingInputModal, MismatchModal, PlotPlaceHolder, DisplayControlCard
-from dash.dash import no_update
 from enum import Enum
 from operator import itemgetter
 from parsers import DatasetStates
@@ -116,8 +115,7 @@ def lookup_input_errors(session):
     return None
 
 
-def process_args(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
-                 track_separation=2):
+def process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation):
     session = decompress_session(session)
     available_tracks = get_available_tracks(session)
     seq_lenght = len(session[DatasetReference.SEQUENCE.value.encode()])

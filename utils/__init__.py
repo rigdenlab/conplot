@@ -90,9 +90,3 @@ def toggle_alert(*args, **kwargs):
     from utils.callback_utils import toggle_alert
 
     return toggle_alert(*args, **kwargs)
-
-
-def display_page(*args, **kwargs):
-    from utils.callback_utils import display_page
-
-    return display_page(*args, **kwargs)

@@ -1,5 +1,3 @@
-from utils import UrlIndex
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
 import json
 
 
@@ -53,20 +51,3 @@ def toggle_alert(value):
         return True
     else:
         return False
-
-
-def display_page(url, session_id):
-    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id)
-    elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id)
-    elif url == UrlIndex.PLOT.value:
-        return Plot(session_id)
-    elif url == UrlIndex.HELP.value:
-        return Help(session_id)
-    elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id)
-    elif url == UrlIndex.SESSION_TIMEOUT.value:
-        return SessionTimeout(session_id)
-    else:
-        return noPage(url)

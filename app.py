@@ -8,6 +8,7 @@ import uuid
 from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
 from loaders import AdditionalTracks
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
@@ -33,6 +34,15 @@ def serve_layout():
         dcc.Location(id='url', refresh=False),
         html.Div(id='page-content'),
     ])
+
+
+def is_expired_session(session_id):
+    if not cache.exists(session_id):
+        app.logger.info('Session {} has expired'.format(session_id))
+        return True
+    else:
+        cache.expire(session_id, 900)
+        return False
 
 
 # ==============================================================
@@ -69,12 +79,22 @@ def toggle_alert(*args):
               [State('session-id', 'children')])
 def display_page(url, session_id):
     app.logger.info('Session {} requested url {}'.format(session_id, url))
-    if not cache.exists(session_id):
-        app.logger.info('Session {} has expired'.format(session_id))
-        url = UrlIndex.SESSION_TIMEOUT.value
+
+    if is_expired_session(session_id):
+        return SessionTimeout(session_id)
+    elif url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
+        return Home(session_id)
+    elif url == UrlIndex.CONTACT.value:
+        return Contact(session_id)
+    elif url == UrlIndex.PLOT.value:
+        return Plot(session_id)
+    elif url == UrlIndex.HELP.value:
+        return Help(session_id)
+    elif url == UrlIndex.RIGDEN.value:
+        return RigdenLab(session_id)
     else:
-        cache.expire(session_id, 900)
-    return utils.display_page(url, session_id)
+        app.logger.error('404 page not found {}'.format(url))
+        return noPage(url)
 
 
 @app.callback([Output('track-selection-card', "color"),
@@ -105,11 +125,8 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
 
     if not ensure_triggered(trigger):
         return file_divs, cleared_fcontents, None
-    elif not cache.exists(session_id):
-        app.logger.info('Session {} has expired'.format(session_id))
+    elif is_expired_session(session_id):
         return file_divs, cleared_fcontents, SessionTimedOutModal()
-    else:
-        cache.expire(session_id, 900)
 
     app.logger.info('Session {} upload triggered'.format(session_id))
     dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
@@ -143,11 +160,8 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
     trigger = dash.callback_context.triggered[0]
     if not ensure_triggered(trigger):
         return None, no_update
-    elif not cache.exists(session_id):
-        app.logger.info('Session {} has expired'.format(session_id))
+    elif is_expired_session(session_id):
         return SessionTimedOutModal(), no_update
-    else:
-        cache.expire(session_id, 900)
 
     app.logger.info('Session {} upload triggered'.format(session_id))
     dataset = AdditionalTracks.__getattr__(input_format).value
@@ -180,11 +194,8 @@ def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[0]
     if not ensure_triggered(trigger):
         return None
-    elif not cache.exists(session_id):
-        app.logger.info('Session {} has expired'.format(session_id))
+    elif is_expired_session(session_id):
         return SessionTimedOutModal()
-    else:
-        cache.expire(session_id, 900)
 
     app.logger.info('Session {} remove file triggered'.format(session_id))
     fname, dataset, is_open = get_remove_trigger(trigger)
@@ -216,11 +227,8 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     trigger = dash.callback_context.triggered[0]
     if not ensure_triggered(trigger):
         return PlotPlaceHolder(), None, DisplayControlCard(), True
-    elif not cache.exists(session_id):
-        app.logger.info('Session {} has expired'.format(session_id))
+    elif is_expired_session(session_id):
         return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
-    else:
-        cache.expire(session_id, 900)
 
     app.logger.info('Session {} plot requested'.format(session_id))
 

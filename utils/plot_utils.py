@@ -1,39 +1,61 @@
-import plotly.graph_objects as go
-from enum import Enum
-from loaders import DatasetReference
-from parsers import DatasetStates
 from components import MissingInputModal, MismatchModal, PlotPlaceHolder, DisplayControlCard
+from enum import Enum
+from operator import itemgetter
+from parsers import DatasetStates
+import plotly.graph_objects as go
+from plotly.colors import diverging
+from plotly.colors import sequential
+from loaders import DatasetReference
 from layouts import ContextReference
 from utils import decompress_session
 import dash_core_components as dcc
-from dash.dash import no_update
-from operator import itemgetter
 
 
 class ColorReference(Enum):
-    INSIDE = 'rgba(0,255,0,0.4)'
-    OUTSIDE = 'rgba(255,255,0,0.4)'
-    INSERTED = 'rgba(255,0,0,0.4)'
-    DISORDER = 'rgba(120,0,0,0.4)'
-    ORDER = 'rgba(0,120,0,0.4)'
-    CONSERVED = 'rgba(0, 30, 255,0.4)'
-    AVERAGE = 'rgba(0, 130, 255,0.4)'
-    VARIABLE = 'rgba(0, 225, 255,0.4)'
-    HELIX = 'rgba(247, 0, 255, 0.4)'
-    COIL = 'rgba(255, 162, 0,0.4)'
-    SHEET = 'rgba(0, 4, 255,0.4)'
+    INSIDE = 'rgba(0, 255, 0,  0.6)'
+    OUTSIDE = 'rgba(255, 255, 0,  0.6)'
+    INSERTED = 'rgba(255, 0, 0,  0.6)'
+    DISORDER = 'rgba(120, 0, 0,  0.6)'
+    ORDER = 'rgba(0, 120, 0,  0.6)'
+    HELIX = 'rgba(247, 0, 255,  0.6)'
+    COIL = 'rgba(255, 162, 0,  0.6)'
+    SHEET = 'rgba(0, 4, 255,  0.6)'
+    CUSTOM_1 = diverging.Spectral[0].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_2 = diverging.Spectral[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_3 = diverging.Spectral[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_4 = diverging.Spectral[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_5 = diverging.Spectral[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_6 = diverging.Spectral[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_7 = diverging.Spectral[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_8 = diverging.Spectral[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_9 = diverging.Spectral[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_10 = diverging.Spectral[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_11 = diverging.Spectral[10].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CUSTOM_NAN = 'rgba(0, 0, 0, 0)'
+    VARIABLE_1 = sequential.ice[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    VARIABLE_2 = sequential.ice[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    VARIABLE_3 = sequential.ice[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_4 = sequential.ice[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_5 = sequential.ice[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    AVERAGE_6 = sequential.ice[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_7 = sequential.ice[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_8 = sequential.ice[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
+    CONSERVED_9 = sequential.ice[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
 
 
-def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=7,
+def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
                    track_separation=2):
-    session = decompress_session(session)
-    available_tracks, selected_tracks = get_track_info(session=session, selected_tracks=selected_tracks,
-                                                       trigger=trigger)
+    session, available_tracks, selected_tracks, factor, contact_marker_size, \
+    track_marker_size, track_separation = process_args(**locals())
+
     error = lookup_input_errors(session)
 
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
 
+    display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
+                                      contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
+                                      track_separation=track_separation)
     axis_range = (0, len(session[DatasetReference.SEQUENCE.value.encode()]) + 1)
     figure = create_figure(axis_range)
     figure.add_trace(create_contact_trace(cmap=session[DatasetReference.CONTACT_MAP.value.encode()],
@@ -41,9 +63,9 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
                                           marker_size=contact_marker_size, factor=factor))
 
     for idx, dataset in enumerate(selected_tracks):
-        if dataset is None:
+        if dataset == '---':
             continue
-        elif idx == 3:
+        elif idx == 4:
             traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value.encode()], dataset=dataset,
                                          marker_size=track_marker_size, prediction=session[dataset.encode()])
         else:
@@ -58,31 +80,7 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
         config={"toImageButtonOptions": {"width": None, "height": None}}
     )
 
-    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
-        return graph, None, DisplayControlCard(available_tracks=available_tracks,
-                                               selected_tracks=selected_tracks), False
-    else:
-        return graph, None, no_update, False
-
-
-def get_track_info(session, trigger, selected_tracks):
-    available_tracks = get_available_tracks(session)
-    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
-        selected_tracks = default_track_layout(available_tracks)
-    else:
-        selected_tracks = get_track_user_selection(selected_tracks)
-
-    return available_tracks, selected_tracks
-
-
-def get_available_tracks(session):
-    available_tracks = []
-    for track in session.keys():
-        if track == DatasetReference.SEQUENCE.value.encode() or track == DatasetReference.CONTACT_MAP.value.encode():
-            pass
-        elif session[track] is not None:
-            available_tracks.append(track.decode())
-    return available_tracks
+    return graph, None, display_card, False
 
 
 def get_missing_data(session):
@@ -109,12 +107,84 @@ def lookup_input_errors(session):
         if dataset == DatasetReference.CONTACT_MAP.value.encode() or dataset == DatasetReference.SEQUENCE.value.encode():
             pass
         elif session[dataset] is not None and len(session[dataset]) != seq_length:
-            mismatched.append(dataset)
+            mismatched.append(dataset.decode())
 
     if any(mismatched):
         return MismatchModal(*mismatched)
 
     return None
+
+
+def process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation):
+    session = decompress_session(session)
+    available_tracks = get_available_tracks(session)
+    seq_lenght = len(session[DatasetReference.SEQUENCE.value.encode()])
+
+    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
+        if seq_lenght >= 700:
+            contact_marker_size = 2
+        else:
+            contact_marker_size = 3
+        track_separation = round(seq_lenght / 100)
+        selected_tracks = default_track_layout(available_tracks)
+    else:
+        selected_tracks = get_track_user_selection(selected_tracks, available_tracks)
+
+    return session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation
+
+
+def get_available_tracks(session):
+    available_tracks = []
+    for track in session.keys():
+        if track == DatasetReference.SEQUENCE.value.encode() or track == DatasetReference.CONTACT_MAP.value.encode():
+            pass
+        elif session[track] is not None:
+            available_tracks.append(track.decode())
+    return available_tracks
+
+
+def get_track_user_selection(selection, available):
+    if len(selection) == 0:
+        return ['---'] * 9
+    else:
+        return [track if track in available else '---' for track in selection]
+
+
+def default_track_layout(available_tracks):
+    tracks = []
+
+    if DatasetReference.MEMBRANE_TOPOLOGY.value in available_tracks:
+        tracks.append(DatasetReference.MEMBRANE_TOPOLOGY.value)
+    if DatasetReference.SECONDARY_STRUCTURE.value in available_tracks:
+        tracks.append(DatasetReference.SECONDARY_STRUCTURE.value)
+    if DatasetReference.DISORDER.value in available_tracks:
+        tracks.append(DatasetReference.DISORDER.value)
+    if DatasetReference.CONSERVATION.value in available_tracks:
+        tracks.append(DatasetReference.CONSERVATION.value)
+    if DatasetReference.CUSTOM.value in available_tracks:
+        tracks.append(DatasetReference.CUSTOM.value)
+
+    if not any(tracks):
+        return ['---'] * 9
+    else:
+        missing_tracks = ['---' for missing in range(0, 5 - len(tracks))]
+        tracks += missing_tracks
+        return tracks[1:][::-1] + tracks
+
+
+def create_figure(axis_range):
+    return go.Figure(
+        layout=go.Layout(
+            xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
+                   'linewidth': 2, 'linecolor': 'black'},
+            yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
+                   'linewidth': 2, 'linecolor': 'black'},
+            margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
+            hovermode='closest',
+            showlegend=False,
+            plot_bgcolor='rgba(0,0,0,0)',
+        )
+    )
 
 
 def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
@@ -130,25 +200,6 @@ def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
             'color': color
         },
     )
-
-
-def create_figure(axis_range):
-    figure = go.Figure(
-        layout=go.Layout(
-            xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1,
-                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
-                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-            yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1,
-                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
-                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-            margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
-            hovermode='closest',
-            showlegend=False,
-            plot_bgcolor='rgba(0,0,0,0)',
-        )
-    )
-
-    return figure
 
 
 def create_contact_trace(cmap, seq_length, marker_size=5, factor=2):
@@ -215,9 +266,9 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
     traces = []
     x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
-    track_origin = abs(3 - track_idx)
+    track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
-    if track_idx > 3:
+    if track_idx > 4:
         lower_bound = True
     else:
         lower_bound = False
@@ -236,30 +287,3 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
         traces.append(create_scatter(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
-
-
-def get_track_user_selection(selection):
-    if len(selection) == 0:
-        return [None] * 7
-    else:
-        return [track if track != 'None' else None for track in selection]
-
-
-def default_track_layout(available_tracks):
-    tracks = []
-
-    if DatasetReference.MEMBRANE_TOPOLOGY.value in available_tracks:
-        tracks.append(DatasetReference.MEMBRANE_TOPOLOGY.value)
-    if DatasetReference.SECONDARY_STRUCTURE.value in available_tracks:
-        tracks.append(DatasetReference.SECONDARY_STRUCTURE.value)
-    if DatasetReference.DISORDER.value in available_tracks:
-        tracks.append(DatasetReference.DISORDER.value)
-    if DatasetReference.CONSERVATION.value in available_tracks:
-        tracks.append(DatasetReference.CONSERVATION.value)
-
-    if not any(tracks):
-        return [None] * 7
-    else:
-        missing_tracks = [None for missing in range(0, 4 - len(tracks))]
-        tracks += missing_tracks
-        return tracks[1:][::-1] + tracks

@@ -9,7 +9,7 @@ import sys
 from unittest import TestLoader, TextTestRunner, TestSuite
 
 ROOT_DIR = os.path.join(os.path.dirname(__file__))
-PACKAGES = ["parsers"]
+PACKAGES = ["parsers", "loaders", "utils"]
 
 
 class UnittestFramework(object):

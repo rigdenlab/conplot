@@ -1,5 +1,6 @@
 import dash_html_components as html
-from components import NavBar, ErrorAlert, Header
+import dash_bootstrap_components as dbc
+from components import NavBar, Header, NoPageFoundCard
 
 
 def noPage(url):
@@ -7,13 +8,8 @@ def noPage(url):
         Header(),
         NavBar(),
         html.Br(),
-        html.H2('Something went wrong...'),
-        html.Hr(),
-        html.P(["404 Page not found: {}".format(url)]),
         html.Br(),
         html.Br(),
-        ErrorAlert(True)
-    ],
-        className="no-page"
-    )
+        dbc.Container(NoPageFoundCard(url)),
+    ], className="no-page")
     return layout

@@ -13,8 +13,8 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
-    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard
-from utils import PathIndex, compress_data, ensure_triggered, \
+    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard, InvalidInputModal
+from utils import UrlIndex, compress_data, ensure_triggered, \
     get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
 
@@ -39,10 +39,14 @@ def serve_layout():
 # ==============================================================
 
 
-app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, PathIndex.FONT_AWESOME.value])
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, UrlIndex.FONT_AWESOME.value])
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
+
+if 'IS_HEROKU' not in os.environ:
+    os.environ['REDISCLOUD_URL'] = "redis://localhost:6379"
+
 url = urllib.parse.urlparse(os.environ.get('REDISCLOUD_URL'))
 cache = redis.Redis(host=url.hostname, port=url.port, password=url.password)
 
@@ -62,8 +66,12 @@ def toggle_alert(*args):
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
-def display_page(*args):
-    return utils.display_page(*args)
+def display_page(url, session_id):
+    if not cache.exists(session_id):
+        url = UrlIndex.SESSION_TIMEOUT.value
+    else:
+        cache.expire(session_id, 300)
+    return utils.display_page(url, session_id)
 
 
 @app.callback([Output('track-selection-card', "color"),
@@ -198,6 +206,9 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
         return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
     else:
         cache.expire(session_id, 300)
+
+    if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
+        return no_update, InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
 

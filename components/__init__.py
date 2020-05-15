@@ -10,6 +10,12 @@ def RepeatedInputModal(*args, **kwargs):
     return RepeatedInputModal(*args, **kwargs)
 
 
+def InvalidInputModal(*args, **kwargs):
+    from components.modals import InvalidInputModal
+
+    return InvalidInputModal(*args, **kwargs)
+
+
 def SessionTimedOutModal(*args, **kwargs):
     from components.modals import SessionTimedOutModal
 
@@ -65,9 +71,27 @@ def NavBar(*args, **kwargs):
 
 
 def Header(*args, **kwargs):
-    from components.header import Header
+    from components.headers import Header
 
     return Header(*args, **kwargs)
+
+
+def MandatoryInputHeader(*args, **kwargs):
+    from components.headers import MandatoryInputHeader
+
+    return MandatoryInputHeader(*args, **kwargs)
+
+
+def AdditionalInputHeader(*args, **kwargs):
+    from components.headers import AdditionalInputHeader
+
+    return AdditionalInputHeader(*args, **kwargs)
+
+
+def DisplayControlHeader(*args, **kwargs):
+    from components.headers import DisplayControlHeader
+
+    return DisplayControlHeader(*args, **kwargs)
 
 
 def UploadButton(*args, **kwargs):
@@ -95,12 +119,126 @@ def ErrorAlert(*args, **kwargs):
 
 
 def PlotPlaceHolder(*args, **kwargs):
-    from components.plotplaceholder import PlotPlaceHolder
+    from components.misc import PlotPlaceHolder
 
     return PlotPlaceHolder(*args, **kwargs)
+
+
+def NoPageFoundCard(*args, **kwargs):
+    from components.cards import NoPageFoundCard
+
+    return NoPageFoundCard(*args, **kwargs)
 
 
 def DisplayControlCard(*args, **kwargs):
     from components.cards import DisplayControlCard
 
     return DisplayControlCard(*args, **kwargs)
+
+
+def HelpToolTip(*args, **kwargs):
+    from components.tooltips import HelpToolTip
+
+    return HelpToolTip(*args, **kwargs)
+
+
+def ExampleLinkBadge(*args, **kwargs):
+    from components.badges import ExampleLinkBadge
+
+    return ExampleLinkBadge(*args, **kwargs)
+
+
+def HelpBadge(*args, **kwargs):
+    from components.badges import HelpBadge
+
+    return HelpBadge(*args, **kwargs)
+
+
+def InvalidFormatCard(*args, **kwargs):
+    from components.cards import InvalidFormatCard
+
+    return InvalidFormatCard(*args, **kwargs)
+
+
+def TrackLayoutSelector(*args, **kwargs):
+    from components.inputgroups import TrackLayoutSelector
+
+    return TrackLayoutSelector(*args, **kwargs)
+
+
+def ContactFormatSelector(*args, **kwargs):
+    from components.inputgroups import ContactFormatSelector
+
+    return ContactFormatSelector(*args, **kwargs)
+
+
+def LFactorSelector(*args, **kwargs):
+    from components.inputgroups import LFactorSelector
+
+    return LFactorSelector(*args, **kwargs)
+
+
+def SizeSelector(*args, **kwargs):
+    from components.inputgroups import SizeSelector
+
+    return SizeSelector(*args, **kwargs)
+
+
+def Button(*args, **kwargs):
+    from components.buttons import Button
+
+    return Button(*args, **kwargs)
+
+
+def AdditionalTrackFormatSelector(*args, **kwargs):
+    from components.inputgroups import AdditionalTrackFormatSelector
+
+    return AdditionalTrackFormatSelector(*args, **kwargs)
+
+
+def StartNewSessionLink(*args, **kwargs):
+    from components.links import StartNewSessionLink
+
+    return StartNewSessionLink(*args, **kwargs)
+
+
+def GitHubLink(*args, **kwargs):
+    from components.links import GitHubLink
+
+    return GitHubLink(*args, **kwargs)
+
+
+def ConPlotLink(*args, **kwargs):
+    from components.links import ConPlotLink
+
+    return ConPlotLink(*args, **kwargs)
+
+
+def ContactBugAlert(*args, **kwargs):
+    from components.alerts import ContactBugAlert
+
+    return ContactBugAlert(*args, **kwargs)
+
+
+def EmailInput(*args, **kwargs):
+    from components.inputgroups import EmailInput
+
+    return EmailInput(*args, **kwargs)
+
+
+def NameInput(*args, **kwargs):
+    from components.inputgroups import NameInput
+
+    return NameInput(*args, **kwargs)
+
+
+def ProblemDescriptionInput(*args, **kwargs):
+    from components.inputgroups import ProblemDescriptionInput
+
+    return ProblemDescriptionInput(*args, **kwargs)
+
+
+def EmailIssueSelect(*args, **kwargs):
+    from components.inputgroups import EmailIssueSelect
+
+    return EmailIssueSelect(*args, **kwargs)

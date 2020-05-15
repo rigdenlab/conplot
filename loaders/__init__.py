@@ -9,6 +9,7 @@ class DatasetReference(Enum):
     SECONDARY_STRUCTURE = 'secondarystructure'
     CONSERVATION = 'conservation'
     DISORDER = 'disorder'
+    CUSTOM = 'custom'
 
 
 class AdditionalTracks(Enum):
@@ -16,6 +17,7 @@ class AdditionalTracks(Enum):
     CONSURF = DatasetReference.CONSERVATION.value
     PSIPRED = DatasetReference.SECONDARY_STRUCTURE.value
     IUPRED = DatasetReference.DISORDER.value
+    CUSTOM = DatasetReference.CUSTOM.value
 
 
 def decode_raw_file(raw_file):

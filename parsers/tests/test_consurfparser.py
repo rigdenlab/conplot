@@ -65,45 +65,8 @@ class ConsurfParserTestCase(unittest.TestCase):
 or the confidence interval for the estimated score is equal to- or larger than- 4 color grades.
 """
 
-        expected = [
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.VARIABLE.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.AVERAGE.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.CONSERVED.value,
-            ConservationStates.AVERAGE.value,
-        ]
+        expected = [7, 8, 3, 4, 3, 1, 5, 3, 3, 1, 6, 4, 2, 5, 5, 1, 6, 5, 2,
+                    8, 6, 4, 6, 8, 8, 4, 9, 6, 4, 9, 9, 9, 7, 8, 9, 9, 4]
 
         output = ConsurfParser(dummy_prediction)
         self.assertEquals(37, len(output))

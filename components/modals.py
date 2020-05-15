@@ -66,7 +66,7 @@ def SessionTimedOutModal():
             timed-out."""),
             StartNewSessionLink()
         ]),
-    ], id='missing-fields-modal', is_open=True)
+    ], id='missing-fields-modal', is_open=True, backdrop='static', keyboard=False)
 
 
 def ModalHeader(text):

@@ -1,5 +1,5 @@
 from utils import UrlIndex
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
 import json
 
 
@@ -66,5 +66,7 @@ def display_page(url, session_id):
         return Help(session_id)
     elif url == UrlIndex.RIGDEN.value:
         return RigdenLab(session_id)
+    elif url == UrlIndex.SESSION_TIMEOUT.value:
+        return SessionTimeout(session_id)
     else:
         return noPage(url)

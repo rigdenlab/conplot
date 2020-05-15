@@ -66,8 +66,12 @@ def toggle_alert(*args):
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
-def display_page(*args):
-    return utils.display_page(*args)
+def display_page(url, session_id):
+    if not cache.exists(session_id):
+        url = UrlIndex.SESSION_TIMEOUT.value
+    else:
+        cache.expire(session_id, 300)
+    return utils.display_page(url, session_id)
 
 
 @app.callback([Output('track-selection-card', "color"),

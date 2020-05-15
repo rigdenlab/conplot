@@ -8,10 +8,11 @@ class UrlIndex(Enum):
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
-    RIGDEN_GITHUB = 'https://github.com/rigdenlab'
-    GITHUB = 'https://github.com/rigdenlab/conplot'
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
+    SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
+    RIGDEN_GITHUB = 'https://github.com/rigdenlab'
+    GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
     CONPLOT_LOGO = '/assets/conplot_logo.png'

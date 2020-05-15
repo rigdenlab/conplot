@@ -54,6 +54,12 @@ def Contact(*args, **kwargs):
     return Contact(*args, **kwargs)
 
 
+def SessionTimeout(*args, **kwargs):
+    from layouts.session_timeout import SessionTimeout
+
+    return SessionTimeout(*args, **kwargs)
+
+
 def Plot(*args, **kwargs):
     from layouts.plot import Plot
 

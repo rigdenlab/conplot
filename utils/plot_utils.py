@@ -57,12 +57,10 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
     if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         contact_marker_size, track_separation = get_default_display_setup(
             len(session[DatasetReference.SEQUENCE.value.encode()]))
-        display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
-                                          contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
-                                          track_separation=track_separation)
-    else:
-        display_card = no_update
 
+    display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
+                                      contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
+                                      track_separation=track_separation)
     axis_range = (0, len(session[DatasetReference.SEQUENCE.value.encode()]) + 1)
     figure = create_figure(axis_range)
     figure.add_trace(create_contact_trace(cmap=session[DatasetReference.CONTACT_MAP.value.encode()],
@@ -70,7 +68,7 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
                                           marker_size=contact_marker_size, factor=factor))
 
     for idx, dataset in enumerate(selected_tracks):
-        if dataset is None:
+        if dataset == '---':
             continue
         elif idx == 4:
             traces = get_diagonal_traces(sequence=session[DatasetReference.SEQUENCE.value.encode()], dataset=dataset,
@@ -137,7 +135,7 @@ def get_track_info(session, trigger, selected_tracks):
     if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         selected_tracks = default_track_layout(available_tracks)
     else:
-        selected_tracks = get_track_user_selection(selected_tracks)
+        selected_tracks = get_track_user_selection(selected_tracks, available_tracks)
 
     return available_tracks, selected_tracks
 
@@ -152,11 +150,11 @@ def get_available_tracks(session):
     return available_tracks
 
 
-def get_track_user_selection(selection):
+def get_track_user_selection(selection, available):
     if len(selection) == 0:
-        return [None] * 9
+        return ['---'] * 9
     else:
-        return [track if track != 'None' else None for track in selection]
+        return [track if track in available else '---' for track in selection]
 
 
 def default_track_layout(available_tracks):
@@ -174,9 +172,9 @@ def default_track_layout(available_tracks):
         tracks.append(DatasetReference.CUSTOM.value)
 
     if not any(tracks):
-        return [None] * 9
+        return ['---'] * 9
     else:
-        missing_tracks = [None for missing in range(0, 5 - len(tracks))]
+        missing_tracks = ['---' for missing in range(0, 5 - len(tracks))]
         tracks += missing_tracks
         return tracks[1:][::-1] + tracks
 

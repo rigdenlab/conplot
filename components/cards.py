@@ -170,7 +170,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
 
 
 def TrackSelectionCard(track_idx, track_value, available_tracks):
-    track_options = [{'label': 'None', 'value': None}]
+    track_options = [{'label': '---', 'value': '---'}]
     track_options += [{'label': dataset, 'value': dataset} for dataset in available_tracks]
 
     return dbc.Card(TrackLayoutSelector(track_idx, track_options, track_value), outline=False)

@@ -13,7 +13,7 @@ import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, InvalidFileCollapse, FilenameAlert, SessionTimedOutModal, \
-    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard, InvalidInputModal
+    InvalidAddTrackCollapse, PlotPlaceHolder, DisplayControlCard, InvalidInputModal, InvalidFormatModal
 from utils import UrlIndex, compress_data, ensure_triggered, \
     get_remove_trigger, get_upload_id, remove_unused_fname_alerts
 
@@ -117,8 +117,7 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
         data, invalid = Loader(fcontent, input_format)
 
     if invalid:
-        file_divs[index] = InvalidFileCollapse(dataset)
-        return file_divs, cleared_fcontents, None
+        return file_divs, cleared_fcontents, InvalidFormatModal()
     else:
         file_divs[index] = FilenameAlert(fname, dataset)
         cache.hset(session_id, dataset, data)
@@ -151,9 +150,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
     fname_alerts = remove_unused_fname_alerts(fname_alerts)
 
     if invalid:
-        if fname_alerts and fname_alerts[-1]['props']['id'] != 'invalid-track-collapse':
-            fname_alerts.append(InvalidAddTrackCollapse())
-        return None, fname_alerts
+        return InvalidFormatModal(), fname_alerts
     else:
         fname_alerts = [alert for alert in fname_alerts
                         if alert['props']['id'] != 'no-tracks-card'

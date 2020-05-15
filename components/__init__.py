@@ -10,6 +10,12 @@ def RepeatedInputModal(*args, **kwargs):
     return RepeatedInputModal(*args, **kwargs)
 
 
+def InvalidFormatModal(*args, **kwargs):
+    from components.modals import InvalidFormatModal
+
+    return InvalidFormatModal(*args, **kwargs)
+
+
 def InvalidInputModal(*args, **kwargs):
     from components.modals import InvalidInputModal
 

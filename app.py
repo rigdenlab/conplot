@@ -26,7 +26,7 @@ from utils import UrlIndex, compress_data, ensure_triggered, \
 def serve_layout():
     session_id = str(uuid.uuid4())
     cache.hset(session_id, 'id', compress_data(session_id))
-    cache.expire(session_id, 300)
+    cache.expire(session_id, 900)
     return html.Div([
         html.Div(session_id, id='session-id', style={'display': 'none'}),
         dcc.Location(id='url', refresh=False),
@@ -70,7 +70,7 @@ def display_page(url, session_id):
     if not cache.exists(session_id):
         url = UrlIndex.SESSION_TIMEOUT.value
     else:
-        cache.expire(session_id, 300)
+        cache.expire(session_id, 900)
     return utils.display_page(url, session_id)
 
 
@@ -105,7 +105,7 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     elif not cache.exists(session_id):
         return file_divs, cleared_fcontents, SessionTimedOutModal()
     else:
-        cache.expire(session_id, 300)
+        cache.expire(session_id, 900)
 
     dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
 
@@ -139,7 +139,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
     elif not cache.exists(session_id):
         return SessionTimedOutModal(), no_update
     else:
-        cache.expire(session_id, 300)
+        cache.expire(session_id, 900)
 
     dataset = AdditionalTracks.__getattr__(input_format).value
 
@@ -173,7 +173,7 @@ def remove_dataset(alerts_open, session_id):
     elif not cache.exists(session_id):
         return SessionTimedOutModal()
     else:
-        cache.expire(session_id, 300)
+        cache.expire(session_id, 900)
 
     fname, dataset, is_open = get_remove_trigger(trigger)
 
@@ -205,7 +205,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     elif not cache.exists(session_id):
         return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
     else:
-        cache.expire(session_id, 300)
+        cache.expire(session_id, 900)
 
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
         return no_update, InvalidInputModal(), no_update, no_update

@@ -62,7 +62,7 @@ def SessionTimedOutModal():
     return dbc.Modal([
         ModalHeader("Session timed-out"),
         dbc.ModalBody([
-            html.P("""More than 5 minutes have passed since you last interacted with the website and your session has 
+            html.P("""More than 15 minutes have passed since you last interacted with the website and your session has 
             timed-out."""),
             StartNewSessionLink()
         ]),

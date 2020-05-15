@@ -46,17 +46,13 @@ class ColorReference(Enum):
 
 def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
                    track_separation=2):
-    session = decompress_session(session)
-    available_tracks, selected_tracks = get_track_info(session=session, selected_tracks=selected_tracks,
-                                                       trigger=trigger)
+    session, available_tracks, selected_tracks, factor, contact_marker_size, \
+    track_marker_size, track_separation = process_args(**locals())
+
     error = lookup_input_errors(session)
 
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
-
-    if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
-        contact_marker_size, track_separation = get_default_display_setup(
-            len(session[DatasetReference.SEQUENCE.value.encode()]))
 
     display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                       contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
@@ -86,16 +82,6 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
     )
 
     return graph, None, display_card, False
-
-
-def get_default_display_setup(seq_len):
-    if seq_len >= 700:
-        contact_marker_size = 2
-    else:
-        contact_marker_size = 3
-    track_separation = round(seq_len / 100)
-
-    return contact_marker_size, track_separation
 
 
 def get_missing_data(session):
@@ -130,14 +116,23 @@ def lookup_input_errors(session):
     return None
 
 
-def get_track_info(session, trigger, selected_tracks):
+def process_args(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
+                 track_separation=2):
+    session = decompress_session(session)
     available_tracks = get_available_tracks(session)
+    seq_lenght = len(session[DatasetReference.SEQUENCE.value.encode()])
+
     if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
+        if seq_lenght >= 700:
+            contact_marker_size = 2
+        else:
+            contact_marker_size = 3
+        track_separation = round(seq_lenght / 100)
         selected_tracks = default_track_layout(available_tracks)
     else:
         selected_tracks = get_track_user_selection(selected_tracks, available_tracks)
 
-    return available_tracks, selected_tracks
+    return session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation
 
 
 def get_available_tracks(session):
@@ -182,12 +177,10 @@ def default_track_layout(available_tracks):
 def create_figure(axis_range):
     return go.Figure(
         layout=go.Layout(
-            xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1,
-                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
-                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
-            yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1,
-                   'tickvals': [x for x in range(*axis_range, 100)], 'ticks': 'inside',
-                   'showline': True, 'linewidth': 2, 'linecolor': 'black'},
+            xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
+                   'linewidth': 2, 'linecolor': 'black'},
+            yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
+                   'linewidth': 2, 'linecolor': 'black'},
             margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
             hovermode='closest',
             showlegend=False,

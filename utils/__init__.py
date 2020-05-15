@@ -86,6 +86,12 @@ def ensure_triggered(*args, **kwargs):
     return ensure_triggered(*args, **kwargs)
 
 
+def get_current_fnames(*args, **kwargs):
+    from utils.callback_utils import get_current_fnames
+
+    return get_current_fnames(*args, **kwargs)
+
+
 def toggle_alert(*args, **kwargs):
     from utils.callback_utils import toggle_alert
 

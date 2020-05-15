@@ -20,7 +20,7 @@ from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger,
 
 
 # ==============================================================
-# Define functions of general use
+# Define functions and variables of general use
 # ==============================================================
 #
 
@@ -74,13 +74,29 @@ def toggle_alert(*args):
     return utils.toggle_alert(*args)
 
 
+@app.callback([Output('track-selection-card', "color"),
+               Output('additionaltrack-upload', 'disabled')],
+              [Input('track-selector', "value")])
+def toggle_add_track_format(value):
+    return utils.toggle_selection_alert(value)
+
+
+@app.callback([Output("format-selection-card", "color"),
+               Output({'type': "upload-button", 'index': DatasetReference.CONTACT_MAP.value}, 'disabled')],
+              [Input("contact-format-selector", 'value')])
+def toggle_format_alert(*args):
+    return utils.toggle_selection_alert(*args)
+
+
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
 def display_page(url, session_id):
     app.logger.info('Session {} requested url {}'.format(session_id, url))
 
-    if is_expired_session(session_id):
+    if url is None:
+        return no_update
+    elif is_expired_session(session_id):
         return SessionTimeout(session_id)
     elif url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
         return Home(session_id)
@@ -95,20 +111,6 @@ def display_page(url, session_id):
     else:
         app.logger.error('404 page not found {}'.format(url))
         return noPage(url)
-
-
-@app.callback([Output('track-selection-card', "color"),
-               Output('additionaltrack-upload', 'disabled')],
-              [Input('track-selector', "value")])
-def toggle_add_track_format(value):
-    return utils.toggle_selection_alert(value)
-
-
-@app.callback([Output("format-selection-card", "color"),
-               Output({'type': "upload-button", 'index': DatasetReference.CONTACT_MAP.value}, 'disabled')],
-              [Input("contact-format-selector", 'value')])
-def toggle_format_alert(*args):
-    return utils.toggle_selection_alert(*args)
 
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
@@ -135,9 +137,9 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
         app.logger.info('Session {} dataset {} already exists'.format(session_id, dataset))
         return file_divs, cleared_fcontents, RepeatedInputModal(dataset)
     elif dataset == DatasetReference.SEQUENCE.value:
-        data, invalid = SequenceLoader(fcontent)
+        data, invalid = SequenceLoader(fcontent, fname)
     else:
-        data, invalid = Loader(fcontent, input_format)
+        data, invalid = Loader(fcontent, input_format, fname)
 
     if invalid:
         app.logger.info('Session {} dataset {} invalid'.format(session_id, dataset))
@@ -170,7 +172,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
         app.logger.info('Session {} dataset {} already exists'.format(session_id, dataset))
         return RepeatedInputModal(dataset), no_update
 
-    data, invalid = Loader(fcontent, input_format)
+    data, invalid = Loader(fcontent, input_format, fname)
 
     fname_alerts = remove_unused_fname_alerts(fname_alerts)
 
@@ -237,6 +239,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
         return no_update, InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
+    del session[b'id']
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,

@@ -1,4 +1,5 @@
 import json
+from utils import decompress_data
 
 
 def toggle_selection_alert(format_selection):
@@ -51,3 +52,12 @@ def toggle_alert(value):
         return True
     else:
         return False
+
+
+def get_current_fnames(session):
+    result = {}
+
+    for key in session.keys():
+        result[key] = decompress_data(session[key]).pop(-1)
+
+    return result

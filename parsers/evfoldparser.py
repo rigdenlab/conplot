@@ -1,6 +1,7 @@
 from utils.exceptions import InvalidFormat
 from operator import itemgetter
 
+
 def EvfoldParser(input):
     contents = input.split('\n')
     output = []
@@ -18,4 +19,3 @@ def EvfoldParser(input):
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return tuple(output)
-

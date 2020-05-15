@@ -28,7 +28,7 @@ def Body():
                 ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
-                dbc.Button('Commit data', id='plot-button', color="primary", block=True),
+                dbc.Button('Generate Plot', id='plot-button', color="primary", block=True),
             ], width=3, style={'height': '100%'}),
             dbc.Col([
                 html.Div([

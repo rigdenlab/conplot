@@ -36,6 +36,12 @@ def EvfoldParser(*args, **kwargs):
     return EvfoldParser(*args, **kwargs)
 
 
+def CCMpredParser(*args, **kwargs):
+    from parsers.ccmpredparser import CCMpredParser
+
+    return CCMpredParser(*args, **kwargs)
+
+
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
     CONSURF = ConsurfParser
@@ -45,12 +51,15 @@ class ParserFormats(Enum):
     METAPSICOV = PsicovParser
     NEBCON = PsicovParser
     EVFOLD = EvfoldParser
+    CCMPRED = CCMpredParser
 
 
 class ContactFormats(Enum):
     PSICOV = PsicovParser
     METAPSICOV = PsicovParser
     NEBCON = PsicovParser
+    EVFOLD = EvfoldParser
+    CCMPRED = CCMpredParser
 
 
 class MembraneStates(Enum):

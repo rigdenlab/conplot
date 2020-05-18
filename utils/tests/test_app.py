@@ -1,6 +1,6 @@
 import os
 import unittest
-from app import app, url
+from app import app, redis_url
 
 
 class AppTestCase(unittest.TestCase):
@@ -14,9 +14,9 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual("redis://localhost:6379", os.environ['REDISCLOUD_URL'])
 
     def test_2(self):
-        self.assertEqual('localhost', url.hostname)
-        self.assertIsNone(url.password)
-        self.assertEqual(6379, url.port)
+        self.assertEqual('localhost', redis_url.hostname)
+        self.assertIsNone(redis_url.password)
+        self.assertEqual(6379, redis_url.port)
 
 
 if __name__ == '__main__':

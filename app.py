@@ -9,14 +9,14 @@ from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
 from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
-from loaders import AdditionalTracks
+from loaders import AdditionalDatasetReference, MandatoryDatasetReference
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
     InvalidInputModal, InvalidFormatModal
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
-    remove_unused_fname_alerts
+    remove_unused_fname_alerts, decompress_data
 
 
 # ==============================================================
@@ -43,6 +43,20 @@ def is_expired_session(session_id):
     else:
         cache.expire(session_id, 900)
         return False
+
+
+def update_fname_alerts(session_id, enumerator):
+    fname_alerts = []
+    for idx, dataset in enumerate(enumerator):
+        if cache.hexists(session_id, dataset.value):
+            fname = decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
+            fname_alerts.append(FilenameAlert(fname, dataset.value))
+    if enumerator == MandatoryDatasetReference:
+        return fname_alerts + [no_update for x in range(0, 2 - len(fname_alerts))]
+    elif not fname_alerts:
+        return no_update
+
+    return fname_alerts
 
 
 # ==============================================================
@@ -125,10 +139,11 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     file_divs = [no_update for x in range(0, len(fcontents))]
     cleared_fcontents = [None for x in range(0, len(fcontents))]
 
-    if not ensure_triggered(trigger):
-        return file_divs, cleared_fcontents, None
-    elif is_expired_session(session_id):
+    if is_expired_session(session_id):
         return file_divs, cleared_fcontents, SessionTimedOutModal()
+    elif not ensure_triggered(trigger):
+        file_divs = update_fname_alerts(session_id, MandatoryDatasetReference)
+        return file_divs, cleared_fcontents, None
 
     app.logger.info('Session {} upload triggered'.format(session_id))
     dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
@@ -160,13 +175,15 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
                State('session-id', 'children')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
-    if not ensure_triggered(trigger):
-        return None, no_update
-    elif is_expired_session(session_id):
+
+    if is_expired_session(session_id):
         return SessionTimedOutModal(), no_update
+    elif not ensure_triggered(trigger):
+        fname_alerts = update_fname_alerts(session_id, AdditionalDatasetReference)
+        return None, fname_alerts
 
     app.logger.info('Session {} upload triggered'.format(session_id))
-    dataset = AdditionalTracks.__getattr__(input_format).value
+    dataset = AdditionalDatasetReference.__getattr__(input_format).value
 
     if cache.hexists(session_id, dataset):
         app.logger.info('Session {} dataset {} already exists'.format(session_id, dataset))

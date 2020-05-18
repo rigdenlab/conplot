@@ -1,5 +1,5 @@
 import dash_bootstrap_components as dbc
-from loaders import AdditionalTracks
+from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
 
 
@@ -40,7 +40,7 @@ def AdditionalTrackFormatSelector():
             dbc.Select(
                 id='track-selector',
                 options=[{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
-                         for track in AdditionalTracks]
+                         for track in AdditionalDatasetReference]
             ),
             dbc.InputGroupAddon("Track", addon_type="append"),
         ]

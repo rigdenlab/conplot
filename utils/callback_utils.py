@@ -56,6 +56,7 @@ def toggle_alert(value):
 
 def get_current_fnames(session):
     result = {}
+    del session[b'id']
 
     for key in session.keys():
         result[key] = decompress_data(session[key]).pop(-1)

@@ -18,4 +18,4 @@ def EvfoldParser(input):
         raise InvalidFormat('Unable to parse contacts')
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
-        return tuple(output)
+        return output

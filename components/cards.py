@@ -237,13 +237,14 @@ def CreateUserCard():
     ])
 
 
-def UserStoredSessions(username, current_session_name=None):
+def UserStoredSessionsCard(username, current_session_name=None):
     return dbc.Card([
         dbc.CardBody([
             html.Div(id='stored-sessions-toast-div'),
-            html.H2('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
+            html.Div(id='save-session-toast-div'),
+            html.H3('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner')
+            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner'),
         ])
     ])

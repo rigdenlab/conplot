@@ -214,10 +214,10 @@ def NoPageFoundCard(*args, **kwargs):
     return NoPageFoundCard(*args, **kwargs)
 
 
-def UserStoredSessions(*args, **kwargs):
-    from components.cards import UserStoredSessions
+def UserStoredSessionsCard(*args, **kwargs):
+    from components.cards import UserStoredSessionsCard
 
-    return UserStoredSessions(*args, **kwargs)
+    return UserStoredSessionsCard(*args, **kwargs)
 
 
 def CreateUserCard(*args, **kwargs):

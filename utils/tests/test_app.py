@@ -10,7 +10,7 @@ class AppTestCase(unittest.TestCase):
                        'https://use.fontawesome.com/releases/v5.7.2/css/all.css']
         self.assertEqual('ConPlot', app.title)
         self.assertListEqual(stylesheets, app.config['external_stylesheets'])
-        self.assertEqual(11, len(app.callback_map))
+        self.assertEqual(12, len(app.callback_map))
         self.assertEqual("redis://localhost:6379", os.environ['REDISCLOUD_URL'])
 
     def test_2(self):

@@ -41,12 +41,6 @@ def CCMpredParser(*args, **kwargs):
 
     return CCMpredParser(*args, **kwargs)
 
-# def CasprrParser(*args, **kwargs):
-#     from parsers.casprrparser import CasprrParser
-#
-#     return CasprrParser(*args, **kwargs)
-
-
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
     CONSURF = ConsurfParser

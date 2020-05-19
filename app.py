@@ -8,13 +8,13 @@ import uuid
 from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout, UsersPortal
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout, UsersPortal, CreateUser
 from loaders import AdditionalDatasetReference, MandatoryDatasetReference
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
-    InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert
+    InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert, SuccessCreateUserAlert
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
     remove_unused_fname_alerts, decompress_data
 from utils import sql_utils
@@ -72,6 +72,9 @@ app.config.suppress_callback_exceptions = True
 
 if 'IS_HEROKU' not in os.environ:
     os.environ['REDISCLOUD_URL'] = "redis://localhost:6379"
+
+os.environ[
+    'DATABASE_URL'] = 'postgres://xhjvwzrxvdiawq:95f4a6a924c2416364d2ff50e76a65601109a6131347225934c65fd4f0b4a526@ec2-54-246-85-151.eu-west-1.compute.amazonaws.com:5432/ddi4fs0u62v798'
 
 redis_url = urllib.parse.urlparse(os.environ.get('REDISCLOUD_URL'))
 cache = redis.Redis(host=redis_url.hostname, port=redis_url.port, password=redis_url.password)
@@ -141,6 +144,33 @@ def user_logout(n_clicks, session_id):
         return SuccessLogoutAlert()
 
 
+@app.callback([Output('invalid-create-user-collapse', 'is_open'),
+               Output('success-create-user-alert-div', 'children')],
+              [Input("create-user-button", 'n_clicks')],
+              [State('username-input', 'value'),
+               State('password-input', 'value'),
+               State('email-input', 'value'),
+               State('session-id', 'children')])
+def create_user(n_clicks, username, password, email, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update, no_update
+    elif not ensure_triggered(trigger):
+        return no_update, no_update
+
+    print(email, type(email))
+
+    if any([True for x in (username, password, email) if x is None]):
+        return True, None
+    elif sql_utils.create_user(username, password, email):
+        app.logger.info('Session {} created user {} - {}'.format(session_id, username, email))
+        cache.hset(session_id, 'user', compress_data(username))
+        return False, SuccessCreateUserAlert(username)
+    else:
+        return True, None
+
+
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
@@ -168,6 +198,8 @@ def display_page(url, session_id):
         return RigdenLab(session_id, username)
     elif url == UrlIndex.USERS_PORTAL.value:
         return UsersPortal(username)
+    elif url == UrlIndex.CREATE_USER.value:
+        return CreateUser(username)
     else:
         app.logger.error('404 page not found {}'.format(url))
         return noPage(url, username)

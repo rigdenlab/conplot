@@ -11,6 +11,7 @@ class UrlIndex(Enum):
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
     USERS_PORTAL = urllib.parse.urljoin(ROOT, 'user-portal')
+    CREATE_USER = urllib.parse.urljoin(ROOT, 'user-create')
     SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'

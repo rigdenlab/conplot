@@ -59,7 +59,7 @@ def TrackLayoutSelector(idx, options, value):
 def EmailInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("@", addon_type="prepend"),
-        dbc.Input(placeholder="Email address", type="email")
+        dbc.Input(placeholder="example@email.com", type="email", id='email-input')
     ], className="mb-3")
 
 
@@ -87,12 +87,12 @@ def EmailIssueSelect():
 def UserNameInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Username", addon_type="prepend"),
-        dbc.Input(type="text", id='username-input')
+        dbc.Input(type="text", id='username-input', placeholder='User')
     ], className="mb-3")
 
 
 def PasswordInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Password", addon_type="prepend"),
-        dbc.Input(type="password", id='password-input')
+        dbc.Input(type="password", id='password-input', placeholder='XXXX')
     ], className="mb-3")

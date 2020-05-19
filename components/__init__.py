@@ -58,6 +58,12 @@ def InvalidLoginCollapse(*args, **kwargs):
     return InvalidLoginCollapse(*args, **kwargs)
 
 
+def InvalidNewUserCollapse(*args, **kwargs):
+    from components.collapse import InvalidNewUserCollapse
+
+    return InvalidNewUserCollapse(*args, **kwargs)
+
+
 def InvalidAddTrackCollapse(*args, **kwargs):
     from components.collapse import InvalidAddTrackCollapse
 
@@ -154,6 +160,12 @@ def FilenameAlert(*args, **kwargs):
     return FilenameAlert(*args, **kwargs)
 
 
+def SuccessCreateUserAlert(*args, **kwargs):
+    from components.alerts import SuccessCreateUserAlert
+
+    return SuccessCreateUserAlert(*args, **kwargs)
+
+
 def ErrorAlert(*args, **kwargs):
     from components.alerts import ErrorAlert
 
@@ -182,6 +194,12 @@ def NoPageFoundCard(*args, **kwargs):
     from components.cards import NoPageFoundCard
 
     return NoPageFoundCard(*args, **kwargs)
+
+
+def CreateUserCard(*args, **kwargs):
+    from components.cards import CreateUserCard
+
+    return CreateUserCard(*args, **kwargs)
 
 
 def UserLogoutCard(*args, **kwargs):

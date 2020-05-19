@@ -42,6 +42,12 @@ def UsersPortal(*args, **kwargs):
     return UsersPortal(*args, **kwargs)
 
 
+def CreateUser(*args, **kwargs):
+    from layouts.createuser import CreateUser
+
+    return CreateUser(*args, **kwargs)
+
+
 def RigdenLab(*args, **kwargs):
     from layouts.rigdenlab import RigdenLab
 

@@ -62,9 +62,13 @@ def delete_entry(table_name, id_field, id_value):
     perform_query(query, commit=True)
 
 
-def create_user(username, psswrd, email=None):
-    insert_entry(TableNames.USER_DATA.value, ('username', 'email', 'password'),
-                 ("'%s'" % username, "'%s'" % email, SqlQueries.CRYPT.value % psswrd))
+def create_user(username, psswrd, email):
+    try:
+        insert_entry(TableNames.USER_DATA.value, ('username', 'email', 'password'),
+                     ("'%s'" % username, "'%s'" % email, SqlQueries.CRYPT.value % psswrd))
+        return True
+    except psycopg2.IntegrityError:
+        return False
 
 
 def userlogin(username, psswrd):

@@ -52,20 +52,20 @@ def SuccesfulLogoutToast():
 def UserAccountDropdownMenu(username=None):
     # TODO: IMPORTANT, WE WONT ALLOW THE USERS TO CREATE A USER WITH USERNAME USER
     if username is None:
-        identified = False
+        store_disabled = True
         username = 'USER'
     else:
-        identified = False
+        store_disabled = False
 
     return dbc.Row([
         dbc.DropdownMenu(
             [
                 dbc.DropdownMenuItem("User identification", header=True),
                 dbc.DropdownMenuItem("Login/Logout", href=UrlIndex.USERS_PORTAL.value),
-                dbc.DropdownMenuItem("Create a new account", href=UrlIndex.USERS_PORTAL.value),
+                dbc.DropdownMenuItem("Create a new account", href=UrlIndex.CREATE_USER.value),
                 dbc.DropdownMenuItem(divider=True),
                 dbc.DropdownMenuItem("Members only area", header=True),
-                dbc.DropdownMenuItem("Access stored sessions", disabled=identified),
+                dbc.DropdownMenuItem("Access stored sessions", disabled=store_disabled),
                 dbc.DropdownMenuItem(divider=True),
             ], label=username, right=True, bs_size="md", id='user-account-dropdown'
         )

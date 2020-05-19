@@ -37,6 +37,22 @@ def SuccessLoginAlert(username):
     )
 
 
+def SuccessCreateUserAlert(username):
+    return dbc.Alert([
+        html.H4('Success', className="alert-heading", style={'text-align': "center"}),
+        html.P([
+            "You have successfully created a new user. You are no logged in as '%s'. You can now safely store plots "
+            "after you create them on the Plot tab!" % username
+        ], style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='success',
+        fade=True,
+        is_open=True,
+        id='success-create-user-alert'
+    )
+
+
 def SuccessLogoutAlert():
     return dbc.Alert([
         html.H4('Success', className="alert-heading", style={'text-align': "center"}),

@@ -1,6 +1,6 @@
 from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
     DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
-    TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput
+    TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput, EmailInput, InvalidNewUserCollapse
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -31,7 +31,7 @@ def UserLoginCard():
             PasswordInput(),
             InvalidLoginCollapse(),
             html.Br(),
-            html.Div(id='success-login-alert-div'),
+            dbc.Spinner(html.Div(id='success-login-alert-div')),
             html.Br(),
             dbc.Button("Login", color="primary", block=True, id='user-login-button'),
             html.Br(),
@@ -49,7 +49,7 @@ def UserLogoutCard(username):
             html.H6('You are currently logged in as %s. Do you want to logout?' % username,
                     style={'text-align': "center"}),
             html.Br(),
-            html.Div(id='success-logout-alert-div'),
+            dbc.Spinner(html.Div(id='success-logout-alert-div')),
             html.Br(),
             dbc.Button("Logout", color="danger", block=True, id='user-logout-button'),
             html.Br(),
@@ -215,3 +215,22 @@ def TrackSelectionCard(track_idx, track_value, available_tracks):
 def InvalidFormatCard():
     return dbc.Card(dbc.CardBody("Invalid format, unable to load", style={'text-align': "center"}), color="danger",
                     outline=True)
+
+
+def CreateUserCard():
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2('Create a new user', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            UserNameInput(),
+            PasswordInput(),
+            EmailInput(),
+            InvalidNewUserCollapse(),
+            html.Br(),
+            dbc.Spinner(html.Div(id='success-create-user-alert-div')),
+            html.Br(),
+            dbc.Button("Create new user", color="primary", block=True, id='create-user-button'),
+            html.Br(),
+        ])
+    ])

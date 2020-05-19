@@ -12,6 +12,7 @@ class UrlIndex(Enum):
     HELP = urllib.parse.urljoin(ROOT, 'help')
     USERS_PORTAL = urllib.parse.urljoin(ROOT, 'user-portal')
     CREATE_USER = urllib.parse.urljoin(ROOT, 'user-create')
+    USER_STORAGE = urllib.parse.urljoin(ROOT, 'user-storage')
     SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
@@ -92,3 +93,9 @@ def toggle_alert(*args, **kwargs):
     from utils.callback_utils import toggle_alert
 
     return toggle_alert(*args, **kwargs)
+
+
+def get_session_action(*args, **kwargs):
+    from utils.callback_utils import get_session_action
+
+    return get_session_action(*args, **kwargs)

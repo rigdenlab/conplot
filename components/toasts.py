@@ -35,3 +35,27 @@ def SuccesfulLogoutToast():
         icon="danger",
         style={"position": "fixed", "top": 66, "right": 10, "width": 350},
     )
+
+def SuccesfulSessionLoadToast(session_name):
+    return dbc.Toast(
+        "You have loaded session '%s'" % session_name,
+        id="positioned-toast",
+        header="Session loaded",
+        is_open=True,
+        dismissable=True,
+        icon="success",
+        style={"position": "fixed", "top": 66, "right": 10, "width": 350},
+    )
+
+
+def SuccesfulSessionDeleteToast(session_name):
+    return dbc.Toast(
+        "You have deleted session '%s'" % session_name,
+        id="positioned-toast",
+        header="Session removed",
+        is_open=True,
+        dismissable=True,
+        icon="danger",
+        style={"position": "fixed", "top": 66, "right": 10, "width": 350},
+    )
+

@@ -46,10 +46,28 @@ def SuccesfulLogoutToast(*args, **kwargs):
     return SuccesfulLogoutToast(*args, **kwargs)
 
 
+def StoredSessionsList(*args, **kwargs):
+    from components.listgrpoups import StoredSessionsList
+
+    return StoredSessionsList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
     from components.toasts import SessionTimedOutToast
 
     return SessionTimedOutToast(*args, **kwargs)
+
+
+def SuccesfulSessionDeleteToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionDeleteToast
+
+    return SuccesfulSessionDeleteToast(*args, **kwargs)
+
+
+def SuccesfulSessionLoadToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionLoadToast
+
+    return SuccesfulSessionLoadToast(*args, **kwargs)
 
 
 def InvalidLoginCollapse(*args, **kwargs):

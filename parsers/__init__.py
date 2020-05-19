@@ -37,6 +37,12 @@ def EvfoldParser(*args, **kwargs):
     return EvfoldParser(*args, **kwargs)
 
 
+def CCMpredParser(*args, **kwargs):
+    from parsers.ccmpredparser import CCMpredParser
+
+    return CCMpredParser(*args, **kwargs)
+
+  
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
 
@@ -53,6 +59,8 @@ class ParserFormats(Enum):
     NEBCON = PsicovParser
     CUSTOM = CustomParser
     EVFOLD = EvfoldParser
+    CCMPRED = CCMpredParser
+    CASPRR = PsicovParser
 
 
 class ContactFormats(Enum):
@@ -60,6 +68,9 @@ class ContactFormats(Enum):
     METAPSICOV = PsicovParser
     NEBCON = PsicovParser
     EVFOLD = EvfoldParser
+    CCMPRED = CCMpredParser
+    CASPRR = PsicovParser
+
 
 
 class MembraneStates(Enum):

@@ -35,21 +35,39 @@ def MismatchModal(*args, **kwargs):
 
 
 def SuccesfulLoginToast(*args, **kwargs):
-    from components.misc import SuccesfulLoginToast
+    from components.toasts import SuccesfulLoginToast
 
     return SuccesfulLoginToast(*args, **kwargs)
 
 
 def SuccesfulLogoutToast(*args, **kwargs):
-    from components.misc import SuccesfulLogoutToast
+    from components.toasts import SuccesfulLogoutToast
 
     return SuccesfulLogoutToast(*args, **kwargs)
 
 
+def StoredSessionsList(*args, **kwargs):
+    from components.listgrpoups import StoredSessionsList
+
+    return StoredSessionsList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
-    from components.misc import SessionTimedOutToast
+    from components.toasts import SessionTimedOutToast
 
     return SessionTimedOutToast(*args, **kwargs)
+
+
+def SuccesfulSessionDeleteToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionDeleteToast
+
+    return SuccesfulSessionDeleteToast(*args, **kwargs)
+
+
+def SuccesfulSessionLoadToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionLoadToast
+
+    return SuccesfulSessionLoadToast(*args, **kwargs)
 
 
 def InvalidLoginCollapse(*args, **kwargs):
@@ -194,6 +212,12 @@ def NoPageFoundCard(*args, **kwargs):
     from components.cards import NoPageFoundCard
 
     return NoPageFoundCard(*args, **kwargs)
+
+
+def UserStoredSessions(*args, **kwargs):
+    from components.cards import UserStoredSessions
+
+    return UserStoredSessions(*args, **kwargs)
 
 
 def CreateUserCard(*args, **kwargs):

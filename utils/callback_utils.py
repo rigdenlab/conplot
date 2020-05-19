@@ -52,3 +52,8 @@ def toggle_alert(value):
         return True
     else:
         return False
+
+
+def get_session_action(trigger):
+    prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
+    return prop_id['index'], prop_id['type'].split('-')[0]

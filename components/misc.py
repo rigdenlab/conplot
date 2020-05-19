@@ -13,44 +13,7 @@ def PlotPlaceHolder():
     ], className='square-content')
 
 
-def SuccesfulLoginToast(username):
-    return dbc.Toast(
-        "Logged in as %s" % username,
-        id="positioned-toast",
-        header="Successful login",
-        is_open=True,
-        dismissable=True,
-        icon="success",
-        style={"position": "fixed", "top": 66, "right": 10, "width": 350},
-    )
-
-
-def SessionTimedOutToast():
-    return dbc.Toast(
-        "Session has timed-out!",
-        id="positioned-toast",
-        header="Session timed-out",
-        is_open=True,
-        dismissable=True,
-        icon="danger",
-        style={"position": "fixed", "top": 66, "right": 10, "width": 350},
-    )
-
-
-def SuccesfulLogoutToast():
-    return dbc.Toast(
-        "You have logged out!",
-        id="positioned-toast",
-        header="User log out",
-        is_open=True,
-        dismissable=True,
-        icon="danger",
-        style={"position": "fixed", "top": 66, "right": 10, "width": 350},
-    )
-
-
 def UserAccountDropdownMenu(username=None):
-    # TODO: IMPORTANT, WE WONT ALLOW THE USERS TO CREATE A USER WITH USERNAME USER
     if username is None:
         store_disabled = True
         username = 'USER'
@@ -65,7 +28,8 @@ def UserAccountDropdownMenu(username=None):
                 dbc.DropdownMenuItem("Create a new account", href=UrlIndex.CREATE_USER.value),
                 dbc.DropdownMenuItem(divider=True),
                 dbc.DropdownMenuItem("Members only area", header=True),
-                dbc.DropdownMenuItem("Access stored sessions", disabled=store_disabled),
+                dbc.DropdownMenuItem("Access stored sessions", disabled=store_disabled,
+                                     href=UrlIndex.USER_STORAGE.value),
                 dbc.DropdownMenuItem(divider=True),
             ], label=username, right=True, bs_size="md", id='user-account-dropdown'
         )

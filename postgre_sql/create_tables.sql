@@ -1,3 +1,26 @@
 CREATE EXTENSION pgcrypto;
-CREATE TABLE user_data (id serial primary key, username varchar(15) not null unique, email varchar(65) not null unique, password text not null);
-CREATE TABLE session_data (id serial primary key, user_id int references user_data(id), sequence bit varying, contact bit varying, membrane bit varying, secondarystructure bit varying, custom bit varying, disorder bit varying, conservation bit varying, date date not null default current_date)
+
+CREATE TABLE user_data
+(
+    id           serial primary key,
+    username     varchar(25) not null unique,
+    email        varchar(65) unique,
+    password     text        not null,
+    created_date date        not null default current_date,
+    last_login   date        not null default current_date
+);
+CREATE TABLE session_data
+(
+    primary key (owner_username, session_name),
+    owner_username     varchar(25) references user_data (username),
+    session_name       varchar(25) not null,
+    sequence           bytea,
+    contact            bytea,
+    membranetopology   bytea,
+    secondarystructure bytea,
+    conservation       bytea,
+    disorder           bytea,
+    custom             bytea,
+    created_date       date        not null default current_date,
+    last_access_date   date        not null default current_date
+)

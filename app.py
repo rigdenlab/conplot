@@ -8,15 +8,17 @@ import uuid
 from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout, UsersPortal, CreateUser, UserStorage
 from loaders import AdditionalDatasetReference, MandatoryDatasetReference
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
-    InvalidInputModal, InvalidFormatModal
+    InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert, SuccessCreateUserAlert, \
+    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
-    remove_unused_fname_alerts, decompress_data
+    remove_unused_fname_alerts, decompress_data, get_session_action
+from utils import sql_utils
 
 
 # ==============================================================
@@ -112,19 +114,130 @@ def display_page(url, session_id):
         return no_update
     elif is_expired_session(session_id):
         return SessionTimeout(session_id)
-    elif url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id)
+    elif cache.hexists(session_id, 'user'):
+        username = decompress_data(cache.hget(session_id, 'user'))
+    else:
+        username = None
+
+    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
+        return Home(session_id, username)
     elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id)
+        return Contact(session_id, username)
     elif url == UrlIndex.PLOT.value:
-        return Plot(session_id)
+        return Plot(session_id, username)
     elif url == UrlIndex.HELP.value:
-        return Help(session_id)
+        return Help(session_id, username)
     elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id)
+        return RigdenLab(session_id, username)
+    elif url == UrlIndex.USERS_PORTAL.value:
+        return UsersPortal(username)
+    elif url == UrlIndex.CREATE_USER.value:
+        return CreateUser(username)
+    elif url == UrlIndex.USER_STORAGE.value:
+        if cache.hexists(session_id, 'session_name'):
+            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
+        else:
+            return UserStorage(username)
     else:
         app.logger.error('404 page not found {}'.format(url))
-        return noPage(url)
+        return noPage(url, username)
+
+
+@app.callback([Output('invalid-login-collapse', 'is_open'),
+               Output('success-login-alert-div', 'children')],
+              [Input("user-login-button", 'n_clicks')],
+              [State('username-input', 'value'),
+               State('password-input', 'value'),
+               State('session-id', 'children')])
+def user_login(n_clicks, username, password, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update, no_update
+    elif not ensure_triggered(trigger):
+        return no_update, no_update
+
+    if sql_utils.userlogin(username, password):
+        app.logger.info('Session {} login user {}'.format(session_id, username))
+        cache.hset(session_id, 'user', compress_data(username))
+        return False, SuccessLoginAlert(username)
+    else:
+        return True, None
+
+
+@app.callback(Output('success-logout-alert-div', 'children'),
+              [Input("user-logout-button", 'n_clicks')],
+              [State('session-id', 'children')])
+def user_logout(n_clicks, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update
+    elif not ensure_triggered(trigger):
+        return no_update
+
+    cache.hdel(session_id, 'user')
+    cache.hdel(session_id, 'session_name')
+    app.logger.info('Session {} logout user'.format(session_id))
+    return SuccessLogoutAlert()
+
+
+@app.callback([Output('invalid-create-user-collapse', 'is_open'),
+               Output('success-create-user-alert-div', 'children')],
+              [Input("create-user-button", 'n_clicks')],
+              [State('username-input', 'value'),
+               State('password-input', 'value'),
+               State('email-input', 'value'),
+               State('session-id', 'children')])
+def create_user(n_clicks, username, password, email, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update, no_update
+    elif not ensure_triggered(trigger):
+        return no_update, no_update
+
+    if any([True for x in (username, password, email) if x is None]):
+        return True, None
+    elif sql_utils.create_user(username, password, email):
+        app.logger.info('Session {} created user {} - {}'.format(session_id, username, email))
+        cache.hset(session_id, 'user', compress_data(username))
+        return False, SuccessCreateUserAlert(username)
+    else:
+        return True, None
+
+
+@app.callback([Output('stored-sessions-toast-div', 'children'),
+               Output('stored-sessions-list-spinner', 'children')],
+              [Input({'type': 'delete-session-button', 'index': ALL}, 'n_clicks'),
+               Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks')],
+              [State('session-id', 'children')])
+def manage_stored_sessions(delete_clicks, load_click, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return SessionTimedOutToast(), no_update
+    elif not ensure_triggered(trigger):
+        return no_update, no_update
+
+    session_name, action = get_session_action(trigger)
+    username = decompress_data(cache.hget(session_id, 'user'))
+    if cache.hexists(session_id, 'session_name'):
+        current_session_name = decompress_data(cache.hget(session_id, 'session_name'))
+    else:
+        current_session_name = None
+
+    if action == 'delete':
+        sql_utils.delete_session(username, session_name)
+        app.logger.info('Session {} user {} deleted session {}'.format(session_id, username, session_name))
+        return SuccesfulSessionDeleteToast(session_name), StoredSessionsList(username, current_session_name)
+    else:
+        cache.hset(session_id, 'session_name', compress_data(session_name))
+        loaded_session = sql_utils.retrieve_session(username, session_name)
+        for key in loaded_session:
+            cache.hset(session_id, key, loaded_session[key])
+        app.logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
+        return SuccesfulSessionLoadToast(session_name), StoredSessionsList(username, session_name)
 
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),

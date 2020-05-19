@@ -4,7 +4,7 @@ from components import NavBar, Header, SessionTimedOutModal
 import dash_bootstrap_components as dbc
 
 
-def Body(session_id):
+def Body():
     return html.Div(
         [
             SessionTimedOutModal(),
@@ -40,5 +40,5 @@ def SessionTimeout(session_id):
     return html.Div([
         Header(),
         NavBar(UrlIndex.SESSION_TIMEOUT.value),
-        Body(session_id),
+        Body(),
     ])

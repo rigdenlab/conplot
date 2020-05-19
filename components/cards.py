@@ -1,6 +1,7 @@
 from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
     DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
-    TrackLayoutSelector, ErrorAlert
+    TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput, EmailInput, \
+    InvalidNewUserCollapse, StoredSessionsList
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -17,6 +18,42 @@ def NoPageFoundCard(url):
             html.Br(),
             ErrorAlert(True)
 
+        ])
+    ])
+
+
+def UserLoginCard():
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2('User login', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            UserNameInput(),
+            PasswordInput(),
+            InvalidLoginCollapse(),
+            html.Br(),
+            dbc.Spinner(html.Div(id='success-login-alert-div')),
+            html.Br(),
+            dbc.Button("Login", color="primary", block=True, id='user-login-button'),
+            html.Br(),
+        ])
+    ])
+
+
+def UserLogoutCard(username):
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2('User logout', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            html.Br(),
+            html.H6('You are currently logged in as %s. Do you want to logout?' % username,
+                    style={'text-align': "center"}),
+            html.Br(),
+            dbc.Spinner(html.Div(id='success-logout-alert-div')),
+            html.Br(),
+            dbc.Button("Logout", color="danger", block=True, id='user-logout-button'),
+            html.Br(),
         ])
     ])
 
@@ -179,3 +216,34 @@ def TrackSelectionCard(track_idx, track_value, available_tracks):
 def InvalidFormatCard():
     return dbc.Card(dbc.CardBody("Invalid format, unable to load", style={'text-align': "center"}), color="danger",
                     outline=True)
+
+
+def CreateUserCard():
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2('Create a new user', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            UserNameInput(),
+            PasswordInput(),
+            EmailInput(),
+            InvalidNewUserCollapse(),
+            html.Br(),
+            dbc.Spinner(html.Div(id='success-create-user-alert-div')),
+            html.Br(),
+            dbc.Button("Create new user", color="primary", block=True, id='create-user-button'),
+            html.Br(),
+        ])
+    ])
+
+
+def UserStoredSessions(username, current_session_name=None):
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div(id='stored-sessions-toast-div'),
+            html.H2('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner')
+        ])
+    ])

@@ -12,3 +12,25 @@ def InvalidFileCollapse(dataset):
 
 def InvalidAddTrackCollapse():
     return dbc.Collapse(InvalidFormatCard(), id='invalid-track-collapse', is_open=True)
+
+
+def InvalidLoginCollapse():
+    return dbc.Collapse(
+        dbc.Card(
+            dbc.CardBody("Invalid username or password, please try again", style={'text-align': "center"}),
+            color="danger",
+            outline=True
+        ),
+        id='invalid-login-collapse', is_open=False
+    )
+
+def InvalidNewUserCollapse():
+    return dbc.Collapse(
+        dbc.Card(
+            dbc.CardBody("Invalid username or email address! Either your username or the provided email address are "
+                         "already used on ConPlot.", style={'text-align': "center"}),
+            color="danger",
+            outline=True
+        ),
+        id='invalid-create-user-collapse', is_open=False
+    )

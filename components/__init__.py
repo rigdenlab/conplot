@@ -34,6 +34,54 @@ def MismatchModal(*args, **kwargs):
     return MismatchModal(*args, **kwargs)
 
 
+def SuccesfulLoginToast(*args, **kwargs):
+    from components.toasts import SuccesfulLoginToast
+
+    return SuccesfulLoginToast(*args, **kwargs)
+
+
+def SuccesfulLogoutToast(*args, **kwargs):
+    from components.toasts import SuccesfulLogoutToast
+
+    return SuccesfulLogoutToast(*args, **kwargs)
+
+
+def StoredSessionsList(*args, **kwargs):
+    from components.listgrpoups import StoredSessionsList
+
+    return StoredSessionsList(*args, **kwargs)
+
+
+def SessionTimedOutToast(*args, **kwargs):
+    from components.toasts import SessionTimedOutToast
+
+    return SessionTimedOutToast(*args, **kwargs)
+
+
+def SuccesfulSessionDeleteToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionDeleteToast
+
+    return SuccesfulSessionDeleteToast(*args, **kwargs)
+
+
+def SuccesfulSessionLoadToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionLoadToast
+
+    return SuccesfulSessionLoadToast(*args, **kwargs)
+
+
+def InvalidLoginCollapse(*args, **kwargs):
+    from components.collapse import InvalidLoginCollapse
+
+    return InvalidLoginCollapse(*args, **kwargs)
+
+
+def InvalidNewUserCollapse(*args, **kwargs):
+    from components.collapse import InvalidNewUserCollapse
+
+    return InvalidNewUserCollapse(*args, **kwargs)
+
+
 def InvalidAddTrackCollapse(*args, **kwargs):
     from components.collapse import InvalidAddTrackCollapse
 
@@ -50,6 +98,12 @@ def AdditionalTracksUploadCard(*args, **kwargs):
     from components.cards import AdditionalTracksUploadCard
 
     return AdditionalTracksUploadCard(*args, **kwargs)
+
+
+def UserLoginCard(*args, **kwargs):
+    from components.cards import UserLoginCard
+
+    return UserLoginCard(*args, **kwargs)
 
 
 def MandatoryUploadCard(*args, **kwargs):
@@ -106,6 +160,12 @@ def UploadButton(*args, **kwargs):
     return UploadButton(*args, **kwargs)
 
 
+def UserAccountDropdownMenu(*args, **kwargs):
+    from components.misc import UserAccountDropdownMenu
+
+    return UserAccountDropdownMenu(*args, **kwargs)
+
+
 def AddTrackButton(*args, **kwargs):
     from components.buttons import AddTrackButton
 
@@ -118,10 +178,28 @@ def FilenameAlert(*args, **kwargs):
     return FilenameAlert(*args, **kwargs)
 
 
+def SuccessCreateUserAlert(*args, **kwargs):
+    from components.alerts import SuccessCreateUserAlert
+
+    return SuccessCreateUserAlert(*args, **kwargs)
+
+
 def ErrorAlert(*args, **kwargs):
     from components.alerts import ErrorAlert
 
     return ErrorAlert(*args, **kwargs)
+
+
+def SuccessLogoutAlert(*args, **kwargs):
+    from components.alerts import SuccessLogoutAlert
+
+    return SuccessLogoutAlert(*args, **kwargs)
+
+
+def SuccessLoginAlert(*args, **kwargs):
+    from components.alerts import SuccessLoginAlert
+
+    return SuccessLoginAlert(*args, **kwargs)
 
 
 def PlotPlaceHolder(*args, **kwargs):
@@ -134,6 +212,24 @@ def NoPageFoundCard(*args, **kwargs):
     from components.cards import NoPageFoundCard
 
     return NoPageFoundCard(*args, **kwargs)
+
+
+def UserStoredSessions(*args, **kwargs):
+    from components.cards import UserStoredSessions
+
+    return UserStoredSessions(*args, **kwargs)
+
+
+def CreateUserCard(*args, **kwargs):
+    from components.cards import CreateUserCard
+
+    return CreateUserCard(*args, **kwargs)
+
+
+def UserLogoutCard(*args, **kwargs):
+    from components.cards import UserLogoutCard
+
+    return UserLogoutCard(*args, **kwargs)
 
 
 def DisplayControlCard(*args, **kwargs):
@@ -182,6 +278,18 @@ def LFactorSelector(*args, **kwargs):
     from components.inputgroups import LFactorSelector
 
     return LFactorSelector(*args, **kwargs)
+
+
+def UserNameInput(*args, **kwargs):
+    from components.inputgroups import UserNameInput
+
+    return UserNameInput(*args, **kwargs)
+
+
+def PasswordInput(*args, **kwargs):
+    from components.inputgroups import PasswordInput
+
+    return PasswordInput(*args, **kwargs)
 
 
 def SizeSelector(*args, **kwargs):

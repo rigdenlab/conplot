@@ -32,9 +32,9 @@ def Body():
     )
 
 
-def Contact(session_id):
+def Contact(session_id, username):
     return html.Div([
-        Header(),
+        Header(username),
         NavBar(UrlIndex.CONTACT.value),
         Body(),
     ])

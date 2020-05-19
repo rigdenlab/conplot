@@ -4,7 +4,7 @@ from components import NavBar, Header
 import dash_bootstrap_components as dbc
 
 
-def Body(session_id):
+def Body():
     return html.Div(
         [
             html.Br(),
@@ -23,9 +23,9 @@ def Body(session_id):
     )
 
 
-def Help(session_id):
+def Help(session_id, username):
     return html.Div([
-        Header(),
+        Header(username),
         NavBar(UrlIndex.HELP.value),
-        Body(session_id),
+        Body(),
     ])

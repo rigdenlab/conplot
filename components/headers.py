@@ -1,15 +1,15 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from components import HelpToolTip, GitHubLink, ConPlotLink
+from components import HelpToolTip, ConPlotLink, UserAccountDropdownMenu
 from utils import UrlIndex
 
 
-def Header():
+def Header(username=None):
     return dbc.Navbar(
         [
             ConPlotLink(),
             dbc.NavbarToggler(id="navbar-toggler"),
-            dbc.Collapse(GitHubLink(), id="navbar-collapse", navbar=True),
+            dbc.Collapse(UserAccountDropdownMenu(username), id="navbar-collapse", navbar=True),
         ],
     )
 

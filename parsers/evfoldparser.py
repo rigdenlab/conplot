@@ -1,6 +1,7 @@
 from utils.exceptions import InvalidFormat
 from operator import itemgetter
 
+
 def EvfoldParser(input):
     contents = input.split('\n')
     output = []
@@ -17,5 +18,4 @@ def EvfoldParser(input):
         raise InvalidFormat('Unable to parse contacts')
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
-        return tuple(output)
-
+        return output

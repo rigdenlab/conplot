@@ -9,13 +9,20 @@ class DatasetReference(Enum):
     SECONDARY_STRUCTURE = 'secondarystructure'
     CONSERVATION = 'conservation'
     DISORDER = 'disorder'
+    CUSTOM = 'custom'
 
 
-class AdditionalTracks(Enum):
+class AdditionalDatasetReference(Enum):
     TOPCONS = DatasetReference.MEMBRANE_TOPOLOGY.value
-    CONSURF = DatasetReference.CONSERVATION.value
     PSIPRED = DatasetReference.SECONDARY_STRUCTURE.value
     IUPRED = DatasetReference.DISORDER.value
+    CONSURF = DatasetReference.CONSERVATION.value
+    CUSTOM = DatasetReference.CUSTOM.value
+
+
+class MandatoryDatasetReference(Enum):
+    SEQUENCE = DatasetReference.SEQUENCE.value
+    CONTACT_MAP = DatasetReference.CONTACT_MAP.value
 
 
 def decode_raw_file(raw_file):

@@ -1,18 +1,17 @@
-import dash_html_components as html
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
+import dash_html_components as html
+
+
+def Button(id, children, color='primary'):
+    return dbc.Button(id=id, children=children, color=color, block=True)
 
 
 def UploadButton(dataset, multiple=False, disabled=False):
     return html.Div([
         dcc.Upload(
-            id={
-                'type': 'upload-button',
-                'index': dataset
-            },
-            children=dbc.Button(
-                "Upload {}".format(dataset), id='upload-{}-button'.format(dataset), color="primary", block=True
-            ),
+            id={'type': 'upload-button', 'index': dataset},
+            children=Button(children="Upload {}".format(dataset), id='upload-{}-button'.format(dataset)),
             multiple=multiple, disabled=disabled
         ),
     ])
@@ -22,10 +21,7 @@ def AddTrackButton(multiple=False, disabled=False):
     return html.Div([
         dcc.Upload(
             id='additionaltrack-upload',
-            children=dbc.Button(
-                html.I(className="fas fa-plus-circle fa-2x"), id='upload-additionaltrack-button',
-                color="primary", block=True
-            ),
+            children=Button(children=html.I(className="fas fa-plus-circle fa-2x"), id='upload-additionaltrack-button'),
             multiple=multiple, disabled=disabled
         ),
     ])

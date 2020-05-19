@@ -4,7 +4,7 @@ from utils.exceptions import InvalidFormat
 from utils import compress_data
 
 
-def Loader(raw_file, input_format):
+def Loader(raw_file, input_format, fname):
     data = None
     invalid = False
 
@@ -12,6 +12,7 @@ def Loader(raw_file, input_format):
         decoded = decode_raw_file(raw_file)
         try:
             data_raw = ParserFormats.__dict__[input_format](decoded)
+            data_raw.append(fname)
             data = compress_data(data_raw)
         except InvalidFormat:
             data = None

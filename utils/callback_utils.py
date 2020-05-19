@@ -1,6 +1,5 @@
-from utils import PathIndex
-from layouts import noPage, Home, Plot, Contact
 import json
+from utils import decompress_data
 
 
 def toggle_selection_alert(format_selection):
@@ -53,14 +52,3 @@ def toggle_alert(value):
         return True
     else:
         return False
-
-
-def display_page(url, session_id):
-    if url == PathIndex.HOME.value or url == PathIndex.ROOT.value:
-        return Home(session_id)
-    elif url == PathIndex.CONTACT.value:
-        return Contact(session_id)
-    elif url == PathIndex.PLOT.value:
-        return Plot(session_id)
-    else:
-        return noPage(url)

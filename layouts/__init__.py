@@ -36,10 +36,28 @@ def Home(*args, **kwargs):
     return Home(*args, **kwargs)
 
 
+def RigdenLab(*args, **kwargs):
+    from layouts.rigdenlab import RigdenLab
+
+    return RigdenLab(*args, **kwargs)
+
+
+def Help(*args, **kwargs):
+    from layouts.help import Help
+
+    return Help(*args, **kwargs)
+
+
 def Contact(*args, **kwargs):
     from layouts.contact import Contact
 
     return Contact(*args, **kwargs)
+
+
+def SessionTimeout(*args, **kwargs):
+    from layouts.session_timeout import SessionTimeout
+
+    return SessionTimeout(*args, **kwargs)
 
 
 def Plot(*args, **kwargs):

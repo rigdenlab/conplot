@@ -30,6 +30,7 @@ def IupredParser(*args, **kwargs):
 
     return IupredParser(*args, **kwargs)
 
+
 def EvfoldParser(*args, **kwargs):
     from parsers.evfoldparser import EvfoldParser
 
@@ -41,6 +42,13 @@ def CCMpredParser(*args, **kwargs):
 
     return CCMpredParser(*args, **kwargs)
 
+  
+def CustomParser(*args, **kwargs):
+    from parsers.customparser import CustomParser
+
+    return CustomParser(*args, **kwargs)
+
+
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
     CONSURF = ConsurfParser
@@ -49,6 +57,7 @@ class ParserFormats(Enum):
     PSICOV = PsicovParser
     METAPSICOV = PsicovParser
     NEBCON = PsicovParser
+    CUSTOM = CustomParser
     EVFOLD = EvfoldParser
     CCMPRED = CCMpredParser
     CASPRR = PsicovParser
@@ -63,6 +72,7 @@ class ContactFormats(Enum):
     CASPRR = PsicovParser
 
 
+
 class MembraneStates(Enum):
     INSIDE = 1
     OUTSIDE = 2
@@ -70,9 +80,30 @@ class MembraneStates(Enum):
 
 
 class ConservationStates(Enum):
-    CONSERVED = 1
-    AVERAGE = 2
-    VARIABLE = 3
+    VARIABLE_1 = 1
+    VARIABLE_2 = 2
+    VARIABLE_3 = 3
+    AVERAGE_4 = 4
+    AVERAGE_5 = 5
+    AVERAGE_6 = 6
+    CONSERVED_7 = 7
+    CONSERVED_8 = 8
+    CONSERVED_9 = 9
+
+
+class CustomStates(Enum):
+    CUSTOM_1 = 1
+    CUSTOM_2 = 2
+    CUSTOM_3 = 3
+    CUSTOM_4 = 4
+    CUSTOM_5 = 5
+    CUSTOM_6 = 6
+    CUSTOM_7 = 7
+    CUSTOM_8 = 8
+    CUSTOM_9 = 9
+    CUSTOM_10 = 10
+    CUSTOM_11 = 11
+    CUSTOM_NAN = 'NAN'
 
 
 class DisorderStates(Enum):
@@ -91,3 +122,4 @@ class DatasetStates(Enum):
     secondarystructure = SecondaryStructureStates
     conservation = ConservationStates
     disorder = DisorderStates
+    custom = CustomStates

@@ -1,76 +1,88 @@
-import dash_html_components as html
+from components import StartNewSessionLink
 import dash_bootstrap_components as dbc
+import dash_html_components as html
 from loaders import DatasetReference
-from app import PathIndex
 
 
 def MismatchModal(*args):
-    if DatasetReference.SEQUENCE.name not in args:
+    if DatasetReference.SEQUENCE not in args:
 
         return dbc.Modal([
-            dbc.ModalHeader(
-                html.H4("Mismatch Detected", className="alert-heading", style={'color': 'red'}),
-            ),
+            ModalHeader("Mismatch Detected"),
             dbc.ModalBody([
-                html.P("We are having problems to match the uploaded sequence with the following predictions. "
-                       "Please ensure that these predictions correspond with the protein sequence in the uploaded "
-                       "FASTA file."
-                       ),
-                html.Ul([
-                    html.Li('%s' % arg) for arg in args
-                ], id='missing-fields-div'),
-            ]),
+                html.P("""We are having problems to match the uploaded sequence with the following predictions. Please 
+                ensure that these predictions correspond with the protein sequence in the uploaded FASTA file.""",
+                       style={'text-align': "justify"}),
+                html.Ul([html.Li('%s' % arg) for arg in args], id='missing-fields-div')
+            ])
         ], id='mismatch-modal', is_open=True)
 
     else:
         return dbc.Modal([
-            dbc.ModalHeader(
-                html.H4("Sequence Mismatch", className="alert-heading", style={'color': 'red'}),
-            ),
-            dbc.ModalBody([
-                html.P("We are having problems to match the uploaded sequence with the provided contact map. "
-                       "Please ensure that the provided the sequence corresponds with the protein of the given contact map."
-                       ),
-            ]),
-        ], id='mismatch-modal', is_open=True),
+            ModalHeader("Sequence Mismatch"),
+            dbc.ModalBody(
+                html.P("""We are having problems to match the uploaded sequence with the provided contact map. Please 
+                ensure that the provided the sequence corresponds with the protein of the given contact map.""",
+                       style={'text-align': "justify"})
+            )
+        ], id='mismatch-modal', is_open=True)
 
 
 def MissingInputModal(*args):
     return dbc.Modal([
-        dbc.ModalHeader(
-            html.H4("Missing Inputs", className="alert-heading", style={'color': 'red'}),
-        ),
+        ModalHeader("Missing Inputs"),
         dbc.ModalBody([
-            html.P("Please ensure you fill in all required fields before trying to generate a plot. "
-                   "We detected problems on the following fields:"),
-            html.Ul([
-                html.Li('%s file' % arg) for arg in args
-            ], id='missing-fields-div'),
+            html.P("""Please ensure you fill in all required fields before trying to generate a plot. Following 
+            mandatory fields are still missing:""", style={'text-align': "justify"}),
+            html.Ul([html.Li('%s file' % arg) for arg in args], id='missing-fields-div')
         ]),
-    ], id='missing-fields-modal', is_open=True),
+    ], id='missing-fields-modal', is_open=True)
 
 
 def RepeatedInputModal(dataset):
     return dbc.Modal([
-        dbc.ModalHeader(
-            html.H4("Already uploaded", className="alert-heading", style={'color': 'red'}),
+        ModalHeader("Already uploaded"),
+        dbc.ModalBody(
+            html.P("""A file for the dataset {} was already provided. To upload a different one you will need to delete 
+            the current one first.""".format(dataset), style={'text-align': "justify"})
         ),
-        dbc.ModalBody([
-            html.P("A file for the dataset {} was already provided. To upload a different one you will need to delete"
-                   " the current one first.".format(dataset))
-        ]),
-    ], id='missing-fields-modal', is_open=True),
+    ], id='missing-fields-modal', is_open=True)
+
+
+def InvalidInputModal():
+    return dbc.Modal([
+        ModalHeader("Invalid input"),
+        dbc.ModalBody(
+            html.P("""Some of the values you have selected on the display control tab are invalid, either because they 
+            are out of the permitted range or the input is non-numeric. Check your selection on those selectors 
+            highlighted on red and make sure the value you introduce is correct.""", style={'text-align': "justify"})
+        ),
+    ], id='invalid-input-modal', is_open=True)
 
 
 def SessionTimedOutModal():
     return dbc.Modal([
-        dbc.ModalHeader(
-            html.H4("Session timed-out", className="alert-heading", style={'color': 'red'}),
-        ),
+        ModalHeader("Session timed-out"),
         dbc.ModalBody([
-            html.P("More than 5 minutes have passed since you last interacted with the website and your session has"
-                   "timed-out."),
-            html.A(dbc.Button("Start new session", block=True, color='danger'), href=PathIndex.ROOT.value,
-                   style={"text-decoration": "none"})
+            html.P("""More than 15 minutes have passed since you last interacted with the website and your session has 
+            timed-out.""", style={'text-align': "justify"}),
+            StartNewSessionLink()
         ]),
-    ], id='missing-fields-modal', is_open=True)
+    ], id='missing-fields-modal', is_open=True, backdrop='static', keyboard=False)
+
+
+def ModalHeader(text):
+    return dbc.ModalHeader(html.H4(text, className="alert-heading", style={'color': 'red'}))
+
+
+def InvalidFormatModal():
+    return dbc.Modal([
+        ModalHeader("Invalid file format"),
+        dbc.ModalBody(
+            html.P("""The file you just attempted to upload does not comply with the file format guidelines. Make sure 
+            that you are uploading the correct file and you have selected the correct format. If you are not sure about 
+            how the file format looks like, you can read about each format on our help page. If you are sure that the 
+            format of your file is correct, please report the bug on the 'Contact' tab.""",
+                   style={'text-align': "justify"})
+        ),
+    ], id='invalid-input-modal', is_open=True)

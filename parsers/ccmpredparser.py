@@ -14,10 +14,10 @@ def CCMpredParser(input):
         else:
             data.append(line)
 
-    for res_1, score_array in enumerate(data):
-        for res_2, score in enumerate(score_array):
-            if abs((res_1+1) - int(res_2+1)) >= 5 and score!='':
-                output.append((int(res_1 + 1), int(res_2 + 1), float(score)))
+    for res_1, score_array in enumerate(data, 1):
+        for res_2, score in enumerate(score_array, 1):
+            if abs((res_1) - int(res_2)) >= 5 and score!='' and float(score)>0:
+                output.append((int(res_1), int(res_2), float(score)))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')

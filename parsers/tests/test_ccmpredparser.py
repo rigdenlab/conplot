@@ -32,8 +32,6 @@ class CCMpredParserTestCase(unittest.TestCase):
                            0.3391335904598236, 0.33913296461105347, 0.27737972140312195, 0.2773790955543518,
                            0.2665451467037201, 0.26654472947120667]
         output = CCMpredParser(dummy_prediction)
-        print(len(output))
-        print([contact[1] for contact in output])
 
         self.assertEquals(30, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])

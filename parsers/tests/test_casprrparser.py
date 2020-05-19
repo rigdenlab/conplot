@@ -1,5 +1,5 @@
 import unittest
-from parsers import CasprrParser
+from parsers import PsicovParser
 from utils.exceptions import InvalidFormat
 
 
@@ -23,7 +23,7 @@ class CasprrParserTestCase(unittest.TestCase):
         expected_score = [0.99560225, 0.99520814, 0.995158, 0.99344337, 0.99096644, 0.98981607, 0.9892521, 0.98918885,
                           0.9883262, 0.98828995]
 
-        output = CasprrParser(dummy_prediction)
+        output = PsicovParser(dummy_prediction)
         self.assertEquals(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
@@ -35,4 +35,4 @@ D U M M Y
 100 8  0 8 5.382865
 """
         with self.assertRaises(InvalidFormat):
-            output = CasprrParser(dummy_prediction)
+            output = PsicovParser(dummy_prediction)

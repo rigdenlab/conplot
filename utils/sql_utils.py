@@ -15,9 +15,13 @@ class SqlQueries(Enum):
     INSERT_SESSION = """INSERT INTO {} ({}) VALUES ({})"""
     UPDATE = """UPDATE %s SET %s = '%s' WHERE %s = '%s'"""
     DELETE = """DELETE FROM %s WHERE %s = '%s'"""
+    DELETE_SESSION = """DELETE FROM {} WHERE {} = '%s' AND {} = '%s'""".format(TableNames.SESSION_DATA.value,
+                                                                               'owner_username', 'session_name')
     CRYPT = """crypt('%s', gen_salt('bf'))"""
     LOGIN = """SELECT id FROM {} WHERE username = '%s' AND password = crypt('%s', password)
     """.format(TableNames.USER_DATA.value)
+    LIST_SESSIONS = """SELECT session_name, created_date FROM {} WHERE owner_username = '%s'
+    """.format(TableNames.SESSION_DATA.value)
     RETRIEVE_SESSION = """SELECT * FROM {} WHERE owner_username = '%s' AND session_name = '%s'
     """.format(TableNames.SESSION_DATA.value)
     UPDATE_SESSION_DATE = """UPDATE {} SET {} = '%s' WHERE {} = '%s' AND {} = '%s'
@@ -116,6 +120,17 @@ def retrieve_session(username, session_name):
         perform_query(query, fetch=False)
         session = {}
         for idx, dataset in enumerate(DatasetReference, 2):
-            session[dataset.value] = session_data[idx]
+            if session_data[idx] is not None:
+                session[dataset.value] = session_data[idx]
 
     return session
+
+
+def list_all_sessions(username):
+    query = SqlQueries.LIST_SESSIONS.value % username
+    return perform_query(query, fetch=True)
+
+
+def delete_session(username, session_name):
+    query = SqlQueries.DELETE_SESSION.value % (username, session_name)
+    return perform_query(query, commit=True)

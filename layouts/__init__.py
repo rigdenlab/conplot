@@ -42,6 +42,12 @@ def UsersPortal(*args, **kwargs):
     return UsersPortal(*args, **kwargs)
 
 
+def UserStorage(*args, **kwargs):
+    from layouts.userstorage import UserStorage
+
+    return UserStorage(*args, **kwargs)
+
+
 def CreateUser(*args, **kwargs):
     from layouts.createuser import CreateUser
 

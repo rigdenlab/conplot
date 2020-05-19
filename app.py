@@ -73,9 +73,6 @@ app.config.suppress_callback_exceptions = True
 if 'IS_HEROKU' not in os.environ:
     os.environ['REDISCLOUD_URL'] = "redis://localhost:6379"
 
-os.environ[
-    'DATABASE_URL'] = 'postgres://xhjvwzrxvdiawq:95f4a6a924c2416364d2ff50e76a65601109a6131347225934c65fd4f0b4a526@ec2-54-246-85-151.eu-west-1.compute.amazonaws.com:5432/ddi4fs0u62v798'
-
 redis_url = urllib.parse.urlparse(os.environ.get('REDISCLOUD_URL'))
 cache = redis.Redis(host=redis_url.hostname, port=redis_url.port, password=redis_url.password)
 

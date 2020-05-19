@@ -41,6 +41,11 @@ def CCMpredParser(*args, **kwargs):
 
     return CCMpredParser(*args, **kwargs)
 
+def CasprrParser(*args, **kwargs):
+    from parsers.casprrparser import CasprrParser
+
+    return CasprrParser(*args, **kwargs)
+
 
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
@@ -52,6 +57,7 @@ class ParserFormats(Enum):
     NEBCON = PsicovParser
     EVFOLD = EvfoldParser
     CCMPRED = CCMpredParser
+    CASPRR = CasprrParser
 
 
 class ContactFormats(Enum):
@@ -60,6 +66,7 @@ class ContactFormats(Enum):
     NEBCON = PsicovParser
     EVFOLD = EvfoldParser
     CCMPRED = CCMpredParser
+    CASPRR = CasprrParser
 
 
 class MembraneStates(Enum):

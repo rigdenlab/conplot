@@ -51,9 +51,9 @@ def Body():
     ])
 
 
-def Plot(session_id):
+def Plot(session_id, username):
     return html.Div([
-        Header(),
+        Header(username),
         NavBar(UrlIndex.PLOT.value),
         Body()
     ])

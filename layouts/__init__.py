@@ -36,6 +36,18 @@ def Home(*args, **kwargs):
     return Home(*args, **kwargs)
 
 
+def UsersPortal(*args, **kwargs):
+    from layouts.userportal import UsersPortal
+
+    return UsersPortal(*args, **kwargs)
+
+
+def CreateUser(*args, **kwargs):
+    from layouts.createuser import CreateUser
+
+    return CreateUser(*args, **kwargs)
+
+
 def RigdenLab(*args, **kwargs):
     from layouts.rigdenlab import RigdenLab
 

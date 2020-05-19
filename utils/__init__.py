@@ -10,6 +10,8 @@ class UrlIndex(Enum):
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
+    USERS_PORTAL = urllib.parse.urljoin(ROOT, 'user-portal')
+    CREATE_USER = urllib.parse.urljoin(ROOT, 'user-create')
     SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
@@ -84,12 +86,6 @@ def ensure_triggered(*args, **kwargs):
     from utils.callback_utils import ensure_triggered
 
     return ensure_triggered(*args, **kwargs)
-
-
-def get_current_fnames(*args, **kwargs):
-    from utils.callback_utils import get_current_fnames
-
-    return get_current_fnames(*args, **kwargs)
 
 
 def toggle_alert(*args, **kwargs):

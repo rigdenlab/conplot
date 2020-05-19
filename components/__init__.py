@@ -34,6 +34,30 @@ def MismatchModal(*args, **kwargs):
     return MismatchModal(*args, **kwargs)
 
 
+def SuccesfulLoginToast(*args, **kwargs):
+    from components.misc import SuccesfulLoginToast
+
+    return SuccesfulLoginToast(*args, **kwargs)
+
+
+def SuccesfulLogoutToast(*args, **kwargs):
+    from components.misc import SuccesfulLogoutToast
+
+    return SuccesfulLogoutToast(*args, **kwargs)
+
+
+def SessionTimedOutToast(*args, **kwargs):
+    from components.misc import SessionTimedOutToast
+
+    return SessionTimedOutToast(*args, **kwargs)
+
+
+def InvalidLoginCollapse(*args, **kwargs):
+    from components.collapse import InvalidLoginCollapse
+
+    return InvalidLoginCollapse(*args, **kwargs)
+
+
 def InvalidAddTrackCollapse(*args, **kwargs):
     from components.collapse import InvalidAddTrackCollapse
 
@@ -50,6 +74,12 @@ def AdditionalTracksUploadCard(*args, **kwargs):
     from components.cards import AdditionalTracksUploadCard
 
     return AdditionalTracksUploadCard(*args, **kwargs)
+
+
+def UserLoginCard(*args, **kwargs):
+    from components.cards import UserLoginCard
+
+    return UserLoginCard(*args, **kwargs)
 
 
 def MandatoryUploadCard(*args, **kwargs):
@@ -106,6 +136,12 @@ def UploadButton(*args, **kwargs):
     return UploadButton(*args, **kwargs)
 
 
+def UserAccountDropdownMenu(*args, **kwargs):
+    from components.misc import UserAccountDropdownMenu
+
+    return UserAccountDropdownMenu(*args, **kwargs)
+
+
 def AddTrackButton(*args, **kwargs):
     from components.buttons import AddTrackButton
 
@@ -124,6 +160,18 @@ def ErrorAlert(*args, **kwargs):
     return ErrorAlert(*args, **kwargs)
 
 
+def SuccessLogoutAlert(*args, **kwargs):
+    from components.alerts import SuccessLogoutAlert
+
+    return SuccessLogoutAlert(*args, **kwargs)
+
+
+def SuccessLoginAlert(*args, **kwargs):
+    from components.alerts import SuccessLoginAlert
+
+    return SuccessLoginAlert(*args, **kwargs)
+
+
 def PlotPlaceHolder(*args, **kwargs):
     from components.misc import PlotPlaceHolder
 
@@ -134,6 +182,12 @@ def NoPageFoundCard(*args, **kwargs):
     from components.cards import NoPageFoundCard
 
     return NoPageFoundCard(*args, **kwargs)
+
+
+def UserLogoutCard(*args, **kwargs):
+    from components.cards import UserLogoutCard
+
+    return UserLogoutCard(*args, **kwargs)
 
 
 def DisplayControlCard(*args, **kwargs):
@@ -182,6 +236,18 @@ def LFactorSelector(*args, **kwargs):
     from components.inputgroups import LFactorSelector
 
     return LFactorSelector(*args, **kwargs)
+
+
+def UserNameInput(*args, **kwargs):
+    from components.inputgroups import UserNameInput
+
+    return UserNameInput(*args, **kwargs)
+
+
+def PasswordInput(*args, **kwargs):
+    from components.inputgroups import PasswordInput
+
+    return PasswordInput(*args, **kwargs)
 
 
 def SizeSelector(*args, **kwargs):

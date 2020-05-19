@@ -3,9 +3,9 @@ import dash_bootstrap_components as dbc
 from components import NavBar, Header, NoPageFoundCard
 
 
-def noPage(url):
+def noPage(url, username):
     layout = html.Div([
-        Header(),
+        Header(username),
         NavBar(),
         html.Br(),
         html.Br(),

@@ -64,7 +64,7 @@ def EmailInput():
 
 
 def NameInput():
-    return dbc.InputGroup(dbc.Input(placeholder="First Name"), className="mb-3")
+    return dbc.InputGroup(dbc.Input(placeholder="First Name", type="text"), className="mb-3")
 
 
 def ProblemDescriptionInput():
@@ -82,3 +82,17 @@ def EmailIssueSelect():
         ),
         dbc.InputGroupAddon("Subject", addon_type="prepend"),
     ])
+
+
+def UserNameInput():
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("Username", addon_type="prepend"),
+        dbc.Input(type="text", id='username-input')
+    ], className="mb-3")
+
+
+def PasswordInput():
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("Password", addon_type="prepend"),
+        dbc.Input(type="password", id='password-input')
+    ], className="mb-3")

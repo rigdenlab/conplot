@@ -8,15 +8,16 @@ import uuid
 from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout
+from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout, UsersPortal
 from loaders import AdditionalDatasetReference, MandatoryDatasetReference
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
-    InvalidInputModal, InvalidFormatModal
+    InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
     remove_unused_fname_alerts, decompress_data
+from utils import sql_utils
 
 
 # ==============================================================
@@ -102,6 +103,44 @@ def toggle_format_alert(*args):
     return utils.toggle_selection_alert(*args)
 
 
+@app.callback([Output('invalid-login-collapse', 'is_open'),
+               Output('success-login-alert-div', 'children')],
+              [Input("user-login-button", 'n_clicks')],
+              [State('username-input', 'value'),
+               State('password-input', 'value'),
+               State('session-id', 'children')])
+def user_login(n_clicks, username, password, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update, no_update
+    elif not ensure_triggered(trigger):
+        return no_update, no_update
+
+    if sql_utils.userlogin(username, password):
+        app.logger.info('Session {} login user {}'.format(session_id, username))
+        cache.hset(session_id, 'user', compress_data(username))
+        return False, SuccessLoginAlert(username)
+    else:
+        return True, None
+
+
+@app.callback(Output('success-logout-alert-div', 'children'),
+              [Input("user-logout-button", 'n_clicks')],
+              [State('session-id', 'children')])
+def user_logout(n_clicks, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update
+    elif not ensure_triggered(trigger):
+        return no_update
+    elif cache.hexists(session_id, 'user'):
+        app.logger.info('Session {} logout user'.format(session_id))
+        cache.hdel(session_id, 'user')
+        return SuccessLogoutAlert()
+
+
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
@@ -112,19 +151,26 @@ def display_page(url, session_id):
         return no_update
     elif is_expired_session(session_id):
         return SessionTimeout(session_id)
-    elif url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id)
+    elif cache.hexists(session_id, 'user'):
+        username = decompress_data(cache.hget(session_id, 'user'))
+    else:
+        username = None
+
+    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
+        return Home(session_id, username)
     elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id)
+        return Contact(session_id, username)
     elif url == UrlIndex.PLOT.value:
-        return Plot(session_id)
+        return Plot(session_id, username)
     elif url == UrlIndex.HELP.value:
-        return Help(session_id)
+        return Help(session_id, username)
     elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id)
+        return RigdenLab(session_id, username)
+    elif url == UrlIndex.USERS_PORTAL.value:
+        return UsersPortal(username)
     else:
         app.logger.error('404 page not found {}'.format(url))
-        return noPage(url)
+        return noPage(url, username)
 
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),

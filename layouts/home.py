@@ -5,7 +5,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 
 
-def Body(session_id):
+def Body():
     return html.Div(
         [
             html.Br(),
@@ -50,9 +50,9 @@ def Body(session_id):
     )
 
 
-def Home(session_id):
+def Home(session_id, username):
     return html.Div([
-        Header(),
+        Header(username),
         NavBar(UrlIndex.HOME.value),
-        Body(session_id),
+        Body(),
     ])

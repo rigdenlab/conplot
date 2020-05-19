@@ -21,6 +21,37 @@ def FilenameAlert(filename, dataset):
     )
 
 
+def SuccessLoginAlert(username):
+    return dbc.Alert([
+        html.H4('Success', className="alert-heading", style={'text-align': "center"}),
+        html.P([
+            "You have successfully logged in as '%s'. You can now safely store plots after you create them "
+            "on the Plot tab!" % username
+        ], style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='success',
+        fade=True,
+        is_open=True,
+        id='success-login-alert'
+    )
+
+
+def SuccessLogoutAlert():
+    return dbc.Alert([
+        html.H4('Success', className="alert-heading", style={'text-align': "center"}),
+        html.P([
+            "You have successfully logged out"
+        ], style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='danger',
+        fade=True,
+        is_open=True,
+        id='success-logout-alert'
+    )
+
+
 def ContactBugAlert():
     return dbc.Alert([
         html.H4('Info', className="alert-heading"),

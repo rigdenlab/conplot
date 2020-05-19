@@ -1,7 +1,7 @@
 from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
     DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
     TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput, EmailInput, \
-    InvalidNewUserCollapse, StoredSessionsList
+    InvalidNewUserCollapse, StoredSessionsList, StoreSessionHeader, StoreSessionNameInput
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -118,6 +118,32 @@ def AdditionalTracksUploadCard():
             AddTrackButton(disabled=True)
         ]),
     ])
+
+
+def StoreSessionCard(username=None):
+    if username is not None:
+        disabled = False
+        content = StoreSessionNameInput()
+    else:
+        disabled = True
+        content = NoUserLoggedCard()
+    return dbc.Card([
+        dbc.CardBody([
+            StoreSessionHeader(),
+            html.Br(),
+            html.Div([
+                content
+            ], id='store-session-card-div'),
+            html.Br(),
+            dbc.Button(children=html.I(className="fas fa-save fa-2x"), id='store-session-button', disabled=disabled,
+                       outline=True, block=True, color='primary')
+        ]),
+    ])
+
+
+def NoUserLoggedCard():
+    return dbc.Card(dbc.CardBody("You must loggin before saving session data"), color="danger", outline=True,
+                    id='user-not-logged-card', style={'text-align': "center"})
 
 
 def NoAdditionalTracksCard():

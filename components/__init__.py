@@ -106,6 +106,12 @@ def UserLoginCard(*args, **kwargs):
     return UserLoginCard(*args, **kwargs)
 
 
+def StoreSessionCard(*args, **kwargs):
+    from components.cards import StoreSessionCard
+
+    return StoreSessionCard(*args, **kwargs)
+
+
 def MandatoryUploadCard(*args, **kwargs):
     from components.cards import MandatoryUploadCard
 
@@ -140,6 +146,12 @@ def MandatoryInputHeader(*args, **kwargs):
     from components.headers import MandatoryInputHeader
 
     return MandatoryInputHeader(*args, **kwargs)
+
+
+def StoreSessionHeader(*args, **kwargs):
+    from components.headers import StoreSessionHeader
+
+    return StoreSessionHeader(*args, **kwargs)
 
 
 def AdditionalInputHeader(*args, **kwargs):
@@ -266,6 +278,12 @@ def TrackLayoutSelector(*args, **kwargs):
     from components.inputgroups import TrackLayoutSelector
 
     return TrackLayoutSelector(*args, **kwargs)
+
+
+def StoreSessionNameInput(*args, **kwargs):
+    from components.inputgroups import StoreSessionNameInput
+
+    return StoreSessionNameInput(*args, **kwargs)
 
 
 def ContactFormatSelector(*args, **kwargs):

@@ -84,6 +84,13 @@ def EmailIssueSelect():
     ])
 
 
+def StoreSessionNameInput():
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("Name", addon_type="prepend"),
+        dbc.Input(type="text", id='session-name-input', placeholder='New session name')
+    ], className="mb-3")
+
+
 def UserNameInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Username", addon_type="prepend"),

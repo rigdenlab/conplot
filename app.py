@@ -159,8 +159,6 @@ def create_user(n_clicks, username, password, email, session_id):
     elif not ensure_triggered(trigger):
         return no_update, no_update
 
-    print(email, type(email))
-
     if any([True for x in (username, password, email) if x is None]):
         return True, None
     elif sql_utils.create_user(username, password, email):

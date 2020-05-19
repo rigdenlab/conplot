@@ -7,11 +7,11 @@ def SessionListItem(session_name, session_date, color='secondary'):
     return dbc.ListGroupItem([
         dbc.Row([
             dbc.Col([
-                html.P(session_name, style={'text-align': "center", 'vertical-align': 'middle'})
-            ]),
+                html.H4(session_name, style={'vertical-align': 'middle', 'margin': 'auto'})
+            ], style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'}),
             dbc.Col([
-                html.P(session_date, style={'text-align': "center", 'vertical-align': 'middle'})
-            ]),
+                html.H4(session_date, style={'vertical-align': 'middle', 'margin': 'auto'})
+            ], style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'}),
             dbc.Col([
                 dbc.ButtonGroup([
                     dbc.Button('Load session', outline=True, color='primary',

@@ -1,6 +1,7 @@
 from utils.exceptions import InvalidFormat
 from operator import itemgetter
 
+
 def CCMpredParser(input):
     contents = input.split('\n')
 
@@ -16,7 +17,7 @@ def CCMpredParser(input):
 
     for res_1, score_array in enumerate(data, 1):
         for res_2, score in enumerate(score_array, 1):
-            if abs((res_1) - int(res_2)) >= 5 and score!='' and float(score)>0:
+            if abs((res_1) - int(res_2)) >= 5 and score != '' and float(score) > 0:
                 output.append((int(res_1), int(res_2), float(score)))
 
     if not output:
@@ -24,5 +25,3 @@ def CCMpredParser(input):
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return tuple(output)
-
-

@@ -21,3 +21,4 @@ def PsicovParser(input):
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output
+

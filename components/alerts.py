@@ -76,9 +76,27 @@ def ContactBugAlert():
             html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
     ],
-        dismissable=True,
+        dismissable=False,
         color='danger',
         fade=True,
-        is_open=False,
+        is_open=True,
         id='bug-alert'
+    )
+
+
+def ContactForgotPsswrdAlert():
+    return dbc.Alert([
+        html.H4('Info', className="alert-heading"),
+        html.P(
+            "If you forgot your password, make sure to fill in with your registered username on the 'Name' input field "
+            "and the same email address you provided when registering on the 'Email' input field. If we find this "
+            "username and email address registered in our site, we will send you an email with a new automatically "
+            "generated password shortly after you click on 'Send'."
+        ),
+    ],
+        dismissable=False,
+        color='danger',
+        fade=True,
+        is_open=True,
+        id='forgot-psswrd-alert'
     )

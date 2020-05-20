@@ -7,11 +7,11 @@ def SessionListItem(session_name, session_date, color='secondary'):
     return dbc.ListGroupItem([
         dbc.Row([
             dbc.Col([
-                html.P(session_name, style={'text-align': "center", 'vertical-align': 'middle'})
-            ]),
+                html.H5(session_name, style={'vertical-align': 'middle', 'margin': 'auto'})
+            ], style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'}),
             dbc.Col([
-                html.P(session_date, style={'text-align': "center", 'vertical-align': 'middle'})
-            ]),
+                html.H5(session_date, style={'vertical-align': 'middle', 'margin': 'auto'})
+            ], style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'}),
             dbc.Col([
                 dbc.ButtonGroup([
                     dbc.Button('Load session', outline=True, color='primary',
@@ -26,7 +26,13 @@ def SessionListItem(session_name, session_date, color='secondary'):
 
 
 def EmptyListItem():
-    return dbc.ListGroupItem('No sessions have been found!')
+    return dbc.ListGroupItem(
+        dbc.Row(
+            dbc.Col(
+                html.H5('No sessions have been found!', style={'vertical-align': 'middle', 'margin': 'auto'}),
+                style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'})
+        )
+    )
 
 
 def StoredSessionsList(username, selected_session_name=None):

@@ -1,19 +1,27 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from components import NavBar, Header, UserLoginCard, UserStoredSessions
+from components import NavBar, Header, UserLoginCard, UserStoredSessionsCard
+
+
+def Body(username=None, current_session_name=None):
+    if username is None:
+        return html.Div([
+            html.Br(),
+            html.Br(),
+            dbc.Container(UserLoginCard())
+        ])
+    else:
+        return html.Div([
+            html.Br(),
+            html.Br(),
+            html.Br(),
+            dbc.Container(UserStoredSessionsCard(username, current_session_name)),
+        ])
 
 
 def UserStorage(username=None, current_session_name=None):
-    if username is None:
-        card = UserLoginCard()
-    else:
-        card = UserStoredSessions(username, current_session_name)
-
     return html.Div([
         Header(username),
         NavBar(),
-        html.Br(),
-        html.Br(),
-        html.Br(),
-        dbc.Container(card),
+        Body(username, current_session_name)
     ])

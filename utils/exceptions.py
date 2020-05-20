@@ -14,5 +14,5 @@ class EmailAlreadyUsed(Exception):
     pass
 
 
-class InvalidCredentials(Exception):
+class SQLInjectionAlert(Exception):
     pass

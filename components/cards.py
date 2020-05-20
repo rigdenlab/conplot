@@ -1,7 +1,7 @@
 from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
     DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
     TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput, EmailInput, \
-    InvalidNewUserCollapse, StoredSessionsList
+    InvalidNewUserCollapse, StoredSessionsList, StoreSessionHeader, StoreSessionNameInput
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
@@ -110,7 +110,7 @@ def AdditionalTracksUploadCard():
             AdditionalInputHeader(),
             html.Br(),
             html.Div([
-                NoAdditionalTracksCard()
+                NoAdditionalTracksCard(),
             ], id='additional-tracks-filenames'),
             html.Br(),
             AdditionalTrackFormatSelectionCard(),
@@ -118,6 +118,30 @@ def AdditionalTracksUploadCard():
             AddTrackButton(disabled=True)
         ]),
     ])
+
+
+def StoreSessionCard(username=None):
+    if username is not None:
+        disabled = False
+        content = StoreSessionNameInput()
+    else:
+        disabled = True
+        content = [NoUserLoggedCard(), html.Div(StoreSessionNameInput(), style={'display': 'none'})]
+    return dbc.Card([
+        dbc.CardBody([
+            StoreSessionHeader(),
+            html.Br(),
+            html.Div(content, id='store-session-card-div'),
+            html.Br(),
+            dbc.Button(children=html.I(className="fas fa-save fa-2x"), id='store-session-button', disabled=disabled,
+                       outline=True, block=True, color='primary')
+        ]),
+    ])
+
+
+def NoUserLoggedCard():
+    return dbc.Card(dbc.CardBody("You must loggin before saving session data"), color="danger", outline=True,
+                    id='user-not-logged-card', style={'text-align': "center"})
 
 
 def NoAdditionalTracksCard():
@@ -237,13 +261,14 @@ def CreateUserCard():
     ])
 
 
-def UserStoredSessions(username, current_session_name=None):
+def UserStoredSessionsCard(username, current_session_name=None):
     return dbc.Card([
         dbc.CardBody([
             html.Div(id='stored-sessions-toast-div'),
-            html.H2('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
+            html.Div(id='save-session-toast-div'),
+            html.H3('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner')
+            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner'),
         ])
     ])

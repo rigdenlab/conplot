@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
     InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert, SuccessCreateUserAlert, \
-    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList
+    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList, SessionStoreModal
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
     remove_unused_fname_alerts, decompress_data, get_session_action
 from utils import sql_utils
@@ -61,6 +61,31 @@ def update_fname_alerts(session_id, enumerator):
     return fname_alerts
 
 
+def serve_url(url, session_id, username):
+    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
+        return Home(session_id, username)
+    elif url == UrlIndex.CONTACT.value:
+        return Contact(session_id, username)
+    elif url == UrlIndex.PLOT.value:
+        return Plot(session_id, username)
+    elif url == UrlIndex.HELP.value:
+        return Help(session_id, username)
+    elif url == UrlIndex.RIGDEN.value:
+        return RigdenLab(session_id, username)
+    elif url == UrlIndex.USERS_PORTAL.value:
+        return UsersPortal(username)
+    elif url == UrlIndex.CREATE_USER.value:
+        return CreateUser(username)
+    elif url == UrlIndex.USER_STORAGE.value:
+        if cache.hexists(session_id, 'session_name'):
+            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
+        else:
+            return UserStorage(username)
+    else:
+        app.logger.error('404 page not found {}'.format(url))
+        return noPage(url, username)
+
+
 # ==============================================================
 # Create dash.app
 # ==============================================================
@@ -84,7 +109,7 @@ app.layout = serve_layout
 # Define callbacks for the app
 # ==============================================================
 
-@app.callback(Output('bug-alert', 'is_open'),
+@app.callback(Output('contact-alert-div', 'children'),
               [Input('issue-select', 'value')])
 def toggle_alert(*args):
     return utils.toggle_alert(*args)
@@ -119,28 +144,7 @@ def display_page(url, session_id):
     else:
         username = None
 
-    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id, username)
-    elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id, username)
-    elif url == UrlIndex.PLOT.value:
-        return Plot(session_id, username)
-    elif url == UrlIndex.HELP.value:
-        return Help(session_id, username)
-    elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id, username)
-    elif url == UrlIndex.USERS_PORTAL.value:
-        return UsersPortal(username)
-    elif url == UrlIndex.CREATE_USER.value:
-        return CreateUser(username)
-    elif url == UrlIndex.USER_STORAGE.value:
-        if cache.hexists(session_id, 'session_name'):
-            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
-        else:
-            return UserStorage(username)
-    else:
-        app.logger.error('404 page not found {}'.format(url))
-        return noPage(url, username)
+    return serve_url(url, session_id, username)
 
 
 @app.callback([Output('invalid-login-collapse', 'is_open'),
@@ -234,10 +238,35 @@ def manage_stored_sessions(delete_clicks, load_click, session_id):
     else:
         cache.hset(session_id, 'session_name', compress_data(session_name))
         loaded_session = sql_utils.retrieve_session(username, session_name)
-        for key in loaded_session:
-            cache.hset(session_id, key, loaded_session[key])
+        for dataset in DatasetReference:
+            if dataset.value in loaded_session:
+                cache.hset(session_id, dataset.value, loaded_session[dataset.value])
+            else:
+                cache.hdel(session_id, dataset.value)
         app.logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
         return SuccesfulSessionLoadToast(session_name), StoredSessionsList(username, session_name)
+
+
+@app.callback(Output('store-session-modal-div', 'children'),
+              [Input('store-session-button', 'n_clicks')],
+              [State('new-session-name-input', 'value'),
+               State('session-id', 'children')])
+def store_session(n_clicks, session_name, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return SessionTimedOutToast()
+    elif not ensure_triggered(trigger):
+        return no_update
+
+    username = decompress_data(cache.hget(session_id, 'user'))
+    session = cache.hgetall(session_id)
+
+    app.logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
+    sql_utils.store_session(username, session_name, session)
+    cache.hset(session_id, 'session_name', compress_data(session_name))
+
+    return SessionStoreModal(session_name)
 
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
@@ -369,7 +398,6 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
         return no_update, InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
-    del session[b'id']
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,

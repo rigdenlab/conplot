@@ -13,6 +13,7 @@ class UrlIndex(Enum):
     USERS_PORTAL = urllib.parse.urljoin(ROOT, 'user-portal')
     CREATE_USER = urllib.parse.urljoin(ROOT, 'user-create')
     USER_STORAGE = urllib.parse.urljoin(ROOT, 'user-storage')
+    CHANGE_PASSWORD = urllib.parse.urljoin(ROOT, 'user-change-password')
     SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'

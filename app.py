@@ -72,6 +72,8 @@ def serve_url(url, session_id, username):
         return layouts.UsersPortal(username)
     elif url == UrlIndex.CREATE_USER.value:
         return layouts.CreateUser(username)
+    elif url == UrlIndex.CHANGE_PASSWORD.value:
+        return layouts.ChangeUserPassword(username)
     elif url == UrlIndex.USER_STORAGE.value:
         if cache.hexists(session_id, 'session_name'):
             return layouts.UserStorage(username, utils.decompress_data(cache.hget(session_id, 'session_name')))
@@ -197,7 +199,7 @@ def create_user(n_clicks, username, password, email, session_id):
     elif not utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    if any([True for x in (username, password, email) if x is None]):
+    if any([True for x in (username, password, email) if x is None or x == '']):
         return True, None
     elif sql_utils.create_user(username, password, email):
         app.logger.info('Session {} created user {} - {}'.format(session_id, username, email))

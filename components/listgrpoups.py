@@ -26,7 +26,13 @@ def SessionListItem(session_name, session_date, color='secondary'):
 
 
 def EmptyListItem():
-    return dbc.ListGroupItem(html.H4('No sessions have been found!', style={'justify-content': 'center'}))
+    return dbc.ListGroupItem(
+        dbc.Row(
+            dbc.Col(
+                html.H5('No sessions have been found!', style={'vertical-align': 'middle', 'margin': 'auto'}),
+                style={'align-items': 'center', 'justify-content': 'center', 'display': 'flex'})
+        )
+    )
 
 
 def StoredSessionsList(username, selected_session_name=None):

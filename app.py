@@ -209,6 +209,26 @@ def create_user(n_clicks, username, password, email, session_id):
         return True, None
 
 
+@app.callback(Output('success-change-password-alert-div', 'children'),
+              [Input('user-change-password-button', 'n_clicks')],
+              [State('old-password-input', 'value'),
+               State('new-password-input', 'value'),
+               State('session-id', 'children')])
+def change_password(n_clicks, old_password, new_password, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update
+    elif not utils.ensure_triggered(trigger):
+        return no_update
+
+    username = utils.decompress_data(cache.hget(session_id, 'user'))
+    if sql_utils.change_password(username, old_password, new_password):
+        return components.SuccessChangePasswordAlert(username)
+    else:
+        return components.FailChangePasswordAlert(username)
+
+
 @app.callback([Output('stored-sessions-toast-div', 'children'),
                Output('stored-sessions-list-spinner', 'children')],
               [Input({'type': 'delete-session-button', 'index': ALL}, 'n_clicks'),

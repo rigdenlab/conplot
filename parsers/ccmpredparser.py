@@ -9,8 +9,8 @@ def CCMpredParser(input):
 
     data = []
     for line in contents:
-        line = line.lstrip().split('\t')
-        if not line or line[0].isalpha():
+        line = line.lstrip().split()
+        if not line or line[0].isalpha() or len(line) == 1:
             continue
         else:
             data.append(line)
@@ -25,3 +25,5 @@ def CCMpredParser(input):
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output
+
+

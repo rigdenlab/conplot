@@ -42,6 +42,11 @@ def CCMpredParser(*args, **kwargs):
 
     return CCMpredParser(*args, **kwargs)
 
+def ColstatsParser(*args, **kwargs):
+    from parsers.colstatsparser import ColstatsParser
+
+    return ColstatsParser(*args, **kwargs)
+
   
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
@@ -61,6 +66,8 @@ class ParserFormats(Enum):
     EVFOLD = EvfoldParser
     CCMPRED = CCMpredParser
     CASPRR = PsicovParser
+    GREMLIN = PsicovParser
+    COLSTATS = ColstatsParser
 
 
 class ContactFormats(Enum):
@@ -70,6 +77,8 @@ class ContactFormats(Enum):
     EVFOLD = EvfoldParser
     CCMPRED = CCMpredParser
     CASPRR = PsicovParser
+    GREMLIN = PsicovParser
+    COLSTATS = ColstatsParser
 
 
 

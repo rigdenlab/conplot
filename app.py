@@ -1,24 +1,20 @@
 import os
+import components
 import dash
+import layouts
+import loaders
 import logging
 import redis
 import utils
+from utils import sql_utils
+from utils import UrlIndex
 import urllib.parse
 import uuid
 from dash.dash import no_update
 import dash_core_components as dcc
 import dash_html_components as html
-from layouts import noPage, Home, Plot, Contact, Help, RigdenLab, SessionTimeout, UsersPortal, CreateUser, UserStorage
-from loaders import AdditionalDatasetReference, MandatoryDatasetReference
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL
-from loaders import DatasetReference, SequenceLoader, Loader
-from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
-    InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert, SuccessCreateUserAlert, \
-    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList, SessionStoreModal
-from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
-    remove_unused_fname_alerts, decompress_data, get_session_action
-from utils import sql_utils
 
 
 # ==============================================================
@@ -29,7 +25,7 @@ from utils import sql_utils
 def serve_layout():
     session_id = str(uuid.uuid4())
     app.logger.info('New session initiated {}'.format(session_id))
-    cache.hset(session_id, 'id', compress_data(session_id))
+    cache.hset(session_id, 'id', utils.compress_data(session_id))
     cache.expire(session_id, 900)
     return html.Div([
         html.Div(session_id, id='session-id', style={'display': 'none'}),
@@ -51,9 +47,9 @@ def update_fname_alerts(session_id, enumerator):
     fname_alerts = []
     for idx, dataset in enumerate(enumerator):
         if cache.hexists(session_id, dataset.value):
-            fname = decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
-            fname_alerts.append(FilenameAlert(fname, dataset.value))
-    if enumerator == MandatoryDatasetReference:
+            fname = utils.decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
+            fname_alerts.append(components.FilenameAlert(fname, dataset.value))
+    if enumerator == loaders.MandatoryDatasetReference:
         return fname_alerts + [no_update for x in range(0, 2 - len(fname_alerts))]
     elif not fname_alerts:
         return no_update
@@ -63,27 +59,29 @@ def update_fname_alerts(session_id, enumerator):
 
 def serve_url(url, session_id, username):
     if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id, username)
+        return layouts.Home(session_id, username)
     elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id, username)
+        return layouts.Contact(session_id, username)
     elif url == UrlIndex.PLOT.value:
-        return Plot(session_id, username)
+        return layouts.Plot(session_id, username)
     elif url == UrlIndex.HELP.value:
-        return Help(session_id, username)
+        return layouts.Help(session_id, username)
     elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id, username)
+        return layouts.RigdenLab(session_id, username)
     elif url == UrlIndex.USERS_PORTAL.value:
-        return UsersPortal(username)
+        return layouts.UsersPortal(username)
     elif url == UrlIndex.CREATE_USER.value:
-        return CreateUser(username)
+        return layouts.CreateUser(username)
+    elif url == UrlIndex.CHANGE_PASSWORD.value:
+        return layouts.ChangeUserPassword(username)
     elif url == UrlIndex.USER_STORAGE.value:
         if cache.hexists(session_id, 'session_name'):
-            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
+            return layouts.UserStorage(username, utils.decompress_data(cache.hget(session_id, 'session_name')))
         else:
-            return UserStorage(username)
+            return layouts.UserStorage(username)
     else:
         app.logger.error('404 page not found {}'.format(url))
-        return noPage(url, username)
+        return layouts.noPage(url, username)
 
 
 # ==============================================================
@@ -123,7 +121,7 @@ def toggle_add_track_format(value):
 
 
 @app.callback([Output("format-selection-card", "color"),
-               Output({'type': "upload-button", 'index': DatasetReference.CONTACT_MAP.value}, 'disabled')],
+               Output({'type': "upload-button", 'index': loaders.DatasetReference.CONTACT_MAP.value}, 'disabled')],
               [Input("contact-format-selector", 'value')])
 def toggle_format_alert(*args):
     return utils.toggle_selection_alert(*args)
@@ -138,9 +136,9 @@ def display_page(url, session_id):
     if url is None:
         return no_update
     elif is_expired_session(session_id):
-        return SessionTimeout(session_id)
+        return layouts.SessionTimeout(session_id)
     elif cache.hexists(session_id, 'user'):
-        username = decompress_data(cache.hget(session_id, 'user'))
+        username = utils.decompress_data(cache.hget(session_id, 'user'))
     else:
         username = None
 
@@ -158,13 +156,13 @@ def user_login(n_clicks, username, password, session_id):
 
     if is_expired_session(session_id):
         return no_update, no_update
-    elif not ensure_triggered(trigger):
+    elif not utils.ensure_triggered(trigger):
         return no_update, no_update
 
     if sql_utils.userlogin(username, password):
         app.logger.info('Session {} login user {}'.format(session_id, username))
-        cache.hset(session_id, 'user', compress_data(username))
-        return False, SuccessLoginAlert(username)
+        cache.hset(session_id, 'user', utils.compress_data(username))
+        return False, components.SuccessLoginAlert(username)
     else:
         return True, None
 
@@ -177,13 +175,13 @@ def user_logout(n_clicks, session_id):
 
     if is_expired_session(session_id):
         return no_update
-    elif not ensure_triggered(trigger):
+    elif not utils.ensure_triggered(trigger):
         return no_update
 
     cache.hdel(session_id, 'user')
     cache.hdel(session_id, 'session_name')
     app.logger.info('Session {} logout user'.format(session_id))
-    return SuccessLogoutAlert()
+    return components.SuccessLogoutAlert()
 
 
 @app.callback([Output('invalid-create-user-collapse', 'is_open'),
@@ -198,17 +196,37 @@ def create_user(n_clicks, username, password, email, session_id):
 
     if is_expired_session(session_id):
         return no_update, no_update
-    elif not ensure_triggered(trigger):
+    elif not utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    if any([True for x in (username, password, email) if x is None]):
+    if any([True for x in (username, password, email) if x is None or x == '']):
         return True, None
     elif sql_utils.create_user(username, password, email):
         app.logger.info('Session {} created user {} - {}'.format(session_id, username, email))
-        cache.hset(session_id, 'user', compress_data(username))
-        return False, SuccessCreateUserAlert(username)
+        cache.hset(session_id, 'user', utils.compress_data(username))
+        return False, components.SuccessCreateUserAlert(username)
     else:
         return True, None
+
+
+@app.callback(Output('success-change-password-alert-div', 'children'),
+              [Input('user-change-password-button', 'n_clicks')],
+              [State('old-password-input', 'value'),
+               State('new-password-input', 'value'),
+               State('session-id', 'children')])
+def change_password(n_clicks, old_password, new_password, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return no_update
+    elif not utils.ensure_triggered(trigger):
+        return no_update
+
+    username = utils.decompress_data(cache.hget(session_id, 'user'))
+    if sql_utils.change_password(username, old_password, new_password):
+        return components.SuccessChangePasswordAlert(username)
+    else:
+        return components.FailChangePasswordAlert(username)
 
 
 @app.callback([Output('stored-sessions-toast-div', 'children'),
@@ -220,31 +238,33 @@ def manage_stored_sessions(delete_clicks, load_click, session_id):
     trigger = dash.callback_context.triggered[0]
 
     if is_expired_session(session_id):
-        return SessionTimedOutToast(), no_update
-    elif not ensure_triggered(trigger):
+        return components.SessionTimedOutToast(), no_update
+    elif not utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    session_name, action = get_session_action(trigger)
-    username = decompress_data(cache.hget(session_id, 'user'))
+    session_name, action = utils.get_session_action(trigger)
+    username = utils.decompress_data(cache.hget(session_id, 'user'))
     if cache.hexists(session_id, 'session_name'):
-        current_session_name = decompress_data(cache.hget(session_id, 'session_name'))
+        current_session_name = utils.decompress_data(cache.hget(session_id, 'session_name'))
     else:
         current_session_name = None
 
     if action == 'delete':
         sql_utils.delete_session(username, session_name)
         app.logger.info('Session {} user {} deleted session {}'.format(session_id, username, session_name))
-        return SuccesfulSessionDeleteToast(session_name), StoredSessionsList(username, current_session_name)
+        return components.SuccesfulSessionDeleteToast(session_name), \
+               components.StoredSessionsList(username, current_session_name)
     else:
-        cache.hset(session_id, 'session_name', compress_data(session_name))
+        cache.hset(session_id, 'session_name', utils.compress_data(session_name))
         loaded_session = sql_utils.retrieve_session(username, session_name)
-        for dataset in DatasetReference:
+        for dataset in loaders.DatasetReference:
             if dataset.value in loaded_session:
                 cache.hset(session_id, dataset.value, loaded_session[dataset.value])
             else:
                 cache.hdel(session_id, dataset.value)
         app.logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
-        return SuccesfulSessionLoadToast(session_name), StoredSessionsList(username, session_name)
+        return components.SuccesfulSessionLoadToast(session_name), \
+               components.StoredSessionsList(username, session_name)
 
 
 @app.callback(Output('store-session-modal-div', 'children'),
@@ -255,18 +275,18 @@ def store_session(n_clicks, session_name, session_id):
     trigger = dash.callback_context.triggered[0]
 
     if is_expired_session(session_id):
-        return SessionTimedOutToast()
-    elif not ensure_triggered(trigger):
+        return components.SessionTimedOutToast()
+    elif not utils.ensure_triggered(trigger):
         return no_update
 
-    username = decompress_data(cache.hget(session_id, 'user'))
+    username = utils.decompress_data(cache.hget(session_id, 'user'))
     session = cache.hgetall(session_id)
 
     app.logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
     sql_utils.store_session(username, session_name, session)
-    cache.hset(session_id, 'session_name', compress_data(session_name))
+    cache.hset(session_id, 'session_name', utils.compress_data(session_name))
 
-    return SessionStoreModal(session_name)
+    return components.SessionStoreModal(session_name)
 
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
@@ -282,28 +302,28 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     cleared_fcontents = [None for x in range(0, len(fcontents))]
 
     if is_expired_session(session_id):
-        return file_divs, cleared_fcontents, SessionTimedOutModal()
-    elif not ensure_triggered(trigger):
-        file_divs = update_fname_alerts(session_id, MandatoryDatasetReference)
+        return file_divs, cleared_fcontents, components.SessionTimedOutModal()
+    elif not utils.ensure_triggered(trigger):
+        file_divs = update_fname_alerts(session_id, loaders.MandatoryDatasetReference)
         return file_divs, cleared_fcontents, None
 
     app.logger.info('Session {} upload triggered'.format(session_id))
-    dataset, fname, fcontent, index = get_upload_id(trigger, fnames, fcontents)
+    dataset, fname, fcontent, index = utils.get_upload_id(trigger, fnames, fcontents)
 
     if cache.hexists(session_id, dataset):
         app.logger.info('Session {} dataset {} already exists'.format(session_id, dataset))
-        return file_divs, cleared_fcontents, RepeatedInputModal(dataset)
-    elif dataset == DatasetReference.SEQUENCE.value:
-        data, invalid = SequenceLoader(fcontent, fname)
+        return file_divs, cleared_fcontents, components.RepeatedInputModal(dataset)
+    elif dataset == loaders.DatasetReference.SEQUENCE.value:
+        data, invalid = loaders.SequenceLoader(fcontent, fname)
     else:
-        data, invalid = Loader(fcontent, input_format, fname)
+        data, invalid = loaders.Loader(fcontent, input_format, fname)
 
     if invalid:
         app.logger.info('Session {} dataset {} invalid'.format(session_id, dataset))
-        return file_divs, cleared_fcontents, InvalidFormatModal()
+        return file_divs, cleared_fcontents, components.InvalidFormatModal()
     else:
         app.logger.info('Session {} uploads {} - {}'.format(session_id, dataset, fname))
-        file_divs[index] = FilenameAlert(fname, dataset)
+        file_divs[index] = components.FilenameAlert(fname, dataset)
         cache.hset(session_id, dataset, data)
         return file_divs, cleared_fcontents, None
 
@@ -319,31 +339,31 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
     trigger = dash.callback_context.triggered[0]
 
     if is_expired_session(session_id):
-        return SessionTimedOutModal(), no_update
-    elif not ensure_triggered(trigger):
-        fname_alerts = update_fname_alerts(session_id, AdditionalDatasetReference)
+        return components.SessionTimedOutModal(), no_update
+    elif not utils.ensure_triggered(trigger):
+        fname_alerts = update_fname_alerts(session_id, loaders.AdditionalDatasetReference)
         return None, fname_alerts
 
     app.logger.info('Session {} upload triggered'.format(session_id))
-    dataset = AdditionalDatasetReference.__getattr__(input_format).value
+    dataset = loaders.AdditionalDatasetReference.__getattr__(input_format).value
 
     if cache.hexists(session_id, dataset):
         app.logger.info('Session {} dataset {} already exists'.format(session_id, dataset))
-        return RepeatedInputModal(dataset), no_update
+        return components.RepeatedInputModal(dataset), no_update
 
-    data, invalid = Loader(fcontent, input_format, fname)
+    data, invalid = loaders.Loader(fcontent, input_format, fname)
 
-    fname_alerts = remove_unused_fname_alerts(fname_alerts)
+    fname_alerts = utils.remove_unused_fname_alerts(fname_alerts)
 
     if invalid:
         app.logger.info('Session {} dataset {} invalid'.format(session_id, dataset))
-        return InvalidFormatModal(), fname_alerts
+        return components.InvalidFormatModal(), fname_alerts
     else:
         app.logger.info('Session {} uploads {} - {}'.format(session_id, dataset, fname))
         fname_alerts = [alert for alert in fname_alerts
                         if alert['props']['id'] != 'no-tracks-card'
                         and alert['props']['id'] != 'invalid-track-collapse']
-        fname_alerts.append(FilenameAlert(fname, dataset))
+        fname_alerts.append(components.FilenameAlert(fname, dataset))
         cache.hset(session_id, dataset, data)
         return None, fname_alerts
 
@@ -353,13 +373,13 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [State('session-id', 'children')])
 def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[0]
-    if not ensure_triggered(trigger):
+    if not utils.ensure_triggered(trigger):
         return None
     elif is_expired_session(session_id):
-        return SessionTimedOutModal()
+        return components.SessionTimedOutModal()
 
     app.logger.info('Session {} remove file triggered'.format(session_id))
-    fname, dataset, is_open = get_remove_trigger(trigger)
+    fname, dataset, is_open = utils.get_remove_trigger(trigger)
 
     if is_open:
         app.logger.info('Session {} removal of {} aborted'.format(session_id, dataset))
@@ -386,16 +406,16 @@ def remove_dataset(alerts_open, session_id):
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
                    track_separation, track_selection, session_id):
     trigger = dash.callback_context.triggered[0]
-    if not ensure_triggered(trigger):
-        return PlotPlaceHolder(), None, DisplayControlCard(), True
+    if not utils.ensure_triggered(trigger):
+        return components.PlotPlaceHolder(), None, components.DisplayControlCard(), True
     elif is_expired_session(session_id):
-        return PlotPlaceHolder(), SessionTimedOutModal(), DisplayControlCard(), True
+        return components.PlotPlaceHolder(), components.SessionTimedOutModal(), components.DisplayControlCard(), True
 
     app.logger.info('Session {} plot requested'.format(session_id))
 
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
-        return no_update, InvalidInputModal(), no_update, no_update
+        return no_update, components.InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
 

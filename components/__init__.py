@@ -115,6 +115,12 @@ def AdditionalTracksUploadCard(*args, **kwargs):
     return AdditionalTracksUploadCard(*args, **kwargs)
 
 
+def ChangeUserPasswordCard(*args, **kwargs):
+    from components.cards import ChangeUserPasswordCard
+
+    return ChangeUserPasswordCard(*args, **kwargs)
+
+
 def UserLoginCard(*args, **kwargs):
     from components.cards import UserLoginCard
 
@@ -203,6 +209,18 @@ def FilenameAlert(*args, **kwargs):
     from components.alerts import FilenameAlert
 
     return FilenameAlert(*args, **kwargs)
+
+
+def SuccessChangePasswordAlert(*args, **kwargs):
+    from components.alerts import SuccessChangePasswordAlert
+
+    return SuccessChangePasswordAlert(*args, **kwargs)
+
+
+def FailChangePasswordAlert(*args, **kwargs):
+    from components.alerts import FailChangePasswordAlert
+
+    return FailChangePasswordAlert(*args, **kwargs)
 
 
 def SuccessCreateUserAlert(*args, **kwargs):

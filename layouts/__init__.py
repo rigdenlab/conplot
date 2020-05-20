@@ -48,6 +48,12 @@ def UserStorage(*args, **kwargs):
     return UserStorage(*args, **kwargs)
 
 
+def ChangeUserPassword(*args, **kwargs):
+    from layouts.changeuserpassword import ChangeUserPassword
+
+    return ChangeUserPassword(*args, **kwargs)
+
+
 def CreateUser(*args, **kwargs):
     from layouts.createuser import CreateUser
 

@@ -104,8 +104,8 @@ def UserNameInput():
     ], className="mb-3")
 
 
-def PasswordInput():
+def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
     return dbc.InputGroup([
-        dbc.InputGroupAddon("Password", addon_type="prepend"),
-        dbc.Input(type="password", id='password-input', placeholder='XXXX')
+        dbc.InputGroupAddon(addon, addon_type="prepend"),
+        dbc.Input(type="password", id=id, placeholder=placeholder)
     ], className="mb-3")

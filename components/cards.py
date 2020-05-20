@@ -1,11 +1,25 @@
-from components import UploadButton, AddTrackButton, ContactFormatSelector, AdditionalTrackFormatSelector, \
-    DisplayControlHeader, AdditionalInputHeader, MandatoryInputHeader, LFactorSelector, SizeSelector, \
-    TrackLayoutSelector, ErrorAlert, InvalidLoginCollapse, UserNameInput, PasswordInput, EmailInput, \
-    InvalidNewUserCollapse, StoredSessionsList, StoreSessionHeader, StoreSessionNameInput
+import components
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from loaders import DatasetReference
+
+
+def ChangeUserPasswordCard(username):
+    return dbc.Card([
+        dbc.CardBody([
+            html.H2("Change %s's password" % username, className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            components.PasswordInput(id='old-password-input', addon='Old', placeholder='password'),
+            components.PasswordInput(id='new-password-input', addon='New', placeholder='password'),
+            html.Br(),
+            dbc.Spinner(html.Div(id='success-change-password-alert-div')),
+            html.Br(),
+            dbc.Button("Change", color="primary", block=True, id='user-change-password-button'),
+            html.Br(),
+        ])
+    ])
 
 
 def NoPageFoundCard(url):
@@ -16,7 +30,7 @@ def NoPageFoundCard(url):
             html.Br(),
             html.P(["404 Page not found: {}".format(url)]),
             html.Br(),
-            ErrorAlert(True)
+            components.ErrorAlert(True)
 
         ])
     ])
@@ -28,9 +42,9 @@ def UserLoginCard():
             html.H2('User login', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            UserNameInput(),
-            PasswordInput(),
-            InvalidLoginCollapse(),
+            components.UserNameInput(),
+            components.PasswordInput(),
+            components.InvalidLoginCollapse(),
             html.Br(),
             dbc.Spinner(html.Div(id='success-login-alert-div')),
             html.Br(),
@@ -64,17 +78,17 @@ def SequenceUploadCard():
             html.H5('Sequence', style={'text-align': "center"}),
             html.Br(),
             html.Div(id={'type': 'file-div', 'index': DatasetReference.SEQUENCE.value}),
-            UploadButton(DatasetReference.SEQUENCE.value),
+            components.UploadButton(DatasetReference.SEQUENCE.value),
         ], id='format-selection-card'),
     ])
 
 
 def ContactFormatSelectionCard():
-    return dbc.Card(ContactFormatSelector(), id='format-selection-card', color="danger", outline=True)
+    return dbc.Card(components.ContactFormatSelector(), id='format-selection-card', color="danger", outline=True)
 
 
 def AdditionalTrackFormatSelectionCard():
-    return dbc.Card(AdditionalTrackFormatSelector(), id='track-selection-card', color="danger", outline=True)
+    return dbc.Card(components.AdditionalTrackFormatSelector(), id='track-selection-card', color="danger", outline=True)
 
 
 def ContactUploadCard():
@@ -85,7 +99,7 @@ def ContactUploadCard():
             ContactFormatSelectionCard(),
             html.Br(),
             html.Div(id={'type': 'file-div', 'index': DatasetReference.CONTACT_MAP.value}),
-            UploadButton(DatasetReference.CONTACT_MAP.value, disabled=True)
+            components.UploadButton(DatasetReference.CONTACT_MAP.value, disabled=True)
         ], id='format-selection-card'),
     ])
 
@@ -94,7 +108,7 @@ def MandatoryUploadCard():
     return dbc.Card(
         dbc.CardBody(
             [
-                MandatoryInputHeader(),
+                components.MandatoryInputHeader(),
                 html.Br(),
                 SequenceUploadCard(),
                 html.Br(),
@@ -107,7 +121,7 @@ def MandatoryUploadCard():
 def AdditionalTracksUploadCard():
     return dbc.Card([
         dbc.CardBody([
-            AdditionalInputHeader(),
+            components.AdditionalInputHeader(),
             html.Br(),
             html.Div([
                 NoAdditionalTracksCard(),
@@ -115,7 +129,7 @@ def AdditionalTracksUploadCard():
             html.Br(),
             AdditionalTrackFormatSelectionCard(),
             html.Br(),
-            AddTrackButton(disabled=True)
+            components.AddTrackButton(disabled=True)
         ]),
     ])
 
@@ -123,13 +137,13 @@ def AdditionalTracksUploadCard():
 def StoreSessionCard(username=None):
     if username is not None:
         disabled = False
-        content = StoreSessionNameInput()
+        content = components.StoreSessionNameInput()
     else:
         disabled = True
-        content = [NoUserLoggedCard(), html.Div(StoreSessionNameInput(), style={'display': 'none'})]
+        content = [NoUserLoggedCard(), html.Div(components.StoreSessionNameInput(), style={'display': 'none'})]
     return dbc.Card([
         dbc.CardBody([
-            StoreSessionHeader(),
+            components.StoreSessionHeader(),
             html.Br(),
             html.Div(content, id='store-session-card-div'),
             html.Br(),
@@ -172,7 +186,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
         return dbc.Card(
             dbc.CardBody(
                 [
-                    DisplayControlHeader(),
+                    components.DisplayControlHeader(),
                     html.Br(),
                     NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separation)
                 ]
@@ -187,18 +201,19 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                     [
                         html.Div([
                             html.P("Adjust contact map", className="card-text"),
-                            dbc.Card(LFactorSelector(factor), outline=False),
+                            dbc.Card(components.LFactorSelector(factor), outline=False),
                             html.Br(),
-                            dbc.Card(SizeSelector('contact-marker-size-input', contact_marker_size, 1, 15),
+                            dbc.Card(components.SizeSelector('contact-marker-size-input', contact_marker_size, 1, 15),
                                      outline=False),
                             html.Br(),
                             html.Hr(),
                             html.P('Adjust additional tracks'),
-                            dbc.Card(SizeSelector('track-marker-size-input', track_marker_size, 1, 20),
+                            dbc.Card(components.SizeSelector('track-marker-size-input', track_marker_size, 1, 20),
                                      outline=False),
                             html.Br(),
                             dbc.Card(
-                                SizeSelector('track-separation-size-input', track_separation, 1, 150, 'Separation'),
+                                components.SizeSelector('track-separation-size-input', track_separation, 1, 150,
+                                                        'Separation'),
                                 outline=False),
                             html.Br(),
                             html.Hr(),
@@ -234,7 +249,7 @@ def TrackSelectionCard(track_idx, track_value, available_tracks):
     track_options = [{'label': '---', 'value': '---'}]
     track_options += [{'label': dataset, 'value': dataset} for dataset in available_tracks]
 
-    return dbc.Card(TrackLayoutSelector(track_idx, track_options, track_value), outline=False)
+    return dbc.Card(components.TrackLayoutSelector(track_idx, track_options, track_value), outline=False)
 
 
 def InvalidFormatCard():
@@ -248,10 +263,10 @@ def CreateUserCard():
             html.H2('Create a new user', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            UserNameInput(),
-            PasswordInput(),
-            EmailInput(),
-            InvalidNewUserCollapse(),
+            components.UserNameInput(),
+            components.PasswordInput(),
+            components.EmailInput(),
+            components.InvalidNewUserCollapse(),
             html.Br(),
             dbc.Spinner(html.Div(id='success-create-user-alert-div')),
             html.Br(),
@@ -269,6 +284,7 @@ def UserStoredSessionsCard(username, current_session_name=None):
             html.H3('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            dbc.Spinner(StoredSessionsList(username, current_session_name), id='stored-sessions-list-spinner'),
+            dbc.Spinner(components.StoredSessionsList(username, current_session_name),
+                        id='stored-sessions-list-spinner'),
         ])
     ])

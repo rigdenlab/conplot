@@ -21,6 +21,32 @@ def FilenameAlert(filename, dataset):
     )
 
 
+def SuccessChangePasswordAlert(username):
+    return dbc.Alert([
+        html.H4('Success', className="alert-heading", style={'text-align': "center"}),
+        html.P("You have successfully changed %s's password!" % username, style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='success',
+        fade=True,
+        is_open=True,
+        id='success-change-password-alert'
+    )
+
+
+def FailChangePasswordAlert(username):
+    return dbc.Alert([
+        html.H4('Error', className="alert-heading", style={'text-align': "center"}),
+        html.P("Something went wrong and we couldn't change %s's password!" % username, style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='danger',
+        fade=True,
+        is_open=True,
+        id='fail-change-password-alert'
+    )
+
+
 def SuccessLoginAlert(username):
     return dbc.Alert([
         html.H4('Success', className="alert-heading", style={'text-align': "center"}),

@@ -38,6 +38,10 @@ class SqlQueries(Enum):
     CHECK_SESSION_EXISTS = """SELECT * FROM {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
 
+    CHANGE_PASSWORD = """UPDATE {} SET {} = crypt(%s, {}) WHERE {} = %s
+    """.format(TableNames.USER_DATA.value, SqlFieldNames.PASSWORD.value, SqlFieldNames.PASSWORD.value,
+               SqlFieldNames.USERNAME.value)
+
     UPDATE_SESSION = """UPDATE {} SET {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value,
                ",".join(["{} = %s".format(dataset.value) for dataset in DatasetReference]), SqlFieldNames.OWNER.value,
@@ -94,6 +98,14 @@ def create_user(username, psswrd, email):
         perform_query(SqlQueries.CREATE_USER.value, args=(username, email, psswrd), commit=True)
         return True
     except psycopg2.IntegrityError:
+        return False
+
+
+def change_password(username, old_password, new_password):
+    if userlogin(username, old_password):
+        perform_query(SqlQueries.CHANGE_PASSWORD.value, args=(new_password, username), commit=True)
+        return True
+    else:
         return False
 
 

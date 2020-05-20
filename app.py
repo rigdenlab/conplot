@@ -61,6 +61,31 @@ def update_fname_alerts(session_id, enumerator):
     return fname_alerts
 
 
+def serve_url(url, session_id, username):
+    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
+        return Home(session_id, username)
+    elif url == UrlIndex.CONTACT.value:
+        return Contact(session_id, username)
+    elif url == UrlIndex.PLOT.value:
+        return Plot(session_id, username)
+    elif url == UrlIndex.HELP.value:
+        return Help(session_id, username)
+    elif url == UrlIndex.RIGDEN.value:
+        return RigdenLab(session_id, username)
+    elif url == UrlIndex.USERS_PORTAL.value:
+        return UsersPortal(username)
+    elif url == UrlIndex.CREATE_USER.value:
+        return CreateUser(username)
+    elif url == UrlIndex.USER_STORAGE.value:
+        if cache.hexists(session_id, 'session_name'):
+            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
+        else:
+            return UserStorage(username)
+    else:
+        app.logger.error('404 page not found {}'.format(url))
+        return noPage(url, username)
+
+
 # ==============================================================
 # Create dash.app
 # ==============================================================
@@ -84,7 +109,7 @@ app.layout = serve_layout
 # Define callbacks for the app
 # ==============================================================
 
-@app.callback(Output('bug-alert', 'is_open'),
+@app.callback(Output('contact-alert-div', 'children'),
               [Input('issue-select', 'value')])
 def toggle_alert(*args):
     return utils.toggle_alert(*args)
@@ -119,28 +144,7 @@ def display_page(url, session_id):
     else:
         username = None
 
-    if url == UrlIndex.HOME.value or url == UrlIndex.ROOT.value:
-        return Home(session_id, username)
-    elif url == UrlIndex.CONTACT.value:
-        return Contact(session_id, username)
-    elif url == UrlIndex.PLOT.value:
-        return Plot(session_id, username)
-    elif url == UrlIndex.HELP.value:
-        return Help(session_id, username)
-    elif url == UrlIndex.RIGDEN.value:
-        return RigdenLab(session_id, username)
-    elif url == UrlIndex.USERS_PORTAL.value:
-        return UsersPortal(username)
-    elif url == UrlIndex.CREATE_USER.value:
-        return CreateUser(username)
-    elif url == UrlIndex.USER_STORAGE.value:
-        if cache.hexists(session_id, 'session_name'):
-            return UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
-        else:
-            return UserStorage(username)
-    else:
-        app.logger.error('404 page not found {}'.format(url))
-        return noPage(url, username)
+    return serve_url(url, session_id, username)
 
 
 @app.callback([Output('invalid-login-collapse', 'is_open'),
@@ -239,6 +243,15 @@ def manage_stored_sessions(delete_clicks, load_click, session_id):
         app.logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
         return SuccesfulSessionLoadToast(session_name), StoredSessionsList(username, session_name)
 
+"""
+@app.callback([Output('stored-sessions-toast-div', 'children'),
+               Output('stored-sessions-list-spinner', 'children')],
+              [Input({'type': 'delete-session-button', 'index': ALL}, 'n_clicks'),
+               Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks')],
+              [State('session-id', 'children')])
+def store_session():
+    pass
+"""
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
                Output({'type': "upload-button", 'index': ALL}, 'contents'),

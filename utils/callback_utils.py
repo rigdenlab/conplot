@@ -1,5 +1,5 @@
 import json
-from utils import decompress_data
+from components import EmailIssueReference, ContactForgotPsswrdAlert, ContactBugAlert
 
 
 def toggle_selection_alert(format_selection):
@@ -48,10 +48,12 @@ def ensure_triggered(trigger):
 
 
 def toggle_alert(value):
-    if value is not None and value == '1':
-        return True
+    if value == EmailIssueReference.BUG.value:
+        return ContactBugAlert()
+    elif value == EmailIssueReference.FORGOT_PSSWRD.value:
+        return ContactForgotPsswrdAlert()
     else:
-        return False
+        return None
 
 
 def get_session_action(trigger):

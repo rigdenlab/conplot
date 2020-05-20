@@ -1,3 +1,12 @@
+from enum import Enum
+
+
+class EmailIssueReference(Enum):
+    BUG = '1'
+    FORGOT_PSSWRD = '2'
+    OTHER = '3'
+
+
 def MissingInputModal(*args, **kwargs):
     from components.modals import MissingInputModal
 
@@ -206,6 +215,12 @@ def SuccessLogoutAlert(*args, **kwargs):
     from components.alerts import SuccessLogoutAlert
 
     return SuccessLogoutAlert(*args, **kwargs)
+
+
+def ContactForgotPsswrdAlert(*args, **kwargs):
+    from components.alerts import ContactForgotPsswrdAlert
+
+    return ContactForgotPsswrdAlert(*args, **kwargs)
 
 
 def SuccessLoginAlert(*args, **kwargs):

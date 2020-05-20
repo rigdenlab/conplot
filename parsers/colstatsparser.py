@@ -10,7 +10,6 @@ def ColstatsParser(input):
     data = []
     for line in contents:
         line = line.lstrip().split(' ')
-        print(line)
         if not line or line[0].isalpha() or len(line) == 1:
             continue
         else:

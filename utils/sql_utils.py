@@ -10,22 +10,31 @@ class TableNames(Enum):
     SESSION_DATA = 'session_data'
 
 
+class SqlFieldNames(Enum):
+    ID = 'id'
+    OWNER = 'owner_username'
+    SESSION_NAME = 'session_name'
+    USERNAME = 'username'
+    EMAIL = 'email'
+    PASSWORD = 'password'
+    LAST_ACCESS = 'last_access_date'
+    CREATED_DATE = 'created_date'
+    LAST_LOGIN = 'last_login'
+
+
 class SqlQueries(Enum):
-    INSERT = """ INSERT INTO %s (%s) VALUES (%s)"""
+    UPDATE = """UPDATE {} SET {} = '{}' WHERE {} = '{}'"""
+    DELETE = """DELETE FROM {} WHERE {} = '{}'"""
+    CREATE_USER = """INSERT INTO {} ({},{},{}) VALUES ('{}','{}',crypt('{}', gen_salt('bf')))"""
+    USER_LOGIN = """SELECT {} FROM {} WHERE {} = '{}' AND {} = crypt('{}', {})"""
+    UPDATE_LAST_LOGIN = """UPDATE {} SET {} = '{}' WHERE {} = '{}'"""
+    CHECK_SESSION_EXISTS = """SELECT * FROM {} WHERE {} = '{}' AND {} = '{}'"""
+    UPDATE_SESSION = """UPDATE {} SET {} WHERE {} = '{}' AND {} = '{}' """
     INSERT_SESSION = """INSERT INTO {} ({}) VALUES ({})"""
-    UPDATE = """UPDATE %s SET %s = '%s' WHERE %s = '%s'"""
-    DELETE = """DELETE FROM %s WHERE %s = '%s'"""
-    DELETE_SESSION = """DELETE FROM {} WHERE {} = '%s' AND {} = '%s'""".format(TableNames.SESSION_DATA.value,
-                                                                               'owner_username', 'session_name')
-    CRYPT = """crypt('%s', gen_salt('bf'))"""
-    LOGIN = """SELECT id FROM {} WHERE username = '%s' AND password = crypt('%s', password)
-    """.format(TableNames.USER_DATA.value)
-    LIST_SESSIONS = """SELECT session_name, created_date FROM {} WHERE owner_username = '%s'
-    """.format(TableNames.SESSION_DATA.value)
-    RETRIEVE_SESSION = """SELECT * FROM {} WHERE owner_username = '%s' AND session_name = '%s'
-    """.format(TableNames.SESSION_DATA.value)
-    UPDATE_SESSION_DATE = """UPDATE {} SET {} = '%s' WHERE {} = '%s' AND {} = '%s'
-    """.format(TableNames.SESSION_DATA.value, 'last_access_date', 'owner_username', 'session_name')
+    RETRIEVE_SESSION = """SELECT * FROM {} WHERE {} = '{}' AND {} = '{}'"""
+    UPDATE_SESSION_DATE = """UPDATE {} SET {} = '{}' WHERE {} = '{}' AND {} = '{}'"""
+    LIST_SESSIONS = """SELECT {}, {} FROM {} WHERE {} = '%s'"""
+    DELETE_SESSION = """DELETE FROM {} WHERE {} = '{}' AND {} = '{}'"""
 
 
 def initiate_connection():
@@ -51,37 +60,38 @@ def perform_query(query, fetch=False, commit=False):
     return result
 
 
-def insert_entry(table_name, fields, values):
-    query = SqlQueries.INSERT.value % (table_name, ",".join(fields), ",".join(values))
-    perform_query(query, commit=True)
-
-
 def update_entry(table_name, field_update, value_update, id_field, id_value):
-    query = SqlQueries.UPDATE.value % (table_name, field_update, value_update, id_field, id_value)
+    query = SqlQueries.UPDATE.value.format(table_name, field_update, value_update, id_field, id_value)
     perform_query(query, commit=True)
 
 
 def delete_entry(table_name, id_field, id_value):
-    query = SqlQueries.DELETE.value % (table_name, id_field, id_value)
+    query = SqlQueries.DELETE.value.format(table_name, id_field, id_value)
     perform_query(query, commit=True)
 
 
 def create_user(username, psswrd, email):
     try:
-        insert_entry(TableNames.USER_DATA.value, ('username', 'email', 'password'),
-                     ("'%s'" % username, "'%s'" % email, SqlQueries.CRYPT.value % psswrd))
+        query = SqlQueries.CREATE_USER.value.format(TableNames.USER_DATA.value, SqlFieldNames.USERNAME.value,
+                                                    SqlFieldNames.EMAIL.value, SqlFieldNames.PASSWORD.value, username,
+                                                    email, psswrd)
+        perform_query(query, commit=True)
         return True
     except psycopg2.IntegrityError:
         return False
 
 
 def userlogin(username, psswrd):
-    query = SqlQueries.LOGIN.value % (username, psswrd)
+    query = SqlQueries.USER_LOGIN.value.format(SqlFieldNames.ID.value, TableNames.USER_DATA.value,
+                                               SqlFieldNames.USERNAME.value, username, SqlFieldNames.PASSWORD.value,
+                                               psswrd, SqlFieldNames.PASSWORD.value)
 
     rslt = perform_query(query, fetch=True)
     if rslt:
-        update_entry(TableNames.USER_DATA.value, 'last_login',
-                     datetime.datetime.now().strftime("%Y-%m-%d"), 'username', username)
+        query = SqlQueries.UPDATE_LAST_LOGIN.value.format(TableNames.USER_DATA.value, SqlFieldNames.LAST_LOGIN.value,
+                                                          datetime.datetime.now().strftime("%Y-%m-%d"),
+                                                          SqlFieldNames.USERNAME.value, username)
+        perform_query(query, commit=True)
         return True
     else:
         return False
@@ -99,8 +109,18 @@ def store_session(username, session_name, session):
             values.append(None)
             fields.append(dataset.value)
 
-    query = SqlQueries.INSERT_SESSION.value.format(TableNames.SESSION_DATA.value, ",".join(fields),
-                                                   ",".join(['%s' for x in range(0, len(values))]))
+    query = SqlQueries.CHECK_SESSION_EXISTS.value.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value,
+                                                         username, SqlFieldNames.SESSION_NAME.value, session_name)
+
+    if any(perform_query(query, fetch=True)):
+        values = values[2:]
+        updates = ",".join(["{} = %s".format(field) for field in fields[2:]])
+        query = SqlQueries.UPDATE_SESSION.value.format(TableNames.SESSION_DATA.value, updates,
+                                                       SqlFieldNames.OWNER.value, username,
+                                                       SqlFieldNames.SESSION_NAME.value, session_name)
+    else:
+        query = SqlQueries.INSERT_SESSION.value.format(TableNames.SESSION_DATA.value, ",".join(fields),
+                                                       ",".join(['%s' for x in range(0, len(values))]))
 
     connection, cursor = initiate_connection()
     cursor.execute(query, values)
@@ -111,12 +131,17 @@ def store_session(username, session_name, session):
 
 def retrieve_session(username, session_name):
     session = None
-    query = SqlQueries.RETRIEVE_SESSION.value % (username, session_name)
+
+    query = SqlQueries.RETRIEVE_SESSION.value.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, username,
+                                                     SqlFieldNames.SESSION_NAME.value, session_name)
     session_data = perform_query(query, fetch=True)
     if session_data:
         session_data = session_data[0]
-        query = SqlQueries.UPDATE_SESSION_DATE.value % (datetime.datetime.now().strftime("%Y-%m-%d"),
-                                                        username, session_name)
+        query = SqlQueries.UPDATE_SESSION_DATE.value.format(TableNames.SESSION_DATA.value,
+                                                            SqlFieldNames.LAST_ACCESS.value,
+                                                            datetime.datetime.now().strftime("%Y-%m-%d"),
+                                                            SqlFieldNames.OWNER.value, username,
+                                                            SqlFieldNames.SESSION_NAME.value, session_name)
         perform_query(query, fetch=False)
         session = {}
         for idx, dataset in enumerate(DatasetReference, 2):
@@ -127,10 +152,13 @@ def retrieve_session(username, session_name):
 
 
 def list_all_sessions(username):
-    query = SqlQueries.LIST_SESSIONS.value % username
+    query = SqlQueries.LIST_SESSIONS.value.format(SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value,
+                                                  SqlFieldNames.TableNames.SESSION_DATA.value,
+                                                  SqlFieldNames.OWNER.value, username)
     return perform_query(query, fetch=True)
 
 
 def delete_session(username, session_name):
-    query = SqlQueries.DELETE_SESSION.value % (username, session_name)
+    query = SqlQueries.DELETE_SESSION.valueformat(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, username,
+                                                  SqlFieldNames.SESSION_NAME.value, session_name)
     return perform_query(query, commit=True)

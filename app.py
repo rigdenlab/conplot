@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output, State, ALL
 from loaders import DatasetReference, SequenceLoader, Loader
 from components import RepeatedInputModal, FilenameAlert, SessionTimedOutModal, PlotPlaceHolder, DisplayControlCard, \
     InvalidInputModal, InvalidFormatModal, SuccessLoginAlert, SuccessLogoutAlert, SuccessCreateUserAlert, \
-    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList
+    SuccesfulSessionLoadToast, SuccesfulSessionDeleteToast, SessionTimedOutToast, StoredSessionsList, SessionStoreModal
 from utils import UrlIndex, compress_data, ensure_triggered, get_remove_trigger, get_upload_id, \
     remove_unused_fname_alerts, decompress_data, get_session_action
 from utils import sql_utils
@@ -238,20 +238,36 @@ def manage_stored_sessions(delete_clicks, load_click, session_id):
     else:
         cache.hset(session_id, 'session_name', compress_data(session_name))
         loaded_session = sql_utils.retrieve_session(username, session_name)
-        for key in loaded_session:
-            cache.hset(session_id, key, loaded_session[key])
+        for dataset in DatasetReference:
+            if dataset.value in loaded_session:
+                cache.hset(session_id, dataset.value, loaded_session[dataset.value])
+            else:
+                cache.hdel(session_id, dataset.value)
         app.logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
         return SuccesfulSessionLoadToast(session_name), StoredSessionsList(username, session_name)
 
-"""
-@app.callback([Output('stored-sessions-toast-div', 'children'),
-               Output('stored-sessions-list-spinner', 'children')],
-              [Input({'type': 'delete-session-button', 'index': ALL}, 'n_clicks'),
-               Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks')],
-              [State('session-id', 'children')])
-def store_session():
-    pass
-"""
+
+@app.callback(Output('store-session-modal-div', 'children'),
+              [Input('store-session-button', 'n_clicks')],
+              [State('new-session-name-input', 'value'),
+               State('session-id', 'children')])
+def store_session(n_clicks, session_name, session_id):
+    trigger = dash.callback_context.triggered[0]
+
+    if is_expired_session(session_id):
+        return SessionTimedOutToast()
+    elif not ensure_triggered(trigger):
+        return no_update
+
+    username = decompress_data(cache.hget(session_id, 'user'))
+    session = cache.hgetall(session_id)
+
+    app.logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
+    sql_utils.store_session(username, session_name, session)
+    cache.hset(session_id, 'session_name', compress_data(session_name))
+
+    return SessionStoreModal(session_name)
+
 
 @app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
                Output({'type': "upload-button", 'index': ALL}, 'contents'),
@@ -382,7 +398,6 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
         return no_update, InvalidInputModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
-    del session[b'id']
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size, track_marker_size,

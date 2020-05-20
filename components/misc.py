@@ -16,7 +16,7 @@ def PlotPlaceHolder():
 def UserAccountDropdownMenu(username=None):
     if username is None:
         store_disabled = True
-        username = 'USER'
+        username = 'LOGIN'
     else:
         store_disabled = False
 

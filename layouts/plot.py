@@ -12,6 +12,7 @@ def Body(username):
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='addtrack-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
         html.Br(),
         html.Br(),
         dbc.Row([

@@ -7,6 +7,12 @@ class EmailIssueReference(Enum):
     OTHER = '3'
 
 
+def SessionStoreModal(*args, **kwargs):
+    from components.modals import SessionStoreModal
+
+    return SessionStoreModal(*args, **kwargs)
+
+
 def MissingInputModal(*args, **kwargs):
     from components.modals import MissingInputModal
 

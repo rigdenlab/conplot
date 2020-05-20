@@ -86,3 +86,13 @@ def InvalidFormatModal():
                    style={'text-align': "justify"})
         ),
     ], id='invalid-input-modal', is_open=True)
+
+
+def SessionStoreModal(session_name):
+    return dbc.Modal([
+        dbc.ModalHeader(html.H4('Session stored successfully', className="alert-heading", style={'color': 'green'})),
+        dbc.ModalBody(
+            html.P("""You have successfully stored current uploaded data as new session with the name %s
+            """ % session_name, style={'text-align': "justify"})
+        ),
+    ], id='invalid-input-modal', is_open=True)

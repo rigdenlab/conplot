@@ -110,7 +110,7 @@ def AdditionalTracksUploadCard():
             AdditionalInputHeader(),
             html.Br(),
             html.Div([
-                NoAdditionalTracksCard()
+                NoAdditionalTracksCard(),
             ], id='additional-tracks-filenames'),
             html.Br(),
             AdditionalTrackFormatSelectionCard(),
@@ -126,14 +126,12 @@ def StoreSessionCard(username=None):
         content = StoreSessionNameInput()
     else:
         disabled = True
-        content = NoUserLoggedCard()
+        content = [NoUserLoggedCard(), html.Div(StoreSessionNameInput(), style={'display': 'none'})]
     return dbc.Card([
         dbc.CardBody([
             StoreSessionHeader(),
             html.Br(),
-            html.Div([
-                content
-            ], id='store-session-card-div'),
+            html.Div(content, id='store-session-card-div'),
             html.Br(),
             dbc.Button(children=html.I(className="fas fa-save fa-2x"), id='store-session-button', disabled=disabled,
                        outline=True, block=True, color='primary')

@@ -1,5 +1,6 @@
 import components
 import layouts
+from loaders import DatasetReference
 from utils import UrlIndex
 from utils import decompress_data, compress_data
 from utils import sql_utils
@@ -27,7 +28,9 @@ def create_user(username, password, email, session_id, cache, logger):
 
 def user_logout(session_id, cache, logger):
     cache.hdel(session_id, 'user')
-    cache.hdel(session_id, 'session_name')
+    cache.hdel(session_id, 'session_pkid')
+    for dataset in DatasetReference:
+        cache.hdel(session_id, dataset.value)
     logger.info('Session {} logout user'.format(session_id))
     return components.SuccessLogoutAlert()
 
@@ -64,8 +67,9 @@ def serve_url(url, session_id, cache, logger):
     elif url == UrlIndex.CHANGE_PASSWORD.value:
         return layouts.ChangeUserPassword(username)
     elif url == UrlIndex.USER_STORAGE.value:
-        if cache.hexists(session_id, 'session_name'):
-            return layouts.UserStorage(username, decompress_data(cache.hget(session_id, 'session_name')))
+        if cache.hexists(session_id, 'session_pkid'):
+            session_pkid = int(cache.hget(session_id, 'session_pkid'))
+            return layouts.UserStorage(username, session_pkid)
         else:
             return layouts.UserStorage(username)
     else:

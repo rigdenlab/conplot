@@ -7,49 +7,50 @@ from utils import sql_utils
 
 def get_current_info(session_id, cache):
     username = decompress_data(cache.hget(session_id, 'user'))
-    if cache.hexists(session_id, 'session_name'):
-        current_session_name = decompress_data(cache.hget(session_id, 'session_name'))
+    if cache.hexists(session_id, 'session_pkid'):
+        current_session_pkid = cache.hget(session_id, 'session_pkid')
     else:
-        current_session_name = None
+        current_session_pkid = None
 
-    return username, current_session_name
+    return username, current_session_pkid
 
 
 def load_session(username, session_name, session_id, cache, logger):
-    cache.hset(session_id, 'session_name', compress_data(session_name))
-    loaded_session = sql_utils.retrieve_session(username, session_name)
+    session_pkid, loaded_session = sql_utils.retrieve_session(username, session_name)
+    cache.hset(session_id, 'session_pkid', session_pkid)
+
     for dataset in loaders.DatasetReference:
         if dataset.value in loaded_session:
             cache.hset(session_id, dataset.value, loaded_session[dataset.value])
         else:
             cache.hdel(session_id, dataset.value)
-    logger.info('Session {} user {} loads session {}'.format(session_id, username, session_name))
-    return components.SuccesfulSessionLoadToast(session_name), components.StoredSessionsList(username, session_name)
+    logger.info('Session {} user {} loads session {} - {}'.format(session_id, username, session_name, session_pkid))
+    return components.SuccesfulSessionLoadToast(session_name), components.StoredSessionsList(username, session_pkid)
 
 
-def delete_session(username, session_name, current_session_name, session_id, logger):
+def delete_session(username, session_name, current_session_pkid, session_id, logger):
     sql_utils.delete_session(username, session_name)
     logger.info('Session {} user {} deleted session {}'.format(session_id, username, session_name))
     return components.SuccesfulSessionDeleteToast(session_name), \
-           components.StoredSessionsList(username, current_session_name)
+           components.StoredSessionsList(username, current_session_pkid)
 
 
 def store_session(session_name, session_id, cache, logger):
     username = decompress_data(cache.hget(session_id, 'user'))
     session = cache.hgetall(session_id)
 
-    if session_name is None:
+    if not session_name:
         return components.SessionStoreModal(None)
 
     logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
-    sql_utils.store_session(username, session_name, session)
-    cache.hset(session_id, 'session_name', compress_data(session_name))
+    session_pkid = sql_utils.store_session(username, session_name, session)
+    cache.hset(session_id, 'session_pkid', session_pkid)
 
     return components.SessionStoreModal(session_name)
 
 
 def decompress_session(session):
-    for key in (b'id', b'user', b'session_name'):
+    for key in (b'id', b'user', b'session_pkid'):
         if key in session:
             del session[key]
 

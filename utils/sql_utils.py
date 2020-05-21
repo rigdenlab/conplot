@@ -22,6 +22,7 @@ class SqlFieldNames(Enum):
     CREATED_DATE = 'created_date'
     LAST_LOGIN = 'last_login'
     SHARED = 'shared_with'
+    SESSION_PKID = 'session_pkid'
 
 
 class SqlQueries(Enum):
@@ -66,9 +67,9 @@ class SqlQueries(Enum):
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.LAST_ACCESS.value, SqlFieldNames.OWNER.value,
                SqlFieldNames.SESSION_NAME.value)
 
-    LIST_SESSIONS = """SELECT {}, {} FROM {} WHERE {} = %s
-    """.format(SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value, TableNames.SESSION_DATA.value,
-               SqlFieldNames.OWNER.value)
+    LIST_SESSIONS = """SELECT {}, {}, {} FROM {} WHERE {} = %s
+    """.format(SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value, SqlFieldNames.SESSION_PKID.value,
+               TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value)
 
     DELETE_SESSION = """DELETE FROM {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
@@ -81,8 +82,13 @@ class SqlQueries(Enum):
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
                SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
 
-    GET_SHARED_SESSIONS = """SELECT * FROM {} WHERE %s = ANY({})
-    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value)
+    GET_SHARED_SESSIONS = """SELECT {}, {}, {}, {} FROM {} WHERE %s = ANY({})
+    """.format(SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value,
+               SqlFieldNames.SESSION_PKID.value, TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value)
+
+    GET_SESSION_PKID = """SELECT {} FROM {} WHERE {} = %s AND {} = %s
+    """.format(SqlFieldNames.SESSION_PKID.value, TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value,
+               SqlFieldNames.SESSION_NAME.value)
 
 
 def initiate_connection():
@@ -161,9 +167,14 @@ def store_session(username, session_name, session):
         query = SqlQueries.INSERT_SESSION.value.format(value_placeholders)
         perform_query(query, args=values, commit=True)
 
+    session_pkid = perform_query(SqlQueries.GET_SESSION_PKID.value, args=(username, session_name), fetch=True)
+
+    return session_pkid[0][0]
+
 
 def retrieve_session(username, session_name):
     session = None
+    session_pkid = None
     session_data = perform_query(SqlQueries.RETRIEVE_SESSION.value, args=(username, session_name), fetch=True)
 
     if session_data:
@@ -171,11 +182,12 @@ def retrieve_session(username, session_name):
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, username, session_name), fetch=False)
         session = {}
+        session_pkid = session_data[-1]
         for idx, dataset in enumerate(DatasetReference, 2):
             if session_data[idx] is not None:
                 session[dataset.value] = session_data[idx]
 
-    return session
+    return session_pkid, session
 
 
 def list_all_sessions(username):
@@ -196,5 +208,5 @@ def stop_sharing_session(owner, session_name, stop_sharing_with):
     return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, owner, session_name), commit=True)
 
 
-def check_shared_sessions(username):
+def get_shared_sessions(username):
     return perform_query(SqlQueries.GET_SHARED_SESSIONS.value, args=(username,), fetch=True)

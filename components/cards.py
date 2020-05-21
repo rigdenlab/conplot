@@ -276,15 +276,29 @@ def CreateUserCard():
     ])
 
 
-def UserStoredSessionsCard(username, current_session_name=None):
+def UserStoredSessionsCard(username, current_session_pkid=None):
     return dbc.Card([
         dbc.CardBody([
             html.Div(id='stored-sessions-toast-div'),
             html.Div(id='save-session-toast-div'),
+            html.Div(id='share-session-toast-div'),
             html.H3('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            dbc.Spinner(components.StoredSessionsList(username, current_session_name),
-                        id='stored-sessions-list-spinner'),
+            dbc.Spinner(components.StoredSessionsList(username, current_session_pkid),
+                        id='stored-sessions-list-spinner')
+        ])
+    ])
+
+
+def UserSharedSessionsCard(username, current_session_pkid=None):
+    return dbc.Card([
+        dbc.CardBody([
+            html.Div(id='shared-sessions-toast-div'),
+            html.H3('Sessions shared with %s' % username, className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            dbc.Spinner(components.SharedSessionsList(username, current_session_pkid),
+                        id='shared-sessions-list-spinner')
         ])
     ])

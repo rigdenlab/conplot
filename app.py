@@ -204,10 +204,10 @@ def manage_stored_sessions(delete_clicks, load_click, session_id):
         return no_update, no_update
 
     session_name, action = callback_utils.get_session_action(trigger)
-    username, current_session_name = session_utils.get_current_info(session_id, cache)
+    username, current_session_pkid = session_utils.get_current_info(session_id, cache)
 
     if action == 'delete':
-        return session_utils.delete_session(username, session_name, current_session_name, session_id, app.logger)
+        return session_utils.delete_session(username, session_name, current_session_pkid, session_id, app.logger)
     else:
         return session_utils.load_session(username, session_name, session_id, cache, app.logger)
 

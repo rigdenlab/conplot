@@ -85,6 +85,12 @@ def StoredSessionsList(*args, **kwargs):
     return StoredSessionsList(*args, **kwargs)
 
 
+def SharedSessionsList(*args, **kwargs):
+    from components.listgrpoups import SharedSessionsList
+
+    return SharedSessionsList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
     from components.toasts import SessionTimedOutToast
 
@@ -131,6 +137,12 @@ def AdditionalTracksUploadCard(*args, **kwargs):
     from components.cards import AdditionalTracksUploadCard
 
     return AdditionalTracksUploadCard(*args, **kwargs)
+
+
+def UserSharedSessionsCard(*args, **kwargs):
+    from components.cards import UserSharedSessionsCard
+
+    return UserSharedSessionsCard(*args, **kwargs)
 
 
 def ChangeUserPasswordCard(*args, **kwargs):

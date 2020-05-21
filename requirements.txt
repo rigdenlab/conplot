@@ -12,4 +12,4 @@ flask~=1.1.2
 psutil~=5.7.0
 redis~=3.5.0
 psycopg2-binary~=2.8.5
-slack~=0.0.3
+slack~=0.0.2

@@ -23,5 +23,6 @@ CREATE TABLE session_data
     custom             bytea,
     shared_with        varchar(25)[] not null default '{}',
     created_date       date          not null default current_date,
-    last_access_date   date          not null default current_date
+    last_access_date   date          not null default current_date,
+    session_pkid         serial        not null unique
 )

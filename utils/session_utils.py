@@ -38,6 +38,9 @@ def store_session(session_name, session_id, cache, logger):
     username = decompress_data(cache.hget(session_id, 'user'))
     session = cache.hgetall(session_id)
 
+    if session_name is None:
+        return components.SessionStoreModal(None)
+
     logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
     sql_utils.store_session(username, session_name, session)
     cache.hset(session_id, 'session_name', compress_data(session_name))

@@ -89,10 +89,19 @@ def InvalidFormatModal():
 
 
 def SessionStoreModal(session_name):
-    return dbc.Modal([
-        dbc.ModalHeader(html.H4('Session stored successfully', className="alert-heading", style={'color': 'green'})),
-        dbc.ModalBody(
-            html.P("""You have successfully stored the currently uploaded data as new session with the name %s
-            """ % session_name, style={'text-align': "justify"})
-        ),
-    ], id='invalid-input-modal', is_open=True)
+    if session_name is not None:
+        return dbc.Modal([
+            dbc.ModalHeader(html.H4('Session stored successfully', className="alert-heading", style={'color': 'green'})),
+            dbc.ModalBody(
+                html.P("""You have successfully stored the currently uploaded data as new session with the name %s
+                """ % session_name, style={'text-align': "justify"})
+            ),
+        ], id='invalid-input-modal', is_open=True)
+    else:
+        return dbc.Modal([
+            dbc.ModalHeader(
+                html.H4('Error', className="alert-heading", style={'color': 'red'})),
+            dbc.ModalBody(
+                html.P("You must provide a name for the session before saving it!", style={'text-align': "justify"})
+            ),
+        ], id='invalid-input-modal', is_open=True)

@@ -1,17 +1,18 @@
 from utils import UrlIndex
 import dash_html_components as html
 from components import NavBar, Header, PlotPlaceHolder, DisplayControlCard, MandatoryUploadCard, \
-    AdditionalTracksUploadCard
+    AdditionalTracksUploadCard, StoreSessionCard
 import dash_bootstrap_components as dbc
 
 
-def Body():
+def Body(username):
     return html.Div([
         html.Div(id='_hidden-div', style={'display': 'none'}),
         dbc.Spinner(html.Div(id='inputs-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='addtrack-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
         html.Br(),
         html.Br(),
         dbc.Row([
@@ -23,6 +24,9 @@ def Body():
                         ),
                         dbc.CardBody(
                             AdditionalTracksUploadCard(),
+                        ),
+                        dbc.CardBody(
+                            StoreSessionCard(username),
                         )
                     ])
                 ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
@@ -45,7 +49,8 @@ def Body():
                 ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
                 html.Br(),
                 html.Br(),
-                dbc.Button('Adjust Plot', outline=True, color='primary', block=True, id='refresh-button-2', disabled=True)
+                dbc.Button('Adjust Plot', outline=True, color='primary', block=True, id='refresh-button-2',
+                           disabled=True)
             ], width=3, style={'height': '100%'}),
         ], justify="between", style={'display': 'flex'})
     ])
@@ -55,5 +60,5 @@ def Plot(session_id, username):
     return html.Div([
         Header(username),
         NavBar(UrlIndex.PLOT.value),
-        Body()
+        Body(username)
     ])

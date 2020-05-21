@@ -21,6 +21,32 @@ def FilenameAlert(filename, dataset):
     )
 
 
+def SuccessChangePasswordAlert(username):
+    return dbc.Alert([
+        html.H4('Success', className="alert-heading", style={'text-align': "center"}),
+        html.P("You have successfully changed %s's password!" % username, style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='success',
+        fade=True,
+        is_open=True,
+        id='success-change-password-alert'
+    )
+
+
+def FailChangePasswordAlert(username):
+    return dbc.Alert([
+        html.H4('Error', className="alert-heading", style={'text-align': "center"}),
+        html.P("Something went wrong and we couldn't change %s's password!" % username, style={'text-align': "center"}),
+    ],
+        dismissable=False,
+        color='danger',
+        fade=True,
+        is_open=True,
+        id='fail-change-password-alert'
+    )
+
+
 def SuccessLoginAlert(username):
     return dbc.Alert([
         html.H4('Success', className="alert-heading", style={'text-align': "center"}),
@@ -76,9 +102,27 @@ def ContactBugAlert():
             html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
     ],
-        dismissable=True,
+        dismissable=False,
         color='danger',
         fade=True,
-        is_open=False,
+        is_open=True,
         id='bug-alert'
+    )
+
+
+def ContactForgotPsswrdAlert():
+    return dbc.Alert([
+        html.H4('Info', className="alert-heading"),
+        html.P(
+            "If you forgot your password, make sure to fill in with your registered username on the 'Name' input field "
+            "and the same email address you provided when registering on the 'Email' input field. If we find this "
+            "username and email address registered in our site, we will send you an email with a new automatically "
+            "generated password shortly after you click on 'Send'."
+        ),
+    ],
+        dismissable=False,
+        color='danger',
+        fade=True,
+        is_open=True,
+        id='forgot-psswrd-alert'
     )

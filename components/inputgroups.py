@@ -1,6 +1,7 @@
 import dash_bootstrap_components as dbc
 from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
+from components import EmailIssueReference
 
 
 def ContactFormatSelector():
@@ -58,13 +59,16 @@ def TrackLayoutSelector(idx, options, value):
 
 def EmailInput():
     return dbc.InputGroup([
-        dbc.InputGroupAddon("@", addon_type="prepend"),
-        dbc.Input(placeholder="example@email.com", type="email", id='email-input')
+        dbc.InputGroupAddon("Email", addon_type="prepend"),
+        dbc.Input(placeholder="example@email.com", type="email", id='email-input', minLength=1, maxLength=65)
     ], className="mb-3")
 
 
 def NameInput():
-    return dbc.InputGroup(dbc.Input(placeholder="First Name", type="text"), className="mb-3")
+    return dbc.InputGroup([
+        dbc.InputGroupAddon("Name", addon_type="prepend"),
+        dbc.Input(placeholder="First Name", type="text")
+    ], className="mb-3")
 
 
 def ProblemDescriptionInput():
@@ -78,21 +82,30 @@ def EmailIssueSelect():
     return dbc.InputGroup([
         dbc.Select(
             id='issue-select',
-            options=[{"label": "Bug report", "value": 1}, {"label": "General inquiry", "value": 2}]
+            options=[{"label": "Bug report", "value": EmailIssueReference.BUG.value},
+                     {'label': 'I Forgot my password', 'value': EmailIssueReference.FORGOT_PSSWRD.value},
+                     {"label": "General inquiry", "value": EmailIssueReference.OTHER.value}]
         ),
         dbc.InputGroupAddon("Subject", addon_type="prepend"),
     ])
 
 
-def UserNameInput():
+def StoreSessionNameInput():
     return dbc.InputGroup([
-        dbc.InputGroupAddon("Username", addon_type="prepend"),
-        dbc.Input(type="text", id='username-input', placeholder='User')
+        dbc.InputGroupAddon("Name", addon_type="prepend"),
+        dbc.Input(type="text", id='new-session-name-input', placeholder='New session name', minLength=1, maxLength=25)
     ], className="mb-3")
 
 
-def PasswordInput():
+def UserNameInput():
     return dbc.InputGroup([
-        dbc.InputGroupAddon("Password", addon_type="prepend"),
-        dbc.Input(type="password", id='password-input', placeholder='XXXX')
+        dbc.InputGroupAddon("Username", addon_type="prepend"),
+        dbc.Input(type="text", id='username-input', placeholder='User', minLength=1, maxLength=25)
+    ], className="mb-3")
+
+
+def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
+    return dbc.InputGroup([
+        dbc.InputGroupAddon(addon, addon_type="prepend"),
+        dbc.Input(type="password", id=id, placeholder=placeholder)
     ], className="mb-3")

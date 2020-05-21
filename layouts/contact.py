@@ -18,12 +18,12 @@ def Body():
                                 className="card-text", style={'text-align': "center"}),
                         html.Hr(),
                         html.Br(),
-                        EmailInput(),
                         NameInput(),
+                        EmailInput(),
                         ProblemDescriptionInput(),
                         EmailIssueSelect(),
                         html.Br(),
-                        ContactBugAlert(),
+                        html.Div(id='contact-alert-div'),
                         dbc.Button("Send", color="primary", block=True)
                     ])
                 ])

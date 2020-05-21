@@ -3,7 +3,7 @@ from enum import Enum
 import datetime
 import psycopg2
 from loaders import DatasetReference
-from utils.exceptions import SQLInjectionAlert, UserExists, EmailAlreadyUsed
+from utils.exceptions import SQLInjectionAlert, UserExists, EmailAlreadyUsed, IntegrityError, UserDoesntExist
 
 
 class TableNames(Enum):
@@ -21,6 +21,7 @@ class SqlFieldNames(Enum):
     LAST_ACCESS = 'last_access_date'
     CREATED_DATE = 'created_date'
     LAST_LOGIN = 'last_login'
+    SHARED = 'shared_with'
 
 
 class SqlQueries(Enum):
@@ -37,6 +38,12 @@ class SqlQueries(Enum):
 
     CHECK_SESSION_EXISTS = """SELECT * FROM {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+
+    CHECK_USER_EXISTS = """SELECT * FROM {} WHERE {} = %s
+        """.format(TableNames.USER_DATA.value, SqlFieldNames.USERNAME.value)
+
+    CHECK_EMAIL_USED = """SELECT * FROM {} WHERE {} = %s
+            """.format(TableNames.USER_DATA.value, SqlFieldNames.EMAIL.value)
 
     CHANGE_PASSWORD = """UPDATE {} SET {} = crypt(%s, {}) WHERE {} = %s
     """.format(TableNames.USER_DATA.value, SqlFieldNames.PASSWORD.value, SqlFieldNames.PASSWORD.value,
@@ -66,6 +73,14 @@ class SqlQueries(Enum):
     DELETE_SESSION = """DELETE FROM {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
 
+    SHARE_SESSION = """UPDATE {} SET {} = array_append({}, %s) WHERE {} = %s AND {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
+               SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+
+    STOP_SHARE = """UPDATE {} SET {} = array_remove({}, %s) WHERE {} = %s AND {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
+               SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+
 
 def initiate_connection():
     connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
@@ -94,11 +109,15 @@ def perform_query(query, args, fetch=False, commit=False):
 
 
 def create_user(username, psswrd, email):
+    if any(perform_query(SqlQueries.CHECK_USER_EXISTS.value, args=(username,), fetch=True)):
+        raise UserExists
+    elif any(perform_query(SqlQueries.CHECK_EMAIL_USED.value, args=(email,), fetch=True)):
+        raise EmailAlreadyUsed
+
     try:
         perform_query(SqlQueries.CREATE_USER.value, args=(username, email, psswrd), commit=True)
-        return True
     except psycopg2.IntegrityError:
-        return False
+        raise IntegrityError
 
 
 def change_password(username, old_password, new_password):
@@ -162,3 +181,13 @@ def list_all_sessions(username):
 
 def delete_session(username, session_name):
     return perform_query(SqlQueries.DELETE_SESSION.value, args=(username, session_name), commit=True)
+
+
+def share_session(owner, session_name, share_with_username):
+    if not any(perform_query(SqlQueries.CHECK_USER_EXISTS.value, args=(share_with_username,), fetch=True)):
+        raise UserDoesntExist
+    return perform_query(SqlQueries.SHARE_SESSION.value, args=(share_with_username, owner, session_name), commit=True)
+
+
+def stop_sharing_session(owner, session_name, stop_sharing_with):
+    return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, owner, session_name), commit=True)

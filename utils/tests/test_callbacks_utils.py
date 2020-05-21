@@ -20,9 +20,9 @@ class CallbacksTestCase(unittest.TestCase):
         self.assertListEqual(expected_output, callback_utils.remove_unused_fname_alerts(test_input))
 
     def test_3(self):
-        test_input = {'prop_id': '{"index":"[\\"dummy_fname\\", \\"dummy_dataset\\"]","type":"filename-alert"}.is_open',
+        test_input = {'prop_id': '{"index":"[\\"dummy_fname\\", \\"sequence\\"]","type":"filename-alert"}.is_open',
                       'value': True}
-        expected_output = ('dummy_fname', 'dummy_dataset', True)
+        expected_output = ('dummy_fname', 'sequence', True)
 
         self.assertTupleEqual(expected_output, callback_utils.get_remove_trigger(test_input))
 
@@ -35,9 +35,9 @@ class CallbacksTestCase(unittest.TestCase):
         self.assertFalse(callback_utils.ensure_triggered(test_input))
 
     def test_5(self):
-        test_trigger = {'prop_id': '{"index":"dummy_dataset","type":"upload-button"}.filename', 'value': 'dummy_fname'}
-        test_fnames = ['dummy', 'dummy_fname', None]
-        test_fcontents = ['dummy', 'dummy_fcontents', None]
-        expected_output = ('dummy_dataset', 'dummy_fname', 'dummy_fcontents', 1)
+        test_trigger = {'prop_id': '{"index":"contact","type":"upload-button"}.filename', 'value': 'dummy_fname'}
+        test_fnames = ['dummy', 'dummy_fname']
+        test_fcontents = [None, 'dummy_fcontents']
+        expected_output = ('contact', 'dummy_fname', 'dummy_fcontents', 1)
 
         self.assertTupleEqual(expected_output, callback_utils.get_upload_id(test_trigger, test_fnames, test_fcontents))

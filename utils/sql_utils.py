@@ -81,6 +81,9 @@ class SqlQueries(Enum):
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
                SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
 
+    GET_SHARED_SESSIONS = """SELECT * FROM {} WHERE %s = ANY({})
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value)
+
 
 def initiate_connection():
     connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
@@ -191,3 +194,7 @@ def share_session(owner, session_name, share_with_username):
 
 def stop_sharing_session(owner, session_name, stop_sharing_with):
     return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, owner, session_name), commit=True)
+
+
+def check_shared_sessions(username):
+    return perform_query(SqlQueries.GET_SHARED_SESSIONS.value, args=(username,), fetch=True)

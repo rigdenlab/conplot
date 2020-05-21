@@ -36,6 +36,21 @@ def EvfoldParser(*args, **kwargs):
 
     return EvfoldParser(*args, **kwargs)
 
+def FreecontactParser(*args, **kwargs):
+    from parsers.freecontactparser import FreecontactParser
+
+    return FreecontactParser(*args, **kwargs)
+
+def ComsatParser(*args, **kwargs):
+    from parsers.comsatparser import ComsatParser
+
+    return ComsatParser(*args, **kwargs)
+
+def PlmdcaParser(*args, **kwargs):
+    from parsers.plmdcaparser import PlmdcaParser
+
+    return PlmdcaParser(*args, **kwargs)
+
 
 def CCMpredParser(*args, **kwargs):
     from parsers.ccmpredparser import CCMpredParser
@@ -63,6 +78,10 @@ class ParserFormats(Enum):
     CASPRR = PsicovParser
     GREMLIN = PsicovParser
     COLSTATS = CCMpredParser
+    FREECONTACT = FreecontactParser
+    EPCMAP = PsicovParser
+    COMSAT = ComsatParser
+    PLMDCA = PlmdcaParser
 
 
 class ContactFormats(Enum):
@@ -74,6 +93,10 @@ class ContactFormats(Enum):
     CASPRR = PsicovParser
     GREMLIN = PsicovParser
     COLSTATS = CCMpredParser
+    FREECONTACT = FreecontactParser
+    EPCMAP = PsicovParser
+    COMSAT = ComsatParser
+    PLMDCA = PlmdcaParser
 
 
 

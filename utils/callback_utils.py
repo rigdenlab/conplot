@@ -1,6 +1,8 @@
 from enum import Enum
 import json
-from components import EmailIssueReference, ContactForgotPsswrdAlert, ContactBugAlert
+import components
+from components import EmailIssueReference
+from utils import slack_utils
 
 
 class DatasetIndex(Enum):
@@ -55,13 +57,24 @@ def ensure_triggered(trigger):
 
 def toggle_alert(value):
     if value == EmailIssueReference.BUG.value:
-        return ContactBugAlert()
+        return components.ContactBugAlert(), False
     elif value == EmailIssueReference.FORGOT_PSSWRD.value:
-        return ContactForgotPsswrdAlert()
+        return components.ContactForgotPsswrdAlert(), False
+    elif value == EmailIssueReference.OTHER.value:
+        return None, False
     else:
-        return None
+        return None, True
 
 
 def get_session_action(trigger):
     prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
     return prop_id['index'], prop_id['type'].split('-')[0]
+
+
+def submit_form(name, email, subject, description, logger):
+    if not name or not email or not description or not subject:
+        return components.InvalidContactFormModal()
+    elif slack_utils.send_slack_message(name, email, subject, description, logger):
+        return components.SuccessContactFormModal()
+    else:
+        return components.SlackConnectionErrorModal()

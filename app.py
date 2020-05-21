@@ -1,5 +1,6 @@
 import components
 import dash
+from utils.exceptions import UserExists, EmailAlreadyUsed, IntegrityError
 import layouts
 import loaders
 import logging
@@ -60,10 +61,30 @@ app.layout = serve_layout
 # Define callbacks for the app
 # ==============================================================
 
-@app.callback(Output('contact-alert-div', 'children'),
+@app.callback([Output('contact-alert-div', 'children'),
+               Output('submit-contact-form-button', 'disabled')],
               [Input('issue-select', 'value')])
 def toggle_alert(*args):
     return callback_utils.toggle_alert(*args)
+
+
+@app.callback(Output('contact-form-modal-div', 'children'),
+              [Input('submit-contact-form-button', 'n_clicks')],
+              [State('contact-name-input', 'value'),
+               State('contact-email-input', 'value'),
+               State('issue-select', 'value'),
+               State('contact-text-area-input', 'value'),
+               State('session-id', 'children')])
+def submit_contact_form(n_clicks, name, email, subject, description, session_id):
+    trigger = dash.callback_context.triggered[0]
+    cache = redis.Redis(connection_pool=redis_pool)
+
+    if session_utils.is_expired_session(session_id, cache, app.logger):
+        return components.SessionTimedOutModal()
+    elif not callback_utils.ensure_triggered(trigger):
+        return no_update
+
+    return callback_utils.submit_form(name, email, subject, description, app.logger)
 
 
 @app.callback([Output('track-selection-card', "color"),
@@ -106,7 +127,7 @@ def user_login(n_clicks, username, password, session_id):
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update, no_update
+        return no_update, components.SessionTimedOutToast()
     elif not callback_utils.ensure_triggered(trigger):
         return no_update, no_update
 
@@ -121,7 +142,7 @@ def user_logout(n_clicks, session_id):
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update
+        return components.SessionTimedOutToast()
     elif not callback_utils.ensure_triggered(trigger):
         return no_update
 
@@ -140,11 +161,15 @@ def create_user(n_clicks, username, password, email, session_id):
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update, no_update
+        return no_update, components.SessionTimedOutToast()
     elif not callback_utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    return app_utils.create_user(username, password, email, session_id, cache, app.logger)
+    try:
+        app_utils.create_user(username, password, email, session_id, cache, app.logger)
+        return False
+    except (UserExists, EmailAlreadyUsed, IntegrityError) as e:
+        return True
 
 
 @app.callback(Output('success-change-password-alert-div', 'children'),
@@ -157,7 +182,7 @@ def change_password(n_clicks, old_password, new_password, session_id):
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update
+        return components.SessionTimedOutToast()
     elif not callback_utils.ensure_triggered(trigger):
         return no_update
 

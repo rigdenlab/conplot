@@ -13,6 +13,24 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def SuccessContactFormModal(*args, **kwargs):
+    from components.modals import SuccessContactFormModal
+
+    return SuccessContactFormModal(*args, **kwargs)
+
+
+def InvalidContactFormModal(*args, **kwargs):
+    from components.modals import InvalidContactFormModal
+
+    return InvalidContactFormModal(*args, **kwargs)
+
+
+def SlackConnectionErrorModal(*args, **kwargs):
+    from components.modals import SlackConnectionErrorModal
+
+    return SlackConnectionErrorModal(*args, **kwargs)
+
+
 def MissingInputModal(*args, **kwargs):
     from components.modals import MissingInputModal
 

@@ -91,7 +91,8 @@ def InvalidFormatModal():
 def SessionStoreModal(session_name):
     if session_name is not None:
         return dbc.Modal([
-            dbc.ModalHeader(html.H4('Session stored successfully', className="alert-heading", style={'color': 'green'})),
+            dbc.ModalHeader(
+                html.H4('Session stored successfully', className="alert-heading", style={'color': 'green'})),
             dbc.ModalBody(
                 html.P("""You have successfully stored the currently uploaded data as new session with the name %s
                 """ % session_name, style={'text-align': "justify"})
@@ -105,3 +106,33 @@ def SessionStoreModal(session_name):
                 html.P("You must provide a name for the session before saving it!", style={'text-align': "justify"})
             ),
         ], id='invalid-input-modal', is_open=True)
+
+
+def InvalidContactFormModal():
+    return dbc.Modal([
+        ModalHeader(html.H4("Missing input", className="alert-heading", style={'color': 'red'})),
+        dbc.ModalBody(
+            html.P("""You must fill in all fields before submiting your contact form!""",
+                   style={'text-align': "justify"})
+        ),
+    ], id='invalid-contact-form-modal', is_open=True)
+
+
+def SuccessContactFormModal():
+    return dbc.Modal([
+        ModalHeader(html.H4("Success", className="alert-heading", style={'color': 'green'})),
+        dbc.ModalBody(
+            html.P("""You have successfully submitted the contact form. We will get in touch with the provided email 
+            as soon as we can.""", style={'text-align': "justify"})
+        ),
+    ], id='success-contact-form-modal', is_open=True)
+
+
+def SlackConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader(html.H4('Connnection Error', className="alert-heading", style={'color': 'red'})),
+        dbc.ModalBody(
+            html.P("""Something went wrong while submitting your contact form. This is most likely a problem on our 
+            side, we are working to solve this.""", style={'text-align': "justify"})
+        ),
+    ], id='slack-contaction-error-modal', is_open=True)

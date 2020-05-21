@@ -57,24 +57,24 @@ def TrackLayoutSelector(idx, options, value):
     )
 
 
-def EmailInput():
+def EmailInput(id='email-input'):
     return dbc.InputGroup([
         dbc.InputGroupAddon("Email", addon_type="prepend"),
-        dbc.Input(placeholder="example@email.com", type="email", id='email-input', minLength=1, maxLength=65)
+        dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65)
     ], className="mb-3")
 
 
 def NameInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Name", addon_type="prepend"),
-        dbc.Input(placeholder="First Name", type="text")
+        dbc.Input(placeholder="First Name", type="text", id='contact-name-input')
     ], className="mb-3")
 
 
 def ProblemDescriptionInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Description", addon_type="prepend"),
-        dbc.Textarea()
+        dbc.Textarea(id='contact-text-area-input')
     ], className="mb-3")
 
 

@@ -1,5 +1,11 @@
+from enum import Enum
 import json
 from components import EmailIssueReference, ContactForgotPsswrdAlert, ContactBugAlert
+
+
+class DatasetIndex(Enum):
+    sequence = 0
+    contact = 1
 
 
 def toggle_selection_alert(format_selection):
@@ -32,7 +38,7 @@ def get_upload_id(trigger, fnames, fcontents):
     fname = trigger['value']
     prop_id = json.loads(trigger['prop_id'].replace('.filename', ''))
     dataset = prop_id['index']
-    index = fnames.index(fname)
+    index = DatasetIndex.__getattr__(dataset).value
     fcontent = fcontents[index]
 
     return dataset, fname, fcontent, index

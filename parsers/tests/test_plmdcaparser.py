@@ -6,7 +6,7 @@ from utils.exceptions import InvalidFormat
 class PlmdcaParserTestCase(unittest.TestCase):
 
     def test_1(self):
-        dummy_prediction = """112,145,0.99560225 
+        dummy_prediction = """112,145,0.99560225
 38,49,0.99520814
 24,56,0.995158
 109,145,0.99344337
@@ -16,6 +16,8 @@ class PlmdcaParserTestCase(unittest.TestCase):
 34,53,0.98918885
 75,81,0.9883262
 57,146,0.98828995"""
+
+
 
         expected_res1 = [112, 38, 24, 109, 109, 64, 128, 34, 75, 57]
         expected_res2 = [145, 49, 56, 145, 141, 125, 138, 53, 81, 146]

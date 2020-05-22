@@ -11,7 +11,7 @@ def PlmdcaParser(input):
         line = line.lstrip().split(' ')
 
         if not line or line[0].isalpha():
-            continue
+            raise InvalidFormat('Unable to parse contacts')
         elif line[0].isdigit() and line[1].isdigit():
             if abs(int(line[0]) - int(line[1])) >= 5:
                 output.append((int(line[0]), int(line[1]), float(line[2])))

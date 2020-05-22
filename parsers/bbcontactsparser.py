@@ -8,7 +8,7 @@ def BbcontactsParser(input):
 
     for line in contents:
         line = line.lstrip().split()
-        if not line or line[1].isalpha():
+        if not line or type(line[0]) != int:
             continue
         elif line[6].isdigit() and line[7].isdigit() and len(line) >= 5:
             if abs(int(line[6]) - int(line[7])) >= 5:

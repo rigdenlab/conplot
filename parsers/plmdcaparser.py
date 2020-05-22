@@ -7,7 +7,10 @@ def PlmdcaParser(input):
     output = []
 
     for line in contents:
-        line = line.lstrip().split(',')
+        try:
+            line = line.lstrip().split(',')
+        except:
+            line = line.lstrip().split(' ')
         if not line or line[0].isalpha():
             continue
         elif line[0].isdigit() and line[1].isdigit():

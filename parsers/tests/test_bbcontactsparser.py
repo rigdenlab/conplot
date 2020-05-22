@@ -20,7 +20,7 @@ class BbcontactsParserTestCase(unittest.TestCase):
         expected_score = [0, 0, 0, 0, 0, 0]
 
         output = BbcontactsParser(dummy_prediction)
-        print([contact[1] for contact in output])
+
         self.assertEquals(6, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])

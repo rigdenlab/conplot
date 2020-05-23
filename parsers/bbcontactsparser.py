@@ -8,14 +8,11 @@ def BbcontactsParser(input):
 
     for line in contents:
         line = line.lstrip().split()
-        if not line or line[0].isalpha():
+        if not line or len(line) != 8:
             continue
-        try:
-            if line[6].isdigit() and line[7].isdigit() and len(line) >= 5:
-                if abs(int(line[6]) - int(line[7])) >= 5:
-                    output.append((int(line[6]), int(line[7]), (0)))
-        except IndexError:
-            raise InvalidFormat('Unable to parse contacts')
+        elif line[6].isdigit() and line[7].isdigit() and len(line) == 8:
+            if abs(int(line[6]) - int(line[7])) >= 5:
+                output.append((int(line[6]), int(line[7]), (0)))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')

@@ -10,6 +10,7 @@ def PlmdcaParser(input):
         line = line.replace(",", " ")
         line = line.lstrip().split(' ')
 
+
         if not line or line[0].isalpha():
             raise InvalidFormat('Unable to parse contacts')
 

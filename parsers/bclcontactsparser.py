@@ -10,7 +10,7 @@ def BclcontactsParser(input):
         line = line.lstrip().split()
         if not line or line[0].isalpha():
             continue
-        elif line[0].isdigit() and line[2].isdigit() and len(line) >= 5:
+        elif line[0].isdigit() and line[2].isdigit() and len(line) >= 9:
             if abs(int(line[0]) - int(line[2])) >= 5:
                 output.append((int(line[0]), int(line[2]), float(line[9])))
 

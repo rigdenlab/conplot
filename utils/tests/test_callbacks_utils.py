@@ -7,8 +7,8 @@ class CallbacksTestCase(unittest.TestCase):
     def test_1(self):
         self.assertTupleEqual(('danger', True), callback_utils.toggle_selection_alert(None))
         self.assertTupleEqual((None, False), callback_utils.toggle_selection_alert('DUMMY'))
-        self.assertTrue(callback_utils.toggle_alert('1'))
-        self.assertFalse(callback_utils.toggle_alert(None))
+        self.assertTupleEqual((None, False), callback_utils.toggle_alert('3'))
+        self.assertTupleEqual((None, True), callback_utils.toggle_alert(None))
 
     def test_2(self):
         test_input = [{'props': {'is_open': True}, 'dummy_1': {'dummy_1': 'dummy_1'}},

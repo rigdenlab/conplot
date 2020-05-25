@@ -58,6 +58,17 @@ def CCMpredParser(*args, **kwargs):
     return CCMpredParser(*args, **kwargs)
 
 
+def BbcontactsParser(*args, **kwargs):
+    from parsers.bbcontactsparser import BbcontactsParser
+
+    return BbcontactsParser(*args, **kwargs)
+
+def BclcontactsParser(*args, **kwargs):
+    from parsers.bclcontactsparser import BclcontactsParser
+
+    return BclcontactsParser(*args, **kwargs)
+
+
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
 
@@ -82,6 +93,9 @@ class ParserFormats(Enum):
     EPCMAP = PsicovParser
     COMSAT = ComsatParser
     PLMDCA = PlmdcaParser
+    PCONS = PlmdcaParser
+    BBCONTACTS = BbcontactsParser
+    BCLCONTCATS = BclcontactsParser
 
 
 class ContactFormats(Enum):
@@ -97,6 +111,9 @@ class ContactFormats(Enum):
     EPCMAP = PsicovParser
     COMSAT = ComsatParser
     PLMDCA = PlmdcaParser
+    PCONS = PlmdcaParser
+    BBCONTACTS = BbcontactsParser
+    BCLCONTCATS = BclcontactsParser
 
 
 

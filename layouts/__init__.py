@@ -42,6 +42,18 @@ def UsersPortal(*args, **kwargs):
     return UsersPortal(*args, **kwargs)
 
 
+def Base(*args, **kwargs):
+    from layouts.base import Base
+
+    return Base(*args, **kwargs)
+
+
+def ShareSession(*args, **kwargs):
+    from layouts.sharesession import ShareSession
+
+    return ShareSession(*args, **kwargs)
+
+
 def UserStorage(*args, **kwargs):
     from layouts.userstorage import UserStorage
 

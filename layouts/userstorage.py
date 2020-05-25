@@ -12,6 +12,7 @@ def Body(username=None, current_session_pkid=None):
         ])
     else:
         return html.Div([
+            html.Div(id='session-storage-toast-div'),
             html.Br(),
             html.Br(),
             html.Br(),

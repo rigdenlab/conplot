@@ -1,9 +1,13 @@
 import os
+from collections import namedtuple
+from components import SessionListType
 from enum import Enum
 import datetime
 import psycopg2
 from loaders import DatasetReference
 from utils.exceptions import SQLInjectionAlert, UserExists, EmailAlreadyUsed, IntegrityError, UserDoesntExist
+
+SessionData = namedtuple('SessionData', ['pkid', 'name', 'owner', 'date'])
 
 
 class TableNames(Enum):
@@ -60,27 +64,26 @@ class SqlQueries(Enum):
            ",".join([SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value] +
                     [dataset.value for dataset in DatasetReference]))
 
-    RETRIEVE_SESSION = """SELECT * FROM {} WHERE {} = %s AND {} = %s
-    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+    RETRIEVE_SESSION = """SELECT * FROM {} WHERE {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SESSION_PKID.value)
 
-    UPDATE_SESSION_DATE = """UPDATE {} SET {} = %s WHERE {} = %s AND {} = %s
-    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.LAST_ACCESS.value, SqlFieldNames.OWNER.value,
-               SqlFieldNames.SESSION_NAME.value)
+    UPDATE_SESSION_DATE = """UPDATE {} SET {} = %s WHERE {} = %s 
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.LAST_ACCESS.value, SqlFieldNames.SESSION_PKID.value)
 
-    LIST_SESSIONS = """SELECT {}, {}, {} FROM {} WHERE {} = %s
-    """.format(SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value, SqlFieldNames.SESSION_PKID.value,
-               TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value)
+    LIST_SESSIONS = """SELECT {}, {}, {}, {} FROM {} WHERE {} = %s
+    """.format(SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value,
+               SqlFieldNames.SESSION_PKID.value, TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value)
 
-    DELETE_SESSION = """DELETE FROM {} WHERE {} = %s AND {} = %s
-    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+    DELETE_SESSION = """DELETE FROM {} WHERE {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SESSION_PKID.value)
 
-    SHARE_SESSION = """UPDATE {} SET {} = array_append({}, %s) WHERE {} = %s AND {} = %s
+    SHARE_SESSION = """UPDATE {} SET {} = array_append({}, %s) WHERE {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
-               SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+               SqlFieldNames.SESSION_PKID.value)
 
-    STOP_SHARE = """UPDATE {} SET {} = array_remove({}, %s) WHERE {} = %s AND {} = %s
+    STOP_SHARE = """UPDATE {} SET {} = array_remove({}, %s) WHERE {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SHARED.value, SqlFieldNames.SHARED.value,
-               SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
+               SqlFieldNames.SESSION_PKID.value)
 
     GET_SHARED_SESSIONS = """SELECT {}, {}, {}, {} FROM {} WHERE %s = ANY({})
     """.format(SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value, SqlFieldNames.CREATED_DATE.value,
@@ -90,6 +93,10 @@ class SqlQueries(Enum):
     """.format(SqlFieldNames.SESSION_PKID.value, TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value,
                SqlFieldNames.SESSION_NAME.value)
 
+    CHECK_SESSION_OWNER = """SELECT {}, {} FROM {} WHERE {} = %s
+    """.format(SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value, TableNames.SESSION_DATA.value,
+               SqlFieldNames.SESSION_PKID.value)
+
 
 def initiate_connection():
     connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
@@ -97,7 +104,7 @@ def initiate_connection():
     return connection, cursor
 
 
-def perform_query(query, args, fetch=False, commit=False):
+def perform_query(query, args, fetch=False, commit=False, top=False):
     if ';' in query or ';' in args:
         raise SQLInjectionAlert('SQL injection detected with query %s and values %s' % (query, args))
 
@@ -105,7 +112,9 @@ def perform_query(query, args, fetch=False, commit=False):
     connection, cursor = initiate_connection()
     cursor.execute(query, args)
 
-    if fetch:
+    if fetch and top:
+        result = cursor.fetchone()
+    elif fetch:
         result = cursor.fetchall()
 
     if commit:
@@ -167,46 +176,56 @@ def store_session(username, session_name, session):
         query = SqlQueries.INSERT_SESSION.value.format(value_placeholders)
         perform_query(query, args=values, commit=True)
 
-    session_pkid = perform_query(SqlQueries.GET_SESSION_PKID.value, args=(username, session_name), fetch=True)
+    session_pkid = perform_query(SqlQueries.GET_SESSION_PKID.value, args=(username, session_name), fetch=True, top=True)
 
-    return session_pkid[0][0]
+    return session_pkid[0]
 
 
-def retrieve_session(username, session_name):
+def retrieve_session(session_pkid):
     session = None
-    session_pkid = None
-    session_data = perform_query(SqlQueries.RETRIEVE_SESSION.value, args=(username, session_name), fetch=True)
+    username = None
+    session_name = None
+    session_data = perform_query(SqlQueries.RETRIEVE_SESSION.value, args=(session_pkid,), fetch=True)
 
     if session_data:
         session_data = session_data[0]
         now = datetime.datetime.now().strftime("%Y-%m-%d")
-        perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, username, session_name), fetch=False)
+        perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, session_pkid), commit=False)
+        session_name = session_data[1]
+        username = session_data[0]
         session = {}
-        session_pkid = session_data[-1]
         for idx, dataset in enumerate(DatasetReference, 2):
             if session_data[idx] is not None:
                 session[dataset.value] = session_data[idx]
 
-    return session_pkid, session
+    return username, session_name, session
 
 
-def list_all_sessions(username):
-    return perform_query(SqlQueries.LIST_SESSIONS.value, args=(username,), fetch=True)
+def list_sessions(username, list_type):
+    if list_type == SessionListType.SHARED:
+        all_sessions = perform_query(SqlQueries.GET_SHARED_SESSIONS.value, args=(username,), fetch=True)
+    else:
+        all_sessions = perform_query(SqlQueries.LIST_SESSIONS.value, args=(username,), fetch=True)
+
+    result = []
+    for session in all_sessions:
+        result.append(SessionData(owner=session[0], name=session[1], date=session[2], pkid=session[3]))
+
+    return result
 
 
-def delete_session(username, session_name):
-    return perform_query(SqlQueries.DELETE_SESSION.value, args=(username, session_name), commit=True)
+def delete_session(session_pkid):
+    username, session_name = perform_query(SqlQueries.CHECK_SESSION_OWNER.value, args=(session_pkid,), fetch=True,
+                                           top=True)
+    perform_query(SqlQueries.DELETE_SESSION.value, args=(session_pkid,), commit=True)
+    return username, session_name
 
 
-def share_session(owner, session_name, share_with_username):
+def share_session(session_pkid, share_with_username):
     if not any(perform_query(SqlQueries.CHECK_USER_EXISTS.value, args=(share_with_username,), fetch=True)):
         raise UserDoesntExist
-    return perform_query(SqlQueries.SHARE_SESSION.value, args=(share_with_username, owner, session_name), commit=True)
+    return perform_query(SqlQueries.SHARE_SESSION.value, args=(share_with_username, session_pkid), commit=True)
 
 
-def stop_sharing_session(owner, session_name, stop_sharing_with):
-    return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, owner, session_name), commit=True)
-
-
-def get_shared_sessions(username):
-    return perform_query(SqlQueries.GET_SHARED_SESSIONS.value, args=(username,), fetch=True)
+def stop_sharing_session(session_pkid, stop_sharing_with):
+    return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, session_pkid), commit=True)

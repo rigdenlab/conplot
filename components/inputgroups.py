@@ -97,11 +97,11 @@ def StoreSessionNameInput():
     ], className="mb-3")
 
 
-def UserNameInput():
+def UserNameInput(id='username-input', classname="mb-3"):
     return dbc.InputGroup([
         dbc.InputGroupAddon("Username", addon_type="prepend"),
-        dbc.Input(type="text", id='username-input', placeholder='User', minLength=1, maxLength=25)
-    ], className="mb-3")
+        dbc.Input(type="text", id=id, placeholder='User', minLength=1, maxLength=25)
+    ], className=classname)
 
 
 def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
@@ -109,3 +109,10 @@ def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
         dbc.InputGroupAddon(addon, addon_type="prepend"),
         dbc.Input(type="password", id=id, placeholder=placeholder)
     ], className="mb-3")
+
+
+def ShareWithInput(id):
+    return dbc.InputGroup([
+        dbc.Input(type="text", id=id, placeholder='Share with...', minLength=1, maxLength=25)
+    ])
+

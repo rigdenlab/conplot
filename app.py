@@ -5,12 +5,10 @@ import layouts
 import loaders
 import logging
 import redis
-from utils import callback_utils, data_utils, session_utils, cache_utils, app_utils, redis_utils, plot_utils, UrlIndex
+from utils import callback_utils, data_utils, session_utils, app_utils, redis_utils, plot_utils, UrlIndex
 from dash.dash import no_update
-import dash_core_components as dcc
-import dash_html_components as html
 import dash_bootstrap_components as dbc
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output, State, ALL, MATCH
 
 
 # ==============================================================
@@ -21,26 +19,7 @@ from dash.dependencies import Input, Output, State, ALL
 def serve_layout():
     cache = redis.Redis(connection_pool=redis_pool)
     session_id = session_utils.initiate_session(cache, app.logger)
-
-    return html.Div([
-        html.Div(session_id, id='session-id', style={'display': 'none'}),
-        dcc.Location(id='url', refresh=False),
-        html.Div(id='page-content'),
-    ])
-
-
-def update_fname_alerts(session_id, enumerator, cache):
-    fname_alerts = []
-    for idx, dataset in enumerate(enumerator):
-        if cache.hexists(session_id, dataset.value):
-            fname = cache_utils.decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
-            fname_alerts.append(components.FilenameAlert(fname, dataset.value))
-    if enumerator == loaders.MandatoryDatasetReference:
-        return fname_alerts + [no_update for x in range(0, 2 - len(fname_alerts))]
-    elif not fname_alerts:
-        return no_update
-
-    return fname_alerts
+    return layouts.Base(session_id)
 
 
 # ==============================================================
@@ -52,7 +31,6 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, UrlIndex.FONT_AW
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
-
 redis_pool = redis_utils.create_pool()
 app.layout = serve_layout
 
@@ -189,27 +167,57 @@ def change_password(n_clicks, old_password, new_password, session_id):
     return app_utils.change_password(new_password, old_password, cache, session_id, app.logger)
 
 
-@app.callback([Output('stored-sessions-toast-div', 'children'),
-               Output('stored-sessions-list-spinner', 'children')],
+@app.callback(Output({'type': 'share-session-toast-div', 'index': MATCH}, 'children'),
+              [Input({'type': 'share-session-button', 'index': MATCH}, 'n_clicks')],
+              [State({'type': 'share-username-input', 'index': MATCH}, 'value'),
+               State({'type': 'share-username-input', 'index': MATCH}, 'id'),
+               State('session-id', 'children')])
+def share_session(share_click, share_with, session_pkid, session_id):
+    trigger = dash.callback_context.triggered[0]
+    cache = redis.Redis(connection_pool=redis_pool)
+    session_pkid = session_pkid['index']
+
+    if session_utils.is_expired_session(session_id, cache, app.logger):
+        return components.SessionTimedOutToast()
+    elif not callback_utils.ensure_triggered(trigger):
+        return no_update
+
+    username, current_session_pkid = session_utils.get_current_info(session_id, cache)
+    if not share_with:
+        return components.InvalidUsernameToast()
+    elif username == share_with:
+        return components.ShareWithOwnerToast()
+
+    return session_utils.share_session(session_pkid, share_with, app.logger)
+
+
+@app.callback([Output('session-storage-toast-div', 'children'),
+               Output('stored-sessions-list-spinner', 'children'),
+               Output('shared-sessions-list-spinner', 'children')],
               [Input({'type': 'delete-session-button', 'index': ALL}, 'n_clicks'),
-               Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks')],
+               Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks'),
+               Input({'type': 'stop-share-session-button', 'index': ALL}, 'n_clicks'),
+               Input({'type': 'load-share-session-button', 'index': ALL}, 'n_clicks')],
               [State('session-id', 'children')])
-def manage_stored_sessions(delete_clicks, load_click, session_id):
+def manage_stored_sessions(delete_clicks, load_click, stop_share, load_share, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return components.SessionTimedOutToast(), no_update
+        return components.SessionTimedOutToast(), no_update, no_update
     elif not callback_utils.ensure_triggered(trigger):
-        return no_update, no_update
+        return no_update, no_update, no_update
 
-    session_name, action = callback_utils.get_session_action(trigger)
+    selected_session_pkid, action = callback_utils.get_session_action(trigger)
     username, current_session_pkid = session_utils.get_current_info(session_id, cache)
 
-    if action == 'delete':
-        return session_utils.delete_session(username, session_name, current_session_pkid, session_id, app.logger)
-    else:
-        return session_utils.load_session(username, session_name, session_id, cache, app.logger)
+    if action == callback_utils.ButtonActions.delete:
+        return session_utils.delete_session(selected_session_pkid, current_session_pkid, session_id, app.logger)
+    elif action == callback_utils.ButtonActions.load:
+        return session_utils.load_session(username, selected_session_pkid, session_id, cache, app.logger)
+    elif action == callback_utils.ButtonActions.stop:
+        return session_utils.stop_share_session(username, selected_session_pkid, current_session_pkid,
+                                                session_id, app.logger)
 
 
 @app.callback(Output('store-session-modal-div', 'children'),
@@ -243,7 +251,8 @@ def upload_dataset(fnames, fcontents, input_format, session_id):
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return [no_update for x in range(0, len(fcontents))], cleared_fcontents, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
-        return update_fname_alerts(session_id, loaders.MandatoryDatasetReference, cache), cleared_fcontents, None
+        return callback_utils.update_fname_alerts(session_id, loaders.MandatoryDatasetReference, cache), \
+               cleared_fcontents, None
 
     return data_utils.upload_dataset(input_format, trigger, fnames, fcontents, session_id, cache, app.logger)
 
@@ -262,7 +271,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutModal(), no_update
     elif not callback_utils.ensure_triggered(trigger):
-        return None, update_fname_alerts(session_id, loaders.AdditionalDatasetReference, cache)
+        return None, callback_utils.update_fname_alerts(session_id, loaders.AdditionalDatasetReference, cache)
 
     return data_utils.upload_additional_track(fcontent, input_format, fname, fname_alerts, session_id, cache,
                                               app.logger)

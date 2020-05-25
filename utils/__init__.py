@@ -10,10 +10,11 @@ class UrlIndex(Enum):
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')
     RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
     HELP = urllib.parse.urljoin(ROOT, 'help')
-    USERS_PORTAL = urllib.parse.urljoin(ROOT, 'user-portal')
-    CREATE_USER = urllib.parse.urljoin(ROOT, 'user-create')
-    USER_STORAGE = urllib.parse.urljoin(ROOT, 'user-storage')
-    CHANGE_PASSWORD = urllib.parse.urljoin(ROOT, 'user-change-password')
+    USERS_PORTAL = urllib.parse.urljoin(ROOT, 'users-area')
+    CREATE_USER = urllib.parse.urljoin(USERS_PORTAL, 'new-user')
+    USER_STORAGE = urllib.parse.urljoin(USERS_PORTAL, 'storage')
+    SHARE_SESSIONS = urllib.parse.urljoin(USERS_PORTAL, 'share')
+    CHANGE_PASSWORD = urllib.parse.urljoin(USERS_PORTAL, 'change-password')
     SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'

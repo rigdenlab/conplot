@@ -66,6 +66,8 @@ def serve_url(url, session_id, cache, logger):
         return layouts.CreateUser(username)
     elif url == UrlIndex.CHANGE_PASSWORD.value:
         return layouts.ChangeUserPassword(username)
+    elif url == UrlIndex.SHARE_SESSIONS.value:
+        return layouts.ShareSession(username)
     elif url == UrlIndex.USER_STORAGE.value:
         if cache.hexists(session_id, 'session_pkid'):
             session_pkid = int(cache.hget(session_id, 'session_pkid'))

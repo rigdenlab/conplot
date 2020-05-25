@@ -1,13 +1,23 @@
 from enum import Enum
 import json
 import components
+from dash import no_update
 from components import EmailIssueReference
-from utils import slack_utils
+from loaders import MandatoryDatasetReference
+from utils import slack_utils, decompress_data
 
 
 class DatasetIndex(Enum):
     sequence = 0
     contact = 1
+
+
+class ButtonActions(Enum):
+    delete = 1
+    load = 2
+    share = 3
+    stop = 4
+
 
 
 def toggle_selection_alert(format_selection):
@@ -68,7 +78,8 @@ def toggle_alert(value):
 
 def get_session_action(trigger):
     prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
-    return prop_id['index'], prop_id['type'].split('-')[0]
+    action = ButtonActions.__getattr__(prop_id['type'].split('-')[0])
+    return prop_id['index'], action
 
 
 def submit_form(name, email, subject, description, logger):
@@ -78,3 +89,17 @@ def submit_form(name, email, subject, description, logger):
         return components.SuccessContactFormModal()
     else:
         return components.SlackConnectionErrorModal()
+
+
+def update_fname_alerts(session_id, enumerator, cache):
+    fname_alerts = []
+    for idx, dataset in enumerate(enumerator):
+        if cache.hexists(session_id, dataset.value):
+            fname = decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
+            fname_alerts.append(components.FilenameAlert(fname, dataset.value))
+    if enumerator == MandatoryDatasetReference:
+        return fname_alerts + [no_update for x in range(0, 2 - len(fname_alerts))]
+    elif not fname_alerts:
+        return no_update
+
+    return fname_alerts

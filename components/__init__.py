@@ -7,10 +7,34 @@ class EmailIssueReference(Enum):
     OTHER = '3'
 
 
+class SessionListType(Enum):
+    STORED = 1
+    SHARED = 2
+    TO_SHARE = 3
+
+
 def SessionStoreModal(*args, **kwargs):
     from components.modals import SessionStoreModal
 
     return SessionStoreModal(*args, **kwargs)
+
+
+def SuccessContactFormModal(*args, **kwargs):
+    from components.modals import SuccessContactFormModal
+
+    return SuccessContactFormModal(*args, **kwargs)
+
+
+def InvalidContactFormModal(*args, **kwargs):
+    from components.modals import InvalidContactFormModal
+
+    return InvalidContactFormModal(*args, **kwargs)
+
+
+def SlackConnectionErrorModal(*args, **kwargs):
+    from components.modals import SlackConnectionErrorModal
+
+    return SlackConnectionErrorModal(*args, **kwargs)
 
 
 def MissingInputModal(*args, **kwargs):
@@ -55,16 +79,52 @@ def SuccesfulLoginToast(*args, **kwargs):
     return SuccesfulLoginToast(*args, **kwargs)
 
 
+def InvalidUsernameToast(*args, **kwargs):
+    from components.toasts import InvalidUsernameToast
+
+    return InvalidUsernameToast(*args, **kwargs)
+
+
+def SessionAlreadyShared(*args, **kwargs):
+    from components.toasts import SessionAlreadyShared
+
+    return SessionAlreadyShared(*args, **kwargs)
+
+
+def ShareWithOwnerToast(*args, **kwargs):
+    from components.toasts import ShareWithOwnerToast
+
+    return ShareWithOwnerToast(*args, **kwargs)
+
+
+def FailedSessionShareToast(*args, **kwargs):
+    from components.toasts import FailedSessionShareToast
+
+    return FailedSessionShareToast(*args, **kwargs)
+
+
 def SuccesfulLogoutToast(*args, **kwargs):
     from components.toasts import SuccesfulLogoutToast
 
     return SuccesfulLogoutToast(*args, **kwargs)
 
 
-def StoredSessionsList(*args, **kwargs):
-    from components.listgrpoups import StoredSessionsList
+def SuccesfulSessionShareToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionShareToast
 
-    return StoredSessionsList(*args, **kwargs)
+    return SuccesfulSessionShareToast(*args, **kwargs)
+
+
+def SuccesfulSessionStopShareToast(*args, **kwargs):
+    from components.toasts import SuccesfulSessionStopShareToast
+
+    return SuccesfulSessionStopShareToast(*args, **kwargs)
+
+
+def SessionList(*args, **kwargs):
+    from components.listgrpoups import SessionList
+
+    return SessionList(*args, **kwargs)
 
 
 def SessionTimedOutToast(*args, **kwargs):
@@ -113,6 +173,18 @@ def AdditionalTracksUploadCard(*args, **kwargs):
     from components.cards import AdditionalTracksUploadCard
 
     return AdditionalTracksUploadCard(*args, **kwargs)
+
+
+def ShareSessionsCard(*args, **kwargs):
+    from components.cards import ShareSessionsCard
+
+    return ShareSessionsCard(*args, **kwargs)
+
+
+def UserSharedSessionsCard(*args, **kwargs):
+    from components.cards import UserSharedSessionsCard
+
+    return UserSharedSessionsCard(*args, **kwargs)
 
 
 def ChangeUserPasswordCard(*args, **kwargs):
@@ -317,6 +389,12 @@ def TrackLayoutSelector(*args, **kwargs):
     from components.inputgroups import TrackLayoutSelector
 
     return TrackLayoutSelector(*args, **kwargs)
+
+
+def ShareWithInput(*args, **kwargs):
+    from components.inputgroups import ShareWithInput
+
+    return ShareWithInput(*args, **kwargs)
 
 
 def StoreSessionNameInput(*args, **kwargs):

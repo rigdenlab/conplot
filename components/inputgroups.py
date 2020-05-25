@@ -57,24 +57,24 @@ def TrackLayoutSelector(idx, options, value):
     )
 
 
-def EmailInput():
+def EmailInput(id='email-input'):
     return dbc.InputGroup([
         dbc.InputGroupAddon("Email", addon_type="prepend"),
-        dbc.Input(placeholder="example@email.com", type="email", id='email-input', minLength=1, maxLength=65)
+        dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65)
     ], className="mb-3")
 
 
 def NameInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Name", addon_type="prepend"),
-        dbc.Input(placeholder="First Name", type="text")
+        dbc.Input(placeholder="First Name", type="text", id='contact-name-input')
     ], className="mb-3")
 
 
 def ProblemDescriptionInput():
     return dbc.InputGroup([
         dbc.InputGroupAddon("Description", addon_type="prepend"),
-        dbc.Textarea()
+        dbc.Textarea(id='contact-text-area-input')
     ], className="mb-3")
 
 
@@ -97,11 +97,11 @@ def StoreSessionNameInput():
     ], className="mb-3")
 
 
-def UserNameInput():
+def UserNameInput(id='username-input', classname="mb-3"):
     return dbc.InputGroup([
         dbc.InputGroupAddon("Username", addon_type="prepend"),
-        dbc.Input(type="text", id='username-input', placeholder='User', minLength=1, maxLength=25)
-    ], className="mb-3")
+        dbc.Input(type="text", id=id, placeholder='User', minLength=1, maxLength=25)
+    ], className=classname)
 
 
 def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
@@ -109,3 +109,10 @@ def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
         dbc.InputGroupAddon(addon, addon_type="prepend"),
         dbc.Input(type="password", id=id, placeholder=placeholder)
     ], className="mb-3")
+
+
+def ShareWithInput(id):
+    return dbc.InputGroup([
+        dbc.Input(type="text", id=id, placeholder='Share with...', minLength=1, maxLength=25)
+    ])
+

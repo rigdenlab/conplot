@@ -7,6 +7,7 @@ from utils import UrlIndex
 def Body():
     return html.Div(
         [
+            dbc.Spinner(html.Div(id='contact-form-modal-div'), fullscreen=True),
             html.Br(),
             html.Br(),
             dbc.Container([
@@ -19,12 +20,12 @@ def Body():
                         html.Hr(),
                         html.Br(),
                         NameInput(),
-                        EmailInput(),
+                        EmailInput(id='contact-email-input'),
                         ProblemDescriptionInput(),
                         EmailIssueSelect(),
                         html.Br(),
                         html.Div(id='contact-alert-div'),
-                        dbc.Button("Send", color="primary", block=True)
+                        dbc.Button("Send", color="primary", block=True, disabled=True, id='submit-contact-form-button')
                     ])
                 ])
             ]),

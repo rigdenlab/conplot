@@ -77,7 +77,8 @@ def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_s
 
     graph = dcc.Graph(
         className='square-content', id='plot-graph', figure=figure,
-        config={"toImageButtonOptions": {"width": None, "height": None}}
+        config={'displaylogo': False, 'modeBarButtonsToRemove': ['select2d', 'lasso2d'],
+                "toImageButtonOptions": {"width": None, "height": None}}
     )
 
     return graph, None, display_card, False

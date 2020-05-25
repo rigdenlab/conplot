@@ -2,7 +2,7 @@ from utils.exceptions import InvalidFormat
 from operator import itemgetter
 
 
-def EvfoldParser(input):
+def FreecontactParser(input):
     contents = input.split('\n')
     output = []
 
@@ -12,7 +12,7 @@ def EvfoldParser(input):
             continue
         elif line[0].isdigit() and line[2].isdigit() and len(line) >= 5:
             if abs(int(line[0]) - int(line[2])) >= 5:
-                output.append((int(line[0]), int(line[2]), float(line[5])))
+                output.append((int(line[0]), int(line[2]), float(line[4])))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')

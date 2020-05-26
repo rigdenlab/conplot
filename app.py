@@ -281,7 +281,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [Input({'type': 'filename-alert', 'index': ALL}, 'is_open')],
               [State('session-id', 'children')])
 def remove_dataset(alerts_open, session_id):
-    trigger = dash.callback_context.triggered[0]
+    trigger = dash.callback_context.triggered[-1]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if not callback_utils.ensure_triggered(trigger):

@@ -1,7 +1,7 @@
 import components
 from dash import no_update
 import loaders
-from utils import callback_utils
+from utils import callback_utils, WimleyWhiteHydrophobicityScale
 
 
 def upload_dataset(input_format, trigger, fnames, fcontents, session_id, cache, logger):
@@ -62,3 +62,13 @@ def remove_dataset(trigger, cache, session_id, logger):
     else:
         logger.info('Session {} removed dataset {}'.format(session_id, dataset))
         cache.hdel(session_id, dataset)
+
+
+def get_hydrophobicity(seq):
+    hydro = []
+    try:
+        for residue in seq:
+            hydro.append(WimleyWhiteHydrophobicityScale.__getattr__(residue).value)
+    except AttributeError:
+        return None
+    return hydro

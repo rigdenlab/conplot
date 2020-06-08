@@ -325,8 +325,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return plot_utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size,
-                                     track_marker_size,
-                                     track_separation)
+                                     track_marker_size, track_separation)
 
 
 # ==============================================================

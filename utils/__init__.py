@@ -2,6 +2,29 @@ import urllib.parse
 from enum import Enum
 
 
+class WimleyWhiteHydrophobicityScale(Enum):
+    I = -0.81
+    L = -0.69
+    F = -0.58
+    V = -0.53
+    M = -0.44
+    P = -0.31
+    W = -0.24
+    H = -0.06
+    T = 0.11
+    E = 0.12
+    Q = 0.19
+    C = 0.22
+    Y = 0.23
+    A = 0.33
+    S = 0.33
+    N = 0.43
+    D = 0.5
+    R = 1.0
+    G = 1.14
+    K = 1.81
+
+
 class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
     ROOT = '/'
@@ -101,3 +124,9 @@ def get_session_action(*args, **kwargs):
     from utils.callback_utils import get_session_action
 
     return get_session_action(*args, **kwargs)
+
+
+def get_hydrophobicity(*args, **kwargs):
+    from utils.data_utils import get_hydrophobicity
+
+    return get_hydrophobicity(*args, **kwargs)

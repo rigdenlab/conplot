@@ -281,7 +281,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [Input({'type': 'filename-alert', 'index': ALL}, 'is_open')],
               [State('session-id', 'children')])
 def remove_dataset(alerts_open, session_id):
-    trigger = dash.callback_context.triggered[0]
+    trigger = dash.callback_context.triggered[-1]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if not callback_utils.ensure_triggered(trigger):
@@ -325,8 +325,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return plot_utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size,
-                                     track_marker_size,
-                                     track_separation)
+                                     track_marker_size, track_separation)
 
 
 # ==============================================================

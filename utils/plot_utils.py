@@ -45,13 +45,13 @@ class ColorReference(Enum):
 
 def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
                    track_separation=2):
-    session, available_tracks, selected_tracks, factor, contact_marker_size, \
-    track_marker_size, track_separation = process_args(**locals())
-
     error = lookup_input_errors(session)
-
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
+
+    session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation = \
+        process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size,
+                     track_separation)
 
     display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                       contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,

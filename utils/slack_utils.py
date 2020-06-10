@@ -8,7 +8,7 @@ def create_message_block(name, email, subject, description):
     if subject == EmailIssueReference.BUG.value:
         subject = 'Bug report :beetle:'
     elif subject == EmailIssueReference.FORGOT_PSSWRD.value:
-        subject = 'I forgot my password :beetle:'
+        subject = 'I forgot my password :lock:'
     elif subject == EmailIssueReference.OTHER.value:
         subject = 'Other'
     else:

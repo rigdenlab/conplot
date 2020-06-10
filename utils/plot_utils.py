@@ -45,13 +45,12 @@ class ColorReference(Enum):
 
 def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
                    track_separation=2):
-    error = lookup_input_errors(session)
+    session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation, \
+    error = process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size,
+                         track_separation)
+
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
-
-    session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation = \
-        process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size,
-                     track_separation)
 
     display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                       contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
@@ -118,6 +117,11 @@ def lookup_input_errors(session):
 
 def process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation):
     session = decompress_session(session)
+
+    error = lookup_input_errors(session)
+    if error is not None:
+        return None, None, None, None, None, None, None, error
+
     available_tracks = get_available_tracks(session)
     seq_lenght = len(session[DatasetReference.SEQUENCE.value.encode()])
 
@@ -131,7 +135,7 @@ def process_args(session, trigger, selected_tracks, factor, contact_marker_size,
     else:
         selected_tracks = get_track_user_selection(selected_tracks, available_tracks)
 
-    return session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation
+    return session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation, error
 
 
 def get_available_tracks(session):

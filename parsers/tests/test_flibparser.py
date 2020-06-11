@@ -31,7 +31,7 @@ class FlibParserTestCase(unittest.TestCase):
     def test_2(self):
         dummy_prediction = """###
 D U M M Y
-100 8 5.382865
+100 X X 8 5.382865
 """
         with self.assertRaises(InvalidFormat):
             output = FlibParser(dummy_prediction)

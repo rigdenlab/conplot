@@ -68,6 +68,12 @@ def BclcontactsParser(*args, **kwargs):
 
     return BclcontactsParser(*args, **kwargs)
 
+def FlibParser(*args, **kwargs):
+    from parsers.flibparser import FlibParser
+
+    return FlibParser(*args, **kwargs)
+
+
 
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
@@ -96,6 +102,7 @@ class ParserFormats(Enum):
     PCONS = PlmdcaParser
     BBCONTACTS = BbcontactsParser
     BCLCONTCATS = BclcontactsParser
+    FLIB = FlibParser
 
 
 class ContactFormats(Enum):
@@ -114,6 +121,7 @@ class ContactFormats(Enum):
     PCONS = PlmdcaParser
     BBCONTACTS = BbcontactsParser
     BCLCONTCATS = BclcontactsParser
+    FLIB = FlibParser
 
 
 

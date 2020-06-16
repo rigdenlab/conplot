@@ -1,13 +1,12 @@
 import components
 import layouts
 from loaders import DatasetReference
-from utils import UrlIndex
+from utils import UrlIndex, sql_utils, cache_utils
 from utils import decompress_data, compress_data
-from utils import sql_utils
 
 
 def change_password(new_password, old_password, cache, session_id, logger):
-    username = decompress_data(cache.hget(session_id, 'user'))
+    username = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.USER.value))
     if sql_utils.change_password(username, old_password, new_password):
         logger.info('Session {} user {} changed password'.format(session_id, username))
         return components.SuccessChangePasswordAlert(username)
@@ -20,15 +19,15 @@ def create_user(username, password, email, session_id, cache, logger):
         return True, None
     elif sql_utils.create_user(username, password, email):
         logger.info('Session {} created user {} - {}'.format(session_id, username, email))
-        cache.hset(session_id, 'user', compress_data(username))
+        cache.hset(session_id, cache_utils.CacheKeys.USER.value, compress_data(username))
         return False, components.SuccessCreateUserAlert(username)
     else:
         return True, None
 
 
 def user_logout(session_id, cache, logger):
-    cache.hdel(session_id, 'user')
-    cache.hdel(session_id, 'session_pkid')
+    cache.hdel(session_id, cache_utils.CacheKeys.USER.value)
+    cache.hdel(session_id, cache_utils.CacheKeys.SESSION_PKID.value)
     for dataset in DatasetReference:
         cache.hdel(session_id, dataset.value)
     logger.info('Session {} logout user'.format(session_id))
@@ -38,15 +37,15 @@ def user_logout(session_id, cache, logger):
 def user_login(username, password, session_id, cache, logger):
     if sql_utils.userlogin(username, password):
         logger.info('Session {} login user {}'.format(session_id, username))
-        cache.hset(session_id, 'user', compress_data(username))
+        cache.hset(session_id, cache_utils.CacheKeys.USER.value, compress_data(username))
         return False, components.SuccessLoginAlert(username)
     else:
         return True, None
 
 
 def serve_url(url, session_id, cache, logger):
-    if cache.hexists(session_id, 'user'):
-        username = decompress_data(cache.hget(session_id, 'user'))
+    if cache.hexists(session_id, cache_utils.CacheKeys.USER.value):
+        username = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.USER.value))
     else:
         username = None
 
@@ -69,8 +68,8 @@ def serve_url(url, session_id, cache, logger):
     elif url == UrlIndex.SHARE_SESSIONS.value:
         return layouts.ShareSession(username)
     elif url == UrlIndex.USER_STORAGE.value:
-        if cache.hexists(session_id, 'session_pkid'):
-            session_pkid = int(cache.hget(session_id, 'session_pkid'))
+        if cache.hexists(session_id, cache_utils.CacheKeys.SESSION_PKID.value):
+            session_pkid = int(cache.hget(session_id, cache_utils.CacheKeys.SESSION_PKID.value))
             return layouts.UserStorage(username, session_pkid)
         else:
             return layouts.UserStorage(username)

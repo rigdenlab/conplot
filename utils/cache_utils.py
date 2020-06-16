@@ -1,6 +1,20 @@
+from enum import Enum
 import json
 import gzip
 from io import BytesIO
+
+
+class CacheKeys(Enum):
+    ID = 'id'
+    USER = 'user'
+    SESSION_PKID = 'session_pkid'
+    CONTACT_FNAMES = 'contact_fnames'
+    CUSTOM_FNAMES = 'custom_fnames'
+    SEQUENCE_FNAME = 'sequence_fname'
+    MEMBRANE_TOPOLOGY_FNAMES = 'membranetopology_fnames'
+    SECONDARY_STRUCTURE_FNAMES = 'secondarystructure_fnames'
+    CONSERVATION_FNAMES = 'conservation_fnames'
+    DISORDER_FNAMES = 'disorder_fnames'
 
 
 def compress_data(data_raw):

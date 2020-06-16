@@ -60,6 +60,12 @@ def compressStringToBytes(*args, **kwargs):
     return compressStringToBytes(*args, **kwargs)
 
 
+def CacheKeys(*args, **kwargs):
+    from utils.cache_utils import CacheKeys
+
+    return CacheKeys(*args, **kwargs)
+
+
 def decompress_data(*args, **kwargs):
     from utils.cache_utils import decompress_data
 

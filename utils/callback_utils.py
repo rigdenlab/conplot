@@ -19,7 +19,6 @@ class ButtonActions(Enum):
     stop = 4
 
 
-
 def toggle_selection_alert(format_selection):
     if format_selection is not None:
         return None, False

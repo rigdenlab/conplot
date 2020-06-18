@@ -3,8 +3,8 @@ import json
 import components
 from dash import no_update
 from components import EmailIssueReference
-from loaders import MandatoryDatasetReference
-from utils import slack_utils, decompress_data
+from loaders import DatasetReference, AdditionalDatasetReference
+from utils import slack_utils, decompress_data, cache_utils
 
 
 class DatasetIndex(Enum):
@@ -37,11 +37,16 @@ def get_remove_trigger(trigger):
 
 def remove_unused_fname_alerts(falerts):
     new_falerts = []
+
+    if falerts is None:
+        return new_falerts
+
     for alert in falerts:
         if 'is_open' not in alert['props'].keys():
             new_falerts.append(alert)
         elif alert['props']['is_open']:
             new_falerts.append(alert)
+
     return new_falerts
 
 
@@ -90,15 +95,37 @@ def submit_form(name, email, subject, description, logger):
         return components.SlackConnectionErrorModal()
 
 
-def update_fname_alerts(session_id, enumerator, cache):
+def retrieve_contact_fnames(session_id, cache):
     fname_alerts = []
-    for idx, dataset in enumerate(enumerator):
-        if cache.hexists(session_id, dataset.value):
-            fname = decompress_data(cache.hget(session_id, dataset.value)).pop(-1)
-            fname_alerts.append(components.FilenameAlert(fname, dataset.value))
-    if enumerator == MandatoryDatasetReference:
-        return fname_alerts + [no_update for x in range(0, 2 - len(fname_alerts))]
-    elif not fname_alerts:
+    if cache.hexists(session_id, cache_utils.CacheKeys.CONTACT_MAP.value):
+        fname_list = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.CONTACT_MAP.value))
+        for fname in fname_list:
+            fname_alerts.append(components.FilenameAlert(fname, DatasetReference.CONTACT_MAP.value))
+
+    if not fname_alerts:
         return no_update
 
     return fname_alerts
+
+
+def retrieve_sequence_fname(session_id, cache):
+    if cache.hexists(session_id, cache_utils.CacheKeys.SEQUENCE.value):
+        fname = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.SEQUENCE.value))
+        return components.FilenameAlert(fname, DatasetReference.SEQUENCE.value)
+    else:
+        return no_update
+
+
+def retrieve_additional_fnames(session_id, cache):
+    fname_alerts = []
+
+    for dataset in AdditionalDatasetReference:
+        if cache.hexists(session_id, dataset.value):
+            dataset_fnames = decompress_data(cache.hget(session_id, dataset.value))
+            for fname in dataset_fnames:
+                fname_alerts.append(components.FilenameAlert(fname, dataset.value))
+
+    if not fname_alerts:
+        return no_update
+    else:
+        return fname_alerts

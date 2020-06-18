@@ -8,21 +8,42 @@ class CacheKeys(Enum):
     ID = 'id'
     USER = 'user'
     SESSION_PKID = 'session_pkid'
-    GRAPH = 'graph'
-    CONTACT_DATA = 'contact_data'
-    CONTACT_FNAMES = 'contact_fnames'
-    CUSTOM_DATA = 'custom_data'
-    CUSTOM_FNAMES = 'custom_fnames'
-    SEQUENCE_DATA = 'sequence_data'
-    SEQUENCE_FNAME = 'sequence_fname'
-    MEMBDANRE_TOPOLOGY_DATA = 'membranetopology_data'
-    MEMBRANE_TOPOLOGY_FNAMES = 'membranetopology_fnames'
-    SECONDARY_STRUCTURE_DATA = 'secondarystructure_data'
-    SECONDARY_STRUCTURE_FNAMES = 'secondarystructure_fnames'
-    CONSERVATION_DATA = 'conservation_data'
-    CONSERVATION_FNAMES = 'conservation_fnames'
-    DISORDER_DATA = 'disorder_data'
-    DISORDER_FNAMES = 'disorder_fnames'
+    SEQUENCE_HYDROPHOBICITY = 'hydro'
+    CONTACT_MAP = 'contact'
+    CUSTOM = 'custom'
+    SEQUENCE = 'sequence'
+    MEMBRANE_TOPOLOGY = 'membranetopology'
+    SECONDARY_STRUCTURE = 'secondarystructure'
+    CONSERVATION = 'conservation'
+    DISORDER = 'disorder'
+
+
+def store_fname(cache, session_id, fname, cache_key):
+    fname_list = cache.hget(session_id, cache_key)
+
+    if not fname_list:
+        cache.hset(session_id, cache_key, compress_data([fname]))
+    else:
+        fname_list = decompress_data(fname_list)
+        fname_list.append(fname)
+        cache.hset(session_id, cache_key, compress_data(fname_list))
+
+
+def remove_fname(cache, session_id, fname, cache_key):
+    fname_list = cache.hget(session_id, cache_key)
+
+    if not fname_list:
+        return
+    elif cache_key == CacheKeys.SEQUENCE.value:
+        cache.hdel(session_id, cache_key)
+        cache.hdel(session_id, CacheKeys.SEQUENCE_HYDROPHOBICITY.value)
+        return
+
+    fname_list = decompress_data(fname_list)
+    if fname in fname_list:
+        index = fname_list.index(fname)
+        del fname_list[index]
+        cache.hset(session_id, cache_key, compress_data(fname_list))
 
 
 def compress_data(data_raw):

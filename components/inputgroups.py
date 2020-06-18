@@ -39,7 +39,7 @@ def AdditionalTrackFormatSelector():
     return dbc.InputGroup(
         [
             dbc.Select(
-                id='track-selector',
+                id='additional-track-selector',
                 options=[{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
                          for track in AdditionalDatasetReference]
             ),

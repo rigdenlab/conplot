@@ -66,14 +66,14 @@ def submit_contact_form(n_clicks, name, email, subject, description, session_id)
 
 
 @app.callback([Output('track-selection-card', "color"),
-               Output('additionaltrack-upload', 'disabled')],
-              [Input('track-selector', "value")])
+               Output('additional-tracks-upload', 'disabled')],
+              [Input('additional-track-selector', "value")])
 def toggle_add_track_format(value):
     return callback_utils.toggle_selection_alert(value)
 
 
 @app.callback([Output("format-selection-card", "color"),
-               Output({'type': "upload-button", 'index': loaders.DatasetReference.CONTACT_MAP.value}, 'disabled')],
+               Output('upload-contact-component', 'disabled')],
               [Input("contact-format-selector", 'value')])
 def toggle_format_alert(*args):
     return callback_utils.toggle_selection_alert(*args)
@@ -236,45 +236,63 @@ def store_session(n_clicks, session_name, session_id):
     return session_utils.store_session(session_name, session_id, cache, app.logger)
 
 
-@app.callback([Output({'type': "file-div", 'index': ALL}, "children"),
-               Output({'type': "upload-button", 'index': ALL}, 'contents'),
-               Output('inputs-modal-div', 'children')],
-              [Input({'type': "upload-button", 'index': ALL}, 'filename')],
-              [State({'type': "upload-button", 'index': ALL}, 'contents'),
-               State("contact-format-selector", 'value'),
+@app.callback([Output('sequence-filename-div', "children"),
+               Output('upload-sequence-component', 'contents'),
+               Output('sequence-upload-modal-div', 'children')],
+              [Input('upload-sequence-component', 'filename')],
+              [State('upload-sequence-component', 'contents'),
                State('session-id', 'children')])
-def upload_dataset(fnames, fcontents, input_format, session_id):
+def upload_sequence(fname, fcontent, session_id):
     trigger = dash.callback_context.triggered[0]
-    cleared_fcontents = [None for x in range(0, len(fcontents))]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return [no_update for x in range(0, len(fcontents))], cleared_fcontents, components.SessionTimedOutModal()
+        return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
-        return callback_utils.update_fname_alerts(session_id, loaders.MandatoryDatasetReference, cache), \
-               cleared_fcontents, None
+        return callback_utils.retrieve_sequence_fname(session_id, cache), None, None
 
-    return data_utils.upload_dataset(input_format, trigger, fnames, fcontents, session_id, cache, app.logger)
+    return data_utils.upload_sequence(fname, fcontent, session_id, cache, app.logger)
 
 
-@app.callback([Output('addtrack-modal-div', 'children'),
-               Output('additional-tracks-filenames', 'children')],
-              [Input('additionaltrack-upload', 'filename')],
-              [State('additionaltrack-upload', 'contents'),
-               State('track-selector', 'value'),
-               State('additional-tracks-filenames', 'children'),
+@app.callback([Output('contact-filenames-div', "children"),
+               Output('upload-contact-component', 'contents'),
+               Output('contact-upload-modal-div', 'children')],
+              [Input('upload-contact-component', 'filename')],
+              [State('upload-contact-component', 'contents'),
+               State("contact-format-selector", 'value'),
+               State('contact-filenames-div', "children"),
+               State('session-id', 'children')])
+def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
+    trigger = dash.callback_context.triggered[0]
+    cache = redis.Redis(connection_pool=redis_pool)
+
+    if session_utils.is_expired_session(session_id, cache, app.logger):
+        return no_update, None, components.SessionTimedOutModal()
+    elif not callback_utils.ensure_triggered(trigger):
+        return callback_utils.retrieve_contact_fnames(session_id, cache), None, None
+
+    return data_utils.upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cache, app.logger,
+                                     dataset=loaders.DatasetReference.CONTACT_MAP.value)
+
+
+@app.callback([Output('additional-tracks-filenames-div', 'children'),
+               Output('additional-tracks-upload', 'contents'),
+               Output('additional-tracks-upload-modal-div', 'children')],
+              [Input('additional-tracks-upload', 'filename')],
+              [State('additional-tracks-upload', 'contents'),
+               State('additional-track-selector', 'value'),
+               State('additional-tracks-filenames-div', 'children'),
                State('session-id', 'children')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return components.SessionTimedOutModal(), no_update
+        return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
-        return None, callback_utils.update_fname_alerts(session_id, loaders.AdditionalDatasetReference, cache)
+        return callback_utils.retrieve_additional_fnames(session_id, cache), None, None
 
-    return data_utils.upload_additional_track(fcontent, input_format, fname, fname_alerts, session_id, cache,
-                                              app.logger)
+    return data_utils.upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cache, app.logger)
 
 
 @app.callback(Output('removefiles-modal-div', 'children'),
@@ -284,12 +302,17 @@ def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[-1]
     cache = redis.Redis(connection_pool=redis_pool)
 
+    app.logger.info(cache.hgetall(session_id).keys())
+
     if not callback_utils.ensure_triggered(trigger):
         return None
     elif session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutModal()
 
     data_utils.remove_dataset(trigger, cache, session_id, app.logger)
+
+    app.logger.info(cache.hgetall(session_id).keys())
+
     return None
 
 

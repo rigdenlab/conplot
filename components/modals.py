@@ -1,31 +1,30 @@
 from components import StartNewSessionLink
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from loaders import DatasetReference
 
 
 def MismatchModal(*args):
-    if DatasetReference.SEQUENCE not in args:
-
-        return dbc.Modal([
-            ModalHeader("Mismatch Detected"),
-            dbc.ModalBody([
-                html.P("""We are having problems to match the uploaded sequence with the following predictions. Please 
+    return dbc.Modal([
+        ModalHeader("Mismatch Detected"),
+        dbc.ModalBody([
+            html.P("""We are having problems to match the uploaded sequence with the following prediction files. Please 
                 ensure that these predictions correspond with the protein sequence in the uploaded FASTA file.""",
-                       style={'text-align': "justify"}),
-                html.Ul([html.Li('%s' % arg) for arg in args], id='missing-fields-div')
-            ])
-        ], id='mismatch-modal', is_open=True)
+                   style={'text-align': "justify"}),
+            html.Ul([html.Li('%s' % arg) for arg in args], id='mismatched-fnames-div')
+        ])
+    ], id='mismatch-modal', is_open=True)
 
-    else:
-        return dbc.Modal([
-            ModalHeader("Sequence Mismatch"),
-            dbc.ModalBody(
-                html.P("""We are having problems to match the uploaded sequence with the provided contact map. Please 
-                ensure that the provided the sequence corresponds with the protein of the given contact map.""",
-                       style={'text-align': "justify"})
-            )
-        ], id='mismatch-modal', is_open=True)
+
+def MismatchSequenceModal(*args):
+    return dbc.Modal([
+        ModalHeader("Sequence Mismatch"),
+        dbc.ModalBody([
+            html.P("""We are having problems to match the uploaded sequence with contact maps in the following files. 
+            Please ensure that the provided the sequence corresponds with the structure in these contact maps.""",
+                   style={'text-align': "justify"}),
+            html.Ul([html.Li('File: %s' % arg) for arg in args], id='mismatched-maps-div')
+        ])
+    ], id='mismatch-modal', is_open=True)
 
 
 def MissingInputModal(*args):
@@ -34,17 +33,27 @@ def MissingInputModal(*args):
         dbc.ModalBody([
             html.P("""Please ensure you fill in all required fields before trying to generate a plot. Following 
             mandatory fields are still missing:""", style={'text-align': "justify"}),
-            html.Ul([html.Li('%s file' % arg) for arg in args], id='missing-fields-div')
+            html.Ul([html.Li('File: %s' % arg) for arg in args], id='missing-fields-div')
         ]),
     ], id='missing-fields-modal', is_open=True)
 
 
-def RepeatedInputModal(dataset):
+def SequenceAlreadyUploadedModal():
     return dbc.Modal([
-        ModalHeader("Already uploaded"),
+        ModalHeader("Sequence already uploaded"),
         dbc.ModalBody(
-            html.P("""A file for the dataset {} was already provided. To upload a different one you will need to delete 
-            the current one first.""".format(dataset), style={'text-align': "justify"})
+            html.P("""Only one sequence file can be uploaded at once. If you wish to upload a new sequence file, remove
+            the currently uploaded file before uploading a new sequence file.""", style={'text-align': "justify"})
+        ),
+    ], id='missing-fields-modal', is_open=True)
+
+
+def RepeatedInputModal(fname):
+    return dbc.Modal([
+        ModalHeader("File already uploaded"),
+        dbc.ModalBody(
+            html.P("""A file with the name - {} - has already been uploaded. You cannot upload two files with identical
+             names, please rename one of them and try again.""".format(fname), style={'text-align': "justify"})
         ),
     ], id='missing-fields-modal', is_open=True)
 

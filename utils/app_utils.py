@@ -3,6 +3,7 @@ import layouts
 from loaders import DatasetReference
 from utils import UrlIndex, sql_utils, cache_utils
 from utils import decompress_data, compress_data
+from utils.exceptions import IntegrityError, UserExists, EmailAlreadyUsed
 
 
 def change_password(new_password, old_password, cache, session_id, logger):
@@ -17,11 +18,12 @@ def change_password(new_password, old_password, cache, session_id, logger):
 def create_user(username, password, email, session_id, cache, logger):
     if any([True for x in (username, password, email) if x is None or x == '']):
         return True, None
-    elif sql_utils.create_user(username, password, email):
+    try:
+        sql_utils.create_user(username, password, email)
         logger.info('Session {} created user {} - {}'.format(session_id, username, email))
         cache.hset(session_id, cache_utils.CacheKeys.USER.value, compress_data(username))
         return False, components.SuccessCreateUserAlert(username)
-    else:
+    except (UserExists, EmailAlreadyUsed, IntegrityError) as e:
         return True, None
 
 

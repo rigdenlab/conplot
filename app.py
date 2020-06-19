@@ -139,15 +139,11 @@ def create_user(n_clicks, username, password, email, session_id):
     cache = redis.Redis(connection_pool=redis_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update, components.SessionTimedOutToast()
+        return no_update, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    try:
-        app_utils.create_user(username, password, email, session_id, cache, app.logger)
-        return False
-    except (UserExists, EmailAlreadyUsed, IntegrityError) as e:
-        return True
+    return app_utils.create_user(username, password, email, session_id, cache, app.logger)
 
 
 @app.callback(Output('success-change-password-alert-div', 'children'),
@@ -302,16 +298,12 @@ def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[-1]
     cache = redis.Redis(connection_pool=redis_pool)
 
-    app.logger.info(cache.hgetall(session_id).keys())
-
     if not callback_utils.ensure_triggered(trigger):
         return None
     elif session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutModal()
 
     data_utils.remove_dataset(trigger, cache, session_id, app.logger)
-
-    app.logger.info(cache.hgetall(session_id).keys())
 
     return None
 

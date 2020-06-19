@@ -1,6 +1,7 @@
 from enum import Enum
 import json
 import gzip
+import loaders
 from io import BytesIO
 
 
@@ -9,13 +10,13 @@ class CacheKeys(Enum):
     USER = 'user'
     SESSION_PKID = 'session_pkid'
     SEQUENCE_HYDROPHOBICITY = 'hydro'
-    CONTACT_MAP = 'contact'
-    CUSTOM = 'custom'
-    SEQUENCE = 'sequence'
-    MEMBRANE_TOPOLOGY = 'membranetopology'
-    SECONDARY_STRUCTURE = 'secondarystructure'
-    CONSERVATION = 'conservation'
-    DISORDER = 'disorder'
+    CONTACT_MAP = loaders.DatasetReference.CONTACT_MAP.value
+    CUSTOM = loaders.DatasetReference.CUSTOM.value
+    SEQUENCE = loaders.DatasetReference.SEQUENCE.value
+    MEMBRANE_TOPOLOGY = loaders.DatasetReference.MEMBRANE_TOPOLOGY.value
+    SECONDARY_STRUCTURE = loaders.DatasetReference.SECONDARY_STRUCTURE.value
+    CONSERVATION = loaders.DatasetReference.CONSERVATION.value
+    DISORDER = loaders.DatasetReference.DISORDER.value
 
 
 def store_fname(cache, session_id, fname, cache_key):

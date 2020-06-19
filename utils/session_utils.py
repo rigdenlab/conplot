@@ -3,8 +3,7 @@ import components
 from utils.exceptions import UserDoesntExist
 import loaders
 import uuid
-from utils import decompress_data, compress_data
-from utils import sql_utils, cache_utils
+from utils import decompress_data, compress_data, sql_utils, cache_utils, callback_utils
 
 
 def get_current_info(session_id, cache):
@@ -22,12 +21,17 @@ def load_session(username, selected_session_pkid, session_id, cache, logger):
     logger.info('Session {} user {} loads session {} - {} - {}'
                 ''.format(session_id, username, owner_user, session_name, selected_session_pkid))
 
-    cache.hset(session_id, cache_utils.CacheKeys.SESSION_PKID.value, selected_session_pkid)
     for dataset in loaders.DatasetReference:
-        if dataset.value in loaded_session:
-            cache.hset(session_id, dataset.value, loaded_session[dataset.value])
-        else:
+        if cache.hexists(session_id, dataset.value):
+            fname_list = decompress_data(cache.hget(session_id, dataset.value))
+            if fname_list:
+                for fname in fname_list:
+                    cache.hdel(session_id, fname)
             cache.hdel(session_id, dataset.value)
+
+    cache.hset(session_id, cache_utils.CacheKeys.SESSION_PKID.value, selected_session_pkid)
+    for key in loaded_session.keys():
+        cache.hset(session_id, key, loaded_session[key])
 
     toast = components.SuccesfulSessionLoadToast(session_name)
     stored_div = components.SessionList(username, components.SessionListType.STORED, selected_session_pkid)

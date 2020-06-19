@@ -327,9 +327,10 @@ def remove_dataset(alerts_open, session_id):
                State('track-marker-size-input', 'value'),
                State('track-separation-size-input', 'value'),
                State({'type': "track-select", 'index': ALL}, 'value'),
+               State({'type': "halfsquare-select", 'index': ALL}, 'value'),
                State('session-id', 'children')])
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
-                   track_separation, track_selection, session_id):
+                   track_separation, track_selection, cmap_selection, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
@@ -347,8 +348,8 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     session = cache.hgetall(session_id)
 
     app.logger.info('Session {} creating conplot'.format(session_id))
-    return plot_utils.create_ConPlot(session, trigger, track_selection, factor, contact_marker_size,
-                                     track_marker_size, track_separation)
+    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, factor,
+                                     contact_marker_size, track_marker_size, track_separation)
 
 
 # ==============================================================

@@ -397,10 +397,22 @@ def InvalidFormatCard(*args, **kwargs):
     return InvalidFormatCard(*args, **kwargs)
 
 
+def HalfSquareSelector(*args, **kwargs):
+    from components.inputgroups import HalfSquareSelector
+
+    return HalfSquareSelector(*args, **kwargs)
+
+
 def TrackLayoutSelector(*args, **kwargs):
     from components.inputgroups import TrackLayoutSelector
 
     return TrackLayoutSelector(*args, **kwargs)
+
+
+def TransparentSwitch(*args, **kwargs):
+    from components.inputgroups import TransparentSwitch
+
+    return TransparentSwitch(*args, **kwargs)
 
 
 def ShareWithInput(*args, **kwargs):

@@ -51,24 +51,31 @@ class ColorReference(Enum):
     CONSERVED_9 = sequential.ice[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
 
 
-def create_ConPlot(session, trigger, selected_tracks, factor=2, contact_marker_size=5, track_marker_size=5,
-                   track_separation=2):
-    session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation, \
-    error = process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size,
-                         track_separation)
+def create_ConPlot(session, trigger, selected_tracks, cmap_selection, factor=2, contact_marker_size=5,
+                   track_marker_size=5, track_separation=2):
+    session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, contact_marker_size, \
+    track_marker_size, track_separation, error = process_args(session, trigger, selected_tracks, cmap_selection,
+                                                              factor, contact_marker_size, track_marker_size,
+                                                              track_separation)
 
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
 
     display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                       contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
-                                      track_separation=track_separation)
+                                      track_separation=track_separation, factor=factor, selected_cmaps=cmap_selection,
+                                      available_maps=available_cmaps)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     axis_range = (0, len(session[seq_fname.encode()]) + 1)
     figure = create_figure(axis_range)
-    cmap_fname = session[DatasetReference.CONTACT_MAP.value.encode()][0]
-    figure.add_trace(create_contact_trace(cmap=session[cmap_fname.encode()], marker_size=contact_marker_size,
-                                          seq_length=len(session[seq_fname.encode()]), factor=factor))
+
+    for idx, fname in enumerate(cmap_selection):
+        if fname == '---':
+            continue
+        figure.add_trace(
+            create_contact_trace(cmap=session[fname.encode()], idx=idx, marker_size=contact_marker_size,
+                                 seq_length=len(session[seq_fname.encode()]), factor=factor)
+        )
 
     for idx, fname in enumerate(selected_tracks):
         if fname == '---':
@@ -142,14 +149,15 @@ def lookup_input_errors(session):
     return None
 
 
-def process_args(session, trigger, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation):
+def process_args(session, trigger, selected_tracks, cmap_selection, factor, contact_marker_size,
+                 track_marker_size, track_separation):
     session = decompress_session(session)
 
     error = lookup_input_errors(session)
     if error is not None:
-        return None, None, None, None, None, None, None, error
+        return None, None, None, None, None, None, None, None, None, error
 
-    available_tracks = get_available_tracks(session)
+    available_tracks, available_cmaps = get_available_data(session)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     seq_length = len(session[seq_fname.encode()])
 
@@ -159,29 +167,44 @@ def process_args(session, trigger, selected_tracks, factor, contact_marker_size,
         else:
             contact_marker_size = 3
         track_separation = round(seq_length / 100)
-        selected_tracks = get_default_track_layout(session)
+        selected_tracks, cmap_selection = get_default_layout(session)
     else:
-        selected_tracks = get_track_user_selection(selected_tracks, available_tracks)
+        selected_tracks, cmap_selection = get_user_selection(cmap_selection, available_cmaps,
+                                                             selected_tracks, available_tracks)
 
-    return session, available_tracks, selected_tracks, factor, contact_marker_size, track_marker_size, track_separation, error
+    return session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, \
+           contact_marker_size, track_marker_size, track_separation, error
 
 
-def get_available_tracks(session):
+def get_available_data(session):
     available_tracks = []
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
             available_tracks += session[dataset.value.encode()]
-    return available_tracks
+
+    available_cmaps = []
+    for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
+        available_cmaps.append(cmap_fname)
+
+    return available_tracks, available_cmaps
 
 
-def get_track_user_selection(selection, available):
-    if len(selection) == 0:
-        return ['---'] * 9
+def get_user_selection(cmap_selection, available_cmaps, track_selection, available_tracks):
+    if len(cmap_selection) == 0:
+        cmap_selection = ['---'] * 2
     else:
-        return [track if track in available else '---' for track in selection]
+        cmap_selection = [fname if fname in available_cmaps else '---' for fname in cmap_selection]
+
+    if len(track_selection) == 0:
+        track_selection = ['---'] * 9
+    else:
+        track_selection = [track if track in available_tracks else '---' for track in track_selection]
+
+    return track_selection, cmap_selection
 
 
-def get_default_track_layout(session):
+def get_default_layout(session):
+    cmap_fname = session[DatasetReference.CONTACT_MAP.value.encode()][0]
     tracks = []
 
     for dataset in DefaultTrackLayout:
@@ -189,11 +212,11 @@ def get_default_track_layout(session):
             tracks.append(session[dataset.value][0])
 
     if not any(tracks):
-        return ['---'] * 9
+        return ['---'] * 9, (cmap_fname, cmap_fname)
     else:
         missing_tracks = ['---' for missing in range(0, 5 - len(tracks))]
         tracks += missing_tracks
-        return tracks[1:][::-1] + tracks
+        return tracks[1:][::-1] + tracks, (cmap_fname, cmap_fname)
 
 
 def get_dataset(session, fname):
@@ -232,23 +255,29 @@ def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
     )
 
 
-def create_contact_trace(cmap, seq_length, marker_size=5, factor=2):
-    contacts = cmap[:int(round(seq_length / factor, 0))]
+def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
+    if factor == 0:
+        contacts = cmap
+    else:
+        contacts = cmap[:int(round(seq_length / factor, 0))]
     res1_list = []
     res2_list = []
     hover_1 = []
     hover_2 = []
     for contact in contacts:
+        contact[:2] = sorted(contact[:2])
         res1_list.append(contact[0])
         res2_list.append(contact[1])
         hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
         hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
 
-    x = res1_list + res2_list
-    y = res2_list + res1_list
-    hovertext = hover_1 + hover_2
+    if idx == 1:
+        return create_scatter(x=res1_list, y=res2_list, symbol='circle', hovertext=hover_1, marker_size=marker_size,
+                              color='black')
 
-    return create_scatter(x=x, y=y, symbol='circle', hovertext=hovertext, marker_size=marker_size, color='black')
+    else:
+        return create_scatter(x=res2_list, y=res1_list, symbol='circle', hovertext=hover_2, marker_size=marker_size,
+                              color='black')
 
 
 def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):

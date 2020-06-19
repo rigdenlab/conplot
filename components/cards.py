@@ -181,9 +181,9 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
     )
 
 
-def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, contact_marker_size=5,
-                       track_marker_size=5, track_separation=2):
-    if available_tracks is None:
+def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cmaps=None, available_maps=None,
+                       factor=2, contact_marker_size=5, track_marker_size=5, track_separation=2):
+    if available_tracks is None or available_maps is None:
         return dbc.Card(
             dbc.CardBody(
                 [
@@ -193,7 +193,8 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                 ]
             )
         )
-    elif selected_tracks is not None and len(selected_tracks) >= 9:
+    elif selected_tracks is not None and len(selected_tracks) >= 9 \
+            and selected_cmaps is not None and len(selected_cmaps) >= 2:
         return html.Div([
             html.H4('Display control', className="card-text", style={'text-align': "center"}),
             html.Br(),
@@ -207,6 +208,10 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                             dbc.Card(components.SizeSelector('contact-marker-size-input', contact_marker_size, 1, 15),
                                      outline=False),
                             html.Br(),
+                            HalfSquareSelectionCard('A', selection=selected_cmaps[0], available_cmaps=available_maps),
+                            html.Br(),
+                            HalfSquareSelectionCard('B', selection=selected_cmaps[1], available_cmaps=available_maps),
+                            html.Br(),
                             html.Hr(),
                             html.P('Adjust additional tracks'),
                             dbc.Card(components.SizeSelector('track-marker-size-input', track_marker_size, 1, 20),
@@ -217,6 +222,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
                                                         'Separation'),
                                 outline=False),
                             html.Br(),
+                            components.TransparentSwitch(),
                             html.Hr(),
                             html.P("Active tracks", className="card-text"),
                             TrackSelectionCard('-4', selected_tracks[0], available_tracks=available_tracks),
@@ -243,7 +249,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, factor=2, co
             )
         ])
     else:
-        raise ValueError('Available tracks detected but not enough were selected! Please report.')
+        raise ValueError('This should not occur! Please report.')
 
 
 def TrackSelectionCard(track_idx, track_value, available_tracks):
@@ -251,6 +257,13 @@ def TrackSelectionCard(track_idx, track_value, available_tracks):
     track_options += [{'label': fname, 'value': fname} for fname in available_tracks]
 
     return dbc.Card(components.TrackLayoutSelector(track_idx, track_options, track_value), outline=False)
+
+
+def HalfSquareSelectionCard(square_idx, selection, available_cmaps):
+    cmap_options = [{'label': '---', 'value': '---'}]
+    cmap_options += [{'label': fname, 'value': fname} for fname in available_cmaps]
+
+    return dbc.Card(components.HalfSquareSelector(square_idx, cmap_options, selection), outline=False)
 
 
 def InvalidFormatCard():

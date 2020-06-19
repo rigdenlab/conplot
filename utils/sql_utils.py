@@ -3,9 +3,7 @@ from collections import namedtuple
 from components import SessionListType
 from enum import Enum
 import datetime
-import json
 import psycopg2
-from psycopg2.extras import Json
 from utils import decompress_data, compress_data
 from utils.exceptions import SQLInjectionAlert, UserExists, EmailAlreadyUsed, IntegrityError, UserDoesntExist
 
@@ -21,7 +19,7 @@ class SqlFieldNames(Enum):
     ID = 'id'
     OWNER = 'owner_username'
     SESSION_NAME = 'session_name'
-    SESSION_JSON = 'session_json'
+    SESSION_JSON = 'session_data'
     USERNAME = 'username'
     EMAIL = 'email'
     PASSWORD = 'password'
@@ -161,9 +159,9 @@ def store_session(username, session_name, session):
     session = prepare_session_storage(session)
 
     if any(perform_query(SqlQueries.CHECK_SESSION_EXISTS.value, args=(username, session_name), fetch=True)):
-        perform_query(SqlQueries.UPDATE_SESSION.value, args=(Json(session), username, session_name), commit=True)
+        perform_query(SqlQueries.UPDATE_SESSION.value, args=(session, username, session_name), commit=True)
     else:
-        perform_query(SqlQueries.INSERT_SESSION.value, args=(username, session_name, Json(session)), commit=True)
+        perform_query(SqlQueries.INSERT_SESSION.value, args=(username, session_name, session), commit=True)
 
     session_pkid = perform_query(SqlQueries.GET_SESSION_PKID.value, args=(username, session_name), fetch=True, top=True)
 
@@ -182,8 +180,8 @@ def retrieve_session(session_pkid):
         perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, session_pkid), commit=False)
         username = session_data[0]
         session_name = session_data[1]
-        session = session_data[2]
-        for key in session:
+        session = decompress_data(session_data[2])
+        for key in session.keys():
             session[key] = compress_data(session[key])
 
     return username, session_name, session
@@ -229,4 +227,4 @@ def prepare_session_storage(session):
         session[key.decode()] = decompress_data(session[key])
         del session[key]
 
-    return session
+    return compress_data(session)

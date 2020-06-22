@@ -19,6 +19,12 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def InvalidMapSelectionModal(*args, **kwargs):
+    from components.modals import InvalidMapSelectionModal
+
+    return InvalidMapSelectionModal(*args, **kwargs)
+
+
 def SuccessContactFormModal(*args, **kwargs):
     from components.modals import SuccessContactFormModal
 

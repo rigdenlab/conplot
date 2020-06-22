@@ -38,6 +38,16 @@ def MissingInputModal(*args):
     ], id='missing-fields-modal', is_open=True)
 
 
+def InvalidMapSelectionModal():
+    return dbc.Modal([
+        ModalHeader("Invalid Input"),
+        dbc.ModalBody([
+            html.P("""Two different contacts maps must be selected to create a superimposed map!""",
+                   style={'text-align': "justify"})
+        ]),
+    ], id='invalid-map-selection-modal', is_open=True)
+
+
 def SequenceAlreadyUploadedModal():
     return dbc.Modal([
         ModalHeader("Sequence already uploaded"),

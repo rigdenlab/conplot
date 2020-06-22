@@ -1,4 +1,4 @@
-from components import MissingInputModal, MismatchModal, MismatchSequenceModal, PlotPlaceHolder, DisplayControlCard
+import components
 from enum import Enum
 from operator import itemgetter
 from parsers import DatasetStates
@@ -25,23 +25,43 @@ def create_ConPlot(session, trigger, selected_tracks, cmap_selection, selected_p
                                                                      transparent, selected_palettes)
 
     if error is not None:
-        return PlotPlaceHolder(), error, DisplayControlCard(), True
+        return components.PlotPlaceHolder(), error, components.DisplayControlCard(), True
 
-    display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
-                                      contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
-                                      track_separation=track_separation, factor=factor, selected_cmaps=cmap_selection,
-                                      available_maps=available_cmaps, transparent=transparent, superimpose=superimpose,
-                                      selected_palettes=selected_palettes)
+    display_card = components.DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
+                                                 contact_marker_size=contact_marker_size, factor=factor,
+                                                 track_marker_size=track_marker_size, transparent=transparent,
+                                                 track_separation=track_separation, selected_cmaps=cmap_selection,
+                                                 available_maps=available_cmaps, superimpose=superimpose,
+                                                 selected_palettes=selected_palettes)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     axis_range = (0, len(session[seq_fname.encode()]) + 1)
     figure = create_figure(axis_range)
 
-    for idx, fname in enumerate(cmap_selection):
-        if fname == '---':
-            continue
+    if not superimpose:
+        for idx, fname in enumerate(cmap_selection):
+            if fname == '---':
+                continue
+            figure.add_trace(
+                create_contact_trace(cmap=session[fname.encode()], idx=idx, marker_size=contact_marker_size,
+                                     seq_length=len(session[seq_fname.encode()]), factor=factor)
+            )
+    else:
+        reference, matched, mismatched = get_superimposed_contact_traces(
+            reference_cmap=session[cmap_selection[0].encode()],
+            secondary_cmap=session[cmap_selection[1].encode()],
+            seq_length=len(session[seq_fname.encode()]),
+            factor=factor)
         figure.add_trace(
-            create_contact_trace(cmap=session[fname.encode()], idx=idx, marker_size=contact_marker_size,
-                                 seq_length=len(session[seq_fname.encode()]), factor=factor)
+            create_superimposed_contact_traces(reference, marker_size=contact_marker_size,
+                                               color='grey', symbol='circle')
+        )
+        figure.add_trace(
+            create_superimposed_contact_traces(mismatched, marker_size=contact_marker_size,
+                                               color='black', symbol='circle')
+        )
+        figure.add_trace(
+            create_superimposed_contact_traces(matched, marker_size=contact_marker_size,
+                                               color='red', symbol='circle')
         )
 
     for idx, fname in enumerate(selected_tracks):
@@ -90,7 +110,7 @@ def lookup_input_errors(session):
     missing_data = get_missing_data(session)
 
     if any(missing_data):
-        return MissingInputModal(*[missing.name for missing in missing_data])
+        return components.MissingInputModal(*[missing.name for missing in missing_data])
 
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     seq_length = len(session[seq_fname.encode()])
@@ -103,7 +123,7 @@ def lookup_input_errors(session):
             mismatched.append(cmap_fname)
 
     if any(mismatched):
-        return MismatchSequenceModal(*mismatched)
+        return components.MismatchSequenceModal(*mismatched)
 
     mismatched = []
     for dataset in AdditionalDatasetReference:
@@ -113,7 +133,7 @@ def lookup_input_errors(session):
                     mismatched.append(dataset.value)
 
     if any(mismatched):
-        return MismatchModal(*mismatched)
+        return components.MismatchModal(*mismatched)
 
     return None
 
@@ -230,15 +250,14 @@ def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
 
 
 def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
-    if factor == 0:
-        contacts = cmap
-    else:
-        contacts = cmap[:int(round(seq_length / factor, 0))]
+    if factor != 0:
+        cmap = cmap[:int(round(seq_length / factor, 0))]
+
     res1_list = []
     res2_list = []
     hover_1 = []
     hover_2 = []
-    for contact in contacts:
+    for contact in cmap:
         contact[:2] = sorted(contact[:2])
         res1_list.append(contact[0])
         res2_list.append(contact[1])
@@ -252,6 +271,51 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
     else:
         return create_scatter(x=res2_list, y=res1_list, symbol='circle', hovertext=hover_2, marker_size=marker_size,
                               color='black')
+
+
+def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
+    if factor != 0:
+        reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
+        secondary_cmap = secondary_cmap[:int(round(seq_length / factor, 0))]
+
+    reference_contacts = [contact[:2] for contact in reference_cmap]
+    secondary_contacts = [contact[:2] for contact in secondary_cmap]
+
+    matched = []
+    mismatched = []
+    reference = []
+
+    for contact in reference_cmap:
+        if contact[:2] in secondary_contacts or contact[:2][::-1] in secondary_contacts:
+            matched.append(contact)
+        else:
+            reference.append(contact)
+
+    for contact in secondary_cmap:
+        if contact[:2] not in reference_contacts or contact[:2][::-1] in reference_contacts:
+            mismatched.append(contact)
+
+    return reference, matched, mismatched
+
+
+def create_superimposed_contact_traces(contacts, marker_size=5, color='black', symbol='circle'):
+    res1_list = []
+    res2_list = []
+    hover_1 = []
+    hover_2 = []
+
+    for contact in contacts:
+        contact[:2] = sorted(contact[:2])
+        res1_list.append(contact[0])
+        res2_list.append(contact[1])
+        hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
+        hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+
+    x = res1_list + res2_list
+    y = res2_list + res1_list
+    hovertext = hover_1 + hover_2
+
+    return create_scatter(x=x, y=y, symbol=symbol, hovertext=hovertext, marker_size=marker_size, color=color)
 
 
 def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):

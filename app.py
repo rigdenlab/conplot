@@ -329,8 +329,6 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
-    print(selected_palettes)
-
     if not callback_utils.ensure_triggered(trigger):
         return components.PlotPlaceHolder(), None, components.DisplayControlCard(), True
     elif session_utils.is_expired_session(session_id, cache, app.logger):
@@ -341,6 +339,8 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
+    elif superimpose and '---' in cmap_selection or len(set(cmap_selection)) == 1:
+        return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
 

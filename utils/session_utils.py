@@ -3,14 +3,13 @@ import components
 from utils.exceptions import UserDoesntExist
 import loaders
 import uuid
-from utils import decompress_data, compress_data
-from utils import sql_utils
+from utils import decompress_data, compress_data, sql_utils, cache_utils, callback_utils
 
 
 def get_current_info(session_id, cache):
-    username = decompress_data(cache.hget(session_id, 'user'))
-    if cache.hexists(session_id, 'session_pkid'):
-        current_session_pkid = cache.hget(session_id, 'session_pkid')
+    username = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.USER.value))
+    if cache.hexists(session_id, cache_utils.CacheKeys.SESSION_PKID.value):
+        current_session_pkid = cache.hget(session_id, cache_utils.CacheKeys.SESSION_PKID.value)
     else:
         current_session_pkid = None
 
@@ -22,12 +21,17 @@ def load_session(username, selected_session_pkid, session_id, cache, logger):
     logger.info('Session {} user {} loads session {} - {} - {}'
                 ''.format(session_id, username, owner_user, session_name, selected_session_pkid))
 
-    cache.hset(session_id, 'session_pkid', selected_session_pkid)
     for dataset in loaders.DatasetReference:
-        if dataset.value in loaded_session:
-            cache.hset(session_id, dataset.value, loaded_session[dataset.value])
-        else:
+        if cache.hexists(session_id, dataset.value):
+            fname_list = decompress_data(cache.hget(session_id, dataset.value))
+            if fname_list:
+                for fname in fname_list:
+                    cache.hdel(session_id, fname)
             cache.hdel(session_id, dataset.value)
+
+    cache.hset(session_id, cache_utils.CacheKeys.SESSION_PKID.value, selected_session_pkid)
+    for key in loaded_session.keys():
+        cache.hset(session_id, key, loaded_session[key])
 
     toast = components.SuccesfulSessionLoadToast(session_name)
     stored_div = components.SessionList(username, components.SessionListType.STORED, selected_session_pkid)
@@ -66,7 +70,7 @@ def share_session(session_pkid, share_with, logger):
 
 
 def store_session(session_name, session_id, cache, logger):
-    username = decompress_data(cache.hget(session_id, 'user'))
+    username = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.USER.value))
     session = cache.hgetall(session_id)
 
     if not session_name:
@@ -74,7 +78,7 @@ def store_session(session_name, session_id, cache, logger):
 
     logger.info('Session {} user {} stores new session {}'.format(session_id, username, session_name))
     session_pkid = sql_utils.store_session(username, session_name, session)
-    cache.hset(session_id, 'session_pkid', session_pkid)
+    cache.hset(session_id, cache_utils.CacheKeys.SESSION_PKID.value, session_pkid)
 
     return components.SessionStoreModal(session_name)
 
@@ -86,7 +90,6 @@ def decompress_session(session):
 
     for key in session.keys():
         session[key] = decompress_data(session[key])
-        session[key].pop(-1)
     return session
 
 
@@ -102,6 +105,6 @@ def is_expired_session(session_id, cache, logger, expire_time=900):
 def initiate_session(cache, logger, expire_time=900):
     session_id = str(uuid.uuid4())
     logger.info('New session initiated {}'.format(session_id))
-    cache.hset(session_id, 'id', compress_data(session_id))
+    cache.hset(session_id, cache_utils.CacheKeys.ID.value, compress_data(session_id))
     cache.expire(session_id, expire_time)
     return session_id

@@ -2,11 +2,22 @@ from loaders import decode_raw_file
 from Bio import SeqIO
 from Bio.Alphabet.IUPAC import protein
 from io import StringIO
-from utils import compress_data
+from utils import compress_data, WimleyWhiteHydrophobicityScale
 
 
-def SequenceLoader(raw_file, fname):
-    data = None
+def get_hydrophobicity(seq):
+    hydro = []
+    try:
+        for residue in seq:
+            hydro.append(WimleyWhiteHydrophobicityScale.__getattr__(residue).value)
+    except AttributeError:
+        return None
+    return hydro
+
+
+def SequenceLoader(raw_file):
+    sequence_data = None
+    sequence_hydrophobicity = None
     invalid = False
 
     if raw_file is not None:
@@ -20,9 +31,9 @@ def SequenceLoader(raw_file, fname):
             if any([residue not in protein.letters for residue in data_raw]) or len(data_raw) == 0:
                 invalid = True
             else:
-                data_raw.append(fname)
-                data = compress_data(data_raw)
+                sequence_hydrophobicity = compress_data(get_hydrophobicity(data_raw))
+                sequence_data = compress_data(data_raw)
         else:
             invalid = True
 
-    return data, invalid
+    return sequence_data, sequence_hydrophobicity, invalid

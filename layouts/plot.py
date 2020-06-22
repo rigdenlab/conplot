@@ -8,10 +8,11 @@ import dash_bootstrap_components as dbc
 def Body(username):
     return html.Div([
         html.Div(id='_hidden-div', style={'display': 'none'}),
-        dbc.Spinner(html.Div(id='inputs-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='contact-upload-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='sequence-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
-        dbc.Spinner(html.Div(id='addtrack-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='additional-tracks-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
         html.Br(),
         html.Br(),

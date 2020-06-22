@@ -67,10 +67,22 @@ def SessionTimedOutModal(*args, **kwargs):
     return SessionTimedOutModal(*args, **kwargs)
 
 
+def SequenceAlreadyUploadedModal(*args, **kwargs):
+    from components.modals import SequenceAlreadyUploadedModal
+
+    return SequenceAlreadyUploadedModal(*args, **kwargs)
+
+
 def MismatchModal(*args, **kwargs):
     from components.modals import MismatchModal
 
     return MismatchModal(*args, **kwargs)
+
+
+def MismatchSequenceModal(*args, **kwargs):
+    from components.modals import MismatchSequenceModal
+
+    return MismatchSequenceModal(*args, **kwargs)
 
 
 def SuccesfulLoginToast(*args, **kwargs):
@@ -385,10 +397,22 @@ def InvalidFormatCard(*args, **kwargs):
     return InvalidFormatCard(*args, **kwargs)
 
 
+def HalfSquareSelector(*args, **kwargs):
+    from components.inputgroups import HalfSquareSelector
+
+    return HalfSquareSelector(*args, **kwargs)
+
+
 def TrackLayoutSelector(*args, **kwargs):
     from components.inputgroups import TrackLayoutSelector
 
     return TrackLayoutSelector(*args, **kwargs)
+
+
+def TransparentSwitch(*args, **kwargs):
+    from components.inputgroups import TransparentSwitch
+
+    return TransparentSwitch(*args, **kwargs)
 
 
 def ShareWithInput(*args, **kwargs):

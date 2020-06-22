@@ -16,9 +16,9 @@ class LoaderTestCase(unittest.TestCase):
                                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
                                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
                                        10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10,
-                                       'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'dummy_fname'])
+                                       'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN', 'NAN'])
 
-        data, invalid = Loader(dummy_raw_file, 'CUSTOM', 'dummy_fname')
+        data, invalid = Loader(dummy_raw_file, 'CUSTOM')
         self.assertFalse(invalid)
         self.assertEqual(data, expected_data)
 
@@ -26,7 +26,7 @@ class LoaderTestCase(unittest.TestCase):
         dummy_raw_file = 'data:application/octet-stream;base64,TEVOIDE2OAoxIDEwIDEKMTAgMTUgMgo0MCA' \
                          '1NSA3CjU1IDg1IDgKODUgOTkgOQoxMDAgMTYwIDEwCg=='
 
-        data, invalid = Loader(dummy_raw_file, 'TOPCONS', 'dummy_fname')
+        data, invalid = Loader(dummy_raw_file, 'TOPCONS')
         self.assertIsNone(data)
         self.assertTrue(invalid)
 
@@ -39,8 +39,8 @@ class LoaderTestCase(unittest.TestCase):
         expected_data = compress_data(
             [(50, 58, 0.9999089), (51, 58, 0.99989784), (143, 185, 0.9998943), (140, 152, 0.99987775),
              (148, 190, 0.9998754), (50, 153, 0.9998622), (145, 117, 0.99985564), (139, 101, 0.9998275),
-             (141, 193, 0.9998223), 'dummy_fname'])
+             (141, 193, 0.9998223)])
 
-        data, invalid = Loader(dummy_raw_file, 'EVFOLD', 'dummy_fname')
+        data, invalid = Loader(dummy_raw_file, 'EVFOLD')
         self.assertFalse(invalid)
         self.assertEqual(data, expected_data)

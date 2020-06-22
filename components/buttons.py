@@ -10,7 +10,7 @@ def Button(id, children, color='primary'):
 def UploadButton(dataset, multiple=False, disabled=False):
     return html.Div([
         dcc.Upload(
-            id={'type': 'upload-button', 'index': dataset},
+            id='upload-{}-component'.format(dataset),
             children=Button(children="Upload {}".format(dataset), id='upload-{}-button'.format(dataset)),
             multiple=multiple, disabled=disabled
         ),
@@ -20,7 +20,7 @@ def UploadButton(dataset, multiple=False, disabled=False):
 def AddTrackButton(multiple=False, disabled=False):
     return html.Div([
         dcc.Upload(
-            id='additionaltrack-upload',
+            id='additional-tracks-upload',
             children=Button(children=html.I(className="fas fa-plus-circle fa-2x"), id='upload-additionaltrack-button'),
             multiple=multiple, disabled=disabled
         ),

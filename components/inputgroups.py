@@ -30,7 +30,7 @@ def LFactorSelector(factor=2):
     return dbc.InputGroup(
         [
             dbc.InputGroupAddon("L /", addon_type="prepend"),
-            dbc.Input(id='L-cutoff-input', type="number", min=1, max=10, step=1, value=factor)
+            dbc.Input(id='L-cutoff-input', type="number", min=0, max=10, step=1, value=factor)
         ]
     )
 
@@ -39,11 +39,20 @@ def AdditionalTrackFormatSelector():
     return dbc.InputGroup(
         [
             dbc.Select(
-                id='track-selector',
+                id='additional-track-selector',
                 options=[{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
                          for track in AdditionalDatasetReference]
             ),
             dbc.InputGroupAddon("Track", addon_type="append"),
+        ]
+    )
+
+
+def HalfSquareSelector(idx, options, value):
+    return dbc.InputGroup(
+        [
+            dbc.InputGroupAddon("Half {}".format(idx), addon_type="prepend"),
+            dbc.Select(id={'type': 'halfsquare-select', 'index': idx}, options=options, value=value)
         ]
     )
 
@@ -116,3 +125,17 @@ def ShareWithInput(id):
         dbc.Input(type="text", id=id, placeholder='Share with...', minLength=1, maxLength=25)
     ])
 
+
+def TransparentSwitch():
+    return dbc.FormGroup(
+        [
+            dbc.Checklist(
+                options=[
+                    {"label": "Transparent tracks", "value": 1},
+                ],
+                value=[],
+                id="transparent-tracks-switch",
+                switch=True,
+            ),
+        ], className='mr-1'
+    )

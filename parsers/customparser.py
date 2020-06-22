@@ -10,8 +10,8 @@ def CustomParser(input):
         len_flag = contents.pop(0).split()
 
     if len(len_flag) > 1 and len_flag[1].isnumeric() and len_flag[0] == 'LEN':
-        lenght = int(len_flag[1])
-        output = [CustomStates.CUSTOM_NAN.value for x in range(0, lenght)]
+        length = int(len_flag[1])
+        output = [CustomStates.CUSTOM_NAN.value for x in range(0, length)]
     else:
         raise InvalidFormat(
             'First line does not correspond with a valid protein length flag: {}'.format(' '.join(len_flag)))

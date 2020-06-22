@@ -1,6 +1,50 @@
+from enum import Enum
 import json
 import gzip
+import loaders
 from io import BytesIO
+
+
+class CacheKeys(Enum):
+    ID = 'id'
+    USER = 'user'
+    SESSION_PKID = 'session_pkid'
+    SEQUENCE_HYDROPHOBICITY = 'hydro'
+    CONTACT_MAP = loaders.DatasetReference.CONTACT_MAP.value
+    CUSTOM = loaders.DatasetReference.CUSTOM.value
+    SEQUENCE = loaders.DatasetReference.SEQUENCE.value
+    MEMBRANE_TOPOLOGY = loaders.DatasetReference.MEMBRANE_TOPOLOGY.value
+    SECONDARY_STRUCTURE = loaders.DatasetReference.SECONDARY_STRUCTURE.value
+    CONSERVATION = loaders.DatasetReference.CONSERVATION.value
+    DISORDER = loaders.DatasetReference.DISORDER.value
+
+
+def store_fname(cache, session_id, fname, cache_key):
+    fname_list = cache.hget(session_id, cache_key)
+
+    if not fname_list:
+        cache.hset(session_id, cache_key, compress_data([fname]))
+    else:
+        fname_list = decompress_data(fname_list)
+        fname_list.append(fname)
+        cache.hset(session_id, cache_key, compress_data(fname_list))
+
+
+def remove_fname(cache, session_id, fname, cache_key):
+    fname_list = cache.hget(session_id, cache_key)
+
+    if not fname_list:
+        return
+    elif cache_key == CacheKeys.SEQUENCE.value:
+        cache.hdel(session_id, cache_key)
+        cache.hdel(session_id, CacheKeys.SEQUENCE_HYDROPHOBICITY.value)
+        return
+
+    fname_list = decompress_data(fname_list)
+    if fname in fname_list:
+        index = fname_list.index(fname)
+        del fname_list[index]
+        cache.hset(session_id, cache_key, compress_data(fname_list))
 
 
 def compress_data(data_raw):

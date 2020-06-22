@@ -4,7 +4,7 @@ from components import SessionListType
 from enum import Enum
 import datetime
 import psycopg2
-from loaders import DatasetReference
+from utils import decompress_data, compress_data
 from utils.exceptions import SQLInjectionAlert, UserExists, EmailAlreadyUsed, IntegrityError, UserDoesntExist
 
 SessionData = namedtuple('SessionData', ['pkid', 'name', 'owner', 'date'])
@@ -19,6 +19,7 @@ class SqlFieldNames(Enum):
     ID = 'id'
     OWNER = 'owner_username'
     SESSION_NAME = 'session_name'
+    SESSION_JSON = 'session_data'
     USERNAME = 'username'
     EMAIL = 'email'
     PASSWORD = 'password'
@@ -54,15 +55,13 @@ class SqlQueries(Enum):
     """.format(TableNames.USER_DATA.value, SqlFieldNames.PASSWORD.value, SqlFieldNames.PASSWORD.value,
                SqlFieldNames.USERNAME.value)
 
-    UPDATE_SESSION = """UPDATE {} SET {} WHERE {} = %s AND {} = %s
-    """.format(TableNames.SESSION_DATA.value,
-               ",".join(["{} = %s".format(dataset.value) for dataset in DatasetReference]), SqlFieldNames.OWNER.value,
+    UPDATE_SESSION = """UPDATE {} SET {} = %s WHERE {} = %s AND {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SESSION_JSON.value, SqlFieldNames.OWNER.value,
                SqlFieldNames.SESSION_NAME.value)
 
-    INSERT_SESSION = """INSERT INTO %s (%s) VALUES ({})
-    """ % (TableNames.SESSION_DATA.value,
-           ",".join([SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value] +
-                    [dataset.value for dataset in DatasetReference]))
+    INSERT_SESSION = """INSERT INTO {} ({}, {}, {}) VALUES (%s, %s, %s) 
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value,
+               SqlFieldNames.SESSION_JSON.value)
 
     RETRIEVE_SESSION = """SELECT * FROM {} WHERE {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SESSION_PKID.value)
@@ -157,24 +156,12 @@ def userlogin(username, psswrd):
 
 
 def store_session(username, session_name, session):
-    values = [username, session_name]
-    fields = ['owner_username', 'session_name']
-
-    for dataset in DatasetReference:
-        if dataset.value.encode() in session.keys():
-            values.append(psycopg2.Binary(session[dataset.value.encode()]))
-            fields.append(dataset.value)
-        else:
-            values.append(None)
-            fields.append(dataset.value)
+    session = prepare_session_storage(session)
 
     if any(perform_query(SqlQueries.CHECK_SESSION_EXISTS.value, args=(username, session_name), fetch=True)):
-        values = values[2:] + [username, session_name]
-        perform_query(SqlQueries.UPDATE_SESSION.value, args=values, commit=True)
+        perform_query(SqlQueries.UPDATE_SESSION.value, args=(session, username, session_name), commit=True)
     else:
-        value_placeholders = ",".join(['%s' for x in range(0, len(values))])
-        query = SqlQueries.INSERT_SESSION.value.format(value_placeholders)
-        perform_query(query, args=values, commit=True)
+        perform_query(SqlQueries.INSERT_SESSION.value, args=(username, session_name, session), commit=True)
 
     session_pkid = perform_query(SqlQueries.GET_SESSION_PKID.value, args=(username, session_name), fetch=True, top=True)
 
@@ -191,12 +178,11 @@ def retrieve_session(session_pkid):
         session_data = session_data[0]
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, session_pkid), commit=False)
-        session_name = session_data[1]
         username = session_data[0]
-        session = {}
-        for idx, dataset in enumerate(DatasetReference, 2):
-            if session_data[idx] is not None:
-                session[dataset.value] = session_data[idx]
+        session_name = session_data[1]
+        session = decompress_data(session_data[2])
+        for key in session.keys():
+            session[key] = compress_data(session[key])
 
     return username, session_name, session
 
@@ -229,3 +215,16 @@ def share_session(session_pkid, share_with_username):
 
 def stop_sharing_session(session_pkid, stop_sharing_with):
     return perform_query(SqlQueries.STOP_SHARE.value, args=(stop_sharing_with, session_pkid), commit=True)
+
+
+def prepare_session_storage(session):
+    for key in (b'id', b'user', b'session_pkid'):
+        if key in session:
+            del session[key]
+
+    key_list = list(session.keys())
+    for key in key_list:
+        session[key.decode()] = decompress_data(session[key])
+        del session[key]
+
+    return compress_data(session)

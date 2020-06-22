@@ -60,6 +60,18 @@ def compressStringToBytes(*args, **kwargs):
     return compressStringToBytes(*args, **kwargs)
 
 
+def retrieve_sequence_fname(*args, **kwargs):
+    from utils.callback_utils import retrieve_sequence_fname
+
+    return retrieve_sequence_fname(*args, **kwargs)
+
+
+def CacheKeys(*args, **kwargs):
+    from utils.cache_utils import CacheKeys
+
+    return CacheKeys(*args, **kwargs)
+
+
 def decompress_data(*args, **kwargs):
     from utils.cache_utils import decompress_data
 

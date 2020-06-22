@@ -14,6 +14,7 @@ def PsicovParser(input):
             continue
         elif line[0].isdigit() and line[1].isdigit() and len(line) >= 5:
             if abs(int(line[0]) - int(line[1])) >= 5:
+                # TODO: Sorting the residue numbers here will save time when creating the plot
                 output.append((int(line[0]), int(line[1]), float(line[4])))
 
     if not output:
@@ -21,4 +22,3 @@ def PsicovParser(input):
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output
-

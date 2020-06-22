@@ -320,9 +320,12 @@ def remove_dataset(alerts_open, session_id):
                State('track-separation-size-input', 'value'),
                State({'type': "track-select", 'index': ALL}, 'value'),
                State({'type': "halfsquare-select", 'index': ALL}, 'value'),
+               State("transparent-tracks-switch", 'value'),
+               State('superimpose-maps-switch', 'value'),
+               State({'type': 'colorpalette-select', 'index': ALL}, 'value'),
                State('session-id', 'children')])
-def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
-                   track_separation, track_selection, cmap_selection, session_id):
+def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size, track_separation,
+                   track_selection, cmap_selection, transparent, superimpose, selected_palettes, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
@@ -336,12 +339,14 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
+    elif superimpose and '---' in cmap_selection or len(set(cmap_selection)) == 1:
+        return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 
     session = cache.hgetall(session_id)
 
     app.logger.info('Session {} creating conplot'.format(session_id))
-    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, factor,
-                                     contact_marker_size, track_marker_size, track_separation)
+    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, selected_palettes, factor,
+                                     contact_marker_size, track_marker_size, track_separation, transparent, superimpose)
 
 
 # ==============================================================

@@ -19,6 +19,12 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def InvalidMapSelectionModal(*args, **kwargs):
+    from components.modals import InvalidMapSelectionModal
+
+    return InvalidMapSelectionModal(*args, **kwargs)
+
+
 def SuccessContactFormModal(*args, **kwargs):
     from components.modals import SuccessContactFormModal
 
@@ -403,10 +409,22 @@ def HalfSquareSelector(*args, **kwargs):
     return HalfSquareSelector(*args, **kwargs)
 
 
+def SuperimposeSwitch(*args, **kwargs):
+    from components.inputgroups import SuperimposeSwitch
+
+    return SuperimposeSwitch(*args, **kwargs)
+
+
 def TrackLayoutSelector(*args, **kwargs):
     from components.inputgroups import TrackLayoutSelector
 
     return TrackLayoutSelector(*args, **kwargs)
+
+
+def PaletteSelector(*args, **kwargs):
+    from components.inputgroups import PaletteSelector
+
+    return PaletteSelector(*args, **kwargs)
 
 
 def TransparentSwitch(*args, **kwargs):

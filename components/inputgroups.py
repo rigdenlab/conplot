@@ -2,6 +2,7 @@ import dash_bootstrap_components as dbc
 from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
 from components import EmailIssueReference
+from utils.plot_utils import DefaultTrackLayout
 
 
 def ContactFormatSelector():
@@ -51,7 +52,7 @@ def AdditionalTrackFormatSelector():
 def HalfSquareSelector(idx, options, value):
     return dbc.InputGroup(
         [
-            dbc.InputGroupAddon("Half {}".format(idx), addon_type="prepend"),
+            dbc.InputGroupAddon("Map {}".format(idx), addon_type="prepend"),
             dbc.Select(id={'type': 'halfsquare-select', 'index': idx}, options=options, value=value)
         ]
     )
@@ -62,6 +63,16 @@ def TrackLayoutSelector(idx, options, value):
         [
             dbc.InputGroupAddon("Track {}".format(idx), addon_type="prepend"),
             dbc.Select(id={'type': 'track-select'.format(idx), 'index': idx}, options=options, value=value)
+        ]
+    )
+
+
+def PaletteSelector(dataset, options, value):
+    index = [x.value for x in DefaultTrackLayout].index(dataset.encode())
+    return dbc.InputGroup(
+        [
+            dbc.InputGroupAddon(dataset, addon_type="prepend"),
+            dbc.Select(id={'type': 'colorpalette-select', 'index': index}, options=options, value=value)
         ]
     )
 
@@ -126,15 +137,40 @@ def ShareWithInput(id):
     ])
 
 
-def TransparentSwitch():
+def TransparentSwitch(transparent):
+    if transparent:
+        value = [1]
+    else:
+        value = []
+
     return dbc.FormGroup(
         [
             dbc.Checklist(
                 options=[
                     {"label": "Transparent tracks", "value": 1},
                 ],
-                value=[],
+                value=value,
                 id="transparent-tracks-switch",
+                switch=True,
+            ),
+        ], className='mr-1'
+    )
+
+
+def SuperimposeSwitch(superimpose):
+    if superimpose:
+        value = [1]
+    else:
+        value = []
+
+    return dbc.FormGroup(
+        [
+            dbc.Checklist(
+                options=[
+                    {"label": "Superimpose maps", "value": 1},
+                ],
+                value=value,
+                id="superimpose-maps-switch",
                 switch=True,
             ),
         ], className='mr-1'

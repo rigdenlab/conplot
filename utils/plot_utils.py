@@ -3,11 +3,9 @@ from enum import Enum
 from operator import itemgetter
 from parsers import DatasetStates
 import plotly.graph_objects as go
-from plotly.colors import diverging
-from plotly.colors import sequential
 from loaders import DatasetReference, AdditionalDatasetReference
 from layouts import ContextReference
-from utils import decompress_session
+from utils import decompress_session, color_palettes
 import dash_core_components as dcc
 
 
@@ -19,44 +17,12 @@ class DefaultTrackLayout(Enum):
     CUSTOM = DatasetReference.CUSTOM.value.encode()
 
 
-class ColorReference(Enum):
-    INSIDE = 'rgba(0, 255, 0,  0.6)'
-    OUTSIDE = 'rgba(255, 255, 0,  0.6)'
-    INSERTED = 'rgba(255, 0, 0,  0.6)'
-    DISORDER = 'rgba(120, 0, 0,  0.6)'
-    ORDER = 'rgba(0, 120, 0,  0.6)'
-    HELIX = 'rgba(247, 0, 255,  0.6)'
-    COIL = 'rgba(255, 162, 0,  0.6)'
-    SHEET = 'rgba(0, 4, 255,  0.6)'
-    CUSTOM_1 = diverging.Spectral[0].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_2 = diverging.Spectral[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_3 = diverging.Spectral[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_4 = diverging.Spectral[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_5 = diverging.Spectral[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_6 = diverging.Spectral[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_7 = diverging.Spectral[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_8 = diverging.Spectral[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_9 = diverging.Spectral[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_10 = diverging.Spectral[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_11 = diverging.Spectral[10].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CUSTOM_NAN = 'rgba(0, 0, 0, 0)'
-    VARIABLE_1 = sequential.ice[9].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    VARIABLE_2 = sequential.ice[8].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    VARIABLE_3 = sequential.ice[7].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    AVERAGE_4 = sequential.ice[6].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    AVERAGE_5 = sequential.ice[5].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    AVERAGE_6 = sequential.ice[4].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CONSERVED_7 = sequential.ice[3].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CONSERVED_8 = sequential.ice[2].replace(')', ', 0.6)').replace('rgb', 'rgba')
-    CONSERVED_9 = sequential.ice[1].replace(')', ', 0.6)').replace('rgb', 'rgba')
-
-
-def create_ConPlot(session, trigger, selected_tracks, cmap_selection, factor=2, contact_marker_size=5,
-                   track_marker_size=5, track_separation=2):
+def create_ConPlot(session, trigger, selected_tracks, cmap_selection, selected_palettes, factor=2,
+                   contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False):
     session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, contact_marker_size, \
-    track_marker_size, track_separation, error = process_args(session, trigger, selected_tracks, cmap_selection,
-                                                              factor, contact_marker_size, track_marker_size,
-                                                              track_separation)
+    track_separation, alpha, selected_palettes, error = process_args(session, trigger, selected_tracks, cmap_selection,
+                                                                     factor, contact_marker_size, track_separation,
+                                                                     transparent, selected_palettes)
 
     if error is not None:
         return PlotPlaceHolder(), error, DisplayControlCard(), True
@@ -64,7 +30,8 @@ def create_ConPlot(session, trigger, selected_tracks, cmap_selection, factor=2, 
     display_card = DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                       contact_marker_size=contact_marker_size, track_marker_size=track_marker_size,
                                       track_separation=track_separation, factor=factor, selected_cmaps=cmap_selection,
-                                      available_maps=available_cmaps)
+                                      available_maps=available_cmaps, transparent=transparent, superimpose=superimpose,
+                                      selected_palettes=selected_palettes)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     axis_range = (0, len(session[seq_fname.encode()]) + 1)
     figure = create_figure(axis_range)
@@ -82,13 +49,15 @@ def create_ConPlot(session, trigger, selected_tracks, cmap_selection, factor=2, 
             continue
 
         dataset = get_dataset(session, fname)
+        index = [x.name for x in color_palettes.DatasetColorPalettes].index(dataset)
+        palette = selected_palettes[index]
 
         if idx == 4:
-            traces = get_diagonal_traces(sequence=session[seq_fname.encode()], dataset=dataset,
-                                         marker_size=track_marker_size, prediction=session[fname.encode()])
+            traces = get_diagonal_traces(sequence=session[seq_fname.encode()], dataset=dataset, color_palette=palette,
+                                         marker_size=track_marker_size, prediction=session[fname.encode()], alpha=alpha)
         else:
             traces = get_traces(track_idx=idx, track_separation=track_separation, marker_size=track_marker_size,
-                                dataset=dataset, prediction=session[fname.encode()])
+                                dataset=dataset, prediction=session[fname.encode()], alpha=alpha, color_palette=palette)
 
         for trace in traces:
             figure.add_trace(trace)
@@ -149,17 +118,22 @@ def lookup_input_errors(session):
     return None
 
 
-def process_args(session, trigger, selected_tracks, cmap_selection, factor, contact_marker_size,
-                 track_marker_size, track_separation):
+def process_args(session, trigger, selected_tracks, cmap_selection, factor, contact_marker_size, track_separation,
+                 transparent, selected_palettes):
     session = decompress_session(session)
 
     error = lookup_input_errors(session)
     if error is not None:
-        return None, None, None, None, None, None, None, None, None, error
+        return None, None, None, None, None, None, None, None, None, None, error
 
     available_tracks, available_cmaps = get_available_data(session)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     seq_length = len(session[seq_fname.encode()])
+
+    if transparent:
+        alpha = '0.6'
+    else:
+        alpha = '1.0'
 
     if trigger['prop_id'] == ContextReference.PLOT_CLICK.value:
         if seq_length >= 700:
@@ -167,13 +141,12 @@ def process_args(session, trigger, selected_tracks, cmap_selection, factor, cont
         else:
             contact_marker_size = 3
         track_separation = round(seq_length / 100)
-        selected_tracks, cmap_selection = get_default_layout(session)
+        selected_tracks, cmap_selection, selected_palettes = get_default_layout(session)
     else:
         selected_tracks, cmap_selection = get_user_selection(cmap_selection, available_cmaps,
                                                              selected_tracks, available_tracks)
-
-    return session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, \
-           contact_marker_size, track_marker_size, track_separation, error
+    return session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, contact_marker_size, \
+           track_separation, alpha, selected_palettes, error
 
 
 def get_available_data(session):
@@ -205,6 +178,7 @@ def get_user_selection(cmap_selection, available_cmaps, track_selection, availab
 
 def get_default_layout(session):
     cmap_fname = session[DatasetReference.CONTACT_MAP.value.encode()][0]
+    selected_palettes = ['PALETTE_1'] * len(color_palettes.DatasetColorPalettes)
     tracks = []
 
     for dataset in DefaultTrackLayout:
@@ -212,11 +186,11 @@ def get_default_layout(session):
             tracks.append(session[dataset.value][0])
 
     if not any(tracks):
-        return ['---'] * 9, (cmap_fname, cmap_fname)
+        return ['---'] * 9, (cmap_fname, cmap_fname), selected_palettes
     else:
         missing_tracks = ['---' for missing in range(0, 5 - len(tracks))]
         tracks += missing_tracks
-        return tracks[1:][::-1] + tracks, (cmap_fname, cmap_fname)
+        return tracks[1:][::-1] + tracks, (cmap_fname, cmap_fname), selected_palettes
 
 
 def get_dataset(session, fname):
@@ -296,12 +270,13 @@ def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, 
     return coord + factor
 
 
-def get_diagonal_traces(prediction, dataset, marker_size, sequence):
+def get_diagonal_traces(prediction, dataset, marker_size, sequence, alpha, color_palette):
     if prediction is None:
         return None
 
     x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
+    palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     traces = []
 
     for state in states:
@@ -310,7 +285,8 @@ def get_diagonal_traces(prediction, dataset, marker_size, sequence):
             continue
 
         hovertext = ['Residue: {} ({}) | {}'.format(sequence[idx - 1], idx, state.name) for idx in x_diagonal]
-        color = ColorReference.__getattr__(state.name).value
+        color = palette.__getattr__(state.name).value
+        color = color.format(alpha)
 
         traces.append(
             create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
@@ -318,13 +294,14 @@ def get_diagonal_traces(prediction, dataset, marker_size, sequence):
     return traces
 
 
-def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
+def get_traces(prediction, dataset, track_idx, track_separation, marker_size, alpha, color_palette):
     if prediction is None:
         return None
 
     traces = []
     x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
+    palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
     if track_idx > 4:
@@ -341,7 +318,8 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size):
         x = [transform_coords_diagonal_axis(x, track_distance, lower_bound=lower_bound, y_axis=False) for x in
              x_diagonal]
         hovertext = ['%s' % state.name for idx in enumerate(x)]
-        color = ColorReference.__getattr__(state.name).value
+        color = palette.__getattr__(state.name).value
+        color = color.format(alpha)
 
         traces.append(create_scatter(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 

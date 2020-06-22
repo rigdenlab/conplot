@@ -320,11 +320,16 @@ def remove_dataset(alerts_open, session_id):
                State('track-separation-size-input', 'value'),
                State({'type': "track-select", 'index': ALL}, 'value'),
                State({'type': "halfsquare-select", 'index': ALL}, 'value'),
+               State("transparent-tracks-switch", 'value'),
+               State('superimpose-maps-switch', 'value'),
+               State({'type': 'colorpalette-select', 'index': ALL}, 'value'),
                State('session-id', 'children')])
-def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size,
-                   track_separation, track_selection, cmap_selection, session_id):
+def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size, track_separation,
+                   track_selection, cmap_selection, transparent, superimpose, selected_palettes, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
+
+    print(selected_palettes)
 
     if not callback_utils.ensure_triggered(trigger):
         return components.PlotPlaceHolder(), None, components.DisplayControlCard(), True
@@ -340,8 +345,8 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     session = cache.hgetall(session_id)
 
     app.logger.info('Session {} creating conplot'.format(session_id))
-    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, factor,
-                                     contact_marker_size, track_marker_size, track_separation)
+    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, selected_palettes, factor,
+                                     contact_marker_size, track_marker_size, track_separation, transparent, superimpose)
 
 
 # ==============================================================

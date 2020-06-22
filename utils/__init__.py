@@ -136,9 +136,3 @@ def get_session_action(*args, **kwargs):
     from utils.callback_utils import get_session_action
 
     return get_session_action(*args, **kwargs)
-
-
-def get_hydrophobicity(*args, **kwargs):
-    from utils.data_utils import get_hydrophobicity
-
-    return get_hydrophobicity(*args, **kwargs)

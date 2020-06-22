@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from loaders import DatasetReference
+from utils import color_palettes
 
 
 def ChangeUserPasswordCard(username):
@@ -171,6 +172,8 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
             dbc.Button('Refresh', id='refresh-button', outline=True, color='primary', block=True),
             dcc.Dropdown(id='track-selection-dropdown'),
             dbc.Input(id='L-cutoff-input', value=2),
+            components.TransparentSwitch(True),
+            components.SuperimposeSwitch(False),
             dbc.Input(id='contact-marker-size-input', value=contact_marker_size),
             dbc.Input(id='track-marker-size-input', value=track_marker_size),
             dbc.Input(id='track-separation-size-input', value=track_separation),
@@ -182,8 +185,9 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
 
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cmaps=None, available_maps=None,
-                       factor=2, contact_marker_size=5, track_marker_size=5, track_separation=2):
-    if available_tracks is None or available_maps is None:
+                       selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5, track_separation=2,
+                       transparent=True, superimpose=False):
+    if available_tracks is None or available_maps is None or selected_palettes is None:
         return dbc.Card(
             dbc.CardBody(
                 [
@@ -212,6 +216,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.Br(),
                             HalfSquareSelectionCard('B', selection=selected_cmaps[1], available_cmaps=available_maps),
                             html.Br(),
+                            components.SuperimposeSwitch(superimpose),
                             html.Hr(),
                             html.P('Adjust additional tracks'),
                             dbc.Card(components.SizeSelector('track-marker-size-input', track_marker_size, 1, 20),
@@ -222,7 +227,17 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                                                         'Separation'),
                                 outline=False),
                             html.Br(),
-                            components.TransparentSwitch(),
+                            ColorPaletteSelectionCard('membranetopology', selected_palettes[0]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[1]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('disorder', selected_palettes[2]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('conservation', selected_palettes[3]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('custom', selected_palettes[4]),
+                            html.Br(),
+                            components.TransparentSwitch(transparent),
                             html.Hr(),
                             html.P("Active tracks", className="card-text"),
                             TrackSelectionCard('-4', selected_tracks[0], available_tracks=available_tracks),
@@ -257,6 +272,14 @@ def TrackSelectionCard(track_idx, track_value, available_tracks):
     track_options += [{'label': fname, 'value': fname} for fname in available_tracks]
 
     return dbc.Card(components.TrackLayoutSelector(track_idx, track_options, track_value), outline=False)
+
+
+def ColorPaletteSelectionCard(dataset, selected_palette):
+    available_palettes = []
+    for palette in color_palettes.DatasetColorPalettes.__getattr__(dataset).value:
+        available_palettes.append({'label': palette.name, 'value': palette.name})
+
+    return dbc.Card(components.PaletteSelector(dataset, available_palettes, selected_palette), outline=False)
 
 
 def HalfSquareSelectionCard(square_idx, selection, available_cmaps):

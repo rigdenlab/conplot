@@ -1,6 +1,5 @@
 import unittest
-from Bio.Alphabet.IUPAC import protein
-from utils import callback_utils, get_hydrophobicity
+from utils import callback_utils
 
 
 class CallbacksTestCase(unittest.TestCase):
@@ -42,9 +41,3 @@ class CallbacksTestCase(unittest.TestCase):
         expected_output = ('contact', 'dummy_fname', 'dummy_fcontents', 1)
 
         self.assertTupleEqual(expected_output, callback_utils.get_upload_id(test_trigger, test_fnames, test_fcontents))
-
-    def test_6(self):
-        expected = [0.33, 0.22, 0.5, 0.12, -0.58, 1.14, -0.06, -0.81, 1.81, -0.69, -0.44, 0.43, -0.31, 0.19, 1.0, 0.33,
-                    0.11, -0.53, -0.24, 0.23]
-        seq = protein.letters
-        self.assertListEqual(expected, get_hydrophobicity(seq))

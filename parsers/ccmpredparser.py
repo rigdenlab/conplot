@@ -1,5 +1,6 @@
-from utils.exceptions import InvalidFormat
 from operator import itemgetter
+from utils.exceptions import InvalidFormat
+from utils import unique_by_key
 
 
 def CCMpredParser(input):
@@ -7,23 +8,27 @@ def CCMpredParser(input):
 
     output = []
 
-    data = []
-    for line in contents:
+    for res_1, line in enumerate(contents, 1):
         line = line.lstrip().split()
         if not line or line[0].isalpha() or len(line) == 1:
             continue
-        else:
-            data.append(line)
 
-    for res_1, score_array in enumerate(data, 1):
-        for res_2, score in enumerate(score_array, 1):
-            if abs((res_1) - int(res_2)) >= 5 and score != '' and float(score) > 0:
-                output.append((int(res_1), int(res_2), float(score)))
+        for res_2, raw_score in enumerate(line, 1):
+            raw_score = float(raw_score)
+            if raw_score == '' or raw_score < 0.1:
+                continue
+
+            seq_distance = abs(res_1 - res_2)
+
+            if seq_distance >= 5:
+                contact = [res_1, res_2, raw_score]
+                contact[:2] = sorted(contact[:2], reverse=True)
+                output.append((tuple(contact[:2]), contact[2]))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')
     else:
+        unique_contacts = unique_by_key(output, key=itemgetter(0))
+        output = [(*contact[0], contact[1]) for contact in unique_contacts]
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output
-
-

@@ -19,10 +19,10 @@ def PsipredParser(*args, **kwargs):
     return PsipredParser(*args, **kwargs)
 
 
-def PsicovParser(*args, **kwargs):
-    from parsers.psicovparser import PsicovParser
+def ContactParser(*args, **kwargs):
+    from parsers.contactparser import ContactParser
 
-    return PsicovParser(*args, **kwargs)
+    return ContactParser(*args, **kwargs)
 
 
 def IupredParser(*args, **kwargs):
@@ -31,48 +31,10 @@ def IupredParser(*args, **kwargs):
     return IupredParser(*args, **kwargs)
 
 
-def EvfoldParser(*args, **kwargs):
-    from parsers.evfoldparser import EvfoldParser
-
-    return EvfoldParser(*args, **kwargs)
-
-def FreecontactParser(*args, **kwargs):
-    from parsers.freecontactparser import FreecontactParser
-
-    return FreecontactParser(*args, **kwargs)
-
-def ComsatParser(*args, **kwargs):
-    from parsers.comsatparser import ComsatParser
-
-    return ComsatParser(*args, **kwargs)
-
-def PlmdcaParser(*args, **kwargs):
-    from parsers.plmdcaparser import PlmdcaParser
-
-    return PlmdcaParser(*args, **kwargs)
-
-
 def CCMpredParser(*args, **kwargs):
     from parsers.ccmpredparser import CCMpredParser
 
     return CCMpredParser(*args, **kwargs)
-
-
-def BbcontactsParser(*args, **kwargs):
-    from parsers.bbcontactsparser import BbcontactsParser
-
-    return BbcontactsParser(*args, **kwargs)
-
-def BclcontactsParser(*args, **kwargs):
-    from parsers.bclcontactsparser import BclcontactsParser
-
-    return BclcontactsParser(*args, **kwargs)
-
-def FlibParser(*args, **kwargs):
-    from parsers.flibparser import FlibParser
-
-    return FlibParser(*args, **kwargs)
-
 
 
 def CustomParser(*args, **kwargs):
@@ -86,43 +48,46 @@ class ParserFormats(Enum):
     CONSURF = ConsurfParser
     PSIPRED = PsipredParser
     IUPRED = IupredParser
-    PSICOV = PsicovParser
-    METAPSICOV = PsicovParser
-    NEBCON = PsicovParser
     CUSTOM = CustomParser
-    EVFOLD = EvfoldParser
+    PSICOV = ContactParser
+    METAPSICOV = ContactParser
+    NEBCON = ContactParser
+    CASPRR = ContactParser
+    GREMLIN = ContactParser
+    EPCMAP = ContactParser
+    EVFOLD = ContactParser
+    FREECONTACT = ContactParser
+    PLMDCA = ContactParser
+    PCONS = ContactParser
+    FLIB = ContactParser
+    SAINT2 = ContactParser
+    BCLCONTCATS = ContactParser
+    BBCONTACTS = ContactParser
+    COMSAT = ContactParser
     CCMPRED = CCMpredParser
-    CASPRR = PsicovParser
-    GREMLIN = PsicovParser
     COLSTATS = CCMpredParser
-    FREECONTACT = FreecontactParser
-    EPCMAP = PsicovParser
-    COMSAT = ComsatParser
-    PLMDCA = PlmdcaParser
-    PCONS = PlmdcaParser
-    BBCONTACTS = BbcontactsParser
-    BCLCONTCATS = BclcontactsParser
-    FLIB = FlibParser
 
 
 class ContactFormats(Enum):
-    PSICOV = PsicovParser
-    METAPSICOV = PsicovParser
-    NEBCON = PsicovParser
-    EVFOLD = EvfoldParser
-    CCMPRED = CCMpredParser
-    CASPRR = PsicovParser
-    GREMLIN = PsicovParser
-    COLSTATS = CCMpredParser
-    FREECONTACT = FreecontactParser
-    EPCMAP = PsicovParser
-    COMSAT = ComsatParser
-    PLMDCA = PlmdcaParser
-    PCONS = PlmdcaParser
-    BBCONTACTS = BbcontactsParser
-    BCLCONTCATS = BclcontactsParser
-    FLIB = FlibParser
-
+    PSICOV = 0
+    METAPSICOV = 1
+    NEBCON = 2
+    CASPRR = 3
+    GREMLIN = 4
+    EPCMAP = 5
+    EVFOLD = 6
+    FREECONTACT = 7
+    PLMDCA = 8
+    PCONS = 9
+    FLIB = 10
+    SAINT2 = 11
+    BCLCONTCATS = 12
+    BBCONTACTS = 13
+    COMSAT = 14
+    CCMPRED = 15
+    COLSTATS = 16
+    MAPALIGN = 17
+    ALEIGEN = 18
 
 
 class MembraneStates(Enum):

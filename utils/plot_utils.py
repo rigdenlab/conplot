@@ -119,7 +119,7 @@ def lookup_input_errors(session):
     for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
         cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
                                  max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
-        if cmap_max_register > seq_length - 1:
+        if cmap_max_register > seq_length:
             mismatched.append(cmap_fname)
 
     if any(mismatched):
@@ -258,7 +258,6 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
     hover_1 = []
     hover_2 = []
     for contact in cmap:
-        contact[:2] = sorted(contact[:2])
         res1_list.append(contact[0])
         res2_list.append(contact[1])
         hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
@@ -286,13 +285,13 @@ def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, 
     reference = []
 
     for contact in reference_cmap:
-        if contact[:2] in secondary_contacts or contact[:2][::-1] in secondary_contacts:
+        if contact[:2] in secondary_contacts:
             matched.append(contact)
         else:
             reference.append(contact)
 
     for contact in secondary_cmap:
-        if contact[:2] not in reference_contacts or contact[:2][::-1] in reference_contacts:
+        if contact[:2] not in reference_contacts:
             mismatched.append(contact)
 
     return reference, matched, mismatched
@@ -305,7 +304,6 @@ def create_superimposed_contact_traces(contacts, marker_size=5, color='black', s
     hover_2 = []
 
     for contact in contacts:
-        contact[:2] = sorted(contact[:2])
         res1_list.append(contact[0])
         res2_list.append(contact[1])
         hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))

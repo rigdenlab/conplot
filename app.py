@@ -1,6 +1,5 @@
 import components
 import dash
-from utils.exceptions import UserExists, EmailAlreadyUsed, IntegrityError
 import layouts
 import loaders
 import logging

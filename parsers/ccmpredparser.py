@@ -6,24 +6,25 @@ def CCMpredParser(input):
     contents = input.split('\n')
 
     output = []
+    contacts_cache = []
 
-    data = []
-    for line in contents:
+    for res_1, line in enumerate(contents, 1):
         line = line.lstrip().split()
         if not line or line[0].isalpha() or len(line) == 1:
             continue
-        else:
-            data.append(line)
 
-    for res_1, score_array in enumerate(data, 1):
-        for res_2, score in enumerate(score_array, 1):
-            if abs((res_1) - int(res_2)) >= 5 and score != '' and float(score) > 0:
-                output.append((int(res_1), int(res_2), float(score)))
+        for res_2, raw_score in enumerate(line, 1):
+            if raw_score == '' or float(raw_score) < 0.1:
+                continue
+            elif (res_1 - res_2) >= 5 and (res_1, res_2) not in contacts_cache:
+                output.append((int(res_1), int(res_2), float(raw_score)))
+                contacts_cache.append((res_1, res_2))
+            elif (res_2 - res_1) >= 5 and (res_2, res_1) not in contacts_cache:
+                output.append((int(res_2), int(res_1), float(raw_score)))
+                contacts_cache.append((res_2, res_1))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')
     else:
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output
-
-

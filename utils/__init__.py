@@ -136,3 +136,11 @@ def get_session_action(*args, **kwargs):
     from utils.callback_utils import get_session_action
 
     return get_session_action(*args, **kwargs)
+
+
+def unique_by_key(elements, key=None):
+    # Credits to: https://stackoverflow.com/questions/31499259/making-a-sequence-of-tuples-unique-by-a-specific-element
+    if key is None:
+        # no key: the whole element must be unique
+        key = lambda e: e
+    return list({key(el): el for el in elements}.values())

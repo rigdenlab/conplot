@@ -1,7 +1,8 @@
 from enum import Enum
-import re
-from utils.exceptions import InvalidFormat
 from operator import itemgetter
+import re
+from utils import unique_by_key
+from utils.exceptions import InvalidFormat
 
 
 class FieldSeparatorContactFormats(Enum):
@@ -107,37 +108,37 @@ class FieldRawScoreContactFormats(Enum):
 def ContactParser(input, input_format):
     contents = input.split('\n')
     output = []
-    contacts_cache = []
     res_1_idx = FieldResidueOneContactFormats.__getattr__(input_format).value
     res_2_idx = FieldResidueTwoContactFormats.__getattr__(input_format).value
     raw_score_idx = FieldRawScoreContactFormats.__getattr__(input_format).value
     line_size = LineSizeContactFormats.__getattr__(input_format).value
     regex = FieldSeparatorContactFormats.__getattr__(input_format).value
 
-    for line in contents:
+    for idx, line in enumerate(contents):
 
         line = line.lstrip().rstrip()
         line = re.split(regex, line)
 
-        if not line or len(line) < line_size or line[res_1_idx].isalpha():
+        if not line or len(line) < line_size or not line[res_1_idx].isdigit() or not line[res_2_idx].isdigit():
             continue
-        elif line[res_1_idx].isdigit() and line[res_2_idx].isdigit():
-            if abs(int(line[res_1_idx]) - int(line[res_2_idx])) >= 5:
-                res_1 = int(line[res_1_idx])
-                res_2 = int(line[res_2_idx])
-                if raw_score_idx is not None:
-                    raw_score = float(line[raw_score_idx])
-                else:
-                    raw_score = 0
-                if res_1 > res_2 and (res_1, res_2) not in contacts_cache:
-                    output.append((res_1, res_2, raw_score))
-                    contacts_cache.append((res_1, res_2))
-                elif res_2 > res_1 and (res_2, res_1) not in contacts_cache:
-                    output.append((res_2, res_1, raw_score))
-                    contacts_cache.append((res_2, res_1))
+
+        res_1 = int(line[res_1_idx])
+        res_2 = int(line[res_2_idx])
+        seq_distance = res_1 - res_2
+
+        if abs(seq_distance) >= 5:
+            if raw_score_idx is not None:
+                raw_score = float(line[raw_score_idx])
+            else:
+                raw_score = 0
+            contact = [res_1, res_2, raw_score]
+            contact[:2] = sorted(contact[:2], reverse=True)
+            output.append((tuple(contact[:2]), contact[2]))
 
     if not output:
         raise InvalidFormat('Unable to parse contacts')
     else:
+        unique_contacts = unique_by_key(output, key=itemgetter(0))
+        output = [(*contact[0], contact[1]) for contact in unique_contacts]
         output = sorted(output, key=itemgetter(2), reverse=True)
         return output

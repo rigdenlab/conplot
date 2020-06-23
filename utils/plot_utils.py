@@ -119,7 +119,7 @@ def lookup_input_errors(session):
     for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
         cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
                                  max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
-        if cmap_max_register > seq_length - 1:
+        if cmap_max_register > seq_length:
             mismatched.append(cmap_fname)
 
     if any(mismatched):

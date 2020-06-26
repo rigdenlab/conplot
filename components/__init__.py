@@ -1,6 +1,14 @@
 from enum import Enum
 
 
+class UserReadableTrackNames(Enum):
+    membranetopology = 'Membrane topology'
+    secondarystructure = 'Secondary Structure'
+    disorder = 'Sequence disorder'
+    conservation = 'Sequence conservation'
+    custom = 'Custom tracks'
+
+
 class EmailIssueReference(Enum):
     BUG = '1'
     FORGOT_PSSWRD = '2'

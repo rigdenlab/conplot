@@ -1,7 +1,7 @@
 import dash_bootstrap_components as dbc
 from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
-from components import EmailIssueReference
+from components import EmailIssueReference, UserReadableTrackNames
 from utils.plot_utils import DefaultTrackLayout
 
 
@@ -71,7 +71,7 @@ def PaletteSelector(dataset, options, value):
     index = [x.value for x in DefaultTrackLayout].index(dataset.encode())
     return dbc.InputGroup(
         [
-            dbc.InputGroupAddon(dataset, addon_type="prepend"),
+            dbc.InputGroupAddon(UserReadableTrackNames.__getattr__(dataset).value, addon_type="prepend"),
             dbc.Select(id={'type': 'colorpalette-select', 'index': index}, options=options, value=value)
         ]
     )

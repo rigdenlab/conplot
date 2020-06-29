@@ -24,7 +24,7 @@ def ConPlotLink():
         dbc.Row(
             [
                 dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="40px")),
-                dbc.Col(dbc.NavbarBrand('ConPlot', className="ml-2")),
+                dbc.Col(dbc.NavbarBrand(html.H1('ConPlot')), className="mt-2 ml-2"),
             ],
             align="center",
             no_gutters=True,

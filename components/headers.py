@@ -35,7 +35,7 @@ def AdditionalInputHeader():
 def StoreSessionHeader():
     return html.H4(className="card-text", style={'text-align': "center"},
                    children=HelpToolTip(id='store-session-header',
-                                        text="Store current session ",
+                                        text="Store session ",
                                         msg='Once you log in into your user account here you will be able to store'
                                             'the uploaded data so that you can re-visit the plots later.'))
 

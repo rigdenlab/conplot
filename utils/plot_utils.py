@@ -57,11 +57,11 @@ def create_ConPlot(session, trigger, selected_tracks, cmap_selection, selected_p
         )
         figure.add_trace(
             create_superimposed_contact_traces(mismatched, marker_size=contact_marker_size,
-                                               color='black', symbol='circle')
+                                               color='red', symbol='circle')
         )
         figure.add_trace(
             create_superimposed_contact_traces(matched, marker_size=contact_marker_size,
-                                               color='red', symbol='circle')
+                                               color='black', symbol='circle')
         )
 
     for idx, fname in enumerate(selected_tracks):

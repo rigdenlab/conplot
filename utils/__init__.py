@@ -44,6 +44,14 @@ class UrlIndex(Enum):
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
     CONPLOT_LOGO = '/assets/conplot_logo.png'
+    SWAMP_LOGO = '/assets/swamp_logo.png'
+    SWAMP_READDOCS = 'https://swamp.readthedocs.io/en/latest/'
+    SIMBAD_LOGO = '/assets/simbad_logo.png'
+    SIMBAD_READDOCS = 'https://simbad.readthedocs.io/en/latest/'
+    AMPLE_LOGO = '/assets/ample_logo.png'
+    AMPLE_READDOCS = 'https://ample.readthedocs.io/en/latest/'
+    CONKIT_LOGO = '/assets/conkit_logo.png'
+    CONKIT_READDOCS = 'https://conkit.readthedocs.io/en/latest/'
     STATIC_DATA = 'https://github.com/rigdenlab/conplot/tree/master/static/data'
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
 

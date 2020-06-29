@@ -13,7 +13,7 @@ def Body():
             dbc.Container([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H1('Conplot help page', className="card-text", style={'text-align': "center"}),
+                        html.H1('ConPlot help page', className="card-text", style={'text-align': "center"}),
                         html.Br(),
                         html.Br(),
                     ])

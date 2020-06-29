@@ -14,8 +14,7 @@ def Body(username):
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='additional-tracks-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
-        html.Br(),
-        html.Br(),
+        html.Div(id='half-breakline', style={'margin-bottom': '1vh'}),
         dbc.Row([
             dbc.Col([
                 html.Div([

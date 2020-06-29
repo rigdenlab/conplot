@@ -13,7 +13,7 @@ def Body():
             dbc.Container([
                 dbc.Card([
                     dbc.CardBody([
-                        html.H1('Contact form', className="card-text", style={'text-align': "center"}),
+                        html.H3('Contact form', className="card-text", style={'text-align': "center"}),
                         html.Br(),
                         html.H6("Please fill in the form with a description of the problem or the inquiry",
                                 className="card-text", style={'text-align': "center"}),

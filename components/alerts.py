@@ -14,11 +14,8 @@ def ErrorAlert(is_open=False):
 
 
 def FilenameAlert(filename, dataset):
-    return dbc.Alert(
-        '{}: {}'.format(dataset, filename),
-        dismissable=True, color="success", is_open=True,
-        id={'type': 'filename-alert', 'index': '["{}", "{}"]'.format(filename, dataset)}
-    )
+    return dbc.Alert(filename, dismissable=True, color="success", is_open=True,
+                     id={'type': 'filename-alert', 'index': '["{}", "{}"]'.format(filename, dataset)})
 
 
 def SuccessChangePasswordAlert(username):

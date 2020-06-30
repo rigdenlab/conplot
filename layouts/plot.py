@@ -14,7 +14,7 @@ def Body(username):
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='additional-tracks-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
-        html.Div(id='half-breakline', style={'margin-bottom': '1vh'}),
+        html.Br(),
         dbc.Row([
             dbc.Col([
                 html.Div([
@@ -52,7 +52,7 @@ def Body(username):
                 dbc.Button('Adjust Plot', outline=True, color='primary', block=True, id='refresh-button-2',
                            disabled=True)
             ], width=3, style={'height': '100%'}),
-        ], justify="between", style={'display': 'flex'})
+        ], justify="between", style={'display': 'flex'}, className='m-0')
     ])
 
 

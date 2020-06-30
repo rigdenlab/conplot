@@ -9,7 +9,7 @@ from utils import color_palettes
 def ChangeUserPasswordCard(username):
     return dbc.Card([
         dbc.CardBody([
-            html.H2("Change %s's password" % username, className="card-text", style={'text-align': "center"}),
+            html.H3("Change %s's password" % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             components.PasswordInput(id='old-password-input', addon='Old', placeholder='password'),
@@ -40,7 +40,7 @@ def NoPageFoundCard(url):
 def UserLoginCard():
     return dbc.Card([
         dbc.CardBody([
-            html.H2('User login', className="card-text", style={'text-align': "center"}),
+            html.H3('User login', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             components.UserNameInput(),
@@ -58,7 +58,7 @@ def UserLoginCard():
 def UserLogoutCard(username):
     return dbc.Card([
         dbc.CardBody([
-            html.H2('User logout', className="card-text", style={'text-align': "center"}),
+            html.H3('User logout', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             html.Br(),
@@ -299,7 +299,7 @@ def InvalidFormatCard():
 def CreateUserCard():
     return dbc.Card([
         dbc.CardBody([
-            html.H2('Create a new user', className="card-text", style={'text-align': "center"}),
+            html.H3('Create a new user', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             components.UserNameInput(),

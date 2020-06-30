@@ -10,30 +10,33 @@ def Body():
             html.Br(),
             html.Br(),
             html.Br(),
-            dbc.Container([
-                dbc.Card([
-                    dbc.CardBody([
-                        html.H1('Rigden Lab', className="card-text", style={'text-align': "center"}),
-                        html.Br(),
-                        html.P([
-                            """We are a structural bioinformatics group based at the """,
-                            html.A('University of Liverpool', href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
-                            """. Our research focuses on the creation of new software tools aimed at the 
-                            applications of residue contact predictions in the fields of molecular replacement 
-                            and """,
-                            html.I('ab initio'),
-                            """ protein modelling. If you work in any of these fields and you enjoyed using 
-                            ConPlot, here are some of the tools we have developed that you may also find useful."""
-                        ], style={"font-size": "150%", "text-align": "justify"}),
-                        html.Br(),
-                        AmpleJumbotron(),
-                        ConkitJumbotron(),
-                        SimbadJumbotron(),
-                        SwampJumbotron(),
-                        html.Br()
+            dbc.Row([
+                dbc.Col([
+                    dbc.Card([
+                        dbc.CardBody([
+                            html.H3('Rigden Lab', className="card-text", style={'text-align': "center"}),
+                            html.Br(),
+                            html.P([
+                                """We are a structural bioinformatics group based at the """,
+                                html.A('University of Liverpool', href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
+                                """. Our research focuses on the creation of new software tools aimed at the 
+                                applications of residue contact predictions in the fields of molecular replacement 
+                                and """,
+                                html.I('ab initio'),
+                                """ protein modelling. If you work in any of these fields and you enjoyed using 
+                                ConPlot, here are some of the tools we have developed that you may also find useful."""
+                            ], style={"font-size": "120%", "text-align": "justify"}),
+                            html.Br(),
+                            html.Br(),
+                            AmpleJumbotron(),
+                            ConkitJumbotron(),
+                            SimbadJumbotron(),
+                            SwampJumbotron(),
+                            html.Br()
+                        ])
                     ])
-                ])
-            ]),
+                ], width=10),
+            ], justify='center', align='center', className='m-0')
         ]
     )
 

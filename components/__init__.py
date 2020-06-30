@@ -57,6 +57,12 @@ def InvalidMapSelectionModal(*args, **kwargs):
     return InvalidMapSelectionModal(*args, **kwargs)
 
 
+def CustomFormatDescriptionModal(*args, **kwargs):
+    from components.modals import CustomFormatDescriptionModal
+
+    return CustomFormatDescriptionModal(*args, **kwargs)
+
+
 def SuccessContactFormModal(*args, **kwargs):
     from components.modals import SuccessContactFormModal
 

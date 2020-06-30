@@ -155,3 +155,39 @@ def SlackConnectionErrorModal():
             side, we are working to solve this.""", style={'text-align': "justify"})
         ),
     ], id='slack-contaction-error-modal', is_open=True)
+
+
+def CustomFormatDescriptionModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Custom Format Specifications'),
+        dbc.ModalBody([
+            dbc.Row([
+                html.P('Custom files can be used to add personalised tracks to your plots. These files are plain text '
+                       'files, and can be created manually in Notepad or similar text editors. The first line of this '
+                       'file should start with the flag "LEN", followed by the length of the protein sequence that '
+                       'this file is intended to be used with. Subsequent lines indicate records to be added in the '
+                       'track, each defined using three fields, which are separated by white spaces:',
+                       style={"text-align": "justify"}),
+                html.Ul([
+                    html.Li('Field 1: corresponds with the first residue number of the record  -i.e. indicates where '
+                            'the record should start-.', style={"text-align": "justify"}),
+                    html.Li('Field 2: corresponds with the last residue number of the record -i.e. indicates where the'
+                            'record should end-.', style={"text-align": "justify"}),
+                    html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
+                            'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
+                            'record. A complete list of the mapping between these numbers and the actual color that '
+                            'will be used in the plot can be found in the next section "About color palettes"',
+                            style={"text-align": "justify"})
+                ]),
+                html.P('Bellow there is a sample of the first four lines of an example custom file. As you can see, '
+                       'this sample corresponds with a file created for a protein containing 168 residues. In this '
+                       'case, three records have been created, a record with color "3" that spans between residues 1 '
+                       'and 10; a second record with color "6" that spans residues from 10 to 25; and a third record '
+                       'with color "9" between residues 30 and 45', style={"text-align": "justify"}),
+                html.Br(),
+                dbc.Col([
+                    html.Plaintext('LEN 168\n1 10 3\n10 25 6\n30 45 9')
+                ], width=5, style={'background-color': '#EAEAEA'}, align='center'),
+            ], justify='center', align='center', className='m-0')
+        ]),
+    ], id='custom-format-specs-modal', is_open=False, size='lg', scrollable=True)

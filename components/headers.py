@@ -20,7 +20,7 @@ def DisplayControlHeader():
                                         text='Display control ',
                                         msg='Here you can adjust the layout of your plot after it is '
                                             'generated. Just adjust the parameters of interest and click on'
-                                            ' the refresh button.'))
+                                            ' the adjust plot button.'))
 
 
 def AdditionalInputHeader():

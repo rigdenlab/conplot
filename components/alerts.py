@@ -7,8 +7,10 @@ def ErrorAlert(is_open=False):
     return dbc.Alert([
         html.H4('ERROR', className="alert-heading"),
         html.P([
-            "If you suspect a bug, please report this to email@me.com or on the project's ",
-            html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
+            "If you suspect a bug, please ",
+            dbc.CardLink(html.U('get in touch'), href=UrlIndex.CONTACT.value),
+            " and report this to us, or create an issue on our ",
+            html.A(html.U("Github repository"), href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
     ], dismissable=True, color='danger', fade=True, is_open=is_open, id='error-alert')
 
@@ -95,8 +97,8 @@ def ContactBugAlert():
     return dbc.Alert([
         html.H4('Info', className="alert-heading"),
         html.P([
-            "If you suspect a bug, you can also create an issue on the project's ",
-            html.A("Github repository", href=UrlIndex.GITHUB.value, className="alert-link")
+            "If you suspect a bug, you can also create an issue on the our ",
+            html.A(html.U("Github repository"), href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
     ],
         dismissable=False,

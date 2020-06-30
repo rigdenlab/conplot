@@ -28,9 +28,9 @@ def Body():
                                 multiple sources. The exploitation of this novel cross-referencing method can be useful 
                                 to potentially expose structural features that would otherwise go undetected. Developed 
                                 by the """,
-                                html.A("Rigden", href=UrlIndex.RIGDEN_GITHUB.value),
+                                dbc.CardLink(html.U("Rigden Lab"), href=UrlIndex.RIGDEN.value),
                                 """ group at the """,
-                                html.A("University of Liverpool", href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
+                                html.A(html.U("University of Liverpool"), href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
                                 """ this new tool provides an interactive interface for researchers in the field of 
                                 protein bioinformatics that are interested in analysing data on a given protein at a 
                                 glance."""
@@ -65,12 +65,11 @@ def Body():
                                     'User account are available in order to store sessions and re-visit them without '
                                     'having to upload the data again. It is also possible to share these sessions with '
                                     'other users.'),
-                                html.Li('Alternative color-blind friendly palettes are available.')
                             ], style={"font-size": "120%", "text-align": "justify"}),
                             html.P([
                                 'Visit our ',
                                 dbc.CardLink(html.U('help page'), href=UrlIndex.HELP.value),
-                                ' to read about how to use ConPlot and how to take advantage of all its potential.'
+                                ' to read about how to use ConPlot and take advantage of all its potential!'
                             ], style={"font-size": "120%", "text-align": "justify"}),
                         ])
                     ])

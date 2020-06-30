@@ -27,6 +27,30 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def SwampJumbotron():
+    from components.jumbotrons import SwampJumbotron
+
+    return SwampJumbotron()
+
+
+def SimbadJumbotron():
+    from components.jumbotrons import SimbadJumbotron
+
+    return SimbadJumbotron()
+
+
+def AmpleJumbotron():
+    from components.jumbotrons import AmpleJumbotron
+
+    return AmpleJumbotron()
+
+
+def ConkitJumbotron():
+    from components.jumbotrons import ConkitJumbotron
+
+    return ConkitJumbotron()
+
+
 def InvalidMapSelectionModal(*args, **kwargs):
     from components.modals import InvalidMapSelectionModal
 

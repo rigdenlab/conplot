@@ -43,6 +43,7 @@ class UrlIndex(Enum):
     GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
+    LAYOUT_DIAGRAM = '/assets/layout_diagram.png'
     CONPLOT_LOGO = '/assets/conplot_logo.png'
     SWAMP_LOGO = '/assets/swamp_logo.png'
     SWAMP_READDOCS = 'https://swamp.readthedocs.io/en/latest/'

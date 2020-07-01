@@ -191,8 +191,8 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
 
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cmaps=None, available_maps=None,
-                       selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5, track_separation=2,
-                       transparent=True, superimpose=False):
+                       selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5,
+                       track_separation=2, transparent=True, superimpose=False):
     if available_tracks is None or available_maps is None or selected_palettes is None:
         return dbc.Card(
             dbc.CardBody(
@@ -206,7 +206,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
     elif selected_tracks is not None and len(selected_tracks) >= 9 \
             and selected_cmaps is not None and len(selected_cmaps) >= 2:
         return html.Div([
-            html.H4('Display control', className="card-text", style={'text-align': "center"}),
+            components.DisplayControlHeader(),
             html.Br(),
             dbc.Card(
                 dbc.CardBody(

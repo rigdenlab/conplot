@@ -28,7 +28,87 @@ def Body():
                                     '.'
                                     ], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
-                            html.H4('1. Required input', className="card-text", style={'text-align': "center"}),
+                            html.H4('1. ConPlot layout', className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            html.P(["To create a plot, you will need to understand first the layout of ConPlot's ",
+                                    html.I('Plot'),
+                                    ' page. The layout of the application has been divided into four panels that will '
+                                    'allow you to interact with ConPlot:'],
+                                   style={"font-size": "110%", 'text-align': "justify"}),
+                            html.Ul([
+                                html.Li(['Panel 1: This panel contains the navigation bar that is displayed throughout '
+                                         'all ConPlot. The tabs on this bar should be your preferred method to browse '
+                                         'through ConPlot, as using the arrow keys or the refresh button on your '
+                                         'browser will cause you to loose your session and loose any unsaved data. '
+                                         'Also, you may notice that after you create a plot and browse away to a '
+                                         'different tab, plots will disappear when you come back to the ',
+                                         html.I('Plot'),
+                                         ' tab. Nevertheless, ConPlot kept everything for you so if you want to '
+                                         'see your plot again simply click on ',
+                                         html.I('Generate Plot'),
+                                         ' to get it back!'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Panel 2: This is the input panel, here you can upload all the data you want '
+                                         'to integrate into a plot. The panel is divided into three sections (from top '
+                                         'to bottom): first, the ',
+                                         html.I('Required Input'),
+                                         ' section, where you upload a sequence and a contact map -which is the '
+                                         'minimal input to create a plot-; second an ',
+                                         html.I('Additional Tracks'),
+                                         ' section, where you upload prediction files containing the information to '
+                                         'be display as coloured tracks in the diagonal of the map; and finally a ',
+                                         html.I('Store Session'),
+                                         ' section, where you will be able to store sessions -only after you login '
+                                         'into your user account-.'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(["Panel 3: This is the plot panel, and is the panel where the plots that you "
+                                         "create will be displayed. A grey placeholder with ConPlot's logo will be "
+                                         "displayed until you generate a plot. Plots are interactive, if you hover "
+                                         "over the contacts on the map or the tracks on the diagonal ConPlot will show "
+                                         "information  about that particular data point. If you over on the top left "
+                                         "of the plot, a mode bar will appear. With the buttons in this bar you can "
+                                         "control certain aspects of the plot, like the behaviour of the hovering "
+                                         "tool, the scale of the plot, or you can also download the plot you have "
+                                         "created as a ",
+                                         html.I('png'),
+                                         ' image file -click on the camera button-.'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Panel 4: This is the display control panel, where you will be able to '
+                                         'control the layout of the plot and the way information is displayed: the '
+                                         'size of the contact markers, the track colour palettes, the information '
+                                         'displayed on each track...etc. Once you have tweaked these settings, click '
+                                         'on ',
+                                         html.I('Adjust Plot'),
+                                         ' to refresh the plot with the adjusted parameters.'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                            ]),
+                            html.Br(),
+                            html.Img(src=UrlIndex.LAYOUT_DIAGRAM.value, height='700vh',
+                                     style={'border': '5px solid', 'display': 'block', 'margin-left': 'auto',
+                                            'margin-right': 'auto'}),
+                            html.Br(),
+                            html.Br(),
+                            dbc.Alert([
+                                'TIPS:',
+                                html.Ul([
+                                    html.Br(),
+                                    html.Li(["Plots that you create will disappear when you browse through the "
+                                             "different tabs in ConPlot. Nevertheless, ConPlot will keep all the data "
+                                             "for you so if you want to see the plot again simply click on ",
+                                             html.I('Generate Plot'), " to see your plot back again!"]),
+                                    html.Li("If you hover to the top left of the plot panel, the plot's mode bar will "
+                                            "appear. Use the buttons on this bar to control the behaviour of the "
+                                            "hovering tool, zoom in and out, change the scale of the plot or to "
+                                            "download the plot image as a png file.")
+                                ])
+                            ], style={'text-align': "justify"}, color='info'),
+                            dbc.Alert("WARNING: Do not click on the refresh button in your browser! Doing this will "
+                                      "cause your session to expire and you will loose any unsaved data and "
+                                      "plots. Instead, use ConPlot's navigation bar on the top panel to safely browse "
+                                      "through the website.", style={'text-align': "justify"}, color='danger'),
+                            html.Br(),
+                            html.H4('2. Required input', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.P("ConPlot requires the following inputs to be able to create a plot.",
@@ -70,7 +150,7 @@ def Body():
                                       'misrepresentations of data or even failure to create a plot.',
                                       style={'text-align': "justify"}, color='danger'),
                             html.Br(),
-                            html.H4('2. Aditional tracks', className="card-text",
+                            html.H4('3. Aditional tracks', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
@@ -127,7 +207,7 @@ def Body():
                                 html.Li(['CUSTOM file. These files are plain text files that can be created manually '
                                          'by users to include additional tracks of information to the plot. These '
                                          'files enable limitless personalisation of the contact map plot, as it '
-                                         'becomes possible to add as much information as wished. If you wish to read '
+                                         'becomes possible to add as much information as desired. If you wish to read '
                                          'about the format specifications click ',
                                          dbc.Button('here', color='link', size='sm', id='custom-format-specs-button',
                                                     className='ml-0'),
@@ -136,14 +216,14 @@ def Body():
                             ]),
                             dbc.Alert('TIP: You will not be able to upload a file until you first select its format in '
                                       'the dropdown selection menu.', style={'text-align': "justify"}, color='info'),
-                            html.P(['There is no limit on the number of files you can upload for each dataset, the '
-                                    'only requirement is that all the files correspond with the residue sequence that '
-                                    'has been uploaded. If these files do not mach, it could be possible that the data '
-                                    'on the resulting plot is misrepresented, or ConPlot is unable to create a plot on '
-                                    'the first place. Please note that if you upload multiple files for a given '
-                                    'format, the default behaviour of ConPlot is to include only the first one to the '
-                                    'plot. If you wish to visualise the other files, you will need to select them in '
-                                    'the track content selection menus as described in the next section.'],
+                            html.P(['There is no limit on the number of files you can upload, the only requirement is '
+                                    'that all the files correspond with the residue sequence that has been uploaded. '
+                                    'If these files do not mach, this could result in data misrepresentation or '
+                                    'Conplot not being able to create a plot. Please note that if you upload multiple '
+                                    'files for a given format, the default behaviour of ConPlot is to include only the '
+                                    'first one to the plot. If you wish to visualise the other files, you will need to '
+                                    'select them in the track content selection menus as described in the next '
+                                    'section.'],
                                    style={"font-size": "110%", "text-align": "justify"}),
                             dbc.Alert(['TIP: If you would like to upload a sequence prediction that is not included in '
                                        'the list of supported formats, you can always create a custom file and add the '
@@ -154,22 +234,21 @@ def Body():
                             html.Br(),
                             html.Br(),
                             html.Br(),
-                            html.H4('3. Create a plot and adjust the plot', className="card-text",
+                            html.H4('4. Create a plot and adjust the plot', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.Br(),
                             html.Br(),
-                            html.H4('4. FAQs', className="card-text",
+                            html.H4('5. FAQs', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.Br(),
                             html.Br(),
-                            html.H4('5. Tutorials', className="card-text",
+                            html.H4('6. Tutorials', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
-                            html.Br(),
                         ])
                     ])
                 ], width=10),

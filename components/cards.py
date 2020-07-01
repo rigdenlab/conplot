@@ -37,11 +37,17 @@ def NoPageFoundCard(url):
     ])
 
 
-def UserLoginCard():
+def UserLoginCard(not_logged_in=False):
+    if not_logged_in:
+        warning = html.H5('You must login before accessing the members only area', style={'text-align': "center"})
+    else:
+        warning = None
+
     return dbc.Card([
         dbc.CardBody([
             html.H3('User login', className="card-text", style={'text-align': "center"}),
             html.Hr(),
+            warning,
             html.Br(),
             components.UserNameInput(),
             components.PasswordInput(),

@@ -15,10 +15,7 @@ def PlotPlaceHolder():
 
 def UserAccountDropdownMenu(username=None):
     if username is None:
-        store_disabled = True
         username = 'LOGIN'
-    else:
-        store_disabled = False
 
     return dbc.Row([
         dbc.DropdownMenu(
@@ -28,12 +25,9 @@ def UserAccountDropdownMenu(username=None):
                 dbc.DropdownMenuItem("Create a new account", href=UrlIndex.CREATE_USER.value),
                 dbc.DropdownMenuItem(divider=True),
                 dbc.DropdownMenuItem("Members only area", header=True),
-                dbc.DropdownMenuItem("Access personal storage", disabled=store_disabled,
-                                     href=UrlIndex.USER_STORAGE.value),
-                dbc.DropdownMenuItem("Share sessions", disabled=store_disabled,
-                                     href=UrlIndex.SHARE_SESSIONS.value),
-                dbc.DropdownMenuItem("Change your password", disabled=store_disabled,
-                                     href=UrlIndex.CHANGE_PASSWORD.value),
+                dbc.DropdownMenuItem("Access personal storage", href=UrlIndex.USER_STORAGE.value),
+                dbc.DropdownMenuItem("Share sessions", href=UrlIndex.SHARE_SESSIONS.value),
+                dbc.DropdownMenuItem("Change your password", href=UrlIndex.CHANGE_PASSWORD.value),
                 dbc.DropdownMenuItem(divider=True),
             ], label=username, right=True, bs_size="md", id='user-account-dropdown'
         )

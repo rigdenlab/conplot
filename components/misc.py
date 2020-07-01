@@ -37,4 +37,16 @@ def UserAccountDropdownMenu(username=None):
                 dbc.DropdownMenuItem(divider=True),
             ], label=username, right=True, bs_size="md", id='user-account-dropdown'
         )
-    ], no_gutters=True, className="ml-auto flex-nowrap mt-3 mt-md-0", align="center")
+    ], no_gutters=True, className="ml-auto flex-nowrap mt-3 mt-md-0 mr-2", align="center")
+
+
+def ConPlotBrand():
+    return dbc.Row(
+        [
+            dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="75vh", className='m-0')),
+            dbc.Col(html.H1('ConPlot', style={'font-size': '7vh'}), className="ml-2 mt-2"),
+        ],
+        align="center",
+        no_gutters=True,
+        className='m-2'
+    )

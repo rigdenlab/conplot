@@ -45,5 +45,5 @@ def NavBar(pathname=None):
                 href=UrlIndex.RIGDEN.value
             )
         )
-    ], pills=True, fill=True, justified=True, style={'border-bottom': '1px solid', 'border-top': '1px solid'}
+    ], pills=True, fill=True, justified=True, style={'border-bottom': '2px solid', 'border-top': '2px solid'}
     )

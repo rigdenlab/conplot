@@ -17,17 +17,3 @@ def GitHubLink():
         className="ml-auto flex-nowrap mt-3 mt-md-0",
         align="center"
     )
-
-
-def ConPlotLink():
-    return html.A(
-        dbc.Row(
-            [
-                dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="40px")),
-                dbc.Col(dbc.NavbarBrand(html.H1('ConPlot')), className="mt-2 ml-2"),
-            ],
-            align="center",
-            no_gutters=True,
-        ),
-        href=UrlIndex.HOME.value,
-    )

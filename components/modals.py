@@ -183,7 +183,9 @@ def CustomFormatDescriptionModal():
                        'this sample corresponds with a file created for a protein containing 168 residues. In this '
                        'case, three records have been created, a record with color "3" that spans between residues 1 '
                        'and 10; a second record with color "6" that spans residues from 10 to 25; and a third record '
-                       'with color "9" between residues 30 and 45', style={"text-align": "justify"}),
+                       'with color "9" between residues 30 and 45. Note how a gap has been left between residues '
+                       '25 and 30. When a range of residues has no record, this will be left as a blank gap in the '
+                       'track by ConPlot.', style={"text-align": "justify"}),
                 html.Br(),
                 dbc.Col([
                     html.Plaintext('LEN 168\n1 10 3\n10 25 6\n30 45 9')

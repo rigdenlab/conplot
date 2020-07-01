@@ -14,7 +14,7 @@ class Custom_SpectralColorPalette(Enum):
     CUSTOM_9 = diverging.Spectral[8].replace(')', ', {})').replace('rgb', 'rgba')
     CUSTOM_10 = diverging.Spectral[9].replace(')', ', {})').replace('rgb', 'rgba')
     CUSTOM_11 = diverging.Spectral[10].replace(')', ', {})').replace('rgb', 'rgba')
-    CUSTOM_NAN = 'rgba(0, 0, 0, {})'
+    CUSTOM_NAN = 'rgba(255, 255, 255, {})'
 
 
 class Custom_GrayColorPalette(Enum):
@@ -29,7 +29,7 @@ class Custom_GrayColorPalette(Enum):
     CUSTOM_9 = sequential.gray[8].replace(')', ', {})').replace('rgb', 'rgba')
     CUSTOM_10 = sequential.gray[9].replace(')', ', {})').replace('rgb', 'rgba')
     CUSTOM_11 = sequential.gray[10].replace(')', ', {})').replace('rgb', 'rgba')
-    CUSTOM_NAN = 'rgba(0, 0, 0, {})'
+    CUSTOM_NAN = 'rgba(255, 255, 255, {})'
 
 
 class Conservation_BlueColorPalette(Enum):

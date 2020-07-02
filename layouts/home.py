@@ -69,7 +69,7 @@ def Body():
                             html.P([
                                 'Visit our ',
                                 dbc.CardLink(html.U('help page'), href=UrlIndex.HELP.value),
-                                ' to read about how to use ConPlot and take advantage of all its potential!'
+                                ' to read about how to use ConPlot and take advantage of its full potential!'
                             ], style={"font-size": "120%", "text-align": "justify"}),
                         ])
                     ])

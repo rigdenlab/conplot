@@ -25,8 +25,7 @@ def Body():
                                     'your user storage area. If you came here looking for an example of the data files '
                                     'used as an input, you can download them right ',
                                     html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
-                                    '.'
-                                    ], style={"font-size": "110%", "text-align": "justify"}),
+                                    '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             html.H4('1. ConPlot layout', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
@@ -214,8 +213,21 @@ def Body():
                                          ],
                                         style={"font-size": "110%", 'text-align': "justify"})
                             ]),
-                            dbc.Alert('TIP: You will not be able to upload a file until you first select its format in '
-                                      'the dropdown selection menu.', style={'text-align': "justify"}, color='info'),
+                            dbc.Alert([
+                                'TIPS:',
+                                html.Ul([
+                                    html.Br(),
+                                    html.Li('You will not be able to upload a file until you first select its format '
+                                            'in the dropdown selection menu.'),
+                                    html.Li(['If you would like to upload a sequence prediction that is not '
+                                             'included in the list of supported formats, you can always create a '
+                                             'custom file and add the information manually. If you think it would be '
+                                             'very useful to be able to read this format automatically with ConPlot, '
+                                             'you can try to ',
+                                             dbc.CardLink(html.U('get in touch'), href=UrlIndex.CONTACT.value),
+                                             ' and let us know.'])
+                                ])
+                            ], style={'text-align': "justify"}, color='info'),
                             html.P(['There is no limit on the number of files you can upload, the only requirement is '
                                     'that all the files correspond with the residue sequence that has been uploaded. '
                                     'If these files do not mach, this could result in data misrepresentation or '
@@ -225,18 +237,41 @@ def Body():
                                     'select them in the track content selection menus as described in the next '
                                     'section.'],
                                    style={"font-size": "110%", "text-align": "justify"}),
-                            dbc.Alert(['TIP: If you would like to upload a sequence prediction that is not included in '
-                                       'the list of supported formats, you can always create a custom file and add the '
-                                       'information manually. If you think it would be very useful to be able to read '
-                                       'this format automatically with ConPlot, you can try to ',
-                                       dbc.CardLink(html.U('get in touch'), href=UrlIndex.CONTACT.value),
-                                       ' and let us know.'], style={'text-align': "justify"}, color='info'),
                             html.Br(),
-                            html.Br(),
-                            html.Br(),
-                            html.H4('4. Create a plot and adjust the plot', className="card-text",
+                            html.H4('4. Adjust the plot layout', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
+                            html.Br(),
+                            html.P(['Once you have uploaded all the files of interest you can create your first plot '
+                                    'by clicking on ',
+                                    html.I('Generate Plot'),
+                                    '. Then, ConPlot will create a plot with the default layout settings. We tried to '
+                                    'make sure that by default ConPlot will generate plots where the provided data is '
+                                    'shown clearly, but this is a difficult task as it is something that is highly '
+                                    'dependent on your data. Thus, you are likely to need to adjust the settings on '
+                                    'the display control panel to get your data shown in the best possible way. To '
+                                    'help you do this, this panel has been divided into 4 sections:']),
+                            html.Ul([
+                                html.Li(['Section 1:'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Section 2:'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(["Section 3:"],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Section 4:'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                            ]),
+                            html.Br(),
+                            dbc.Alert(['TIP: If you have just uploaded a file, it might be possible that this file '
+                                       'does not appear listed on the track selection layout. You may need to click on '
+                                       'the ',
+                                       html.I('Generate Plot'),
+                                       ' button before being able to choose it in the dropdown menu.'],
+                                      style={'text-align': "justify"}, color='info'),
+                            html.Br(),
+                            html.P([
+                                """Here we explain how to create user accounts, and how to store and share sessions"""
+                            ], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             html.Br(),
                             html.Br(),
@@ -249,6 +284,17 @@ def Body():
                             html.H4('6. Tutorials', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
+                            html.Br(),
+                            html.P([
+                                """Here is a list of tutorials that will help you understand better how to use 
+                                ConPlot."""
+                            ], style={"font-size": "110%", "text-align": "justify"}),
+                            dbc.Alert([
+                                'TIP: If you want to follow these tutorials you will need to download the '
+                                'example data that can be found ',
+                                html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
+                                '.'
+                            ], style={'text-align': "justify"}, color='info'),
                         ])
                     ])
                 ], width=10),

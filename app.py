@@ -45,6 +45,15 @@ def toggle_alert(*args):
     return callback_utils.toggle_alert(*args)
 
 
+@app.callback(Output('custom-format-specs-modal', 'is_open'),
+              [Input('custom-format-specs-button', 'n_clicks')])
+def toggle_customformatspecs_modal(n_clicks):
+    trigger = dash.callback_context.triggered[0]
+    if not callback_utils.ensure_triggered(trigger):
+        return no_update
+    return True
+
+
 @app.callback(Output('contact-form-modal-div', 'children'),
               [Input('submit-contact-form-button', 'n_clicks')],
               [State('contact-name-input', 'value'),
@@ -82,14 +91,17 @@ def toggle_format_alert(*args):
               [Input('url', 'pathname')],
               [State('session-id', 'children')])
 def display_page(url, session_id):
-    app.logger.info('Session {} requested url {}'.format(session_id, url))
+    trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
 
     if url is None:
         return no_update
     elif session_utils.is_expired_session(session_id, cache, app.logger):
         return layouts.SessionTimeout(session_id)
+    elif not callback_utils.ensure_triggered(trigger):
+        return no_update
 
+    app.logger.info('Session {} requested url {}'.format(session_id, url))
     return app_utils.serve_url(url, session_id, cache, app.logger)
 
 

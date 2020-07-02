@@ -13,8 +13,8 @@ def CustomParser(input):
         length = int(len_flag[1])
         output = [CustomStates.CUSTOM_NAN.value for x in range(0, length)]
     else:
-        raise InvalidFormat(
-            'First line does not correspond with a valid protein length flag: {}'.format(' '.join(len_flag)))
+        raise InvalidFormat('First line does not correspond with a valid protein length flag: {}'
+                            ''.format(' '.join(len_flag)))
 
     for line in contents:
         line = line.lstrip().split()

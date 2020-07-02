@@ -1,16 +1,16 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from components import HelpToolTip, ConPlotLink, UserAccountDropdownMenu
+from components import HelpToolTip, ConPlotBrand, UserAccountDropdownMenu
 from utils import UrlIndex
 
 
 def Header(username=None):
-    return dbc.Navbar(
+    return dbc.Nav(
         [
-            ConPlotLink(),
+            ConPlotBrand(),
             dbc.NavbarToggler(id="navbar-toggler"),
-            dbc.Collapse(UserAccountDropdownMenu(username), id="navbar-collapse", navbar=True),
-        ],
+            UserAccountDropdownMenu(username),
+        ], justified=True
     )
 
 
@@ -20,7 +20,7 @@ def DisplayControlHeader():
                                         text='Display control ',
                                         msg='Here you can adjust the layout of your plot after it is '
                                             'generated. Just adjust the parameters of interest and click on'
-                                            ' the refresh button.'))
+                                            ' the adjust plot button.'))
 
 
 def AdditionalInputHeader():

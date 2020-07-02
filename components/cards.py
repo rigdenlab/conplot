@@ -9,7 +9,7 @@ from utils import color_palettes
 def ChangeUserPasswordCard(username):
     return dbc.Card([
         dbc.CardBody([
-            html.H2("Change %s's password" % username, className="card-text", style={'text-align': "center"}),
+            html.H3("Change %s's password" % username, className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             components.PasswordInput(id='old-password-input', addon='Old', placeholder='password'),
@@ -37,11 +37,17 @@ def NoPageFoundCard(url):
     ])
 
 
-def UserLoginCard():
+def UserLoginCard(not_logged_in=False):
+    if not_logged_in:
+        warning = html.H5('You must login before accessing the members only area', style={'text-align': "center"})
+    else:
+        warning = None
+
     return dbc.Card([
         dbc.CardBody([
-            html.H2('User login', className="card-text", style={'text-align': "center"}),
+            html.H3('User login', className="card-text", style={'text-align': "center"}),
             html.Hr(),
+            warning,
             html.Br(),
             components.UserNameInput(),
             components.PasswordInput(),
@@ -58,7 +64,7 @@ def UserLoginCard():
 def UserLogoutCard(username):
     return dbc.Card([
         dbc.CardBody([
-            html.H2('User logout', className="card-text", style={'text-align': "center"}),
+            html.H3('User logout', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             html.Br(),
@@ -185,8 +191,8 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
 
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cmaps=None, available_maps=None,
-                       selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5, track_separation=2,
-                       transparent=True, superimpose=False):
+                       selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5,
+                       track_separation=2, transparent=True, superimpose=False):
     if available_tracks is None or available_maps is None or selected_palettes is None:
         return dbc.Card(
             dbc.CardBody(
@@ -200,13 +206,15 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
     elif selected_tracks is not None and len(selected_tracks) >= 9 \
             and selected_cmaps is not None and len(selected_cmaps) >= 2:
         return html.Div([
-            html.H4('Display control', className="card-text", style={'text-align': "center"}),
+            components.DisplayControlHeader(),
             html.Br(),
             dbc.Card(
                 dbc.CardBody(
                     [
                         html.Div([
-                            html.P("Adjust contact map", className="card-text"),
+                            html.H5("Adjust contact map", className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
                             dbc.Card(components.LFactorSelector(factor), outline=False),
                             html.Br(),
                             dbc.Card(components.SizeSelector('contact-marker-size-input', contact_marker_size, 1, 15),
@@ -217,8 +225,10 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             HalfSquareSelectionCard('B', selection=selected_cmaps[1], available_cmaps=available_maps),
                             html.Br(),
                             components.SuperimposeSwitch(superimpose),
+                            html.Br(),
+                            html.H5('Adjust additional tracks', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
-                            html.P('Adjust additional tracks'),
+                            html.Br(),
                             dbc.Card(components.SizeSelector('track-marker-size-input', track_marker_size, 1, 20),
                                      outline=False),
                             html.Br(),
@@ -228,8 +238,10 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                                 outline=False),
                             html.Br(),
                             components.TransparentSwitch(transparent),
+                            html.Br(),
+                            html.H5("Active tracks", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
-                            html.P("Active tracks", className="card-text"),
+                            html.Br(),
                             TrackSelectionCard('-4', selected_tracks[0], available_tracks=available_tracks),
                             html.Br(),
                             TrackSelectionCard('-3', selected_tracks[1], available_tracks=available_tracks),
@@ -248,8 +260,10 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.Br(),
                             TrackSelectionCard('+4', selected_tracks[8], available_tracks=available_tracks),
                             html.Br(),
+                            html.Br(),
+                            html.H5("Color palettes", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
-                            html.P("Color palettes of additional tracks", className="card-text"),
+                            html.Br(),
                             ColorPaletteSelectionCard('membranetopology', selected_palettes[0]),
                             html.Br(),
                             ColorPaletteSelectionCard('secondarystructure', selected_palettes[1]),
@@ -299,7 +313,7 @@ def InvalidFormatCard():
 def CreateUserCard():
     return dbc.Card([
         dbc.CardBody([
-            html.H2('Create a new user', className="card-text", style={'text-align': "center"}),
+            html.H3('Create a new user', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
             components.UserNameInput(),

@@ -43,6 +43,7 @@ class UrlIndex(Enum):
     GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
+    LAYOUT_DIAGRAM = '/assets/layout_diagram.png'
     CONPLOT_LOGO = '/assets/conplot_logo.png'
     SWAMP_LOGO = '/assets/swamp_logo.png'
     SWAMP_READDOCS = 'https://swamp.readthedocs.io/en/latest/'
@@ -54,6 +55,14 @@ class UrlIndex(Enum):
     CONKIT_READDOCS = 'https://conkit.readthedocs.io/en/latest/'
     STATIC_DATA = 'https://github.com/rigdenlab/conplot/tree/master/static/data'
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
+    TOPCONS_WEB = 'http://topcons.cbr.su.se/'
+    TOPCONS_CITATION = 'https://dx.doi.org/10.1093%2Fnar%2Fgkv485'
+    PSIPRED_WEB = 'http://bioinf.cs.ucl.ac.uk/psipred/'
+    PSIPRED_CITATION = 'https://doi.org/10.1093/nar/gkz297'
+    IUPRED_WEB = 'https://iupred2a.elte.hu/'
+    IUPRED_CITATION = 'https://doi.org/10.1093/nar/gky384'
+    CONSURF_WEB = 'https://consurf.tau.ac.il/'
+    CONSURF_CITATION = 'https://doi.org/10.1093/nar/gkw408'
 
 
 def create_ConPlot(*args, **kwargs):

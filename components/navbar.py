@@ -23,18 +23,18 @@ def NavBar(pathname=None):
         ),
         dbc.NavItem(
             dbc.NavLink(
-                html.H4("Get in touch", className='mt-1',
-                        style={'color': ('white' if pathname == UrlIndex.CONTACT.value else 'black')}),
-                active=(pathname == UrlIndex.CONTACT.value),
-                href=UrlIndex.CONTACT.value
-            )
-        ),
-        dbc.NavItem(
-            dbc.NavLink(
                 html.H4("Help", className='mt-1',
                         style={'color': ('white' if pathname == UrlIndex.HELP.value else 'black')}),
                 active=(pathname == UrlIndex.HELP.value),
                 href=UrlIndex.HELP.value
+            )
+        ),
+        dbc.NavItem(
+            dbc.NavLink(
+                html.H4("Get in touch", className='mt-1',
+                        style={'color': ('white' if pathname == UrlIndex.CONTACT.value else 'black')}),
+                active=(pathname == UrlIndex.CONTACT.value),
+                href=UrlIndex.CONTACT.value
             )
         ),
         dbc.NavItem(
@@ -45,5 +45,5 @@ def NavBar(pathname=None):
                 href=UrlIndex.RIGDEN.value
             )
         )
-    ], pills=True, fill=True, justified=True
+    ], pills=True, fill=True, justified=True, style={'border-bottom': '2px solid', 'border-top': '2px solid'}
     )

@@ -27,10 +27,40 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def SwampJumbotron():
+    from components.jumbotrons import SwampJumbotron
+
+    return SwampJumbotron()
+
+
+def SimbadJumbotron():
+    from components.jumbotrons import SimbadJumbotron
+
+    return SimbadJumbotron()
+
+
+def AmpleJumbotron():
+    from components.jumbotrons import AmpleJumbotron
+
+    return AmpleJumbotron()
+
+
+def ConkitJumbotron():
+    from components.jumbotrons import ConkitJumbotron
+
+    return ConkitJumbotron()
+
+
 def InvalidMapSelectionModal(*args, **kwargs):
     from components.modals import InvalidMapSelectionModal
 
     return InvalidMapSelectionModal(*args, **kwargs)
+
+
+def CustomFormatDescriptionModal(*args, **kwargs):
+    from components.modals import CustomFormatDescriptionModal
+
+    return CustomFormatDescriptionModal(*args, **kwargs)
 
 
 def SuccessContactFormModal(*args, **kwargs):
@@ -507,10 +537,10 @@ def GitHubLink(*args, **kwargs):
     return GitHubLink(*args, **kwargs)
 
 
-def ConPlotLink(*args, **kwargs):
-    from components.links import ConPlotLink
+def ConPlotBrand(*args, **kwargs):
+    from components.misc import ConPlotBrand
 
-    return ConPlotLink(*args, **kwargs)
+    return ConPlotBrand(*args, **kwargs)
 
 
 def ContactBugAlert(*args, **kwargs):

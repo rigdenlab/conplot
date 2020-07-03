@@ -19,6 +19,12 @@ class ButtonActions(Enum):
     stop = 4
 
 
+def toggle_modal(trigger):
+    if not ensure_triggered(trigger):
+        return no_update
+    return True
+
+
 def toggle_selection_alert(format_selection):
     if format_selection is not None:
         return None, False

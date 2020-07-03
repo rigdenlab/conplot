@@ -49,9 +49,14 @@ def toggle_alert(*args):
               [Input('custom-format-specs-button', 'n_clicks')])
 def toggle_customformatspecs_modal(n_clicks):
     trigger = dash.callback_context.triggered[0]
-    if not callback_utils.ensure_triggered(trigger):
-        return no_update
-    return True
+    return callback_utils.toggle_modal(trigger)
+
+
+@app.callback(Output('gdpr-policy-modal', 'is_open'),
+              [Input('gdpr-policy-button', 'n_clicks')])
+def toggle_gdpr_policy_modal(n_clicks):
+    trigger = dash.callback_context.triggered[0]
+    return callback_utils.toggle_modal(trigger)
 
 
 @app.callback(Output('contact-form-modal-div', 'children'),

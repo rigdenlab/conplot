@@ -193,3 +193,14 @@ def CustomFormatDescriptionModal():
             ], justify='center', align='center', className='m-0')
         ]),
     ], id='custom-format-specs-modal', is_open=False, size='lg', scrollable=True)
+
+
+def GdprPolicyModal():
+    return dbc.Modal([
+        dbc.ModalHeader('ConPlot Website Privacy Policy'),
+        dbc.ModalBody([
+            dbc.Row([
+                html.P('Talk about GDPR', style={"text-align": "justify"}),
+            ], justify='center', align='center', className='m-0')
+        ]),
+    ], id='gdpr-policy-modal', is_open=False, size='lg', scrollable=True)

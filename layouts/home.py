@@ -1,3 +1,4 @@
+from components import GdprPolicyModal, GdprPolicyAlert
 from utils import UrlIndex
 import dash_html_components as html
 from components import NavBar, Header
@@ -7,12 +8,16 @@ import dash_bootstrap_components as dbc
 def Body():
     return html.Div(
         [
+            GdprPolicyModal(),
             html.Br(),
             html.Br(),
             html.Br(),
             dbc.Row([
                 dbc.Col([
                     dbc.Card([
+                        dbc.CardHeader(
+                            GdprPolicyAlert()
+                        ),
                         dbc.CardBody([
                             html.H2('Welcome to Conplot', className="card-text", style={'text-align': "center"}),
                             html.Br(),
@@ -71,10 +76,11 @@ def Body():
                                 dbc.CardLink(html.U('help page'), href=UrlIndex.HELP.value),
                                 ' to read about how to use ConPlot and take advantage of its full potential!'
                             ], style={"font-size": "120%", "text-align": "justify"}),
-                        ])
-                    ])
+                        ]),
+                    ]),
                 ], width=10)
-            ], justify='center', align='center', className='m-0')
+            ], justify='center', align='center', className='m-0'),
+
         ]
     )
 

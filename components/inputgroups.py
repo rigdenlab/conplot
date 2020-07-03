@@ -80,7 +80,10 @@ def PaletteSelector(dataset, options, value):
 def EmailInput(id='email-input'):
     return dbc.InputGroup([
         dbc.InputGroupAddon("Email", addon_type="prepend"),
-        dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65)
+        dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65),
+        dbc.InputGroupAddon('?', id='{}-tooltip'.format(id), addon_type='append', style={'font-size': '500%'}),
+        dbc.Tooltip('We will only use this email address to get in touch with you in case your forget your '
+                    'password or you request assistance from us.', target='{}-tooltip'.format(id))
     ], className="mb-3")
 
 

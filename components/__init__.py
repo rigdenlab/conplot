@@ -2,11 +2,11 @@ from enum import Enum
 
 
 class UserReadableTrackNames(Enum):
-    membranetopology = 'Membrane topology'
+    membranetopology = 'Membrane Topology'
     secondarystructure = 'Secondary Structure'
-    disorder = 'Sequence disorder'
-    conservation = 'Sequence conservation'
-    custom = 'Custom tracks'
+    disorder = 'Seq. Disorder'
+    conservation = 'Seq. Conservation'
+    custom = 'Custom Tracks'
 
 
 class EmailIssueReference(Enum):
@@ -25,6 +25,12 @@ def SessionStoreModal(*args, **kwargs):
     from components.modals import SessionStoreModal
 
     return SessionStoreModal(*args, **kwargs)
+
+
+def GdprPolicyModal(*args, **kwargs):
+    from components.modals import GdprPolicyModal
+
+    return GdprPolicyModal(*args, **kwargs)
 
 
 def SwampJumbotron():
@@ -337,6 +343,12 @@ def FilenameAlert(*args, **kwargs):
     from components.alerts import FilenameAlert
 
     return FilenameAlert(*args, **kwargs)
+
+
+def GdprPolicyAlert(*args, **kwargs):
+    from components.alerts import GdprPolicyAlert
+
+    return GdprPolicyAlert(*args, **kwargs)
 
 
 def SuccessChangePasswordAlert(*args, **kwargs):

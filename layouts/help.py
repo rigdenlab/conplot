@@ -1,6 +1,6 @@
 from utils import UrlIndex
 import dash_html_components as html
-from components import NavBar, Header, CustomFormatDescriptionModal
+from components import NavBar, Header, CustomFormatDescriptionModal, GdprPolicyAlert, GdprPolicyModal
 import dash_bootstrap_components as dbc
 
 
@@ -10,6 +10,7 @@ def Body():
             html.Br(),
             html.Br(),
             html.Br(),
+            GdprPolicyModal(),
             CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([
@@ -250,15 +251,83 @@ def Body():
                                     'shown clearly, but this is a difficult task as it is something that is highly '
                                     'dependent on your data. Thus, you are likely to need to adjust the settings on '
                                     'the display control panel to get your data shown in the best possible way. To '
-                                    'help you do this, this panel has been divided into 4 sections:']),
+                                    'help you do this, this panel has been divided into 4 sections:'],
+                                   style={"font-size": "110%", "text-align": "justify"}),
                             html.Ul([
-                                html.Li(['Section 1:'],
+                                html.Li(['Section 1: Adjust Contact Map. In this section it is possible to modify '
+                                         'aspects about how the residue contact information is displayed through a '
+                                         'series of dropdown menus:',
+                                         html.Ul([
+                                             html.Li(['L/N selector: Change the values of ', html.I('N'),
+                                                      ' with this selector to choose how many contacts should be '
+                                                      'included in the plot (L is the number of residues in the '
+                                                      'protein sequence, residues are sorted by their probability '
+                                                      'score). If you set ', html.I('N'),
+                                                      ' to 0, then all contacts in the file will be displayed. Please '
+                                                      'note that only numerical values between 0 and 10 are allowed.']),
+                                             html.Li('Size selector: Change the size of the contact markers in the '
+                                                     'plot. ConPlot will set a default value depending on the size of '
+                                                     'the protein you are working with, but you can still change this '
+                                                     'if you would like to make the markers smaller or bigger. Please '
+                                                     'note that only numerical values between 1 and 15 are allowed'),
+                                             html.Li(['Map A and Map B selectors: These two selectors let you choose '
+                                                      'which contact data should be displayed on the plot. By '
+                                                      'default, ', html.I('Map A'),
+                                                      ' refers to the top half triangle of the map, and ',
+                                                      html.I('Map B'), 'to the lower one. If the ',
+                                                      html.I('Superimpose Maps'),
+                                                      ' switch is activated, the the roles of these two dropdown '
+                                                      'menus change: ', html.I('Map A'),
+                                                      ' is now used to select the reference map, which will be '
+                                                      'compared with the secondary map selected with the ',
+                                                      html.I('Map B'), ' selector.']),
+                                             html.Li(['Superimpose Maps Switch: As explained above, if this switch '
+                                                      'is activated ', html.I('Map A'),
+                                                      ' will be used as a reference map to be compared with ',
+                                                      html.I('Map B'),
+                                                      '. In this mode, contacts will be coloured according to their '
+                                                      'presence in the reference map and the secondary map. Contacts '
+                                                      'that appear on both the reference and the secondary map will be '
+                                                      'colored in black -match-, those that only appear in the '
+                                                      'reference in grey -absent-, and those that only appear in the '
+                                                      'secondary map in red -mismatch-. Please note that you can only '
+                                                      'use this mode if you select two different contact map files in ',
+                                                      html.I('Map A'), ' and ', html.I('Map B'), ' selectors.'])
+                                         ])],
                                         style={"font-size": "110%", 'text-align': "justify"}),
-                                html.Li(['Section 2:'],
+                                html.Li(['Section 2: Adjust additional tracks. In this section you will find selectors '
+                                         'that will let you control aspects about how the additional tracks are being '
+                                         'displayed in the plot:',
+                                         html.Ul([
+                                             html.Li('Size selector: Change the size of the tiles used to create the '
+                                                     'tracks on the diagonal of the plot. By increasing this vallue, '
+                                                     'you will be able to create create the effect of a continuous '
+                                                     'uninterrupted line if you wish to.Please note that only '
+                                                     'numerical values between 1 and 20 are allowed'),
+                                             html.Li('Separation selector: Change the separation between the different '
+                                                     'tracks displayed on the plot. This can result useful if due to '
+                                                     'the default settings of ConPlot some tracks are layed on '
+                                                     'top of others.'),
+                                             html.Li('Transparent Tracks Switch: When active, the tracks will have '
+                                                     'some level of transparency, allowing you to see any contacts '
+                                                     'present beneath them.')
+                                         ])],
                                         style={"font-size": "110%", 'text-align': "justify"}),
-                                html.Li(["Section 3:"],
+                                html.Li(["Section 3: Active Tracks. In this section you can select which information "
+                                         "displayed on actively on each track of the diagonal. In ConPlot, the "
+                                         "diagonal axis of the contact maps has been divided into 9 tracks, which are "
+                                         "numbered according to their deviation from the reference diagonal track, "
+                                         "which is numbered as 0. Each of the selectors in this section controls the "
+                                         "information displayed on one of these tracks, and will let you choose the "
+                                         "name of one of the files that you have uploaded previously on the input "
+                                         "panel -panel 2 on Figure 1-. Once you select a file, the data contained in "
+                                         "it will be displayed in that particular track. If you leave the selection "
+                                         "blank, then no data will be shown."],
                                         style={"font-size": "110%", 'text-align': "justify"}),
-                                html.Li(['Section 4:'],
+                                html.Li(['Section 4: Color Palettes. In this section you can alter the color palettes '
+                                         'used to depict the additional tracks displayed on the plot. ConPlot allows '
+                                         'you to set different color schemes for each dataset track so that you can '
+                                         'customise the way your plot looks.'],
                                         style={"font-size": "110%", 'text-align': "justify"}),
                             ]),
                             html.Br(),
@@ -269,17 +338,32 @@ def Body():
                                        ' button before being able to choose it in the dropdown menu.'],
                                       style={'text-align': "justify"}, color='info'),
                             html.Br(),
-                            html.P([
-                                """Here we explain how to create user accounts, and how to store and share sessions"""
-                            ], style={"font-size": "110%", "text-align": "justify"}),
-                            html.Br(),
-                            html.Br(),
-                            html.Br(),
-                            html.H4('5. FAQs', className="card-text",
-                                    style={'text-align': "center"}),
+                            html.H4('5. User Accounts', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            html.Br(),
+                            html.P(['By creating an user account in ConPlot, you will be able to access a series of '
+                                    'additional features that will enable you to store sessions indefinitely and share '
+                                    'them with other users. You can access the user account menu with the ',
+                                    html.I('LOGIN'),
+                                    ' dropdown menu on the left of the navigation bar -panel 1 in Figure 1-.'],
+                                   style={"font-size": "110%", "text-align": "justify"}),
+                            html.Ul([
+                                html.Li(['Create an user account. First step to get you started with ConPlot accounts '
+                                         'is to create one. To do this, simply provide your details in the ',
+                                         html.I('Create a new account'),
+                                         ' button. We will require you to provide an username that is not already used '
+                                         'by someone else in our system, a password and an email. Please note that we '
+                                         'will not share this email address with any third party and that it will only '
+                                         'be used to contact you if you request assistance to restore your password '
+                                         'in case you forget it.'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Store sessions. Once you login into your account you will be able to store '
+                                         'sessions in your personal storage area. To do this, after you create a plot '
+                                         'of interest, scroll down to the bottom of the input panel -panel 2 in Figure '
+                                         '1-. Here you will see that you can name your current session and store it '
+                                         'into your personal storage.'],
+                                        style={"font-size": "110%", 'text-align': "justify"})
+                            ]),
                             html.Br(),
                             html.H4('6. Tutorials', className="card-text",
                                     style={'text-align': "center"}),
@@ -295,6 +379,11 @@ def Body():
                                 html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
                                 '.'
                             ], style={'text-align': "justify"}, color='info'),
+                            html.H4('7. Privacy Policy', className="card-text",
+                                    style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            GdprPolicyAlert(False)
                         ])
                     ])
                 ], width=10),

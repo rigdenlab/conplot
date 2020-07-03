@@ -197,10 +197,106 @@ def CustomFormatDescriptionModal():
 
 def GdprPolicyModal():
     return dbc.Modal([
-        dbc.ModalHeader('ConPlot Website Privacy Policy'),
+        dbc.ModalHeader('ConPlot Website Privacy Policy. Updated: 03/07/2020'),
         dbc.ModalBody([
             dbc.Row([
-                html.P('Talk about GDPR', style={"text-align": "justify"}),
-            ], justify='center', align='center', className='m-0')
+                html.H4('1. Introduction'),
+                html.P('ConPlot (also referred to as ‘we’ throughout this text) is committed to protect user data and '
+                       'privacy. The purpose of this text is to provide you with information about how the data we '
+                       'collect from users of ConPlot is used or shared. We may update this Privacy Notice from time '
+                       'to time. We encourage you re-visit this text frequently and take note of the date of the last '
+                       'update on the field above. We do not use or share any of your personal information for any '
+                       'purpose unrelated to the functionality of the website; however, we do collect some '
+                       'information to help us understand how our site is being used in order to improve community '
+                       'support and to enhance the ConPlot user’s experience when visiting our site.'
+                       , style={"text-align": "justify"}),
+                html.Br(),
+                html.H4('2. Information Automatically Collected'),
+                html.P(['When you browse ConPlot, certain information about your visit will be collected. We '
+                        'automatically collect and store the following type of information about your visit:',
+                        html.Ul([
+                            html.Li('The IP address of the client making the request. Often the IP address is that of '
+                                    'your personal computer or smart phone; however, it might be that of a firewall or '
+                                    'proxy your internet provider manages.'),
+                            html.Li('The operating system and information about the browser used when visiting the '
+                                    'site.'),
+                            html.Li('The date and time of each visit.'),
+                            html.Li('Pages visited.'),
+                            html.Li('The address of a referring page. If you click a link on a website that directs '
+                                    'you to ConPlot, the address of that originating web page will be collected. '
+                                    'This “referrer” information is transmitted as part of the browser and server '
+                                    'communications; it is not based on any marketing or partnering agreements with '
+                                    'the referring site.'),
+                        ]),
+                        'This automatically collected information does not identify you personally unless you include '
+                        'personally identifying information in a support form request; see the “Get in Touch” policy '
+                        'below for details. We use this information to measure the number of visitors to our site. '
+                        'The aggregate data may be included in prospectuses and reports to funding agencies.'
+                        ], style={"text-align": "justify"}),
+                html.Br(),
+                html.H4('3. Information You Directly Provide'),
+                html.P('Storing, sharing sessions and any other user account related features of the ConPlot requires '
+                       'that you register for an account. You will be required to provide an email address so we can '
+                       'send you your temporary account password in case you forget this password. An anonymous email '
+                       'service can be used if you do not want to provide personally identifying information. Your '
+                       'email address will not be used to send you alerts or notifications. Any email address '
+                       'provided in this site will only be used to get in touch with you in case your forget your '
+                       'password or you request assistance from us. We do not sell or distribute email addresses to '
+                       'third parties. We also ask for an user name when creating an account. If you share a session '
+                       'with another user, this user name will be displayed with the shared session. We will not sell '
+                       'or distribute your user name or institution to third parties. When you log in, the client IP '
+                       'address is recorded. This IP address can be correlated with the address automatically '
+                       'collected as noted above. If your user profile personally identifies you, then it may be '
+                       'possible to associate you with your detailed activity on the ConPlot website.',
+                       style={"text-align": "justify"}),
+                html.Br(),
+                html.H4('4. "Get in Touch" Form'),
+                html.P('The header on each ConPlot site includes a “Get in Touch” link to a form where users can '
+                       'submit general inquiries, bug reports or request assistance if they forget their passwords. '
+                       'Submissions through this form are emailed to members of the Rigden Lab at the University of '
+                       'Liverpool. The form includes a field for an email address. If the email address identifies you '
+                       'personally, say if you use your institutional email, then your correspondence with us will '
+                       'likewise be linked to you. A valid email is not strictly required, although we cannot reply to '
+                       'you without one. When you submit the form, your IP address and browser version will be '
+                       'recorded for internal use. In the case of reported bugs or other site errors, this '
+                       'information may be used by technical staff to help locate your session in the server logs to '
+                       'aid in troubleshooting the issue. This does have the side effect of making it possible to '
+                       'associate an IP address with an email address which may, in turn, personally identify you. '
+                       'However, ConPlot does not publicly release this information.', style={"text-align": "justify"}),
+                html.Br(),
+                html.H4('5. How ConPlot uses cookies'),
+                html.P('ConPlot uses cookies to associate multiple requests by your web browser into a stateful '
+                       'session. Cookies are essential to track the state of session. Some cookies persist only for a '
+                       'single session. The information is recorded temporarily and is erased when the user quits the '
+                       'session or closes the browser. Others may be persistently stored on the hard drive of your '
+                       'computer until you manually delete them from a browser folder or until they expire, which can '
+                       'be months after they were last used. Cookies can be disabled in your browser (refer to your '
+                       'browser’s documentation for instructions); however, the majority of the website functionality '
+                       'will be unavailable if cookies are disabled.', style={"text-align": "justify"}),
+                html.Br(),
+                html.H4('6. Your Rights based on the General Data Protection Regulation (GDPR)'),
+                html.P('You can read more about General Data Protection Regulation (GDPR) if you wish to, simply '
+                       'follow this link: https://gdpr-info.eu.', style={"text-align": "left"}),
+                html.Ul([
+                    html.Li('The right of transparency and modalities. The privacy policy should be clear and '
+                            'easy to follow in explaining what data we collect and how we use it.'),
+                    html.Li('The right to be informed about when data is gathered. This is described in this privacy '
+                            'policy.'),
+                    html.Li('The right of access. You can ask for what specific data we have about you and how we '
+                            'use it.'),
+                    html.Li('The right to rectification. We will correct any errors in your personal data that you '
+                            'point out to us.'),
+                    html.Li('The right to be forgotten. We are happy to delete your account and info when you make '
+                            'such a request.'),
+                    html.Li('The right to restrict processing. You have the right to request that we restrict the use '
+                            'of your data.'),
+                    html.Li('The right for notification obligation regarding rectification/erasure/restriction.'),
+                    html.Li('The right to data portability.'),
+                    html.Li('The right to object to the processing of your personal data at any time.'),
+                    html.Li('The right in relation to automated decision making and profiling. Basically, you have '
+                            'the right not to be subject to decisions based solely on automated processing which '
+                            'significantly affect you.')
+                ]),
+            ], justify='center', align='center', className='m-0'),
         ]),
     ], id='gdpr-policy-modal', is_open=False, size='lg', scrollable=True)

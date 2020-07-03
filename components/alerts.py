@@ -129,9 +129,8 @@ def ContactForgotPsswrdAlert():
 
 def GdprPolicyAlert(dismissable=True):
     return dbc.Alert([
-        'This website requires limited processing of your personal data in order to function '
-        'properly. By making use of this page you are giving your consent to this as '
-        'outlined in our Privacy Policy.',
+        'This website requires cookies & limited processing of your personal data in order to function properly. '
+        'By making use of ConPlot you are giving your consent to this as outlined in our Privacy Policy.',
         html.Hr(),
         dbc.Button('Read more', color='secondary', size='md', id='gdpr-policy-button')
     ], color='primary', dismissable=dismissable, style={'text-align': "center"})

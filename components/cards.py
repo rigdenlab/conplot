@@ -325,7 +325,8 @@ def CreateUserCard():
             html.Br(),
             dbc.Button("Create new user", color="primary", block=True, id='create-user-button'),
             html.Br(),
-        ])
+        ]),
+        dbc.CardFooter([components.GdprPolicyModal(), components.GdprPolicyAlert()])
     ])
 
 

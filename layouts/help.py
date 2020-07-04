@@ -1,6 +1,6 @@
 from utils import UrlIndex
 import dash_html_components as html
-from components import NavBar, Header, CustomFormatDescriptionModal, GdprPolicyAlert, GdprPolicyModal
+from components import NavBar, Header, CustomFormatDescriptionModal, GdprPolicyAlert, GdprPolicyModal, TutorialList
 import dash_bootstrap_components as dbc
 
 
@@ -391,16 +391,14 @@ def Body():
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            html.P([
-                                """Here is a list of tutorials that will help you understand better how to use 
-                                ConPlot."""
-                            ], style={"font-size": "110%", "text-align": "justify"}),
-                            dbc.Alert([
-                                'TIP: If you want to follow these tutorials you will need to download the '
-                                'example data that can be found ',
-                                html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
-                                '.'
-                            ], style={'text-align': "justify"}, color='info'),
+                            html.P(["Here is a list of tutorials that will help you understand better how to use "
+                                    "ConPlot. To follow them, you will need to download the example data ",
+                                    html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
+                                    '.'], style={"font-size": "110%", "text-align": "justify"}),
+                            html.Br(),
+                            TutorialList(),
+                            html.Br(),
+                            html.Br(),
                             html.H4('7. Privacy Policy', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),

@@ -189,6 +189,12 @@ def SessionList(*args, **kwargs):
     return SessionList(*args, **kwargs)
 
 
+def TutorialList(*args, **kwargs):
+    from components.listgrpoups import TutorialList
+
+    return TutorialList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
     from components.toasts import SessionTimedOutToast
 

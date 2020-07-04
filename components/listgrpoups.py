@@ -69,3 +69,30 @@ def SessionList(username, list_type, selected_session_pkid=None):
         return dbc.ListGroup(EmptyListItem())
 
     return dbc.ListGroup(list_items)
+
+
+def TutorialItem(idx, name):
+    style = {'border-bottom': '1px solid', 'border-left': '1px solid', 'border-right': '1px solid'}
+    if idx == 1:
+        style['border-top'] = '1px solid'
+
+    return dbc.ListGroupItem([
+        dbc.Row([
+            dbc.Col([
+                html.H5('Tutorial {}: {}'.format(idx, name), style={'vertical-align': 'middle', 'margin-top': 8})
+            ], style={'align-items': 'center', 'justify-content': 'left', 'display': 'flex'}),
+            dbc.Col(dbc.Button('Read more', id={'type': 'tutorial-button', 'index': idx}, color='primary'),
+                    style={'align-items': 'center', 'justify-content': 'right', 'display': 'flex'})
+        ], justify='around', align='around')
+    ], style=style)
+
+
+def TutorialList():
+    return dbc.Row(
+        dbc.ListGroup([
+            TutorialItem(idx=1, name='Creating your first plot'),
+            TutorialItem(idx=2, name='Storing and loading a session'),
+            TutorialItem(idx=3, name='Sharing a session'),
+            TutorialItem(idx=4, name='Getting in touch with us')
+        ], style={'width': '70%'}
+        ), justify='center', align='center')

@@ -219,6 +219,18 @@ def UserAccountHelpList(*args, **kwargs):
     return UserAccountHelpList(*args, **kwargs)
 
 
+def GdprRightsList(*args, **kwargs):
+    from components.listgrpoups import GdprRightsList
+
+    return GdprRightsList(*args, **kwargs)
+
+
+def AutomaticInfoCollectedList(*args, **kwargs):
+    from components.listgrpoups import AutomaticInfoCollectedList
+
+    return AutomaticInfoCollectedList(*args, **kwargs)
+
+
 def MandatoryInputHelpList(*args, **kwargs):
     from components.listgrpoups import MandatoryInputHelpList
 

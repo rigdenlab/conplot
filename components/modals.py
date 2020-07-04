@@ -1,4 +1,4 @@
-from components import StartNewSessionLink
+from components import StartNewSessionLink, GdprRightsList, AutomaticInfoCollectedList
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from utils import UrlIndex
@@ -215,20 +215,7 @@ def GdprPolicyModal():
                 html.H4('2. Information Automatically Collected'),
                 html.P(['When you browse ConPlot, certain information about your visit will be collected. We '
                         'automatically collect and store the following type of information about your visit:',
-                        html.Ul([
-                            html.Li('The IP address of the client making the request. Often the IP address is that of '
-                                    'your personal computer or smart phone; however, it might be that of a firewall or '
-                                    'proxy your internet provider manages.'),
-                            html.Li('The operating system and information about the browser used when visiting the '
-                                    'site.'),
-                            html.Li('The date and time of each visit.'),
-                            html.Li('Pages visited.'),
-                            html.Li('The address of a referring page. If you click a link on a website that directs '
-                                    'you to ConPlot, the address of that originating web page will be collected. '
-                                    'This “referrer” information is transmitted as part of the browser and server '
-                                    'communications; it is not based on any marketing or partnering agreements with '
-                                    'the referring site.'),
-                        ]),
+                        AutomaticInfoCollectedList(),
                         'This automatically collected information does not identify you personally unless you include '
                         'personally identifying information in a support form request; see the “Get in Touch” policy '
                         'below for details. We use this information to measure the number of visitors to our site. '
@@ -280,26 +267,7 @@ def GdprPolicyModal():
                         '(GDPR), you can do this ', html.A(html.U('here'), href=UrlIndex.GDPR_WEBSITE.value),
                         '. Here is a summary of what this includes:'],
                        style={"text-align": "left"}),
-                html.Ul([
-                    html.Li('The right of transparency and modalities. The privacy policy should be clear and '
-                            'easy to follow in explaining what data we collect and how we use it.'),
-                    html.Li('The right to be informed about when data is gathered. This is described in this privacy '
-                            'policy.'),
-                    html.Li('The right of access. You can ask for what specific data we have about you and how we '
-                            'use it.'),
-                    html.Li('The right to rectification. We will correct any errors in your personal data that you '
-                            'point out to us.'),
-                    html.Li('The right to be forgotten. We are happy to delete your account and info when you make '
-                            'such a request.'),
-                    html.Li('The right to restrict processing. You have the right to request that we restrict the use '
-                            'of your data.'),
-                    html.Li('The right for notification obligation regarding rectification/erasure/restriction.'),
-                    html.Li('The right to data portability.'),
-                    html.Li('The right to object to the processing of your personal data at any time.'),
-                    html.Li('The right in relation to automated decision making and profiling. Basically, you have '
-                            'the right not to be subject to decisions based solely on automated processing which '
-                            'significantly affect you.')
-                ]),
+                GdprRightsList(),
             ], justify='center', align='center', className='m-0'),
         ]),
     ], id='gdpr-policy-modal', is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True)

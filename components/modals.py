@@ -303,3 +303,35 @@ def GdprPolicyModal():
             ], justify='center', align='center', className='m-0'),
         ]),
     ], id='gdpr-policy-modal', is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True)
+
+
+def TutorialOneModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 1: Creating your first plot'),
+        dbc.ModalBody(['Tutorial goes here'])
+    ], id={'type': 'tutorial-modal', 'index': 1}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialTwoModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 2: Storing and loading a session'),
+        dbc.ModalBody(['Tutorial goes here'])
+    ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialThreeModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 3: Sharing a session'),
+        dbc.ModalBody(['Tutorial goes here'])
+    ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialFourModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 4: Getting in touch with us'),
+        dbc.ModalBody(['Tutorial goes here'])
+    ], id={'type': 'tutorial-modal', 'index': 4}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)

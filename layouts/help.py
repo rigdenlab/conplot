@@ -1,7 +1,7 @@
-from utils import UrlIndex
+import components
 import dash_html_components as html
-from components import NavBar, Header, CustomFormatDescriptionModal, GdprPolicyAlert, GdprPolicyModal, TutorialList
 import dash_bootstrap_components as dbc
+from utils import UrlIndex
 
 
 def Body():
@@ -10,8 +10,12 @@ def Body():
             html.Br(),
             html.Br(),
             html.Br(),
-            GdprPolicyModal(),
-            CustomFormatDescriptionModal(),
+            components.GdprPolicyModal(),
+            components.TutorialOneModal(),
+            components.TutorialTwoModal(),
+            components.TutorialThreeModal(),
+            components.TutorialFourModal(),
+            components.CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([
                     dbc.Card([
@@ -396,14 +400,14 @@ def Body():
                                     html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
-                            TutorialList(),
+                            components.TutorialList(),
                             html.Br(),
                             html.Br(),
                             html.H4('7. Privacy Policy', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            GdprPolicyAlert(False)
+                            components.GdprPolicyAlert(False)
                         ])
                     ])
                 ], width=10),
@@ -414,7 +418,7 @@ def Body():
 
 def Help(session_id, username):
     return html.Div([
-        Header(username),
-        NavBar(UrlIndex.HELP.value),
+        components.Header(username),
+        components.NavBar(UrlIndex.HELP.value),
         Body(),
     ])

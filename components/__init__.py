@@ -27,6 +27,27 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def TutorialOneModal(*args, **kwargs):
+    from components.modals import TutorialOneModal
+
+    return TutorialOneModal(*args, **kwargs)
+
+
+def TutorialTwoModal(*args, **kwargs):
+    from components.modals import TutorialTwoModal
+
+    return TutorialTwoModal(*args, **kwargs)
+
+def TutorialThreeModal(*args, **kwargs):
+    from components.modals import TutorialThreeModal
+
+    return TutorialThreeModal(*args, **kwargs)
+
+def TutorialFourModal(*args, **kwargs):
+    from components.modals import TutorialFourModal
+
+    return TutorialFourModal(*args, **kwargs)
+
 def GdprPolicyModal(*args, **kwargs):
     from components.modals import GdprPolicyModal
 

@@ -362,7 +362,29 @@ def Body():
                                          'of interest, scroll down to the bottom of the input panel -panel 2 in Figure '
                                          '1-. Here you will see that you can name your current session and store it '
                                          'into your personal storage.'],
-                                        style={"font-size": "110%", 'text-align': "justify"})
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Load stored sessions. You can access any session that you have stored in '
+                                         'your personal storage. To do this, access the users area on the dropdown '
+                                         'menu at the left of the navigation bar and click on ',
+                                         html.I('Access personal storage'),
+                                         '. Here you will see a list of all the sessions that you have stored, and '
+                                         'also those sessions that other users may have shared with you. Use the load '
+                                         'and delete buttons next to each session to load or delete any of these '
+                                         'sessions. Please note that you will not be able to delete sessions that were '
+                                         'shared with you, as only the owner of a session can do this. However, you '
+                                         'can decide to stop sharing the session by clicking on the stop button.'],
+                                        style={"font-size": "110%", 'text-align': "justify"}),
+                                html.Li(['Share sessions. You can share any session that you save with other users '
+                                         'of ConPlot. To do this, access the users area on the dropdown menu at the '
+                                         'left of the navigation bar and click on ',
+                                         html.I('Share sessions'),
+                                         '. Here you will be presented with a list of the sessions that you have '
+                                         'created. To share a session in particular, fill in the box next to this '
+                                         'sessions with the user that you want to share it with, and click on the '
+                                         'share button. Once you do this, the other user will have access to this '
+                                         'session. Note that you will only be able to do this with sessions that '
+                                         'you have created yourself: you cannot share sessions that have been shared '
+                                         'with you previously.'], style={"font-size": "110%", 'text-align': "justify"})
                             ]),
                             html.Br(),
                             html.H4('6. Tutorials', className="card-text",

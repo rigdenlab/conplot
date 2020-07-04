@@ -63,6 +63,7 @@ class UrlIndex(Enum):
     IUPRED_CITATION = 'https://doi.org/10.1093/nar/gky384'
     CONSURF_WEB = 'https://consurf.tau.ac.il/'
     CONSURF_CITATION = 'https://doi.org/10.1093/nar/gkw408'
+    GDPR_WEBSITE = 'https://gdpr-info.eu'
 
 
 def create_ConPlot(*args, **kwargs):

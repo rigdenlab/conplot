@@ -1,6 +1,7 @@
 from components import StartNewSessionLink
 import dash_bootstrap_components as dbc
 import dash_html_components as html
+from utils import UrlIndex
 
 
 def MismatchModal(*args):
@@ -275,8 +276,10 @@ def GdprPolicyModal():
                        'will be unavailable if cookies are disabled.', style={"text-align": "justify"}),
                 html.Br(),
                 html.H4('6. Your Rights based on the General Data Protection Regulation (GDPR)'),
-                html.P('You can read more about General Data Protection Regulation (GDPR) if you wish to, simply '
-                       'follow this link: https://gdpr-info.eu.', style={"text-align": "left"}),
+                html.P(['If you wish to know more about your rights under the General Data Protection Regulation '
+                        '(GDPR), you can do this ', html.A(html.U('here'), href=UrlIndex.GDPR_WEBSITE.value),
+                        '. Here is a summary of what this includes:'],
+                       style={"text-align": "left"}),
                 html.Ul([
                     html.Li('The right of transparency and modalities. The privacy policy should be clear and '
                             'easy to follow in explaining what data we collect and how we use it.'),
@@ -299,4 +302,4 @@ def GdprPolicyModal():
                 ]),
             ], justify='center', align='center', className='m-0'),
         ]),
-    ], id='gdpr-policy-modal', is_open=False, size='lg', scrollable=True)
+    ], id='gdpr-policy-modal', is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True)

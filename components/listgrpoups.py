@@ -389,3 +389,17 @@ def AutomaticInfoCollectedList():
                 'communications; it is not based on any marketing or partnering agreements with '
                 'the referring site.'),
     ])
+
+
+def CustomFormatFieldsHelpList():
+    return html.Ul([
+        html.Li('Field 1: corresponds with the first residue number of the record  -inclusive, i.e. '
+                'indicates where the record should start-.', style={"text-align": "justify"}),
+        html.Li('Field 2: corresponds with the last residue number of the record -inclusive, i.e. '
+                'indicates where the record should end-.', style={"text-align": "justify"}),
+        html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
+                'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
+                'record. A complete list of the mapping between these numbers and the actual color that '
+                'will be used in the plot can be found in the next section "Adjust the plot layout".',
+                style={"text-align": "justify"})
+    ])

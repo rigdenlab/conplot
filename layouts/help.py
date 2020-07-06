@@ -42,7 +42,7 @@ def Body():
                                    style={"font-size": "110%", 'text-align': "justify"}),
                             components.PanelLayoutHelpList(),
                             html.Br(),
-                            html.Img(src=UrlIndex.LAYOUT_DIAGRAM.value, height='700vh',
+                            html.Img(src=UrlIndex.HELP_FIG1.value, height='700vh',
                                      style={'border': '5px solid', 'display': 'block', 'margin-left': 'auto',
                                             'margin-right': 'auto'}),
                             html.Br(),

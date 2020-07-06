@@ -1,4 +1,4 @@
-from components import StartNewSessionLink, GdprRightsList, AutomaticInfoCollectedList
+from components import StartNewSessionLink, GdprRightsList, AutomaticInfoCollectedList, CustomFormatFieldsHelpList
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from utils import UrlIndex
@@ -169,17 +169,7 @@ def CustomFormatDescriptionModal():
                        'this file is intended to be used with. Subsequent lines indicate records to be added in the '
                        'track, each defined using three fields, which are separated by white spaces:',
                        style={"text-align": "justify"}),
-                html.Ul([
-                    html.Li('Field 1: corresponds with the first residue number of the record  -inclusive, i.e. '
-                            'indicates where the record should start-.', style={"text-align": "justify"}),
-                    html.Li('Field 2: corresponds with the last residue number of the record -inclusive, i.e. '
-                            'indicates where the record should end-.', style={"text-align": "justify"}),
-                    html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
-                            'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
-                            'record. A complete list of the mapping between these numbers and the actual color that '
-                            'will be used in the plot can be found in the next section "Adjust the plot layout".',
-                            style={"text-align": "justify"})
-                ]),
+                CustomFormatFieldsHelpList(),
                 html.P('Bellow there is a sample of the first four lines of an example custom file. As you can see, '
                        'this sample corresponds with a file created for a protein containing 168 residues. In this '
                        'case, three records have been created, a record with color "3" that spans between residues 1 '
@@ -276,7 +266,104 @@ def GdprPolicyModal():
 def TutorialOneModal():
     return dbc.Modal([
         dbc.ModalHeader('Tutorial 1: Creating your first plot'),
-        dbc.ModalBody(['Tutorial goes here'])
+        dbc.ModalBody(['First, use the navigation bar on top of the website to access the ',
+                       html.I('Plot'), ' tab. Then, you will be presented with the following website:',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG1.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'From here, you will be able to upload your data and integrate it into a plot. The minimal '
+                       'input that ConPlot requires to be able to generate a plot is a protein sequence -in a FASTA '
+                       'file- and a residue contact prediction file -a contact map in one of the supported formats-. '
+                       "Let's start by uploading these files using the input panel on the left of the page as follows:",
+                       html.Ul([
+                           html.Li(['Click on ', html.I('UPLOAD SEQUENCE'),
+                                    ' to upload a FASTA file with the sequence of the protein of interest, '
+                                    'in this case that will be ', html.I('EXAMPLE.FASTA')]),
+                           html.Li(['Click on the ', html.I('Format'),
+                                    ' dropdown menu  highlighted in red to select the format of the contact map that '
+                                    'you will be uploading. In this case, that will be ', html.I('PSICOV'),
+                                    ' format. You will see dropdown menus colored in red like this one all over '
+                                    'ConPlot everytime this input is required before moving to the stage of uploading '
+                                    'a file.']),
+                           html.Li(['Click on ', html.I('UPLOAD CONTACT'),
+                                    ' to upload a contact map file, in this case that will be the file ',
+                                    html.I('EXAMPLE.PSICOV'),
+                                    '. Please note that this file is follows the PSICOV format, just as we indicated '
+                                    'previously with the dropdown menu.'])
+                       ]),
+                       'You will notice that as you upload files, green file banners have appeared in the input panel '
+                       'as shown below: ',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG2.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       "This banners represent the space allocated for the uploaded file in ConPlot's memory, if you "
+                       'wish to remove any of them simply click on the cross on the right side of the banner to remove '
+                       'them from the memory. As you have already uploaded the input required to create a minimal '
+                       'contact map plot, if you click on the ', html.I('Generate Plot'),
+                       ' button, you will generate a contact map plot without any additional information, as shown in '
+                       'this figure:',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG3.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'If you wish to download the figure as a ', html.I('png'),
+                       ' file, simply click on the camera icon on the mode bar at the top right of the plot -this mode '
+                       'bar will only appear when you hover around the top right area of the plot-. You will be able '
+                       'to do this anytime as you add information to the plot or you adjust its layout.',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG4.value, height='300vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'Next, in order to add more tracks of information to the plot, we will upload the example '
+                       'sequence predictions using the designated are in the input panel. If you scroll down the input '
+                       'panel, you will see the ', html.I('Additional Trakcs'),
+                       ' input area. Again, here you will be presented with a format selection menu highlighted in '
+                       'red, indicating that we will need to select a format before uploading the first file. You have '
+                       'been provided with five files in the example data that you can upload in this section, the '
+                       'order at which you do this will not affect the output:',
+                       html.Ul([
+                           html.Li(['TOPCONS (membrane topology prediction): EXAMPLE.TOPCONS']),
+                           html.Li(['PSIPRED (secondary structure prediction): EXAMPLE.SS2']),
+                           html.Li(['CONSURF (sequence conservation): EXAMPLE.CONSURF']),
+                           html.Li(['IUPRED (sequence disorder prediction): EXAMPLE.IUPRED']),
+                           html.Li(['CUSTOM (custom track data file): EXAMPLE.CUSTOM'])
+                       ]),
+                       'Again, as you upload files green banners will appear depicting the storage allocated to each '
+                       'file.',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG5.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'Once you upload all these files, click again on ', html.I('GENERATE PLOT'),
+                       ' to generate a plot that includes all the information you just uploaded:',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG6.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'As you can see, due to the characteristics of this particular protein, the size of the tiles '
+                       'is not big enough so that they will overlay to form a continuous line. This might be the '
+                       'desired effect for some users, but if you are looking after solid lines in the diagonal of the '
+                       'plot you are likely to need to use some of the controls on the right of the plot. You may have '
+                       'noticed that since you generated the first bare contact map a display control panel appeared '
+                       'on the right of the plot. This panel contains numerous switches and menus that will let you '
+                       'tweak the exact way the plot looks, you can read all about these on section',
+                       html.I('4. Adjust the plot layout'),
+                       '. In this particular case, since we are interested in making the tiles big enough that they '
+                       'will overlay into a continuous solid line, you will need to adjust the size of the additional '
+                       'tracks: increase its value from the default 5 to 7. After doing this, click on the ',
+                       html.I('Adjust Plot'),
+                       ' button down below the display control panel. Please note that you did not click on the ',
+                       html.I('Generate Plot'),
+                       ' button beneath the input panel, that button is only used if you would like to generate a new '
+                       'plot after uploading more data to ConPlot. Since we did not upload more data, we are just '
+                       'adjusting the way the plot looks, we click on ', html.I('Adjust Plot'), '.',
+                       html.Img(src=UrlIndex.TUTORIAL1_FIG7.value, height='500vh', className='mt-3',
+                                style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+                       html.Br(),
+                       'That will be all for this tutorial, now you are able to create a plot that integrates several '
+                       'sources of information with you residue contact predictions. This representations are an '
+                       'effective way of visualising your data at a glance, but notice how you will loose this '
+                       'information unless you download the picture as a ', html.I('png'),
+                       ' file. Nevertheless, ConPlot provides you a way to store the uploaded information permanently '
+                       'within our data stores. For this, you will need to follow with the next tutorial to learn '
+                       'how to create an user account and store sessions!'
+                       ])
     ], id={'type': 'tutorial-modal', 'index': 1}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)
 

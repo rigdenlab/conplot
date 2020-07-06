@@ -231,6 +231,12 @@ def AutomaticInfoCollectedList(*args, **kwargs):
     return AutomaticInfoCollectedList(*args, **kwargs)
 
 
+def CustomFormatFieldsHelpList(*args, **kwargs):
+    from components.listgrpoups import CustomFormatFieldsHelpList
+
+    return CustomFormatFieldsHelpList(*args, **kwargs)
+
+
 def MandatoryInputHelpList(*args, **kwargs):
     from components.listgrpoups import MandatoryInputHelpList
 

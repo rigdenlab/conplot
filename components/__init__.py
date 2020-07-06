@@ -39,18 +39,6 @@ def TutorialTwoModal(*args, **kwargs):
     return TutorialTwoModal(*args, **kwargs)
 
 
-def TutorialThreeModal(*args, **kwargs):
-    from components.modals import TutorialThreeModal
-
-    return TutorialThreeModal(*args, **kwargs)
-
-
-def TutorialFourModal(*args, **kwargs):
-    from components.modals import TutorialFourModal
-
-    return TutorialFourModal(*args, **kwargs)
-
-
 def GdprPolicyModal(*args, **kwargs):
     from components.modals import GdprPolicyModal
 

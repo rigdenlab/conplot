@@ -1,4 +1,4 @@
-from components import StartNewSessionLink
+from components import StartNewSessionLink, GdprRightsList, AutomaticInfoCollectedList, CustomFormatFieldsHelpList
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from utils import UrlIndex
@@ -169,17 +169,7 @@ def CustomFormatDescriptionModal():
                        'this file is intended to be used with. Subsequent lines indicate records to be added in the '
                        'track, each defined using three fields, which are separated by white spaces:',
                        style={"text-align": "justify"}),
-                html.Ul([
-                    html.Li('Field 1: corresponds with the first residue number of the record  -inclusive, i.e. '
-                            'indicates where the record should start-.', style={"text-align": "justify"}),
-                    html.Li('Field 2: corresponds with the last residue number of the record -inclusive, i.e. '
-                            'indicates where the record should end-.', style={"text-align": "justify"}),
-                    html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
-                            'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
-                            'record. A complete list of the mapping between these numbers and the actual color that '
-                            'will be used in the plot can be found in the next section "Adjust the plot layout".',
-                            style={"text-align": "justify"})
-                ]),
+                CustomFormatFieldsHelpList(),
                 html.P('Bellow there is a sample of the first four lines of an example custom file. As you can see, '
                        'this sample corresponds with a file created for a protein containing 168 residues. In this '
                        'case, three records have been created, a record with color "3" that spans between residues 1 '
@@ -215,20 +205,7 @@ def GdprPolicyModal():
                 html.H4('2. Information Automatically Collected'),
                 html.P(['When you browse ConPlot, certain information about your visit will be collected. We '
                         'automatically collect and store the following type of information about your visit:',
-                        html.Ul([
-                            html.Li('The IP address of the client making the request. Often the IP address is that of '
-                                    'your personal computer or smart phone; however, it might be that of a firewall or '
-                                    'proxy your internet provider manages.'),
-                            html.Li('The operating system and information about the browser used when visiting the '
-                                    'site.'),
-                            html.Li('The date and time of each visit.'),
-                            html.Li('Pages visited.'),
-                            html.Li('The address of a referring page. If you click a link on a website that directs '
-                                    'you to ConPlot, the address of that originating web page will be collected. '
-                                    'This “referrer” information is transmitted as part of the browser and server '
-                                    'communications; it is not based on any marketing or partnering agreements with '
-                                    'the referring site.'),
-                        ]),
+                        AutomaticInfoCollectedList(),
                         'This automatically collected information does not identify you personally unless you include '
                         'personally identifying information in a support form request; see the “Get in Touch” policy '
                         'below for details. We use this information to measure the number of visitors to our site. '
@@ -280,26 +257,7 @@ def GdprPolicyModal():
                         '(GDPR), you can do this ', html.A(html.U('here'), href=UrlIndex.GDPR_WEBSITE.value),
                         '. Here is a summary of what this includes:'],
                        style={"text-align": "left"}),
-                html.Ul([
-                    html.Li('The right of transparency and modalities. The privacy policy should be clear and '
-                            'easy to follow in explaining what data we collect and how we use it.'),
-                    html.Li('The right to be informed about when data is gathered. This is described in this privacy '
-                            'policy.'),
-                    html.Li('The right of access. You can ask for what specific data we have about you and how we '
-                            'use it.'),
-                    html.Li('The right to rectification. We will correct any errors in your personal data that you '
-                            'point out to us.'),
-                    html.Li('The right to be forgotten. We are happy to delete your account and info when you make '
-                            'such a request.'),
-                    html.Li('The right to restrict processing. You have the right to request that we restrict the use '
-                            'of your data.'),
-                    html.Li('The right for notification obligation regarding rectification/erasure/restriction.'),
-                    html.Li('The right to data portability.'),
-                    html.Li('The right to object to the processing of your personal data at any time.'),
-                    html.Li('The right in relation to automated decision making and profiling. Basically, you have '
-                            'the right not to be subject to decisions based solely on automated processing which '
-                            'significantly affect you.')
-                ]),
+                GdprRightsList(),
             ], justify='center', align='center', className='m-0'),
         ]),
     ], id='gdpr-policy-modal', is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True)
@@ -308,7 +266,102 @@ def GdprPolicyModal():
 def TutorialOneModal():
     return dbc.Modal([
         dbc.ModalHeader('Tutorial 1: Creating your first plot'),
-        dbc.ModalBody(['Tutorial goes here'])
+        dbc.ModalBody([
+            'First, use the navigation bar on top of the website to access the ',
+            html.I('Plot'), ' tab. Then, you will be presented with the following website:',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG1.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'From here, you will be able to upload your data and integrate it into a plot. The minimal input that '
+            'ConPlot requires to be able to generate a plot is a protein sequence -in a FASTA file- and a residue '
+            "contact prediction file -a contact map in one of the supported formats-. Let's start by uploading these "
+            'files using the input panel on the left of the page as follows:',
+            html.Ul([
+                html.Li(['Click on ', html.I('UPLOAD SEQUENCE'),
+                         ' to upload a FASTA file with the sequence of the protein of interest, '
+                         'in this case that will be ', html.I('EXAMPLE.FASTA')]),
+                html.Li(['Click on the ', html.I('Format'),
+                         ' dropdown menu  highlighted in red to select the format of the contact map that '
+                         'you will be uploading. In this case, that will be ', html.I('PSICOV'),
+                         ' format. You will see dropdown menus colored in red like this one all over '
+                         'ConPlot everytime this input is required before moving to the stage of uploading '
+                         'a file.']),
+                html.Li(['Click on ', html.I('UPLOAD CONTACT'),
+                         ' to upload a contact map file, in this case that will be the file ',
+                         html.I('EXAMPLE.PSICOV'),
+                         '. Please note that this file is follows the PSICOV format, just as we indicated '
+                         'previously with the dropdown menu.'])
+            ]),
+            'You will notice that as you upload files, green file banners have appeared in the input panel as shown '
+            'below: ',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG2.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            "This banners represent the space allocated for the uploaded file in ConPlot's memory, if you wish to "
+            'remove any of them simply click on the cross on the right side of the banner to remove them from the '
+            'memory. As you have already uploaded the input required to create a minimal contact map plot, if you '
+            'click on ', html.I('Generate Plot'),
+            ', you will generate a contact map plot without any additional information, as shown in this figure:',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG3.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'If you wish to download the figure as a ', html.I('png'),
+            ' file, simply click on the camera icon on the mode bar at the top right of the plot -this mode bar will '
+            'only appear when you hover around the top right area of the plot-. You will be able to do this anytime '
+            'as you add information to the plot or you adjust its layout.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG4.value, height='300vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'Next, in order to add more tracks of information to the plot, we will upload the example sequence '
+            'predictions using the designated are in the input panel. If you scroll down the input panel, you will '
+            'see the ', html.I('Additional Trakcs'),
+            ' input area. Again, here you will be presented with a format selection menu highlighted in red, '
+            'indicating that we will need to select a format before uploading the first file. You have been provided '
+            'with five files in the example data that you can upload in this section, the order at which you do this '
+            'will not affect the output:',
+            html.Ul([
+                html.Li(['TOPCONS (membrane topology prediction): EXAMPLE.TOPCONS']),
+                html.Li(['PSIPRED (secondary structure prediction): EXAMPLE.SS2']),
+                html.Li(['CONSURF (sequence conservation): EXAMPLE.CONSURF']),
+                html.Li(['IUPRED (sequence disorder prediction): EXAMPLE.IUPRED']),
+                html.Li(['CUSTOM (custom track data file): EXAMPLE.CUSTOM'])
+            ]),
+            'Again, as you upload files green banners will appear depicting the storage allocated to each file.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG5.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'Once you upload all these files, click again on ', html.I('GENERATE PLOT'),
+            ' to generate a plot that includes all the information you just uploaded:',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG6.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'As you can see, due to the characteristics of this particular protein, the size of the tiles '
+            'is not big enough so that they will overlay to form a continuous line. This might be the '
+            'desired effect for some users, but if you are looking after solid lines in the diagonal of the '
+            'plot you are likely to need to use some of the controls on the right of the plot. You may have '
+            'noticed that since you generated the first bare contact map a display control panel appeared '
+            'on the right of the plot. This panel contains numerous switches and menus that will let you '
+            'tweak the exact way the plot looks, you can read all about these on section',
+            html.I('4. Adjust the plot layout'),
+            '. In this particular case, since we are interested in making the tiles big enough that they will overlay '
+            'into a continuous solid line, you will need to adjust the size of the additional tracks: increase its '
+            'value from the default 5 to 7. After doing this, click on the ', html.I('Adjust Plot'),
+            ' button down below the display control panel. Please note that you did not click on the ',
+            html.I('Generate Plot'),
+            ' button beneath the input panel, that button is only used if you would like to generate a new '
+            'plot after uploading more data to ConPlot. Since we did not upload more data, we are just adjusting the '
+            'way the plot looks, we click on ', html.I('Adjust Plot'), '.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG7.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'That will be all for this tutorial, now you are able to create a plot that integrates several '
+            'sources of information with you residue contact predictions. This representations are an '
+            'effective way of visualising your data at a glance, but notice how you will loose this '
+            'information unless you download the picture as a ', html.I('png'),
+            ' file. Nevertheless, ConPlot provides you a way to store the uploaded information permanently '
+            'within our data stores. For this, you will need to follow with the next tutorial to learn '
+            'how to create an user account and store sessions!', html.Br(), html.Br()
+        ])
     ], id={'type': 'tutorial-modal', 'index': 1}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)
 
@@ -316,22 +369,70 @@ def TutorialOneModal():
 def TutorialTwoModal():
     return dbc.Modal([
         dbc.ModalHeader('Tutorial 2: Storing and loading a session'),
-        dbc.ModalBody(['Tutorial goes here'])
+        dbc.ModalBody([
+            'First thing is to create an user account in ConPlot. To do this, first click on the ', html.I('LOGIN'),
+            ' dropdown menu on the top right of the website. This menu will let you access the user portal and the '
+            'members only area -only available once you login-.',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG1.value, height='300vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'By clicking on ', html.I('Create a new account'), ' you will be redirected to the new users area:',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG2.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            'Here you can create a new user by providing an user name, a password and an email. We will only use this '
+            'email address to get in touch with you in case your forget your or you request assistance from us. Also '
+            'please note that both the user name and the email need to be unique, i.e. they cannot be already in use '
+            'in our system. A valid email is not strictly required as we do not validate the email address you '
+            'provide, but please note that you will need access to this email in case you forget your password. Once '
+            'you provide all the required information a green banner will appear informing you that you have now '
+            'created an user account. As an user of ConPlot you can now store sessions on your personal storage and '
+            'retrieve the data whenever you want. You will also be able to share this data among your collaborators '
+            "registered in ConPlot if you wish to. Let's start by storing a session. If you just completed tutorial 1, "
+            'you will now have uploaded to ConPlot the example files and created a plot to visualise this data. '
+            'Thus, if you head back to the ', html.I('Plot'),
+            ' area you will be able to see the files you just uploaded. Since you have created an user account and you '
+            'are logged in, if you scroll down to the bottom of the input panel you will see that the input panel to '
+            'store the current session has been unlocked: ',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG3.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'Fill in the text box with the name you want to use to identify the saved session and click on the button '
+            'with the save icon. A green alert will appear letting you now that the operation was a success. Now you '
+            'have stored the data you uploaded in this session, it will be stored for you permanently so that you can '
+            'come back and re-visit it whenever you want.',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG4.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'If you want to check out any session that you have saved following this method, click again on the ',
+            html.I('LOGIN'), 'dropdown menu and select the ', html.I('Access Personal Storage'),
+            'option. This will take you to a list of all the sessions that you have saved with your user account, plus '
+            'those that have been shared with you:',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG5.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            'As you can see, in this case we can see the EXAMPLE session that we just stored. To load any of the '
+            'sessions listed here, simply click on the button with the disk icon. Alternatively, if you wish to delete '
+            'a session, click on the button with the trash icon. Notice how there is another section for those '
+            'sessions that have been shared with your user. This section is likely to be empty as you just created '
+            'your user, but as your collaborators start to use ConPlot as well, this functionality can become an easy '
+            'way to share data across other lab members. To share a session with another user, click again on the ',
+            html.I('LOGIN'), 'dropdown menu and select the ', html.I('Share Sessions'),
+            'option. This will take you to a list of all the sessions that you have saved with your user account. Next '
+            'to each item, there is a text box that you can use to write the name of the user that you want to share '
+            'that particular session with, and a share button.',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG6.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            'Once you share a session with another user, they will be able to see this session listed in their '
+            'personal storage. For example, in the following image, ', html.I('user_2'),
+            ' has access to the example session as it has been shared by ', html.I('user_1'), '.',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG7.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            'In the same way as you can do with your own stored sessions, if you want to load a shared session simply '
+            'click on the button with the disk icon. However, please note that you will not be able to delete shared '
+            'sessions -this can only be done by the owner of the session-. Instead, you may click on the button with '
+            'the stop icon to stop sharing that session -this way it will not appear on your personal storage '
+            'anymore-. Also please note that session sharing is dynamic, which means that as the owner of the session '
+            'adds/removes files from the session, those users with shared access will be able to see these changes '
+            '-but only the session owner can make changes on the session-.', html.Br(), html.Br()
+        ])
     ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
-        autoFocus=True)
-
-
-def TutorialThreeModal():
-    return dbc.Modal([
-        dbc.ModalHeader('Tutorial 3: Sharing a session'),
-        dbc.ModalBody(['Tutorial goes here'])
-    ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
-        autoFocus=True)
-
-
-def TutorialFourModal():
-    return dbc.Modal([
-        dbc.ModalHeader('Tutorial 4: Getting in touch with us'),
-        dbc.ModalBody(['Tutorial goes here'])
-    ], id={'type': 'tutorial-modal', 'index': 4}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)

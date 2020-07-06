@@ -38,15 +38,6 @@ def TutorialTwoModal(*args, **kwargs):
 
     return TutorialTwoModal(*args, **kwargs)
 
-def TutorialThreeModal(*args, **kwargs):
-    from components.modals import TutorialThreeModal
-
-    return TutorialThreeModal(*args, **kwargs)
-
-def TutorialFourModal(*args, **kwargs):
-    from components.modals import TutorialFourModal
-
-    return TutorialFourModal(*args, **kwargs)
 
 def GdprPolicyModal(*args, **kwargs):
     from components.modals import GdprPolicyModal
@@ -208,6 +199,54 @@ def SessionList(*args, **kwargs):
     from components.listgrpoups import SessionList
 
     return SessionList(*args, **kwargs)
+
+
+def UserAccountHelpList(*args, **kwargs):
+    from components.listgrpoups import UserAccountHelpList
+
+    return UserAccountHelpList(*args, **kwargs)
+
+
+def GdprRightsList(*args, **kwargs):
+    from components.listgrpoups import GdprRightsList
+
+    return GdprRightsList(*args, **kwargs)
+
+
+def AutomaticInfoCollectedList(*args, **kwargs):
+    from components.listgrpoups import AutomaticInfoCollectedList
+
+    return AutomaticInfoCollectedList(*args, **kwargs)
+
+
+def CustomFormatFieldsHelpList(*args, **kwargs):
+    from components.listgrpoups import CustomFormatFieldsHelpList
+
+    return CustomFormatFieldsHelpList(*args, **kwargs)
+
+
+def MandatoryInputHelpList(*args, **kwargs):
+    from components.listgrpoups import MandatoryInputHelpList
+
+    return MandatoryInputHelpList(*args, **kwargs)
+
+
+def AdditionalFormatsHelpList(*args, **kwargs):
+    from components.listgrpoups import AdditionalFormatsHelpList
+
+    return AdditionalFormatsHelpList(*args, **kwargs)
+
+
+def PanelLayoutHelpList(*args, **kwargs):
+    from components.listgrpoups import PanelLayoutHelpList
+
+    return PanelLayoutHelpList(*args, **kwargs)
+
+
+def AdjustPlotHelpList(*args, **kwargs):
+    from components.listgrpoups import AdjustPlotHelpList
+
+    return AdjustPlotHelpList(*args, **kwargs)
 
 
 def TutorialList(*args, **kwargs):

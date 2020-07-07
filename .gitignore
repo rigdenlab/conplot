@@ -1,2 +1,3 @@
 /cache-directory/
 /.env
+/static/docker/.env

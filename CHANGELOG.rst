@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.2.2
+-----
+
+Added
+~~~~~
+- Changed ROOT to /conplot for deployment
+
+
 0.2.1
 -----
 

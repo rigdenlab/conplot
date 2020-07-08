@@ -8,7 +8,7 @@ def ErrorAlert(is_open=False):
         html.H4('ERROR', className="alert-heading"),
         html.P([
             "If you suspect a bug, please ",
-            dbc.CardLink(html.U('get in touch'), href=UrlIndex.CONTACT.value),
+            html.A(html.U('get in touch'), href=UrlIndex.CONTACT.value),
             " and report this to us, or create an issue on our ",
             html.A(html.U("Github repository"), href=UrlIndex.GITHUB.value, className="alert-link")
         ]),

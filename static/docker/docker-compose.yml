@@ -1,6 +1,6 @@
 version: '3'
 services:
-  conplot:
+  web:
     build:
       context: .
       dockerfile: "Dockerfile"
@@ -11,7 +11,7 @@ services:
     ports:
       - "5000:5000"
     env_file:
-      - ".env"
+      - ".env.web"
     command: gunicorn app:server --preload --workers=2 --threads=2 --timeout 180 --max-requests 5 --log-level=info
   db:
     image: "postgres:latest"
@@ -20,10 +20,8 @@ services:
       - ./postgres-data:/var/lib/postgresql/data:z
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_PASSWORD: "password"
-      POSTGRES_USER: "username"
-      POSTGRES_DB: "myDataBase"
+    env_file:
+      - "/.env.db"
   redis:
     image: "redis:latest"
     ports:

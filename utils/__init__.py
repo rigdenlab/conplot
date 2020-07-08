@@ -27,7 +27,7 @@ class WimleyWhiteHydrophobicityScale(Enum):
 
 class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
-    ROOT = '/'
+    ROOT = '/conplot'
     HOME = urllib.parse.urljoin(ROOT, 'home')
     PLOT = urllib.parse.urljoin(ROOT, 'plot')
     CONTACT = urllib.parse.urljoin(ROOT, 'contact')

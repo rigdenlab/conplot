@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.2.1
+-----
+
+Added
+~~~~~
+- Enabled deployment with docker containers
+
+
 0.2
 ----
 

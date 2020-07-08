@@ -1,2 +1,6 @@
 /cache-directory/
 /.env
+/static/docker/.env
+/static/docker/.env.psql
+/static/docker/.env.web
+/static/docker/.env.db

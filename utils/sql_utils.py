@@ -98,7 +98,7 @@ class SqlQueries(Enum):
 
 
 def initiate_connection():
-    connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='require')
+    connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='disable')
     cursor = connection.cursor()
     return connection, cursor
 

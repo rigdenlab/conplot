@@ -5,4 +5,3 @@ RUN mkdir /opt/conplot
 RUN curl https://codeload.github.com/rigdenlab/conplot/tar.gz/development | tar zx -C /opt/conplot/
 WORKDIR /opt/conplot/conplot-development
 RUN pip3 install -r requirements.txt
-ENTRYPOINT ["/opt/conplot/conplot-development/static/docker/entrypoint.sh"]

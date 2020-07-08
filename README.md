@@ -1,6 +1,6 @@
 # ConPlot: Online Analysis of Contact Plots
 
-[![Heroku App Status](http://heroku-shields.herokuapp.com/random-cheesecake)](https://random-cheesecake.herokuapp.com)
+[![Heroku App Status](http://heroku-shields.herokuapp.com/random-cheesecake)](https://random-cheesecake.herokuapp.com/conplot)
 [![CI Status](https://travis-ci.com/rigdenlab/conplot.svg?branch=master)](https://travis-ci.com/rigdenlab/conplot)
 
 ## About ConPlot

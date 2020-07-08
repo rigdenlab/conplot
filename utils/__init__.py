@@ -1,4 +1,3 @@
-import urllib.parse
 from enum import Enum
 
 
@@ -28,17 +27,17 @@ class WimleyWhiteHydrophobicityScale(Enum):
 class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
     ROOT = '/conplot'
-    HOME = urllib.parse.urljoin(ROOT, 'home')
-    PLOT = urllib.parse.urljoin(ROOT, 'plot')
-    CONTACT = urllib.parse.urljoin(ROOT, 'contact')
-    RIGDEN = urllib.parse.urljoin(ROOT, 'ridgen-group')
-    HELP = urllib.parse.urljoin(ROOT, 'help')
-    USERS_PORTAL = urllib.parse.urljoin(ROOT, 'users-area')
-    CREATE_USER = urllib.parse.urljoin(USERS_PORTAL, 'new-user')
-    USER_STORAGE = urllib.parse.urljoin(USERS_PORTAL, 'storage')
-    SHARE_SESSIONS = urllib.parse.urljoin(USERS_PORTAL, 'share')
-    CHANGE_PASSWORD = urllib.parse.urljoin(USERS_PORTAL, 'change-password')
-    SESSION_TIMEOUT = urllib.parse.urljoin(ROOT, 'session-timeout')
+    HOME = '/conplot/home'
+    PLOT = '/conplot/plot'
+    CONTACT = '/conplot/contact'
+    RIGDEN = '/conplot/ridgen-group'
+    HELP = '/conplot/help'
+    USERS_PORTAL = '/conplot/users-portal'
+    CREATE_USER = '/conplot/new-user'
+    USER_STORAGE = '/conplot/user-storage'
+    SHARE_SESSIONS = '/conplot/user-share'
+    CHANGE_PASSWORD = '/conplot/user-change-password'
+    SESSION_TIMEOUT = '/conplot/session-timeout'
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"

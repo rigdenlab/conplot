@@ -12,7 +12,7 @@ services:
       - "5000:5000"
     env_file:
       - ".env.web"
-    command: gunicorn app:server --preload --workers=2 --threads=2 --timeout 180 --max-requests 5 --log-level=info
+    command: gunicorn app:server --preload --workers=6 --threads=2 --timeout 180 --max-requests 5 --log-level=info
   db:
     image: "postgres:latest"
     restart: always

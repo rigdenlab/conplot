@@ -4,3 +4,4 @@
 /static/docker/.env.psql
 /static/docker/.env.web
 /static/docker/.env.db
+/static/docker/postgres-data/

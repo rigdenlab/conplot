@@ -1,4 +1,3 @@
-import urllib.parse
 from enum import Enum
 
 

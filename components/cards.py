@@ -325,9 +325,7 @@ def CreateUserCard():
             components.GdprAgreementCheckbox(),
             html.Br(),
             dbc.Button("Create new user", color="primary", block=True, id='create-user-button', disabled=True),
-            html.Br(),
         ]),
-        dbc.CardFooter([components.GdprPolicyModal(), components.GdprPolicyAlert()])
     ])
 
 

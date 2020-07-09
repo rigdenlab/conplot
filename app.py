@@ -59,6 +59,14 @@ def toggle_gdpr_policy_modal(n_clicks):
     return callback_utils.toggle_modal(trigger)
 
 
+@app.callback(Output('create-user-button', 'disabled'),
+              [Input('gdpr-agreement-checkbox', 'checked')],
+              [State('create-user-button', 'disabled')])
+def toggle_createuser_button(checked, disabled):
+    trigger = dash.callback_context.triggered[0]
+    return callback_utils.toggle_createuserbutton(trigger, disabled)
+
+
 @app.callback(Output({'type': 'tutorial-modal', 'index': MATCH}, 'is_open'),
               [Input({'type': 'tutorial-button', 'index': MATCH}, 'n_clicks')])
 def toggle_tutorial_modal(n_clicks):

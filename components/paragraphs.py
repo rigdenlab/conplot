@@ -32,20 +32,26 @@ def GdprPolicySectionTwo():
 
 def GdprPolicySectionThree():
     return html.P(
-        'Storing, sharing sessions and any other user account related features of the ConPlot requires '
-        'that you register for an account. You will be required to provide an email address so we can '
-        'send you your temporary account password in case you forget this password. An anonymous email '
-        'service can be used if you do not want to provide personally identifying information. Your '
-        'email address will not be used to send you alerts or notifications. Any email address '
-        'provided in this site will only be used to get in touch with you in case your forget your '
-        'password or you request assistance from us. We do not sell or distribute email addresses to '
-        'third parties. We also ask for an user name when creating an account. If you share a session '
-        'with another user, this user name will be displayed with the shared session. We will not sell '
-        'or distribute your user name or institution to third parties. When you log in, the client IP '
-        'address is recorded. This IP address can be correlated with the address automatically '
-        'collected as noted above. If your user profile personally identifies you, then it may be '
-        'possible to associate you with your detailed activity on the ConPlot website.',
-        style={"text-align": "justify"})
+        'Storing, sharing sessions and any other user account related features of ConPlot require '
+        'that you register for an account. To register, you will be required to provide an email address, '
+        'a username and a password. By choosing to create a user account you give us permission to retain this '
+        'information, which will be used only for verification of you as a user and for anonymous '
+        'statistics. We require an email address so we can send you a temporary account password in '
+        'case you forget this password. An anonymous email service can be used if you do not want to provide '
+        'personally identifying information. Your email address will not be used to send you alerts or '
+        'notifications. Any email address provided in this site will only be used to get in touch with you '
+        'in case your forget your password or you request assistance from us. We do not sell or distribute '
+        'email addresses to third parties. We also ask for a user name when creating an account. We will '
+        'not sell or distribute your user name or institution to third parties. When you log '
+        'in, the client IP address is recorded. If your user profile personally identifies you, then it may be '
+        'possible to associate you with your detailed activity on the ConPlot website. After registering as a '
+        'user, by choosing to store a session you give us permission to retain the data you provided '
+        'within that session. This includes the contents and file names of all the files you have uploaded '
+        'to ConPlot, the name chosen for the session and the date in which the session was stored. If you '
+        'share a session with another user, all this data will be accessible to the other user, and '
+        'it will be displayed together with your username. All this information is visible by members of the '
+        'ConPlot team, however it will only be used for development purposes as we will not publicly '
+        'release this information or share it with any third parties.', style={"text-align": "justify"})
 
 
 def GdprPolicySectionFour():

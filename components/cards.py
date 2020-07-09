@@ -322,11 +322,10 @@ def CreateUserCard():
             components.InvalidNewUserCollapse(),
             html.Br(),
             dbc.Spinner(html.Div(id='success-create-user-alert-div')),
+            components.GdprAgreementCheckbox(),
             html.Br(),
-            dbc.Button("Create new user", color="primary", block=True, id='create-user-button'),
-            html.Br(),
+            dbc.Button("Create new user", color="primary", block=True, id='create-user-button', disabled=True),
         ]),
-        dbc.CardFooter([components.GdprPolicyModal(), components.GdprPolicyAlert()])
     ])
 
 

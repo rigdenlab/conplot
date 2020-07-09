@@ -25,6 +25,12 @@ def toggle_modal(trigger):
     return True
 
 
+def toggle_createuserbutton(trigger, disabled):
+    if not ensure_triggered(trigger):
+        return no_update
+    return not disabled
+
+
 def toggle_selection_alert(format_selection):
     if format_selection is not None:
         return None, False

@@ -38,11 +38,12 @@ class UrlIndex(Enum):
     SHARE_SESSIONS = '/conplot/user-share'
     CHANGE_PASSWORD = '/conplot/user-change-password'
     SESSION_TIMEOUT = '/conplot/session-timeout'
+    PRIVACY_POLICY = '/conplot/privacy-policy-statement'
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     GITHUB_LOGO = '/assets/github_logo.png'
-    HELP_FIG1 = '/static/images/Help_Figure_1.png'
+    HELP_FIG1 = '/static/figures/Help_Figure_1.png'
     TUTORIAL1_FIG1 = '/static/figures/Tutorial1_Figure1.png'
     TUTORIAL1_FIG2 = '/static/figures/Tutorial1_Figure2.png'
     TUTORIAL1_FIG3 = '/static/figures/Tutorial1_Figure3.png'

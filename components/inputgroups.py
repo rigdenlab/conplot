@@ -1,8 +1,10 @@
 import dash_bootstrap_components as dbc
+import dash_html_components as html
 from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
 from components import EmailIssueReference, UserReadableTrackNames
 from utils.plot_utils import DefaultTrackLayout
+from utils import UrlIndex
 
 
 def ContactFormatSelector():
@@ -178,3 +180,14 @@ def SuperimposeSwitch(superimpose):
             ),
         ], className='mr-1'
     )
+
+
+def GdprAgreementCheckbox():
+    return dbc.FormGroup(
+        [
+            dbc.Checkbox(id="gdpr-agreement-checkbox", className="form-check-input"),
+            dbc.Label([
+                "I read and agree to ConPlot ",
+                dbc.CardLink(html.U("Privacy Policy"), href=UrlIndex.PRIVACY_POLICY.value)
+            ], html_for="standalone-checkbox", className="form-check-label", style={'margin-top': 2.5})
+        ], check=True)

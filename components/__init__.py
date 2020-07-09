@@ -27,6 +27,42 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def GdprPolicySectionOne(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionOne
+
+    return GdprPolicySectionOne(*args, **kwargs)
+
+
+def GdprPolicySectionTwo(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionTwo
+
+    return GdprPolicySectionTwo(*args, **kwargs)
+
+
+def GdprPolicySectionThree(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionThree
+
+    return GdprPolicySectionThree(*args, **kwargs)
+
+
+def GdprPolicySectionFour(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionFour
+
+    return GdprPolicySectionFour(*args, **kwargs)
+
+
+def GdprPolicySectionFive(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionFive
+
+    return GdprPolicySectionFive(*args, **kwargs)
+
+
+def GdprPolicySectionSix(*args, **kwargs):
+    from components.paragraphs import GdprPolicySectionSix
+
+    return GdprPolicySectionSix(*args, **kwargs)
+
+
 def TutorialOneModal(*args, **kwargs):
     from components.modals import TutorialOneModal
 
@@ -37,6 +73,12 @@ def TutorialTwoModal(*args, **kwargs):
     from components.modals import TutorialTwoModal
 
     return TutorialTwoModal(*args, **kwargs)
+
+
+def GdprAgreementCheckbox(*args, **kwargs):
+    from components.inputgroups import GdprAgreementCheckbox
+
+    return GdprAgreementCheckbox(*args, **kwargs)
 
 
 def GdprPolicyModal(*args, **kwargs):

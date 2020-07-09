@@ -8,6 +8,7 @@ cache: pip
 install:
   - sudo apt-get update
   - python3.6 -m pip install -r requirements.txt
+  - python3.6 -m pip install conkit
 
 script:
   - python3.6 tests.py

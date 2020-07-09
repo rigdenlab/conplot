@@ -4,4 +4,6 @@ RUN dnf install curl gcc initscripts postgresql-server postgresql-contrib python
 RUN mkdir /opt/conplot
 RUN curl https://codeload.github.com/rigdenlab/conplot/tar.gz/master | tar zx -C /opt/conplot/
 WORKDIR /opt/conplot/conplot-master
-RUN pip3 install -r requirements.txt
+RUN python3.6 -m pip install --upgrade pip
+RUN python3.6 -m pip install -r requirements.txt
+RUN python3.6 -m pip install conkit

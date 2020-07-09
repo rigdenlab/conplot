@@ -11,6 +11,12 @@ def noPage(*args, **kwargs):
     return noPage(*args, **kwargs)
 
 
+def PrivacyPolicy(*args, **kwargs):
+    from layouts.privacypolicy import PrivacyPolicy
+
+    return PrivacyPolicy(*args, **kwargs)
+
+
 def Home(*args, **kwargs):
     from layouts.home import Home
 

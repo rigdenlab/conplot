@@ -37,6 +37,12 @@ def CCMpredParser(*args, **kwargs):
     return CCMpredParser(*args, **kwargs)
 
 
+def PDBParser(*args, **kwargs):
+    from parsers.pdbparser import PDBParser
+
+    return PDBParser(*args, **kwargs)
+
+
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
 
@@ -66,6 +72,7 @@ class ParserFormats(Enum):
     COMSAT = ContactParser
     CCMPRED = CCMpredParser
     COLSTATS = CCMpredParser
+    PDB = PDBParser
 
 
 class ContactFormats(Enum):
@@ -88,6 +95,7 @@ class ContactFormats(Enum):
     COLSTATS = 16
     MAPALIGN = 17
     ALEIGEN = 18
+    PDB = 19
 
 
 class MembraneStates(Enum):

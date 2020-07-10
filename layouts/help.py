@@ -162,9 +162,13 @@ def Body():
                             html.Hr(),
                             html.Br(),
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
-                                    "ConPlot. To follow them, you will need to download the example data ",
-                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
-                                    '.'], style={"font-size": "110%", "text-align": "justify"}),
+                                    "ConPlot. We strongly encourage you to complete them before using ConPlot for the "
+                                    "first time, as they will guide you through the basic ConPlot features. We also "
+                                    "recommend to complete these tutorials in the specified order as each of them "
+                                    "will require you to understand concepts learned on the preceding ones. To follow "
+                                    "them, you will need to download the example data ",
+                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value)],
+                                   style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             components.TutorialList(),
                             html.Br(),

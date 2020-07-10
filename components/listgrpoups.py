@@ -80,7 +80,7 @@ def TutorialItem(idx, name):
         dbc.Row([
             dbc.Col([
                 html.H5('Tutorial {}: {}'.format(idx, name), style={'vertical-align': 'middle', 'margin-top': 8})
-            ], style={'align-items': 'center', 'justify-content': 'left', 'display': 'flex'}),
+            ], style={'align-items': 'center', 'justify-content': 'left', 'display': 'flex'}, width=9),
             dbc.Col(dbc.Button('Read more', id={'type': 'tutorial-button', 'index': idx}, color='primary'),
                     style={'align-items': 'center', 'justify-content': 'right', 'display': 'flex'})
         ], justify='around', align='around')
@@ -91,9 +91,9 @@ def TutorialList():
     return dbc.Row(
         dbc.ListGroup([
             TutorialItem(idx=1, name='Creating your first plot'),
-            TutorialItem(idx=2, name='Contact prediction evaluation'),
+            TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
-        ], style={'width': '85%'}
+        ], style={'width': '75%'}
         ), justify='center', align='center')
 
 

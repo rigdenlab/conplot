@@ -10,7 +10,7 @@ def CCMpredParser(input):
 
     for res_1, line in enumerate(contents, 1):
         line = line.lstrip().split()
-        if not line or line[0].isalpha() or len(line) == 1:
+        if not line or line[0].isalpha() or len(line) == 1 or '#' in line[0]:
             continue
 
         for res_2, raw_score in enumerate(line, 1):

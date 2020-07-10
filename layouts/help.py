@@ -13,6 +13,7 @@ def Body():
             components.GdprPolicyModal(),
             components.TutorialOneModal(),
             components.TutorialTwoModal(),
+            components.TutorialThreeModal(),
             components.CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([

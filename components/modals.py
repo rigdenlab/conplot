@@ -319,16 +319,24 @@ def TutorialOneModal():
 
 def TutorialTwoModal():
     return dbc.Modal([
-        dbc.ModalHeader('Tutorial 2: Storing and loading a session'),
+        dbc.ModalHeader('Tutorial 2: Contact prediction evaluation'),
+        dbc.ModalBody([])
+    ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialThreeModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 3: Storing, loading and sharing a session'),
         dbc.ModalBody([
             'First thing is to create an user account in ConPlot. To do this, first click on the ', html.I('LOGIN'),
             ' dropdown menu on the top right of the website. This menu will let you access the user portal and the '
             'members only area -only available once you login-.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG1.value, height='300vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG1.value, height='300vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'By clicking on ', html.I('Create a new account'), ' you will be redirected to the new users area:',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG2.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG2.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'Here you can create a new user by providing an user name, a password and an email. We will only use this '
             'email address to get in touch with you in case your forget your or you request assistance from us. Also '
@@ -344,21 +352,21 @@ def TutorialTwoModal():
             ' area you will be able to see the files you just uploaded. Since you have created an user account and you '
             'are logged in, if you scroll down to the bottom of the input panel you will see that the input panel to '
             'store the current session has been unlocked: ',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG3.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG3.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'Fill in the text box with the name you want to use to identify the saved session and click on the button '
             'with the save icon. A green alert will appear letting you now that the operation was a success. Now you '
             'have stored the data you uploaded in this session, it will be stored for you permanently so that you can '
             'come back and re-visit it whenever you want.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG4.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG4.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'If you want to check out any session that you have saved following this method, click again on the ',
             html.I('LOGIN'), 'dropdown menu and select the ', html.I('Access Personal Storage'),
             'option. This will take you to a list of all the sessions that you have saved with your user account, plus '
             'those that have been shared with you:',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG5.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG5.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'As you can see, in this case we can see the EXAMPLE session that we just stored. To load any of the '
             'sessions listed here, simply click on the button with the disk icon. Alternatively, if you wish to delete '
@@ -370,12 +378,12 @@ def TutorialTwoModal():
             'option. This will take you to a list of all the sessions that you have saved with your user account. Next '
             'to each item, there is a text box that you can use to write the name of the user that you want to share '
             'that particular session with, and a share button.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG6.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG6.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'Once you share a session with another user, they will be able to see this session listed in their '
             'personal storage. For example, in the following image, ', html.I('user_2'),
             ' has access to the example session as it has been shared by ', html.I('user_1'), '.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG7.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG7.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'In the same way as you can do with your own stored sessions, if you want to load a shared session simply '
             'click on the button with the disk icon. However, please note that you will not be able to delete shared '
@@ -385,5 +393,5 @@ def TutorialTwoModal():
             'adds/removes files from the session, those users with shared access will be able to see these changes '
             '-but only the session owner can make changes on the session-.', html.Br(), html.Br()
         ])
-    ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
+    ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)

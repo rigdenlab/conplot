@@ -91,8 +91,9 @@ def TutorialList():
     return dbc.Row(
         dbc.ListGroup([
             TutorialItem(idx=1, name='Creating your first plot'),
-            TutorialItem(idx=2, name='Storing and loading a session'),
-        ], style={'width': '70%'}
+            TutorialItem(idx=2, name='Contact prediction evaluation'),
+            TutorialItem(idx=3, name='Storing, loading and sharing a session'),
+        ], style={'width': '85%'}
         ), justify='center', align='center')
 
 

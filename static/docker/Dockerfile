@@ -5,5 +5,4 @@ RUN mkdir /opt/conplot
 RUN curl https://codeload.github.com/rigdenlab/conplot/tar.gz/master | tar zx -C /opt/conplot/
 WORKDIR /opt/conplot/conplot-master
 RUN python3.6 -m pip install --upgrade pip
-RUN python3.6 -m pip install -r requirements.txt
-RUN python3.6 -m pip install conkit
+RUN cat requirements.txt | xargs -n 1 python3.6 -m pip install

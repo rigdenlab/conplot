@@ -69,10 +69,10 @@ def TutorialOneModal(*args, **kwargs):
     return TutorialOneModal(*args, **kwargs)
 
 
-def TutorialTwoModal(*args, **kwargs):
-    from components.modals import TutorialTwoModal
+def TutorialThreeModal(*args, **kwargs):
+    from components.modals import TutorialThreeModal
 
-    return TutorialTwoModal(*args, **kwargs)
+    return TutorialThreeModal(*args, **kwargs)
 
 
 def GdprAgreementCheckbox(*args, **kwargs):
@@ -145,6 +145,12 @@ def MissingInputModal(*args, **kwargs):
     from components.modals import MissingInputModal
 
     return MissingInputModal(*args, **kwargs)
+
+
+def TutorialTwoModal(*args, **kwargs):
+    from components.modals import TutorialTwoModal
+
+    return TutorialTwoModal(*args, **kwargs)
 
 
 def RepeatedInputModal(*args, **kwargs):

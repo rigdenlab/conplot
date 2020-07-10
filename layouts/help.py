@@ -13,6 +13,7 @@ def Body():
             components.GdprPolicyModal(),
             components.TutorialOneModal(),
             components.TutorialTwoModal(),
+            components.TutorialThreeModal(),
             components.CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([
@@ -27,7 +28,7 @@ def Body():
                                     'create a plot, how to adjust the layout of a plot and even store these plots on '
                                     'your user storage area. If you came here looking for an example of the data files '
                                     'used as an input, you can download them right ',
-                                    html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
+                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             html.H4('1. ConPlot layout', className="card-text", style={'text-align': "center"}),
@@ -161,9 +162,13 @@ def Body():
                             html.Hr(),
                             html.Br(),
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
-                                    "ConPlot. To follow them, you will need to download the example data ",
-                                    html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
-                                    '.'], style={"font-size": "110%", "text-align": "justify"}),
+                                    "ConPlot. We strongly encourage you to complete them before using ConPlot for the "
+                                    "first time, as they will guide you through the basic ConPlot features. We also "
+                                    "recommend to complete these tutorials in the specified order as each of them "
+                                    "will require you to understand concepts learned on the preceding ones. To follow "
+                                    "them, you will need to download the example data ",
+                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value)],
+                                   style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             components.TutorialList(),
                             html.Br(),

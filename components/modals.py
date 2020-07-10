@@ -218,7 +218,11 @@ def TutorialOneModal():
     return dbc.Modal([
         dbc.ModalHeader('Tutorial 1: Creating your first plot'),
         dbc.ModalBody([
-            'First, use the navigation bar on top of the website to access the ',
+            'This tutorial serves as a walk-through of how to create a plot using ConPlot. We will be using data '
+            'corresponding with the Uniprot entry ', html.I('W9DY28'),
+            ', a putative membrane protein. This data can be downloaded ',
+            html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
+            '. First, use the navigation bar on top of the website to access the ',
             html.I('Plot'), ' tab. Then, you will be presented with the following website:',
             html.Img(src=UrlIndex.TUTORIAL1_FIG1.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
@@ -230,7 +234,7 @@ def TutorialOneModal():
             html.Ul([
                 html.Li(['Click on ', html.I('UPLOAD SEQUENCE'),
                          ' to upload a FASTA file with the sequence of the protein of interest, '
-                         'in this case that will be ', html.I('EXAMPLE.FASTA')]),
+                         'in this case that will be ', html.I('W9DY28.FASTA')]),
                 html.Li(['Click on the ', html.I('Format'),
                          ' dropdown menu  highlighted in red to select the format of the contact map that '
                          'you will be uploading. In this case, that will be ', html.I('PSICOV'),
@@ -239,7 +243,7 @@ def TutorialOneModal():
                          'a file.']),
                 html.Li(['Click on ', html.I('UPLOAD CONTACT'),
                          ' to upload a contact map file, in this case that will be the file ',
-                         html.I('EXAMPLE.PSICOV'),
+                         html.I('W9DY28.PSICOV'),
                          '. Please note that this file is follows the PSICOV format, just as we indicated '
                          'previously with the dropdown menu.'])
             ]),
@@ -271,11 +275,11 @@ def TutorialOneModal():
             'with five files in the example data that you can upload in this section, the order at which you do this '
             'will not affect the output:',
             html.Ul([
-                html.Li(['TOPCONS (membrane topology prediction): EXAMPLE.TOPCONS']),
-                html.Li(['PSIPRED (secondary structure prediction): EXAMPLE.SS2']),
-                html.Li(['CONSURF (sequence conservation): EXAMPLE.CONSURF']),
-                html.Li(['IUPRED (sequence disorder prediction): EXAMPLE.IUPRED']),
-                html.Li(['CUSTOM (custom track data file): EXAMPLE.CUSTOM'])
+                html.Li(['TOPCONS (membrane topology prediction): W9DY28.TOPCONS']),
+                html.Li(['PSIPRED (secondary structure prediction): W9DY28.SS2']),
+                html.Li(['CONSURF (sequence conservation): W9DY28.CONSURF']),
+                html.Li(['IUPRED (sequence disorder prediction): W9DY28.IUPRED']),
+                html.Li(['CUSTOM (custom track data file): W9DY28.CUSTOM'])
             ]),
             'Again, as you upload files green banners will appear depicting the storage allocated to each file.',
             html.Img(src=UrlIndex.TUTORIAL1_FIG5.value, height='500vh', className='mt-3',
@@ -319,16 +323,77 @@ def TutorialOneModal():
 
 def TutorialTwoModal():
     return dbc.Modal([
-        dbc.ModalHeader('Tutorial 2: Storing and loading a session'),
+        dbc.ModalHeader('Tutorial 2: Compare a contact prediction with a PDB file'),
         dbc.ModalBody([
-            'First thing is to create an user account in ConPlot. To do this, first click on the ', html.I('LOGIN'),
+            'With ConPlot, it is possible to superimpose a reference contact map and a secondary contact map '
+            'into the same plot. ConPlot well then highlight in red the mismatches, in black the matching contacts and '
+            'in grey the contacts only present in the reference map. This can be used if you wish to compare two '
+            'different prediction methods, but it has also wider applications since ConPlot can also extract the '
+            'contacts present in a structure described on a PDB file. Thus, if you provide a PDB file for the role of '
+            'reference map and a predicted map for the secondary map, ConPlot can be used to evaluate the precision '
+            'of the prediction method of interest, or for the validation of models obtained through ',
+            html.I('ab initio'),
+            " modelling and predicted residue contacts. To showcase this functionality, we will be using data from "
+            "protein TOXD, an alpha-dendrotoxin. You can download this data ",
+            html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
+            ". The data includes the crystal structure of this toxin -a PDB file-, its sequence -a FASTA file-"
+            "and a contact prediction map in ccmpred format -a MAT file-. First, access the ", html.I('Plot'),
+            " tab and upload the sequence fasta file as you have done on the previous tutorial. Then, proceed to "
+            "select the ", html.I('CCMPRED'), " contact map format and upload the file ", html.I('toxd.mat'),
+            ' in the contact map upload section. Do the same with the file ', html.I('toxd.pdb'),
+            ' but remember to change the contact format to ', html.I('PDB'),
+            ' first. Once you have done this, simply click on ', html.I('Generate Plot'),
+            ' to create a plot as described on previous tutorial. By default, ConPlot will display the first contact '
+            'map you uplaoded. For example, in this case we first uploaded ', html.I('toxd.mat'),
+            ' so ConPlot created a plot using the contacts found in this file:',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG1.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'However, for the purpose of comparing both maps, we would like to change that: we need '
+            'ConPlot to compare the predicted contacts in the ', html.I('todx.mat'),
+            ' file using the residue contacts derived on the crystal structure at the ', html.I('toxd.pdb'),
+            ' file as a reference. To do this, you will need to use the ', html.I('Map A'), ' and ', html.I('Map B'),
+            ' selectors on the ', html.I('Display Control'),
+            ' panel. By default, these selectors control which map is displayed on each half of the map -you can try '
+            'to change these values now and click on ', html.I('Adjust Plot'),
+            ' button to experiment with this-. However, the role of these selectors changes when you turn on the ',
+            html.I('Superimpose Maps'), ' switch. Then, ConPlot will use the selection on the ', html.I('Map A'),
+            ' as the reference map, and the selection on ', html.I('Map B'),
+            ' as the secondary map. Thus, if we want to compare the ', html.I('todx.mat'),
+            ' prediction with the ground truth at the ', html.I('toxd.pdb'),
+            ' crystal structure, you will need to select ', html.I('toxd.pdb'), ' as ', html.I('Map A'), ' and ',
+            html.I('todx.mat'), ' as ', html.I('Map B'),
+            '. Then, turn on the ', html.I('Superimpose Maps'),
+            ' switch. Before creating the new plot, you may also want to increase the size of the contact markers '
+            'to 7 and set the L/N selector to 1 for better clarity of the plot:',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG2.value, height='350vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'Now click on ', html.I('Adjust Plot'),
+            '. ConPlot will then create a superimposed map, with matching contacts coloured in solid black, mismatches '
+            'in red and contacts only present in the reference map in grey.',
+            html.Img(src=UrlIndex.TUTORIAL2_FIG3.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+        ])
+    ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialThreeModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 3: Storing, loading and sharing a session'),
+        dbc.ModalBody([
+            'In this tutorial you will learn about how to create an user account in ConPlot, that then can be used '
+            'to store data, and share it among your collaborators. First thing is to create an user account in '
+            'ConPlot. To do this, first click on the ', html.I('LOGIN'),
             ' dropdown menu on the top right of the website. This menu will let you access the user portal and the '
             'members only area -only available once you login-.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG1.value, height='300vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG1.value, height='300vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'By clicking on ', html.I('Create a new account'), ' you will be redirected to the new users area:',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG2.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG2.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'Here you can create a new user by providing an user name, a password and an email. We will only use this '
             'email address to get in touch with you in case your forget your or you request assistance from us. Also '
@@ -344,21 +409,21 @@ def TutorialTwoModal():
             ' area you will be able to see the files you just uploaded. Since you have created an user account and you '
             'are logged in, if you scroll down to the bottom of the input panel you will see that the input panel to '
             'store the current session has been unlocked: ',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG3.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG3.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'Fill in the text box with the name you want to use to identify the saved session and click on the button '
             'with the save icon. A green alert will appear letting you now that the operation was a success. Now you '
             'have stored the data you uploaded in this session, it will be stored for you permanently so that you can '
             'come back and re-visit it whenever you want.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG4.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG4.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'If you want to check out any session that you have saved following this method, click again on the ',
             html.I('LOGIN'), 'dropdown menu and select the ', html.I('Access Personal Storage'),
             'option. This will take you to a list of all the sessions that you have saved with your user account, plus '
             'those that have been shared with you:',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG5.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG5.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'As you can see, in this case we can see the EXAMPLE session that we just stored. To load any of the '
             'sessions listed here, simply click on the button with the disk icon. Alternatively, if you wish to delete '
@@ -370,12 +435,12 @@ def TutorialTwoModal():
             'option. This will take you to a list of all the sessions that you have saved with your user account. Next '
             'to each item, there is a text box that you can use to write the name of the user that you want to share '
             'that particular session with, and a share button.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG6.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG6.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'Once you share a session with another user, they will be able to see this session listed in their '
             'personal storage. For example, in the following image, ', html.I('user_2'),
             ' has access to the example session as it has been shared by ', html.I('user_1'), '.',
-            html.Img(src=UrlIndex.TUTORIAL2_FIG7.value, height='500vh', className='mt-3',
+            html.Img(src=UrlIndex.TUTORIAL3_FIG7.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'In the same way as you can do with your own stored sessions, if you want to load a shared session simply '
             'click on the button with the disk icon. However, please note that you will not be able to delete shared '
@@ -385,5 +450,5 @@ def TutorialTwoModal():
             'adds/removes files from the session, those users with shared access will be able to see these changes '
             '-but only the session owner can make changes on the session-.', html.Br(), html.Br()
         ])
-    ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
+    ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)

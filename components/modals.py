@@ -320,7 +320,12 @@ def TutorialOneModal():
 def TutorialTwoModal():
     return dbc.Modal([
         dbc.ModalHeader('Tutorial 2: Contact prediction evaluation'),
-        dbc.ModalBody([])
+        dbc.ModalBody([
+            'It is possible to evaluate the precision of your contact prediction using ConPlot. This might result '
+            'useful in different situations.'
+
+
+        ])
     ], id={'type': 'tutorial-modal', 'index': 2}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)
 

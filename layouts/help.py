@@ -28,7 +28,7 @@ def Body():
                                     'create a plot, how to adjust the layout of a plot and even store these plots on '
                                     'your user storage area. If you came here looking for an example of the data files '
                                     'used as an input, you can download them right ',
-                                    html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
+                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             html.H4('1. ConPlot layout', className="card-text", style={'text-align': "center"}),
@@ -163,7 +163,7 @@ def Body():
                             html.Br(),
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
                                     "ConPlot. To follow them, you will need to download the example data ",
-                                    html.A(html.U('here'), href=UrlIndex.STATIC_DATA.value),
+                                    html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
                             components.TutorialList(),

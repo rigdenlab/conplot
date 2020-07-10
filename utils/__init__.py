@@ -67,7 +67,7 @@ class UrlIndex(Enum):
     AMPLE_READDOCS = 'https://ample.readthedocs.io/en/latest/'
     CONKIT_LOGO = '/assets/conkit_logo.png'
     CONKIT_READDOCS = 'https://conkit.readthedocs.io/en/latest/'
-    STATIC_DATA = 'https://github.com/rigdenlab/conplot/tree/master/static/data'
+    EXAMPLE_DATA = 'https://github.com/rigdenlab/conplot-examples/archive/master.zip'
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
     TOPCONS_WEB = 'http://topcons.cbr.su.se/'
     TOPCONS_CITATION = 'https://dx.doi.org/10.1093%2Fnar%2Fgkv485'

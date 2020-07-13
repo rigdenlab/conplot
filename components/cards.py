@@ -261,7 +261,7 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             TrackSelectionCard('+4', selected_tracks[8], available_tracks=available_tracks),
                             html.Br(),
                             html.Br(),
-                            html.H5("Color palettes", className="card-text", style={'text-align': "center"}),
+                            html.H5("Colour palettes", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             ColorPaletteSelectionCard('membranetopology', selected_palettes[0]),

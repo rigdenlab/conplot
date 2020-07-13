@@ -22,12 +22,12 @@ def Body():
                             html.H2('ConPlot help page', className="card-text", style={'text-align': "center"}),
                             html.Br(),
                             html.Br(),
-                            html.P(['Welcome to ConPlot help page, here you can read how to use ConPlot and take full '
-                                    'advantage of all its features. This page is divided in a series of sections that '
-                                    'will guide you through the process of understanding what data files you need to '
-                                    'create a plot, how to adjust the layout of a plot and even store these plots on '
-                                    'your user storage area. If you came here looking for an example of the data files '
-                                    'used as an input, you can download them right ',
+                            html.P(['Welcome to the ConPlot help page: here you can read how to use ConPlot and take '
+                                    'full advantage of all its features. This page is divided in a series of sections '
+                                    'that will guide you through the process of understanding what data files you need '
+                                    'to create a plot, how to adjust the layout of a plot and even store these plots '
+                                    'in your user storage area. If you came here looking for an example of the data '
+                                    'files used as an input, you can download them right ',
                                     html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
@@ -54,14 +54,14 @@ def Body():
                                              "different tabs in ConPlot. Nevertheless, ConPlot will keep all the data "
                                              "for you so if you want to see the plot again simply click on ",
                                              html.I('Generate Plot'), " to see your plot back again!"]),
-                                    html.Li("If you hover to the top left of the plot panel, the plot's mode bar will "
+                                    html.Li("If you hover to the top right of the plot panel, the plot's mode bar will "
                                             "appear. Use the buttons on this bar to control the behaviour of the "
                                             "hovering tool, zoom in and out, change the scale of the plot or to "
                                             "download the plot image as a png file.")
                                 ])
                             ], style={'text-align': "justify"}, color='info'),
                             dbc.Alert("WARNING: Do not click on the refresh button in your browser! Doing this will "
-                                      "cause your session to expire and you will loose any unsaved data and "
+                                      "cause your session to expire and you will lose any unsaved data and "
                                       "plots. Instead, use ConPlot's navigation bar on the top panel to safely browse "
                                       "through the website.", style={'text-align': "justify"}, color='danger'),
                             html.Br(),
@@ -76,7 +76,7 @@ def Body():
                                     html.I('Generate Plot'),
                                     ' button. Note that it is possible to upload as many contact map files as you '
                                     'wish, as it is possible to compare them or dynamically change which contact file '
-                                    'is loaded in the plot. More on how to do this will be explain later on.'
+                                    'is loaded in the plot. More on how to do this will be explained later on.'
                                     ], style={"font-size": "110%", 'text-align': "justify"}),
                             dbc.Alert('TIP: If you wish to remove a file that you have uploaded, simply close the '
                                       'banner with its name and ConPlot will do the rest.',
@@ -115,7 +115,7 @@ def Body():
                             ], style={'text-align': "justify"}, color='info'),
                             html.P(['There is no limit on the number of files you can upload, the only requirement is '
                                     'that all the files correspond with the residue sequence that has been uploaded. '
-                                    'If these files do not mach, this could result in data misrepresentation or '
+                                    'If these files do not match, this could result in data misrepresentation or '
                                     'Conplot not being able to create a plot. Please note that if you upload multiple '
                                     'files for a given format, the default behaviour of ConPlot is to include only the '
                                     'first one to the plot. If you wish to visualise the other files, you will need to '
@@ -139,7 +139,7 @@ def Body():
                                    style={"font-size": "110%", "text-align": "justify"}),
                             components.AdjustPlotHelpList(),
                             html.Br(),
-                            dbc.Alert(['TIP: If you have just uploaded a file, it might be possible that this file '
+                            dbc.Alert(['TIP: If you have just uploaded a file, it may be that this file '
                                        'does not appear listed on the track selection layout. You may need to click on '
                                        'the ',
                                        html.I('Generate Plot'),
@@ -149,7 +149,7 @@ def Body():
                             html.H4('5. User Accounts', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            html.P(['By creating an user account in ConPlot, you will be able to access a series of '
+                            html.P(['By creating a user account in ConPlot, you will be able to access a series of '
                                     'additional features that will enable you to store sessions indefinitely and share '
                                     'them with other users. You can access the user account menu with the ',
                                     html.I('LOGIN'),
@@ -163,8 +163,8 @@ def Body():
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
                                     "ConPlot. We strongly encourage you to complete them before using ConPlot for the "
                                     "first time, as they will guide you through the basic ConPlot features. We also "
-                                    "recommend to complete these tutorials in the specified order as each of them "
-                                    "will require you to understand concepts learned on the preceding ones. To follow "
+                                    "recommend completion of these tutorials in the specified order as each of them "
+                                    "will require you to understand concepts learned in the preceding one. To follow "
                                     "them, you will need to download the example data ",
                                     html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value)],
                                    style={"font-size": "110%", "text-align": "justify"}),

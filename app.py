@@ -16,7 +16,12 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 #
 
 def serve_layout():
-    cache = redis.Redis(connection_pool=redis_pool)
+    try:
+        cache = redis.Redis(connection_pool=redis_pool)
+        cache.ping()
+    except (redis.ConnectionError, TypeError, KeyError) as e:
+        app.logger.error('Redis connection error! {}'.format(e))
+        return layouts.RedisConnectionError()
     session_id = session_utils.initiate_session(cache, app.logger)
     return layouts.Base(session_id)
 

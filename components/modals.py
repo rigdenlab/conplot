@@ -449,8 +449,9 @@ def RedisConnectionErrorModal():
         ModalHeader("Redis connection error"),
         dbc.ModalBody([
             html.P(["It was impossible to connect with Redis database. If you are using ConPlot web services on ",
-                    html.I('www.conplot.org'), " please report this issue ",
-                    dbc.CardLink(html.U('here'), href=UrlIndex.CONTACT.value),
+                    html.I('www.conplot.org'),
+                    " we are probably taking a look at this already. If the problem  persists after a few hours, "
+                    "please report this issue on our ", html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value),
                     ". Alternatively, if you are running ConPlot on localhost please ensure that redis server "
                     "is running and that the URL for the connection is available as an environment variable "
                     "called REDISCLOUD_URL as explained on our ",

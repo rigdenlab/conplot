@@ -17,6 +17,12 @@ def RedisConnectionError(*args, **kwargs):
     return RedisConnectionError(*args, **kwargs)
 
 
+def PostgresConnectionError(*args, **kwargs):
+    from layouts.postgresconnectionerrror import PostgresConnectionError
+
+    return PostgresConnectionError(*args, **kwargs)
+
+
 def PrivacyPolicy(*args, **kwargs):
     from layouts.privacypolicy import PrivacyPolicy
 

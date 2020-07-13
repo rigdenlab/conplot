@@ -42,6 +42,9 @@ class SqlQueries(Enum):
     UPDATE_LAST_LOGIN = """UPDATE {} SET {} = %s WHERE {} = %s
     """.format(TableNames.USER_DATA.value, SqlFieldNames.LAST_LOGIN.value, SqlFieldNames.USERNAME.value)
 
+    UPDATE_LAST_ACCESS = """UPDATE {} SET {} = %s WHERE {} = %s
+    """.format(TableNames.SESSION_DATA.value, SqlFieldNames.LAST_ACCESS.value, SqlFieldNames.SESSION_PKID.value)
+
     CHECK_SESSION_EXISTS = """SELECT * FROM {} WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.OWNER.value, SqlFieldNames.SESSION_NAME.value)
 
@@ -175,6 +178,8 @@ def retrieve_session(session_pkid):
     session_data = perform_query(SqlQueries.RETRIEVE_SESSION.value, args=(session_pkid,), fetch=True)
 
     if session_data:
+        perform_query(SqlQueries.UPDATE_LAST_ACCESS.value,
+                      args=(datetime.datetime.now().strftime("%Y-%m-%d"), session_pkid), commit=True)
         session_data = session_data[0]
         now = datetime.datetime.now().strftime("%Y-%m-%d")
         perform_query(SqlQueries.UPDATE_SESSION_DATE.value, args=(now, session_pkid), commit=False)

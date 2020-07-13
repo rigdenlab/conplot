@@ -223,9 +223,9 @@ def create_figure(axis_range):
     return go.Figure(
         layout=go.Layout(
             xaxis={'range': axis_range, 'scaleanchor': "y", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
-                   'linewidth': 2, 'linecolor': 'black', 'title': 'Residue Number'},
+                   'linewidth': 2, 'linecolor': 'black'},
             yaxis={'range': axis_range, 'scaleanchor': "x", 'scaleratio': 1, 'ticks': 'inside', 'showline': True,
-                   'linewidth': 2, 'linecolor': 'black', 'title': 'Residue Number'},
+                   'linewidth': 2, 'linecolor': 'black'},
             margin={'l': 40, 'b': 40, 't': 10, 'r': 10, 'autoexpand': False},
             hovermode='closest',
             showlegend=False,

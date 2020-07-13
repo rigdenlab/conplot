@@ -157,8 +157,7 @@ def Body():
                                    style={"font-size": "110%", "text-align": "justify"}),
                             components.UserAccountHelpList(),
                             html.Br(),
-                            html.H4('6. Tutorials', className="card-text",
-                                    style={'text-align': "center"}),
+                            html.H4('6. Tutorials', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
@@ -173,7 +172,38 @@ def Body():
                             components.TutorialList(),
                             html.Br(),
                             html.Br(),
-                            html.H4('7. Privacy Policy', className="card-text",
+                            html.H4('7. Using ConPlot locally', className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            html.P('ConPlot is a web-based application, and as such we recommend you make use of it '
+                                   'through this website. However, it is also possible to use ConPlot locally on your '
+                                   'personal machine using the localhost. To do this you will first need to install '
+                                   'redis, which is the cache memory server used by ConPlot.'),
+                            dbc.Col([
+                                html.Plaintext('$   sudo apt update\n$   sudo apt install redis-server\n$   sudo '
+                                               'service redis start\n$   REDISCLOUD_URL=redis://localhost:6379')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P('With the above commands you will have installed Redis and started the server. You '
+                                   'will also have created a environment variable called "REDISCLOUD_URL" containing '
+                                   'the URL to connect to your redis server. ConPlot will need to read this '
+                                   'environment variable to access the redis database. After this, all you need to do '
+                                   'is clone ConPlot repository, install the requirements and start the Flask '
+                                   'development server on your machine. Please note that ConPlot requires at least '
+                                   'python 3.6 installed:'),
+                            dbc.Col([
+                                html.Plaintext('$   git clone https://github.com/rigdenlab/conplot\n'
+                                               '$   cd conplot\n$   python3.6 -m pip install -r requirements\n$   '
+                                               'python3.6 app.py')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P(['Now you will be able to access the app on ',
+                                    html.A(html.U('http://127.0.0.1:8050/conplot'),
+                                           href='http://127.0.0.1:8050/conplot'),
+                                    '. Please note that when running locally, ConPlot will not be able to establish a '
+                                    'connection with our database, so all the user account related features will be '
+                                    'disabled. Similarly, you will not be able to get in touch with us using the '
+                                    '"Get in touch" tab.']),
+                            html.Br(),
+                            html.H4('8. Privacy Policy', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),

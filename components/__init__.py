@@ -153,6 +153,18 @@ def TutorialTwoModal(*args, **kwargs):
     return TutorialTwoModal(*args, **kwargs)
 
 
+def RedisConnectionErrorModal(*args, **kwargs):
+    from components.modals import RedisConnectionErrorModal
+
+    return RedisConnectionErrorModal(*args, **kwargs)
+
+
+def PostgresConnectionErrorModal(*args, **kwargs):
+    from components.modals import PostgresConnectionErrorModal
+
+    return PostgresConnectionErrorModal(*args, **kwargs)
+
+
 def RepeatedInputModal(*args, **kwargs):
     from components.modals import RepeatedInputModal
 

@@ -148,16 +148,6 @@ def SuccessContactFormModal():
     ], id='success-contact-form-modal', is_open=True)
 
 
-def SlackConnectionErrorModal():
-    return dbc.Modal([
-        ModalHeader(html.H4('Connnection Error', className="alert-heading", style={'color': 'red'})),
-        dbc.ModalBody(
-            html.P("""Something went wrong while submitting your contact form. This is most likely a problem on our 
-            side, we are working to solve this.""", style={'text-align': "justify"})
-        ),
-    ], id='slack-contaction-error-modal', is_open=True)
-
-
 def CustomFormatDescriptionModal():
     return dbc.Modal([
         dbc.ModalHeader('Custom Format Specifications'),
@@ -452,3 +442,49 @@ def TutorialThreeModal():
         ])
     ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)
+
+
+def RedisConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader("Redis connection error"),
+        dbc.ModalBody([
+            html.P(["It was impossible to connect with Redis database. If you are using ConPlot web services on ",
+                    html.I('www.conplot.org'), " please report this issue ",
+                    dbc.CardLink(html.U('here'), href=UrlIndex.CONTACT.value),
+                    ". Alternatively, if you are running ConPlot on localhost please ensure that redis server "
+                    "is running and that the URL for the connection is available as an environment variable "
+                    "called REDISCLOUD_URL as explained on our ",
+                    html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value), "."],
+                   style={'text-align': "justify"}),
+            components.StartNewSessionLink()
+        ]),
+    ], id='redis-connection-error-modal', is_open=True, backdrop='static', keyboard=False)
+
+
+def PostgresConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader("PostgreSQL connection error"),
+        dbc.ModalBody([
+            html.P(["It was impossible to connect with PostgreSQL database. If you are using ConPlot web services on ",
+                    html.I('www.conplot.org'), " please report this issue ",
+                    dbc.CardLink(html.U('here'), href=UrlIndex.CONTACT.value),
+                    ". Alternatively, if you are running ConPlot on localhost please remember that it is not "
+                    "possible to use user account related features when running ConPlot on this mode."],
+                   style={'text-align': "justify"}),
+            components.StartNewSessionLink()
+        ]),
+    ], id='postgres-connection-error-modal', is_open=True, backdrop='static', keyboard=False)
+
+
+def SlackConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader("Helpdesk connection error"),
+        dbc.ModalBody([
+            html.P(["It was impossible to connect with ConPlot helpdesk. If you are using ConPlot web services on ",
+                    html.I('www.conplot.org'), " please report this issue on our ",
+                    html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value),
+                    ". Alternatively, if you are running ConPlot on localhost please remember that it is not "
+                    "possible to get in touch with us when running ConPlot on this mode."],
+                   style={'text-align': "justify"}),
+        ]),
+    ], id='slack-connection-error-modal', is_open=True)

@@ -58,7 +58,7 @@ $   python3.6 -m pip install -r requirements
 $   python3.6 app.py
 ```
 
-Now you will be able to access the app on `http://127.0.0.1:8050/conplot/`. Please 
+Now you will be able to access the app on `http://127.0.0.1:8050/conplot`. Please 
 note that when running locally, ConPlot will not be able to establish a connection 
 with our database, so all the user account related features will be disabled. Similarly, 
 you will not be able to get in touch with us using the "Get in touch" tab.

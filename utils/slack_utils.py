@@ -1,7 +1,8 @@
 import os
+from components import EmailIssueReference
+from urllib.error import URLError, HTTPError
 from slack import WebClient
 from slack.errors import SlackApiError
-from components import EmailIssueReference
 
 
 def create_message_block(name, email, subject, description):
@@ -66,12 +67,18 @@ def create_message_block(name, email, subject, description):
 
 
 def send_slack_message(name, email, subject, description, logger, channel='conplot'):
-    slack_token = os.environ['SLACK_TOKEN']
-    client = WebClient(token=slack_token)
     try:
+        slack_token = os.environ['SLACK_TOKEN']
+        client = WebClient(token=slack_token)
         msg_block = create_message_block(name, email, subject, description)
         response = client.chat_postMessage(channel=channel, blocks=msg_block)
         logger.info("Contact form submitted: {} - {} - {}".format(name, email, subject))
+    except KeyError:
+        logger.error('Cannot find SLACK_TOKEN environment variable!')
+        return False
+    except (URLError, HTTPError) as e:
+        logger.error('Impossible to establish connection! {}'.format(e))
+        return False
     except SlackApiError as e:
         logger.error('Cannot send message through slack: {}'.format(e.response['error']))
         return False

@@ -1,7 +1,7 @@
 from components import ShareWithInput, SessionListType
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from utils import sql_utils, UrlIndex
+from utils import postgres_utils, UrlIndex
 
 
 def SessionListItem(session, list_type, color='secondary'):
@@ -56,7 +56,7 @@ def EmptyListItem():
 
 def SessionList(username, list_type, selected_session_pkid=None):
     list_items = []
-    all_sessions = sql_utils.list_sessions(username, list_type)
+    all_sessions = postgres_utils.list_sessions(username, list_type)
 
     for session in all_sessions:
         if selected_session_pkid is not None and session.pkid == int(selected_session_pkid):

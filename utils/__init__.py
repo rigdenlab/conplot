@@ -155,6 +155,12 @@ def decompress_session(*args, **kwargs):
     return decompress_session(*args, **kwargs)
 
 
+def is_postgres_available(*args, **kwargs):
+    from utils.postgres_utils import is_postgres_available
+
+    return is_postgres_available(*args, **kwargs)
+
+
 def ensure_triggered(*args, **kwargs):
     from utils.callback_utils import ensure_triggered
 

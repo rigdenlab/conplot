@@ -4,16 +4,20 @@ services:
     build:
       context: .
       dockerfile: "Dockerfile"
-    network_mode: "host"
     depends_on:
-      - db
-      - redis
+      - postgres_db
+      - redis_db
+    links:
+      - redis_db
+      - postgres_db
     ports:
-      - "5000:5000"
+      - "80:80"
+    expose:
+      - "80"
     env_file:
       - ".env.web"
-    command: gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info
-  db:
+    command: gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
+  postgres_db:
     image: "postgres:latest"
     restart: always
     volumes:
@@ -22,9 +26,12 @@ services:
       - "5432:5432"
     env_file:
       - ".env.db"
-  redis:
+  redis_db:
     image: "redis:latest"
-    ports:
-      - "6379:6379"
+    restart: always
+    volumes:
+      - ./redis-data:/data:z
+    command: redis-server --bind redis_db --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes
 volumes:
-  postgres_data:
+  postgres-data:
+  redis-data:

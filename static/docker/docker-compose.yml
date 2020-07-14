@@ -9,11 +9,14 @@ services:
       - redis_db
     links:
       - redis_db
+      - postgres_db
     ports:
-      - "5000:5000"
+      - "80:80"
+    expose:
+      - "80"
     env_file:
       - ".env.web"
-    command: gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :5000
+    command: gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
   postgres_db:
     image: "postgres:latest"
     restart: always

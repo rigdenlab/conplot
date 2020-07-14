@@ -6,4 +6,3 @@ RUN curl https://codeload.github.com/rigdenlab/conplot/tar.gz/master | tar zx -C
 WORKDIR /opt/conplot/conplot-master
 RUN python3.6 -m pip install --upgrade pip
 RUN cat requirements.txt | xargs -n 1 python3.6 -m pip install
-EXPOSE 5000

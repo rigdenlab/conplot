@@ -130,7 +130,7 @@ def lookup_input_errors(session):
         if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
             for fname in session[dataset.value.encode()]:
                 if len(session[fname.encode()]) != seq_length:
-                    mismatched.append(dataset.value)
+                    mismatched.append(fname)
 
     if any(mismatched):
         return components.MismatchModal(*mismatched)

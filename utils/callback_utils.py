@@ -101,7 +101,7 @@ def get_session_action(trigger):
 def submit_form(name, email, subject, description, logger):
     if not name or not email or not description or not subject:
         return components.InvalidContactFormModal()
-    elif slack_utils.send_slack_message(name, email, subject, description, logger):
+    elif slack_utils.user_get_in_touch(name, email, subject, description, logger):
         return components.SuccessContactFormModal()
     else:
         return components.SlackConnectionErrorModal()

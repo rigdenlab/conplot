@@ -12,7 +12,7 @@ def ErrorAlert(is_open=False):
             " and report this to us, or create an issue on our ",
             html.A(html.U("Github repository"), href=UrlIndex.GITHUB.value, className="alert-link")
         ]),
-    ], dismissable=True, color='danger', fade=True, is_open=is_open, id='error-alert')
+    ], color='danger', fade=True, is_open=is_open, id='error-alert')
 
 
 def FilenameAlert(filename, dataset):

@@ -50,7 +50,7 @@ $   cd conplot/static/docker
 $   docker-compose up -d
 ```
 
-After you set up running the docker container, you will be able to access the app on `http://0.0.0.0:80/conplot`.
+After you set up running the docker container, you will be able to access the app on `http://0.0.0.0:80/home`.
 
 ### Locally using Flask development server
 
@@ -82,11 +82,11 @@ requires at least `python 3.6`.
 ```bash
 $   git clone https://github.com/rigdenlab/conplot
 $   cd conplot
-$   python3.6 -m pip install -r requirements
+$   python3.6 -m pip install -r requirements.txt
 $   python3.6 app.py
 ```
 
-Now you will be able to access the app on `http://127.0.0.1:8050/conplot`. Please 
+Now you will be able to access the app on `http://127.0.0.1:8050/home`. Please 
 note that when running locally, ConPlot will not be able to establish a connection 
 with our database, so all the user account related features will be disabled. Similarly, 
 you will not be able to get in touch with us using the "Get in touch" tab.

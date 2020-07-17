@@ -63,7 +63,7 @@ def serve_url(url, session_id, cache, logger):
         return layouts.RigdenLab(session_id, username)
     elif url == UrlIndex.PRIVACY_POLICY.value:
         return layouts.PrivacyPolicy(session_id)
-    elif url in (UrlIndex.USERS_PORTAL.value,  UrlIndex.CREATE_USER.value, UrlIndex.CHANGE_PASSWORD.value,
+    elif url in (UrlIndex.USERS_PORTAL.value, UrlIndex.CREATE_USER.value, UrlIndex.CHANGE_PASSWORD.value,
                  UrlIndex.SHARE_SESSIONS.value, UrlIndex.USER_STORAGE.value):
         if not postgres_utils.is_postgres_available(logger):
             return layouts.PostgresConnectionError()

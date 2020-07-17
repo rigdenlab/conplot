@@ -5,7 +5,7 @@ from slack import WebClient
 from slack.errors import SlackApiError
 
 
-def app_status_ok_message_block(initated_sessions, n_requests, avg_time, n_users, n_sessions, db_size):
+def create_status_ok_message_block(warnings, errors, criticals):
     return [
         {
             "type": "section",
@@ -29,7 +29,7 @@ def app_status_ok_message_block(initated_sessions, n_requests, avg_time, n_users
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": "*Number of sessions initiated:* {}".format(initated_sessions)
+                    "text": "*Warnings detected:* {}".format(warnings)
                 }
             ]
         },
@@ -38,7 +38,7 @@ def app_status_ok_message_block(initated_sessions, n_requests, avg_time, n_users
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": "*Number of requests served:* {}".format(n_requests)
+                    "text": "*Errors detected:* {}".format(errors)
                 }
             ]
         },
@@ -47,41 +47,14 @@ def app_status_ok_message_block(initated_sessions, n_requests, avg_time, n_users
             "elements": [
                 {
                     "type": "mrkdwn",
-                    "text": "*Average request completion time:* {}".format(avg_time)
+                    "text": "*Criticals detected:* {}".format(criticals)
                 }
             ]
         },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": "*No. of users recorded in PostgreSQL :* {}".format(n_users)
-                }
-            ]
-        },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": "*No. of sessions recorded in PostgreSQL :* {}".format(n_sessions)
-                }
-            ]
-        },
-        {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": "*Total PostgreSQL database size:* {}".format(db_size)
-                }
-            ]
-        }
     ]
 
 
-def app_crash_alert_message_block(date, traceback):
+def create_crash_alert_message_block(tracebacks):
     return [
         {
             "type": "section",
@@ -94,19 +67,10 @@ def app_crash_alert_message_block(date, traceback):
             "type": "divider"
         },
         {
-            "type": "context",
-            "elements": [
-                {
-                    "type": "mrkdwn",
-                    "text": "*Date:* {}".format(date)
-                }
-            ]
-        },
-        {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Context: * \n```{}```".format(traceback)
+                "text": "*Context: * \n```{}```".format(tracebacks)
             }
         },
         {
@@ -195,4 +159,14 @@ def send_message(message_block, logger, channel='conplot'):
 
 def user_get_in_touch(name, email, subject, description, logger, channel='conplot'):
     msg_block = create_user_contact_form_message_block(name, email, subject, description)
+    return send_message(msg_block, logger, channel)
+
+
+def report_crash(tracebacks, logger, channel='conplot'):
+    msg_block = create_crash_alert_message_block(tracebacks)
+    return send_message(msg_block, logger, channel)
+
+
+def report_daily_status(warnings, errors, criticals, logger, channel='conplot'):
+    msg_block = create_status_ok_message_block(warnings, errors, criticals)
     return send_message(msg_block, logger, channel)

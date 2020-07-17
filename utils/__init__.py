@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 
 
@@ -24,45 +25,52 @@ class WimleyWhiteHydrophobicityScale(Enum):
     K = 1.81
 
 
+def get_base_url():
+    if 'PRODUCTION_SERVER' in os.environ:
+        return '/conplot'
+    else:
+        return ''
+
+
 class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
     ROOT = '/conplot'
-    HOME = '/conplot/home'
-    PLOT = '/conplot/plot'
-    CONTACT = '/conplot/contact'
-    RIGDEN = '/conplot/ridgen-group'
-    HELP = '/conplot/help'
-    USERS_PORTAL = '/conplot/users-portal'
-    CREATE_USER = '/conplot/new-user'
-    USER_STORAGE = '/conplot/user-storage'
-    SHARE_SESSIONS = '/conplot/user-share'
-    CHANGE_PASSWORD = '/conplot/user-change-password'
-    SESSION_TIMEOUT = '/conplot/session-timeout'
-    PRIVACY_POLICY = '/conplot/privacy-policy-statement'
-    GITHUB_LOGO = '/conplot/assets/github_logo.png'
-    HELP_FIG1 = '/conplot/static/figures/Help_Figure_1.png'
-    TUTORIAL1_FIG1 = '/conplot/static/figures/Tutorial1_Figure1.png'
-    TUTORIAL1_FIG2 = '/conplot/static/figures/Tutorial1_Figure2.png'
-    TUTORIAL1_FIG3 = '/conplot/static/figures/Tutorial1_Figure3.png'
-    TUTORIAL1_FIG4 = '/conplot/static/figures/Tutorial1_Figure4.png'
-    TUTORIAL1_FIG5 = '/conplot/static/figures/Tutorial1_Figure5.png'
-    TUTORIAL1_FIG6 = '/conplot/static/figures/Tutorial1_Figure6.png'
-    TUTORIAL1_FIG7 = '/conplot/static/figures/Tutorial1_Figure7.png'
-    TUTORIAL2_FIG1 = '/conplot/static/figures/Tutorial2_Figure1.png'
-    TUTORIAL2_FIG2 = '/conplot/static/figures/Tutorial2_Figure2.png'
-    TUTORIAL2_FIG3 = '/conplot/static/figures/Tutorial2_Figure3.png'
-    TUTORIAL3_FIG1 = '/conplot/static/figures/Tutorial3_Figure1.png'
-    TUTORIAL3_FIG2 = '/conplot/static/figures/Tutorial3_Figure2.png'
-    TUTORIAL3_FIG3 = '/conplot/static/figures/Tutorial3_Figure3.png'
-    TUTORIAL3_FIG4 = '/conplot/static/figures/Tutorial3_Figure4.png'
-    TUTORIAL3_FIG5 = '/conplot/static/figures/Tutorial3_Figure5.png'
-    TUTORIAL3_FIG6 = '/conplot/static/figures/Tutorial3_Figure6.png'
-    TUTORIAL3_FIG7 = '/conplot/static/figures/Tutorial3_Figure7.png'
-    CONPLOT_LOGO = '/conplot/assets/conplot_logo.png'
-    SWAMP_LOGO = '/conplot/assets/swamp_logo.png'
-    SIMBAD_LOGO = '/conplot/assets/simbad_logo.png'
-    AMPLE_LOGO = '/conplot/assets/ample_logo.png'
-    CONKIT_LOGO = '/conplot/assets/conkit_logo.png'
+    HOME = '{}/home'.format(get_base_url())
+    PLOT = '{}/plot'.format(get_base_url())
+    CONTACT = '{}/contact'.format(get_base_url())
+    RIGDEN = '{}/ridgen-group'.format(get_base_url())
+    HELP = '{}/help'.format(get_base_url())
+    USERS_PORTAL = '{}/users-portal'.format(get_base_url())
+    CREATE_USER = '{}/new-user'.format(get_base_url())
+    USER_STORAGE = '{}/user-storage'.format(get_base_url())
+    SHARE_SESSIONS = '{}/user-share'.format(get_base_url())
+    CHANGE_PASSWORD = '{}/user-change-password'.format(get_base_url())
+    SESSION_TIMEOUT = '{}/session-timeout'.format(get_base_url())
+    PRIVACY_POLICY = '{}/privacy-policy-statement'.format(get_base_url())
+    GITHUB_LOGO = '{}/assets/github_logo.png'.format(get_base_url())
+    HELP_FIG1 = '{}/static/figures/Help_Figure_1.png'.format(get_base_url())
+    TUTORIAL1_FIG1 = '{}/static/figures/Tutorial1_Figure1.png'.format(get_base_url())
+    TUTORIAL1_FIG2 = '{}/static/figures/Tutorial1_Figure2.png'.format(get_base_url())
+    TUTORIAL1_FIG3 = '{}/static/figures/Tutorial1_Figure3.png'.format(get_base_url())
+    TUTORIAL1_FIG4 = '{}/static/figures/Tutorial1_Figure4.png'.format(get_base_url())
+    TUTORIAL1_FIG5 = '{}/static/figures/Tutorial1_Figure5.png'.format(get_base_url())
+    TUTORIAL1_FIG6 = '{}/static/figures/Tutorial1_Figure6.png'.format(get_base_url())
+    TUTORIAL1_FIG7 = '{}/static/figures/Tutorial1_Figure7.png'.format(get_base_url())
+    TUTORIAL2_FIG1 = '{}/static/figures/Tutorial2_Figure1.png'.format(get_base_url())
+    TUTORIAL2_FIG2 = '{}/static/figures/Tutorial2_Figure2.png'.format(get_base_url())
+    TUTORIAL2_FIG3 = '{}/static/figures/Tutorial2_Figure3.png'.format(get_base_url())
+    TUTORIAL3_FIG1 = '{}/static/figures/Tutorial3_Figure1.png'.format(get_base_url())
+    TUTORIAL3_FIG2 = '{}/static/figures/Tutorial3_Figure2.png'.format(get_base_url())
+    TUTORIAL3_FIG3 = '{}/static/figures/Tutorial3_Figure3.png'.format(get_base_url())
+    TUTORIAL3_FIG4 = '{}/static/figures/Tutorial3_Figure4.png'.format(get_base_url())
+    TUTORIAL3_FIG5 = '{}/static/figures/Tutorial3_Figure5.png'.format(get_base_url())
+    TUTORIAL3_FIG6 = '{}/static/figures/Tutorial3_Figure6.png'.format(get_base_url())
+    TUTORIAL3_FIG7 = '{}/static/figures/Tutorial3_Figure7.png'.format(get_base_url())
+    CONPLOT_LOGO = '{}/assets/conplot_logo.png'.format(get_base_url())
+    SWAMP_LOGO = '{}/assets/swamp_logo.png'.format(get_base_url())
+    SIMBAD_LOGO = '{}/assets/simbad_logo.png'.format(get_base_url())
+    AMPLE_LOGO = '{}/assets/ample_logo.png'.format(get_base_url())
+    CONKIT_LOGO = '{}/assets/conkit_logo.png'.format(get_base_url())
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"

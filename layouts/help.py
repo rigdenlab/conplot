@@ -196,8 +196,8 @@ def Body():
                                                'python3.6 app.py')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P(['Now you will be able to access the app on ',
-                                    html.A(html.U('http://127.0.0.1:8050/conplot'),
-                                           href='http://127.0.0.1:8050/conplot'),
+                                    html.A(html.U('http://127.0.0.1:8050/home'),
+                                           href='http://127.0.0.1:8050/home'),
                                     '. Please note that when running locally, ConPlot will not be able to establish a '
                                     'connection with our database, so all the user account related features will be '
                                     'disabled. Similarly, you will not be able to get in touch with us using the '

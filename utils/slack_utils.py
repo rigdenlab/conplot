@@ -18,7 +18,7 @@ def create_status_ok_message_block(warnings, errors, criticals):
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "No app crashes were detected during today's scheduled log scan. Summary of today's activity:"
+                "text": "No app crashes were detected today"
             }
         },
         {
@@ -51,22 +51,13 @@ def create_status_ok_message_block(warnings, errors, criticals):
                 }
             ]
         },
+        {
+            "type": "divider"
+        },
     ]
 
 
 def create_crash_alert_message_block(tracebacks):
-    traceback_section = []
-    for idx, traceback in enumerate(tracebacks, 1):
-        traceback_section.append(
-            {
-                "type": "section",
-                "text": {
-                    "type": "mrkdwn",
-                    "text": "*Traceback {}: * \n```{}```".format(idx, traceback)
-                }
-            }
-        )
-
     block = [
         {
             "type": "section",
@@ -86,7 +77,19 @@ def create_crash_alert_message_block(tracebacks):
             "type": "divider"
         },
     ]
-    block += traceback_section
+
+    for idx, traceback in enumerate(tracebacks, 1):
+        block.append(
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*Traceback {}: * \n```{}```".format(idx, traceback)
+                }
+            }
+        )
+
+    block.append({"type": "divider"})
     return block
 
 

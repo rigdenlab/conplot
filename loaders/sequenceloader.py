@@ -22,7 +22,11 @@ def SequenceLoader(raw_file):
 
     if raw_file is not None:
 
-        decoded = decode_raw_file(raw_file)
+        try:
+            decoded = decode_raw_file(raw_file)
+        except UnicodeDecodeError:
+            return None, None, True
+
         fasta = SeqIO.parse(StringIO(decoded), "fasta")
         records = [record for record in fasta]
 

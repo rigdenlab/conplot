@@ -55,7 +55,19 @@ def create_status_ok_message_block(warnings, errors, criticals):
 
 
 def create_crash_alert_message_block(tracebacks):
-    return [
+    traceback_section = []
+    for idx, traceback in enumerate(tracebacks, 1):
+        traceback_section.append(
+            {
+                "type": "section",
+                "text": {
+                    "type": "mrkdwn",
+                    "text": "*Traceback {}: * \n```{}```".format(idx, traceback)
+                }
+            }
+        )
+
+    block = [
         {
             "type": "section",
             "text": {
@@ -64,19 +76,18 @@ def create_crash_alert_message_block(tracebacks):
             }
         },
         {
-            "type": "divider"
-        },
-        {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": "*Context: * \n```{}```".format(tracebacks)
+                "text": "The following tracebacks were found on the app's logs:"
             }
         },
         {
             "type": "divider"
-        }
+        },
     ]
+    block += traceback_section
+    return block
 
 
 def create_user_contact_form_message_block(name, email, subject, description):

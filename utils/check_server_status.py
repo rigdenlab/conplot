@@ -1,7 +1,7 @@
 import logging
 import argparse
 import docker
-from datetime import date, timedelta
+from datetime import datetime
 from utils import slack_utils
 
 
@@ -12,7 +12,7 @@ def create_argument_parser():
 
 
 def get_logs_24h(container_name):
-    yesterday = date.today() - timedelta(days=1)
+    yesterday = round(datetime.now().timestamp() - 86400)
     client = docker.from_env()
     logs = client.logs(container_name, since=yesterday)
     return logs

@@ -47,27 +47,27 @@ def Body():
                             html.Hr(),
                             html.Br(),
                             html.P([
-                                """A protein contact map is a two-dimensional representation of the contacting pairs of 
-                                residues in the three-dimensional structure. Common depictions of these maps tend to 
-                                omit those contacts in the diagonal of the plot, as they correspond with adjacent 
-                                residues and do not add any valuable information to the plot. ConPlot takes advantage 
-                                of this, and allows users to use this space otherwise left empty to integrate different 
-                                sources of information into a contact map  as coloured tracks in the diagonal. 
-                                Additionally, ConPlot is packed with some features that allow the user to fully 
-                                customise their plots:                           
+                                """A protein contact map is a two-dimensional representation of the (predicted) 
+                                contacting pairs of residues in the three-dimensional structure. Common depictions of 
+                                these maps tend to  omit those contacts near the diagonal of the plot, as they 
+                                correspond to pairs of sequentially nearby residues and typically do not add any 
+                                valuable information to the plot. ConPlot takes advantage of this, and allows users 
+                                to use this space otherwise left empty to integrate different sources of information 
+                                into a contact map  as coloured tracks in the diagonal. Additionally, ConPlot is 
+                                packed with features that allow the user to fully customise their plots:                           
                                 """
                             ], style={"font-size": "120%", "text-align": "justify"}),
                             html.Ul([
                                 html.Li(
-                                    'Upload multiple contact maps to compare them, either by ploting each of them in '
+                                    'Upload multiple contact maps to compare them, either by plotting each of them in '
                                     'a half of the map or by superimposing one of top of the other.'),
                                 html.Li(
                                     'Full control over plot features such as contact marker size, track size or track '
-                                    'arrangement among others.'),
+                                    'arrangement.'),
                                 html.Li('Multiple custom tracks can be added to the plot, enabling limitless '
                                         'personalisation of the information displayed on the plot.'),
                                 html.Li(
-                                    'User account are available in order to store sessions and re-visit them without '
+                                    'User accounts are available in order to store sessions and re-visit them without '
                                     'having to upload the data again. It is also possible to share these sessions with '
                                     'other users.'),
                             ], style={"font-size": "120%", "text-align": "justify"}),

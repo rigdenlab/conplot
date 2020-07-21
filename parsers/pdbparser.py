@@ -17,9 +17,10 @@ def get_first_chain(structure):
 def PDBParser(input):
     try:
         structure = gemmi.read_pdb_string(input)
-        input_chain = get_first_chain(structure)
+        if len(structure[0]) > 1:
+            input = get_first_chain(structure)
         parser = conkit.io.PARSER_CACHE.import_class('pdb')()
-        cmap = parser.read(f_handle=io.StringIO(input_chain))
+        cmap = parser.read(f_handle=io.StringIO(input))
         cmap = cmap.top_map
         cmap.remove_neighbors(inplace=True)
         cmap.sort('raw_score', reverse=True, inplace=True)

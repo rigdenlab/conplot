@@ -7,6 +7,7 @@ from utils.exceptions import InvalidFormat
 
 
 class AminoAcidThreeToOne(Enum):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
     ALA = "A"
     ARG = "R"
     ASN = "N"
@@ -39,6 +40,7 @@ class AminoAcidThreeToOne(Enum):
 
 
 def get_chain_contacts(chain):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
     contacts = []
     residue_range = list(range(1, len(chain) + 1))
     assert len(residue_range) == len(chain)
@@ -57,6 +59,7 @@ def get_chain_contacts(chain):
 
 
 def remove_atoms(chain):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
     for residue in chain.copy():
         if residue.id[0].strip() and residue.resname not in AminoAcidThreeToOne.__members__:
             chain.detach_child(residue.id)

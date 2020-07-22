@@ -1,38 +1,89 @@
+from Bio.PDB import PDBParser as BioPDBParser
+from enum import Enum
 import io
-import conkit.io
-import gemmi
+import itertools
 from operator import itemgetter
-from utils import unique_by_key
 from utils.exceptions import InvalidFormat
 
 
-def get_first_chain(structure):
-    new_model = gemmi.Model('1')
-    new_model.add_chain(structure[0][0].clone())
-    new_structure = gemmi.Structure()
-    new_structure.add_model(new_model)
-    return new_structure.make_minimal_pdb()
+class AminoAcidThreeToOne(Enum):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
+    ALA = "A"
+    ARG = "R"
+    ASN = "N"
+    ASP = "D"
+    CME = "C"
+    CYS = "C"
+    GLN = "Q"
+    GLU = "E"
+    GLY = "G"
+    HIS = "H"
+    ILE = "I"
+    LEU = "L"
+    LYS = "K"
+    MET = "M"
+    MSE = "M"
+    PHE = "F"
+    PRO = "P"
+    PYL = "O"
+    SER = "S"
+    SEC = "U"
+    THR = "T"
+    TRP = "W"
+    TYR = "Y"
+    VAL = "V"
+    ASX = "B"
+    GLX = "Z"
+    XAA = "X"
+    UNK = "X"
+    XLE = "J"
+
+
+def get_chain_contacts(chain):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
+    contacts = []
+    residue_range = list(range(1, len(chain) + 1))
+    assert len(residue_range) == len(chain)
+    iterator = itertools.product(list(zip(residue_range, chain)), list(zip(residue_range, chain)))
+    for (resseq1_alt, residue1), (resseq2_alt, residue2) in iterator:
+        seq_distance = int(residue1.id[1]) - int(residue2.id[1])
+        if seq_distance <= 4:
+            continue
+        for atom1, atom2 in itertools.product(residue1, residue2):
+            xyz_distance = atom1 - atom2
+            if xyz_distance > 8:
+                continue
+            contact = (int(residue1.id[1]), int(residue2.id[1]), round(1.0 - (xyz_distance / 100), 6))
+            contacts.append(contact)
+    return contacts
+
+
+def remove_atoms(chain):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
+    for residue in chain.copy():
+        if residue.id[0].strip() and residue.resname not in AminoAcidThreeToOne.__members__:
+            chain.detach_child(residue.id)
+            continue
+        for atom in residue.copy():
+            if atom.is_disordered():
+                chain[residue.id].detach_child(atom.id)
+            elif residue.resname == "GLY" and atom.id == "CA":
+                continue
+            elif atom.id != "CB":
+                chain[residue.id].detach_child(atom.id)
 
 
 def PDBParser(input):
     try:
-        structure = gemmi.read_pdb_string(input)
-        if len(structure[0]) > 1:
-            input = get_first_chain(structure)
-        parser = conkit.io.PARSER_CACHE.import_class('pdb')()
-        cmap = parser.read(f_handle=io.StringIO(input))
-        cmap = cmap.top_map
-        cmap.remove_neighbors(inplace=True)
-        cmap.sort('raw_score', reverse=True, inplace=True)
+        parser = BioPDBParser().get_structure('pdb', io.StringIO(input))
+        chain = list(parser.get_chains())[0]
+        remove_atoms(chain)
+        contacts = get_chain_contacts(chain)
     except:
         raise InvalidFormat('Unable to parse contacts')
 
-    output = [(tuple(sorted([contact.res1_seq, contact.res2_seq], reverse=True)), contact.raw_score)
-              for contact in cmap]
-    if not output:
+    if not contacts:
         raise InvalidFormat('Unable to parse contacts')
-    else:
-        unique_contacts = unique_by_key(output, key=itemgetter(0))
-        output = [(*contact[0], contact[1]) for contact in unique_contacts]
-        output = sorted(output, key=itemgetter(2), reverse=True)
-        return output
+
+    output = sorted(contacts, key=itemgetter(2), reverse=True)
+    return output

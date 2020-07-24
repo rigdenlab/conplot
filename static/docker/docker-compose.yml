@@ -16,7 +16,7 @@ services:
       - "80"
     env_file:
       - ".env.web"
-    command: gunicorn app:server --preload --workers=5 --threads=3 --timeout 150 --graceful-timeout 150 --max-requests 50 --log-level=info -b :80
+    command: gunicorn app:server --preload --workers=5 --threads=5 --worker-class gevent --timeout 300 --graceful-timeout 300 --max-requests 150 --log-level=info -b :80
   postgres_db:
     image: "postgres:latest"
     restart: always

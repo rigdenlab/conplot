@@ -259,7 +259,7 @@ def TutorialOneModal():
             html.Br(),
             'Next, in order to add more tracks of information to the plot, we will upload the example sequence '
             'predictions using the designated are in the input panel. If you scroll down the input panel, you will '
-            'see the ', html.I('Additional Trakcs'),
+            'see the ', html.I('Additional Tracks'),
             ' input area. Again, here you will be presented with a format selection menu highlighted in red, '
             'indicating that we will need to select a format before uploading the first file. You have been provided '
             'with five files in the example data that you can upload in this section, the order at which you do this '

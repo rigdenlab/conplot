@@ -21,7 +21,7 @@ def AddTrackButton(multiple=False, disabled=False):
     return html.Div([
         dcc.Upload(
             id='additional-tracks-upload',
-            children=Button(children=html.I(className="fas fa-plus-circle fa-2x"), id='upload-additionaltrack-button'),
+            children=Button(children='Add track', id='upload-additionaltrack-button'),
             multiple=multiple, disabled=disabled
         ),
     ])

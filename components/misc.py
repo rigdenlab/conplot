@@ -37,7 +37,7 @@ def UserAccountDropdownMenu(username=None):
 def ConPlotBrand():
     return dbc.Row(
         [
-            dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="75vh", className='m-0')),
+            dbc.Col(html.Img(src=UrlIndex.CONPLOT_LOGO.value, height="75vh", className='m-0'), width=2),
             dbc.Col(html.H1('ConPlot', style={'font-size': '7vh'}), className="ml-2 mt-2"),
         ],
         align="center",

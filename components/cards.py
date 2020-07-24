@@ -359,6 +359,10 @@ def ShareSessionsCard(username):
             html.H3('Share a session with another user', className="card-text",
                     style={'text-align': "center"}),
             html.Hr(),
+            html.P('By sharing a session you grant another user with read-only permissions on '
+                   'your data. They will also be able to see your username, the name of the session and the '
+                   'date when you created it. If you update the contents of the shared session, they will '
+                   'also be able to see the updated data.'),
             html.Br(),
             components.SessionList(username, components.SessionListType.TO_SHARE),
         ])

@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 # ==============================================================
 # Define functions and variables of general use
 # ==============================================================
-#
+
 
 def serve_layout():
     try:

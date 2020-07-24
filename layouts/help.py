@@ -88,7 +88,7 @@ def Body():
                                       'misrepresentations of data or even failure to create a plot.',
                                       style={'text-align': "justify"}, color='danger'),
                             html.Br(),
-                            html.H4('3. Aditional tracks', className="card-text",
+                            html.H4('3. Additional tracks', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),

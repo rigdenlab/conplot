@@ -155,7 +155,7 @@ def StoreSessionCard(username=None):
             html.Br(),
             html.Div(content, id='store-session-card-div'),
             html.Br(),
-            dbc.Button(children=html.I(className="fas fa-save fa-2x"), id='store-session-button', disabled=disabled,
+            dbc.Button(children='Save', id='store-session-button', disabled=disabled,
                        outline=True, block=True, color='primary')
         ]),
     ])

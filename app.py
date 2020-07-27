@@ -14,7 +14,7 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 # ==============================================================
 # Define functions and variables of general use
 # ==============================================================
-#
+
 
 def serve_layout():
     try:
@@ -49,6 +49,18 @@ app.layout = serve_layout
 # ==============================================================
 # Define callbacks for the app
 # ==============================================================
+
+@app.callback(Output('session-id', 'data'),
+              [Input({'type': 'clear-storage-button', 'index': ALL}, 'n_clicks')])
+def start_new_session(n_clicks):
+    trigger = dash.callback_context.triggered[0]
+    if not callback_utils.ensure_triggered(trigger):
+        return no_update
+    else:
+        cache = redis.Redis(connection_pool=redis_pool)
+        new_session_id = session_utils.initiate_session(cache, app.logger)
+        return new_session_id
+
 
 @app.callback([Output('contact-alert-div', 'children'),
                Output('submit-contact-form-button', 'disabled')],
@@ -92,7 +104,7 @@ def toggle_tutorial_modal(n_clicks):
                State('contact-email-input', 'value'),
                State('issue-select', 'value'),
                State('contact-text-area-input', 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def submit_contact_form(n_clicks, name, email, subject, description, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -121,7 +133,7 @@ def toggle_format_alert(*args):
 
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')],
-              [State('session-id', 'children')])
+              [State('session-id', 'data')])
 def display_page(url, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -142,7 +154,7 @@ def display_page(url, session_id):
               [Input("user-login-button", 'n_clicks')],
               [State('username-input', 'value'),
                State('password-input', 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def user_login(n_clicks, username, password, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -157,7 +169,7 @@ def user_login(n_clicks, username, password, session_id):
 
 @app.callback(Output('success-logout-alert-div', 'children'),
               [Input("user-logout-button", 'n_clicks')],
-              [State('session-id', 'children')])
+              [State('session-id', 'data')])
 def user_logout(n_clicks, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -176,7 +188,7 @@ def user_logout(n_clicks, session_id):
               [State('username-input', 'value'),
                State('password-input', 'value'),
                State('email-input', 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def create_user(n_clicks, username, password, email, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -193,7 +205,7 @@ def create_user(n_clicks, username, password, email, session_id):
               [Input('user-change-password-button', 'n_clicks')],
               [State('old-password-input', 'value'),
                State('new-password-input', 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def change_password(n_clicks, old_password, new_password, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -210,7 +222,7 @@ def change_password(n_clicks, old_password, new_password, session_id):
               [Input({'type': 'share-session-button', 'index': MATCH}, 'n_clicks')],
               [State({'type': 'share-username-input', 'index': MATCH}, 'value'),
                State({'type': 'share-username-input', 'index': MATCH}, 'id'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def share_session(share_click, share_with, session_pkid, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -237,7 +249,7 @@ def share_session(share_click, share_with, session_pkid, session_id):
                Input({'type': 'load-session-button', 'index': ALL}, 'n_clicks'),
                Input({'type': 'stop-share-session-button', 'index': ALL}, 'n_clicks'),
                Input({'type': 'load-share-session-button', 'index': ALL}, 'n_clicks')],
-              [State('session-id', 'children')])
+              [State('session-id', 'data')])
 def manage_stored_sessions(delete_clicks, load_click, stop_share, load_share, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -262,7 +274,7 @@ def manage_stored_sessions(delete_clicks, load_click, stop_share, load_share, se
 @app.callback(Output('store-session-modal-div', 'children'),
               [Input('store-session-button', 'n_clicks')],
               [State('new-session-name-input', 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def store_session(n_clicks, session_name, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -280,7 +292,7 @@ def store_session(n_clicks, session_name, session_id):
                Output('sequence-upload-modal-div', 'children')],
               [Input('upload-sequence-component', 'filename')],
               [State('upload-sequence-component', 'contents'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def upload_sequence(fname, fcontent, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -300,7 +312,7 @@ def upload_sequence(fname, fcontent, session_id):
               [State('upload-contact-component', 'contents'),
                State("contact-format-selector", 'value'),
                State('contact-filenames-div', "children"),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -321,7 +333,7 @@ def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
               [State('additional-tracks-upload', 'contents'),
                State('additional-track-selector', 'value'),
                State('additional-tracks-filenames-div', 'children'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -336,7 +348,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
 
 @app.callback(Output('removefiles-modal-div', 'children'),
               [Input({'type': 'filename-alert', 'index': ALL}, 'is_open')],
-              [State('session-id', 'children')])
+              [State('session-id', 'data')])
 def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[-1]
     cache = redis.Redis(connection_pool=redis_pool)
@@ -366,7 +378,7 @@ def remove_dataset(alerts_open, session_id):
                State("transparent-tracks-switch", 'value'),
                State('superimpose-maps-switch', 'value'),
                State({'type': 'colorpalette-select', 'index': ALL}, 'value'),
-               State('session-id', 'children')])
+               State('session-id', 'data')])
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size, track_separation,
                    track_selection, cmap_selection, transparent, superimpose, selected_palettes, session_id):
     trigger = dash.callback_context.triggered[0]

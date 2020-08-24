@@ -8,12 +8,13 @@ from utils import UrlIndex
 
 
 def ContactFormatSelector():
+    format_list = sorted([{"label": map_format, "value": map_format} for map_format in
+                          ContactFormats.__dict__.keys() if '_' not in map_format], key=lambda k: k['label'])
     return dbc.InputGroup(
         [
             dbc.Select(
                 id='contact-format-selector',
-                options=[{"label": map_format, "value": map_format} for map_format in
-                         ContactFormats.__dict__.keys() if '_' not in map_format]
+                options=format_list
             ),
             dbc.InputGroupAddon("Format", addon_type="append")
         ]
@@ -39,12 +40,13 @@ def LFactorSelector(factor=2):
 
 
 def AdditionalTrackFormatSelector():
+    format_list = sorted([{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
+                          for track in AdditionalDatasetReference], key=lambda k: k['value'])
     return dbc.InputGroup(
         [
             dbc.Select(
                 id='additional-track-selector',
-                options=[{"label": '{} ({})'.format(track.name, track.value), "value": track.name}
-                         for track in AdditionalDatasetReference]
+                options=format_list
             ),
             dbc.InputGroupAddon("Track", addon_type="append"),
         ]

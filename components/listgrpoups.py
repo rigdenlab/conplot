@@ -7,9 +7,9 @@ from utils import postgres_utils, UrlIndex
 def SessionListItem(session, list_type, color='secondary'):
     if list_type == SessionListType.SHARED:
         button_group = dbc.ButtonGroup([
-            dbc.Button(html.I(className="fas fa-save"), outline=True, color='primary',
+            dbc.Button('Load', outline=True, color='primary',
                        id={'type': 'load-share-session-button', 'index': session.pkid}),
-            dbc.Button(html.I(className="fas fa-ban"), outline=True, color='danger', className="ml-1",
+            dbc.Button('Remove', outline=True, color='danger', className="ml-1",
                        id={'type': 'stop-share-session-button', 'index': session.pkid})
         ], className="btn-toolbar")
         session_label = "%s - %s" % (session.owner, session.name)
@@ -23,9 +23,9 @@ def SessionListItem(session, list_type, color='secondary'):
         session_label = session.name
     else:
         button_group = dbc.ButtonGroup([
-            dbc.Button(html.I(className="fas fa-save"), outline=True, color='primary',
+            dbc.Button('Load', outline=True, color='primary',
                        id={'type': 'load-session-button', 'index': session.pkid}),
-            dbc.Button(html.I(className="fas fa-trash-alt"), outline=True, color='danger', className="ml-1",
+            dbc.Button('Delete', outline=True, color='danger', className="ml-1",
                        id={'type': 'delete-session-button', 'index': session.pkid})
         ], className="btn-toolbar")
         session_label = session.name

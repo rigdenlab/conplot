@@ -65,7 +65,7 @@ def SuccessCreateUserAlert(username):
     return dbc.Alert([
         html.H4('Success', className="alert-heading", style={'text-align': "center"}),
         html.P([
-            "You have successfully created a new user. You are no logged in as '%s'." % username
+            "You have successfully created a new user. You are now logged in as '%s'." % username
         ], style={'text-align': "center"}),
     ],
         dismissable=False,

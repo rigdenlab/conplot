@@ -20,3 +20,10 @@
     right: 0;
     text-align: center;
 }
+
+.spinner-with-text::after {
+    content: 'Please wait, this process can take up to 5 minutes, do not refresh the page...';
+    position: fixed;
+    top: 55vh;
+    font-weight: 500;
+}

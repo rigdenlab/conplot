@@ -7,8 +7,7 @@ import dash_bootstrap_components as dbc
 
 def Body(username):
     return html.Div([
-        html.Div(id='_hidden-div', style={'display': 'none'}),
-        dbc.Spinner(html.Div(id='contact-upload-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='contact-upload-modal-div'), fullscreen=True, fullscreenClassName="spinner-with-text"),
         dbc.Spinner(html.Div(id='sequence-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),

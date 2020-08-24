@@ -4,8 +4,10 @@ from utils import UrlIndex
 
 
 def StartNewSessionLink():
-    return html.A(dbc.Button("Start new session", block=True, color='danger'), href=UrlIndex.ROOT.value,
-                  style={"text-decoration": "none"})
+    return dbc.NavLink(
+        dbc.Button(
+            "Start new session", block=True, color='danger', id={'type': 'clear-storage-button', 'index': '1'}
+        ), href=UrlIndex.ROOT.value, style={"text-decoration": "none"})
 
 
 def GitHubLink():

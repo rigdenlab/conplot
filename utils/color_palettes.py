@@ -56,26 +56,49 @@ class Conservation_RedColorPalette(Enum):
     CONSERVED_9 = sequential.amp[9].replace(')', ', {})').replace('rgb', 'rgba')
 
 
+class Conservation_GreenColorPalette(Enum):
+    VARIABLE_1 = 'rgba(216, 243, 220,{})'
+    VARIABLE_2 = 'rgba(183, 228, 199,{})'
+    VARIABLE_3 = 'rgba(149, 213, 178,{})'
+    AVERAGE_4 = 'rgba(116, 198, 157,{})'
+    AVERAGE_5 = 'rgba(82, 183, 136,{})'
+    AVERAGE_6 = 'rgba(64, 145, 108,{})'
+    CONSERVED_7 = 'rgba(45, 106, 79,{})'
+    CONSERVED_8 = 'rgba(27, 67, 50,{})'
+    CONSERVED_9 = 'rgba(8, 28, 21,{})'
+
+
 class MembraneTopology_GreenYellowRed(Enum):
-    INSIDE = 'rgba(0, 255, 0,  {})'
-    OUTSIDE = 'rgba(255, 255, 0,  {})'
-    INSERTED = 'rgba(255, 0, 0,  {})'
+    INSIDE = 'rgba(112, 193, 179,  {})'
+    OUTSIDE = 'rgba(255, 224, 102,  {})'
+    INSERTED = 'rgba(242, 95, 92,  {})'
 
 
 class MembraneTopology_BluePurpleGreen(Enum):
-    INSIDE = 'rgba(0, 0, 255,  {})'
-    OUTSIDE = 'rgba(255, 0, 255,  {})'
-    INSERTED = 'rgba(0, 120, 0,  {})'
+    INSIDE = 'rgba(102, 46, 155,  {})'
+    OUTSIDE = 'rgba(67, 188, 205,  {})'
+    INSERTED = 'rgba(234, 53, 70,  {})'
+
+
+class MembraneTopology_BlueRedOrange(Enum):
+    INSIDE = 'rgba(46, 196, 182, {})'
+    OUTSIDE = 'rgba(231, 29, 54,{})'
+    INSERTED = 'rgba(255, 159, 28,{})'
 
 
 class Disorder_BrownGreen(Enum):
-    DISORDER = 'rgba(120, 0, 0,  {})'
-    ORDER = 'rgba(0, 120, 0,  {})'
+    DISORDER = 'rgba(188, 71, 73,  {})'
+    ORDER = 'rgba(106, 153, 78, {})'
 
 
 class Disorder_YellowRed(Enum):
-    DISORDER = 'rgba(255, 255, 0,  {})'
-    ORDER = 'rgba(255, 0, 0,  {})'
+    DISORDER = 'rgba(244, 211, 94,  {})'
+    ORDER = 'rgba(249, 87, 56, {})'
+
+
+class Disorder_PinkBlue(Enum):
+    DISORDER = 'rgba(222, 170, 255,{})'
+    ORDER = 'rgba(192, 253, 255, {})'
 
 
 class SecondaryStructure_RedGreenYellow(Enum):
@@ -90,24 +113,34 @@ class SecondaryStructure_PurpleOrangeBlue(Enum):
     SHEET = 'rgba(0, 0, 255,  {})'
 
 
+class SecondaryStructure_GreenBrownPink(Enum):
+    HELIX = 'rgba(46, 196, 182, {})'
+    COIL = 'rgba(214, 104, 83,{})'
+    SHEET = 'rgba(255, 112, 166,{})'
+
+
 class MembraneTopology_ColorPalettes(Enum):
     PALETTE_1 = MembraneTopology_GreenYellowRed
     PALETTE_2 = MembraneTopology_BluePurpleGreen
+    PALETTE_3 = MembraneTopology_BlueRedOrange
 
 
 class Conservation_ColorPalettes(Enum):
     PALETTE_1 = Conservation_BlueColorPalette
     PALETTE_2 = Conservation_RedColorPalette
+    PALETTE_3 = Conservation_GreenColorPalette
 
 
 class SecondaryStructure_ColorPalettes(Enum):
     PALETTE_1 = SecondaryStructure_PurpleOrangeBlue
     PALETTE_2 = SecondaryStructure_RedGreenYellow
+    PALETTE_3 = SecondaryStructure_GreenBrownPink
 
 
 class Disorder_ColorPalettes(Enum):
     PALETTE_1 = Disorder_BrownGreen
     PALETTE_2 = Disorder_YellowRed
+    PALETTE_3 = Disorder_PinkBlue
 
 
 class Custom_ColorPalettes(Enum):

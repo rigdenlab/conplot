@@ -397,6 +397,34 @@ def CustomFormatFieldsHelpList():
         html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
                 'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
                 'record. A complete list of the mapping between these numbers and the actual color that '
-                'will be used in the plot can be found in the next section "Adjust the plot layout".',
+                'will be used in the plot can be found in section "5. Colour palettes".',
                 style={"text-align": "justify"})
     ])
+
+
+def PaletteItem(idx, name):
+    style = {'border-bottom': '1px solid', 'border-left': '1px solid', 'border-right': '1px solid'}
+    if idx == 1:
+        style['border-top'] = '1px solid'
+
+    return dbc.ListGroupItem([
+        dbc.Row([
+            dbc.Col([
+                html.H5(name, style={'vertical-align': 'middle', 'margin-top': 8})
+            ], style={'align-items': 'center', 'justify-content': 'left', 'display': 'flex'}, width=9),
+            dbc.Col(dbc.Button('Show palettes', id={'type': 'palette-button', 'index': idx}, color='primary'),
+                    style={'align-items': 'center', 'justify-content': 'right', 'display': 'flex'})
+        ], justify='around', align='around')
+    ], style=style)
+
+
+def PaletteList():
+    return dbc.Row(
+        dbc.ListGroup([
+            PaletteItem(idx=1, name='Conservation'),
+            PaletteItem(idx=2, name='Custom files'),
+            PaletteItem(idx=3, name='Disorder'),
+            PaletteItem(idx=4, name='Membrane Topology'),
+            PaletteItem(idx=5, name='Secondary Structure'),
+        ], style={'width': '75%'}
+        ), justify='center', align='center')

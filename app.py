@@ -98,6 +98,13 @@ def toggle_tutorial_modal(n_clicks):
     return callback_utils.toggle_modal(trigger)
 
 
+@app.callback(Output({'type': 'palette-modal', 'index': MATCH}, 'is_open'),
+              [Input({'type': 'palette-button', 'index': MATCH}, 'n_clicks')])
+def toggle_palette_modal(n_clicks):
+    trigger = dash.callback_context.triggered[0]
+    return callback_utils.toggle_modal(trigger)
+
+
 @app.callback(Output('contact-form-modal-div', 'children'),
               [Input('submit-contact-form-button', 'n_clicks')],
               [State('contact-name-input', 'value'),

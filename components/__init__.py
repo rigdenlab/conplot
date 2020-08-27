@@ -261,10 +261,28 @@ def SessionList(*args, **kwargs):
     return SessionList(*args, **kwargs)
 
 
+def PaletteModal(*args, **kwargs):
+    from components.modals import PaletteModal
+
+    return PaletteModal(*args, **kwargs)
+
+
 def UserAccountHelpList(*args, **kwargs):
     from components.listgrpoups import UserAccountHelpList
 
     return UserAccountHelpList(*args, **kwargs)
+
+
+def PaletteItem(*args, **kwargs):
+    from components.listgrpoups import PaletteItem
+
+    return PaletteItem(*args, **kwargs)
+
+
+def PaletteList(*args, **kwargs):
+    from components.listgrpoups import PaletteList
+
+    return PaletteList(*args, **kwargs)
 
 
 def GdprRightsList(*args, **kwargs):

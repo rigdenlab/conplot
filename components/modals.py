@@ -1,7 +1,7 @@
 import components
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from utils import UrlIndex
+from utils import UrlIndex, color_palettes
 
 
 def MismatchModal(*args):
@@ -454,7 +454,7 @@ def RedisConnectionErrorModal():
                     "please report this issue on our ", html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value),
                     ". Alternatively, if you are running ConPlot on localhost please ensure that redis server "
                     "is running and that the URL for the connection is available as an environment variable "
-                    "called REDISCLOUD_URL as explained on our ",
+                    "called KEYDB_URL as explained on our ",
                     html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value), "."],
                    style={'text-align': "justify"}),
             components.StartNewSessionLink()
@@ -489,3 +489,36 @@ def SlackConnectionErrorModal():
                    style={'text-align': "justify"}),
         ]),
     ], id='slack-connection-error-modal', is_open=True)
+
+
+def PaletteModal(dataset, idx):
+    palette_dict = {}
+    palette_list = []
+    for palette in color_palettes.DatasetColorPalettes.__getitem__(dataset).value:
+        palette_list.append(palette.name)
+        palette_dict[palette.name] = []
+        for color in palette.value:
+            palette_dict[palette.name].append((color.name, color.value.format(0.5)))
+
+    modal_body = []
+    for palette in palette_list:
+        modal_body.append(html.Br())
+        modal_body.append(html.P(palette))
+        modal_body.append(html.Hr())
+        row = dbc.Row([
+            dbc.ListGroup([
+                dbc.ListGroupItem(
+                    dbc.Row([
+                        color[0]
+                    ], justify='center', align='center'), style={'background-color': color[1], 'font-weight': 'bold'}
+                ) for color in palette_dict[palette]
+            ], style={'width': '55%'})
+        ], justify='center', align='center')
+        modal_body.append(row)
+        modal_body.append(html.Br())
+
+    return dbc.Modal([
+        dbc.ModalHeader('{} colour palettes'.format(components.UserReadableTrackNames.__getitem__(dataset).value)),
+        dbc.ModalBody(modal_body)
+    ], is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True,
+        id={'type': 'palette-modal', 'index': idx})

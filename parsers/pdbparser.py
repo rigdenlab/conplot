@@ -86,4 +86,5 @@ def PDBParser(input):
         raise InvalidFormat('Unable to parse contacts')
 
     output = sorted(contacts, key=itemgetter(2), reverse=True)
+    output.append("PDB")
     return output

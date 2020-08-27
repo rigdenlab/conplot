@@ -117,8 +117,12 @@ def lookup_input_errors(session):
 
     mismatched = []
     for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
-                                 max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
+        if session[cmap_fname.encode()][-1] == 'PDB':
+            cmap_max_register = max((max(session[cmap_fname.encode()][:-1], key=itemgetter(0))[0],
+                                     max(session[cmap_fname.encode()][:-1], key=itemgetter(1))[0]))
+        else:
+            cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
+                                     max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
         if cmap_max_register > seq_length:
             mismatched.append(cmap_fname)
 
@@ -250,6 +254,9 @@ def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
 
 
 def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
+    if cmap[-1] == 'PDB':
+        del cmap[-1]
+
     if factor != 0:
         cmap = cmap[:int(round(seq_length / factor, 0))]
 
@@ -274,8 +281,12 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
 
 def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
     if factor != 0:
-        reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
         secondary_cmap = secondary_cmap[:int(round(seq_length / factor, 0))]
+        if reference_cmap[-1] == 'PDB':
+            del reference_cmap[-1]
+        else:
+            reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
+
 
     reference_contacts = [contact[:2] for contact in reference_cmap]
     secondary_contacts = [contact[:2] for contact in secondary_cmap]

@@ -6,9 +6,9 @@ services:
       dockerfile: "Dockerfile"
     depends_on:
       - postgres_db
-      - redis_db
+      - keydb_db
     links:
-      - redis_db
+      - keydb_db
       - postgres_db
     ports:
       - "80:80"
@@ -16,7 +16,7 @@ services:
       - "80"
     env_file:
       - ".env.web"
-    command: gunicorn app:server --preload --workers=5 --threads=5 --worker-class gevent --timeout 300 --graceful-timeout 300 --max-requests 150 --log-level=info -b :80
+    command: gunicorn app:server --preload --workers=13 --threads=13 --worker-class gevent --timeout 300 --graceful-timeout 300 --max-requests 150 --log-level=info -b :80
   postgres_db:
     image: "postgres:latest"
     restart: always
@@ -26,12 +26,9 @@ services:
       - "5432:5432"
     env_file:
       - ".env.db"
-  redis_db:
-    image: "redis:latest"
+  keydb_db:
+    image: "eqalpha/keydb"
     restart: always
-    volumes:
-      - ./redis-data:/data:z
-    command: redis-server --bind redis_db --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes
+    command: keydb-cli --bind keydb_db --requirepass ${KEYDB_PASSWORD} --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes --server-threads 4
 volumes:
   postgres-data:
-  redis-data:

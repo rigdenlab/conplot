@@ -10,6 +10,11 @@ def Body():
             html.Br(),
             html.Br(),
             html.Br(),
+            components.PaletteModal('conservation', 1),
+            components.PaletteModal('custom', 2),
+            components.PaletteModal('disorder', 3),
+            components.PaletteModal('membranetopology', 4),
+            components.PaletteModal('secondarystructure', 5),
             components.GdprPolicyModal(),
             components.TutorialOneModal(),
             components.TutorialTwoModal(),
@@ -146,7 +151,15 @@ def Body():
                                        ' button before being able to choose it in the dropdown menu.'],
                                       style={'text-align': "justify"}, color='info'),
                             html.Br(),
-                            html.H4('5. User Accounts', className="card-text", style={'text-align': "center"}),
+                            html.H4('5. Colour Palettes', className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            html.P('Here is a list of the different palettes available for each dataset that you '
+                                   'can use in ConPlot'),
+                            components.PaletteList(),
+                            html.Br(),
+                            html.Br(),
+                            html.H4('6. User Accounts', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.P(['By creating a user account in ConPlot, you will be able to access a series of '
@@ -157,7 +170,7 @@ def Body():
                                    style={"font-size": "110%", "text-align": "justify"}),
                             components.UserAccountHelpList(),
                             html.Br(),
-                            html.H4('6. Tutorials', className="card-text", style={'text-align': "center"}),
+                            html.H4('7. Tutorials', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.P(["Here is a list of tutorials that will help you understand better how to use "
@@ -172,7 +185,7 @@ def Body():
                             components.TutorialList(),
                             html.Br(),
                             html.Br(),
-                            html.H4('7. Using ConPlot locally', className="card-text", style={'text-align': "center"}),
+                            html.H4('8. Using ConPlot locally', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             html.P('ConPlot is a web-based application, and as such we recommend you make use of it '
@@ -181,10 +194,10 @@ def Body():
                                    'redis, which is the cache memory server used by ConPlot.'),
                             dbc.Col([
                                 html.Plaintext('$   sudo apt update\n$   sudo apt install redis-server\n$   sudo '
-                                               'service redis start\n$   REDISCLOUD_URL=redis://localhost:6379')
+                                               'service redis start\n$   KEYDB_URL=redis://localhost:6379')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P('With the above commands you will have installed Redis and started the server. You '
-                                   'will also have created a environment variable called "REDISCLOUD_URL" containing '
+                                   'will also have created a environment variable called "KEYDB_URL" containing '
                                    'the URL to connect to your redis server. ConPlot will need to read this '
                                    'environment variable to access the redis database. After this, all you need to do '
                                    'is clone ConPlot repository, install the requirements and start the Flask '
@@ -203,7 +216,7 @@ def Body():
                                     'disabled. Similarly, you will not be able to get in touch with us using the '
                                     '"Get in touch" tab.']),
                             html.Br(),
-                            html.H4('8. Privacy Policy', className="card-text",
+                            html.H4('9. Privacy Policy', className="card-text",
                                     style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),

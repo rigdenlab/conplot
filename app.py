@@ -4,8 +4,8 @@ import dash
 import layouts
 import loaders
 import logging
-import redis
-from utils import callback_utils, data_utils, session_utils, app_utils, redis_utils, plot_utils, UrlIndex
+import keydb
+from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, UrlIndex
 from dash.dash import no_update
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL, MATCH
@@ -18,9 +18,9 @@ from dash.dependencies import Input, Output, State, ALL, MATCH
 
 def serve_layout():
     try:
-        cache = redis.Redis(connection_pool=redis_pool)
+        cache = keydb.KeyDB(connection_pool=keydb_pool)
         cache.ping()
-    except (redis.ConnectionError, TypeError, KeyError) as e:
+    except (keydb.ConnectionError, TypeError, KeyError) as e:
         app.logger.error('Redis connection error! {}'.format(e))
         return layouts.RedisConnectionError()
     session_id = session_utils.initiate_session(cache, app.logger)
@@ -42,7 +42,7 @@ if 'PRODUCTION_SERVER' in os.environ:
         'routes_pathname_prefix': '/conplot/',
         'requests_pathname_prefix': '/conplot/',
     })
-redis_pool = redis_utils.create_pool()
+keydb_pool = keydb_utils.create_pool()
 app.layout = serve_layout
 
 
@@ -57,7 +57,7 @@ def start_new_session(n_clicks):
     if not callback_utils.ensure_triggered(trigger):
         return no_update
     else:
-        cache = redis.Redis(connection_pool=redis_pool)
+        cache = keydb.KeyDB(connection_pool=keydb_pool)
         new_session_id = session_utils.initiate_session(cache, app.logger)
         return new_session_id
 
@@ -98,6 +98,13 @@ def toggle_tutorial_modal(n_clicks):
     return callback_utils.toggle_modal(trigger)
 
 
+@app.callback(Output({'type': 'palette-modal', 'index': MATCH}, 'is_open'),
+              [Input({'type': 'palette-button', 'index': MATCH}, 'n_clicks')])
+def toggle_palette_modal(n_clicks):
+    trigger = dash.callback_context.triggered[0]
+    return callback_utils.toggle_modal(trigger)
+
+
 @app.callback(Output('contact-form-modal-div', 'children'),
               [Input('submit-contact-form-button', 'n_clicks')],
               [State('contact-name-input', 'value'),
@@ -107,7 +114,7 @@ def toggle_tutorial_modal(n_clicks):
                State('session-id', 'data')])
 def submit_contact_form(n_clicks, name, email, subject, description, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutModal()
@@ -136,7 +143,7 @@ def toggle_format_alert(*args):
               [State('session-id', 'data')])
 def display_page(url, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if url is None:
         return no_update
@@ -157,7 +164,7 @@ def display_page(url, session_id):
                State('session-id', 'data')])
 def user_login(n_clicks, username, password, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return no_update, components.SessionTimedOutToast()
@@ -172,7 +179,7 @@ def user_login(n_clicks, username, password, session_id):
               [State('session-id', 'data')])
 def user_logout(n_clicks, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutToast()
@@ -191,7 +198,7 @@ def user_logout(n_clicks, session_id):
                State('session-id', 'data')])
 def create_user(n_clicks, username, password, email, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return no_update, components.SessionTimedOutModal()
@@ -208,7 +215,7 @@ def create_user(n_clicks, username, password, email, session_id):
                State('session-id', 'data')])
 def change_password(n_clicks, old_password, new_password, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutToast()
@@ -225,7 +232,7 @@ def change_password(n_clicks, old_password, new_password, session_id):
                State('session-id', 'data')])
 def share_session(share_click, share_with, session_pkid, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
     session_pkid = session_pkid['index']
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
@@ -252,7 +259,7 @@ def share_session(share_click, share_with, session_pkid, session_id):
               [State('session-id', 'data')])
 def manage_stored_sessions(delete_clicks, load_click, stop_share, load_share, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutToast(), no_update, no_update
@@ -277,7 +284,7 @@ def manage_stored_sessions(delete_clicks, load_click, stop_share, load_share, se
                State('session-id', 'data')])
 def store_session(n_clicks, session_name, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return components.SessionTimedOutToast()
@@ -295,7 +302,7 @@ def store_session(n_clicks, session_name, session_id):
                State('session-id', 'data')])
 def upload_sequence(fname, fcontent, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return no_update, None, components.SessionTimedOutModal()
@@ -315,7 +322,7 @@ def upload_sequence(fname, fcontent, session_id):
                State('session-id', 'data')])
 def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return no_update, None, components.SessionTimedOutModal()
@@ -336,7 +343,7 @@ def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
                State('session-id', 'data')])
 def upload_additional_track(fname, fcontent, input_format, fname_alerts, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
         return no_update, None, components.SessionTimedOutModal()
@@ -351,7 +358,7 @@ def upload_additional_track(fname, fcontent, input_format, fname_alerts, session
               [State('session-id', 'data')])
 def remove_dataset(alerts_open, session_id):
     trigger = dash.callback_context.triggered[-1]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if not callback_utils.ensure_triggered(trigger):
         return None
@@ -382,7 +389,7 @@ def remove_dataset(alerts_open, session_id):
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size, track_separation,
                    track_selection, cmap_selection, transparent, superimpose, selected_palettes, session_id):
     trigger = dash.callback_context.triggered[0]
-    cache = redis.Redis(connection_pool=redis_pool)
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if not callback_utils.ensure_triggered(trigger):
         return components.PlotPlaceHolder(), None, components.DisplayControlCard(), True

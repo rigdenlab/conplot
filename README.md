@@ -38,7 +38,7 @@ container:
 ```bash
 $   docker pull filosanrod/conplot:latest
 $   docker run --name redis_db -d redis:latest
-$   docker run --name conplot_app --link redis_db:redis -e REDISCLOUD_URL="redis://redis_db:6379" -p 80:80 -d filosanrod/conplot:latest gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
+$   docker run --name conplot_app --link redis_db:redis -e KEYDB_URL="redis://redis_db:6379" -p 80:80 -d filosanrod/conplot:latest gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
 ```
 
 However, if you want to deploy ConPlot as a docker container, we recommend you automate the creation of the 
@@ -68,11 +68,11 @@ Once you have installed `redis`, you will need to start the service by running:
 $   sudo service redis start
 ```
 
-You will also need to create a environment variable called `REDISCLOUD_URL` with 
+You will also need to create a environment variable called `KEYDB_URL` with 
 the URL to connect to the redis server you just started on your machine:
 
 ```bash
-$   REDISCLOUD_URL=redis://localhost:6379
+$   KEYDB_URL=redis://localhost:6379
 ```
 
 After this, all you need to do is clone this repository, install the requirements 

@@ -181,10 +181,10 @@ def Body():
                                    'redis, which is the cache memory server used by ConPlot.'),
                             dbc.Col([
                                 html.Plaintext('$   sudo apt update\n$   sudo apt install redis-server\n$   sudo '
-                                               'service redis start\n$   REDISCLOUD_URL=redis://localhost:6379')
+                                               'service redis start\n$   KEYDB_URL=redis://localhost:6379')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P('With the above commands you will have installed Redis and started the server. You '
-                                   'will also have created a environment variable called "REDISCLOUD_URL" containing '
+                                   'will also have created a environment variable called "KEYDB_URL" containing '
                                    'the URL to connect to your redis server. ConPlot will need to read this '
                                    'environment variable to access the redis database. After this, all you need to do '
                                    'is clone ConPlot repository, install the requirements and start the Flask '

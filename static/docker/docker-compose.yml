@@ -6,9 +6,9 @@ services:
       dockerfile: "Dockerfile"
     depends_on:
       - postgres_db
-      - redis_db
+      - keydb_db
     links:
-      - redis_db
+      - keydb_db
       - postgres_db
     ports:
       - "80:80"
@@ -26,12 +26,9 @@ services:
       - "5432:5432"
     env_file:
       - ".env.db"
-  redis_db:
-    image: "redis:latest"
+  keydb_db:
+    image: "eqalpha/keydb"
     restart: always
-    volumes:
-      - ./redis-data:/data:z
-    command: redis-server --bind redis_db --requirepass ${REDIS_PASSWORD} --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes
+    command: keydb-cli --bind keydb_db --requirepass ${KEYDB_PASSWORD} --maxmemory 256mb --maxmemory-policy volatile-ttl --appendonly yes --server-threads 4
 volumes:
   postgres-data:
-  redis-data:

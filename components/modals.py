@@ -502,9 +502,8 @@ def PaletteModal(dataset, idx):
 
     modal_body = []
     for palette in palette_list:
+        modal_body.append(dbc.Row(html.H4(palette, style={'font-weight': 'bold'}), align='center', justify='center'))
         modal_body.append(html.Br())
-        modal_body.append(html.P(palette))
-        modal_body.append(html.Hr())
         row = dbc.Row([
             dbc.ListGroup([
                 dbc.ListGroupItem(
@@ -515,6 +514,7 @@ def PaletteModal(dataset, idx):
             ], style={'width': '55%'})
         ], justify='center', align='center')
         modal_body.append(row)
+        modal_body.append(html.Br())
         modal_body.append(html.Br())
 
     return dbc.Modal([

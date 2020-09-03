@@ -41,11 +41,11 @@ $   docker run --name conplot_app --link redis_db:redis -e KEYDB_URL="redis://re
 ```
 
 However, if you want to deploy ConPlot as a docker container, we recommend you automate the creation of the 
-multiple containers required to run the app using the `static/docker/docker-compose.yml` file. Do this by running:
+multiple containers required to run the app using the `docker-compose.yml` file found at the `conplot-docker` repository. Do this by running:
 
 ```bash 
-$   git clone https://github.com/rigdenlab/conplot
-$   cd conplot/static/docker
+$   git clone https://github.com/rigdenlab/conplot-docker
+$   cd conplot-docker
 $   docker-compose up -d
 ```
 

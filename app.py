@@ -36,11 +36,6 @@ app = dash.Dash(__name__, external_stylesheets=[dbc.themes.LUX, UrlIndex.FONT_AW
 app.title = 'ConPlot'
 server = app.server
 app.config.suppress_callback_exceptions = True
-app.config.update({
-        'url_base_pathname': '/conplot/',
-        'routes_pathname_prefix': '/conplot/',
-        'requests_pathname_prefix': '/conplot/',
-})
 keydb_pool = keydb_utils.create_pool()
 app.layout = serve_layout
 

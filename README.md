@@ -1,6 +1,5 @@
 # ConPlot: Online Analysis of Contact Plots
 
-[![Heroku App Status](http://heroku-shields.herokuapp.com/random-cheesecake)](https://random-cheesecake.herokuapp.com/conplot)
 [![CI Status](https://travis-ci.com/rigdenlab/conplot.svg?branch=master)](https://travis-ci.com/rigdenlab/conplot)
 ![Docker Automated build](https://img.shields.io/docker/automated/filosanrod/conplot)
 
@@ -25,7 +24,7 @@ at a glance.
 
 
 ConPlot is a web-based application that can be used 
-[here](https://random-cheesecake.herokuapp.com/conplot/). Alternatively,
+[here](www.conplot.org). Alternatively,
 it is also possible to use ConPlot locally on your personal machine using 
 the localhost. There are two possible ways to achieve this.
 

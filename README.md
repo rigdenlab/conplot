@@ -24,8 +24,7 @@ at a glance.
 
 
 ConPlot is a web-based application that can be used 
-[here](http://www.conplot.org). Alternatively,
-it is also possible to use ConPlot locally on your personal machine using 
+[here](http://www.conplot.org). Alternatively, it is also possible to use ConPlot locally on your personal machine using 
 the localhost. There are two possible ways to achieve this.
 
 ### Using Docker image at DockerHub

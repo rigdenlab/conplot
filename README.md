@@ -1,6 +1,5 @@
 # ConPlot: Online Analysis of Contact Plots
 
-[![Heroku App Status](http://heroku-shields.herokuapp.com/conplot)](https://conplot.herokuapp.com/conplot)
 [![CI Status](https://travis-ci.com/rigdenlab/conplot.svg?branch=master)](https://travis-ci.com/rigdenlab/conplot)
 ![Docker Automated build](https://img.shields.io/docker/automated/filosanrod/conplot)
 
@@ -25,8 +24,7 @@ at a glance.
 
 
 ConPlot is a web-based application that can be used 
-[here](https://conplot.herokuapp.com/conplot). Alternatively,
-it is also possible to use ConPlot locally on your personal machine using 
+[here](http://www.conplot.org). Alternatively, it is also possible to use ConPlot locally on your personal machine using 
 the localhost. There are two possible ways to achieve this.
 
 ### Using Docker image at DockerHub
@@ -42,11 +40,11 @@ $   docker run --name conplot_app --link redis_db:redis -e KEYDB_URL="redis://re
 ```
 
 However, if you want to deploy ConPlot as a docker container, we recommend you automate the creation of the 
-multiple containers required to run the app using the `static/docker/docker-compose.yml` file. Do this by running:
+multiple containers required to run the app using the `docker-compose.yml` file found at the `conplot-docker` repository. Do this by running:
 
 ```bash 
-$   git clone https://github.com/rigdenlab/conplot
-$   cd conplot/static/docker
+$   git clone https://github.com/rigdenlab/conplot-docker
+$   cd conplot-docker
 $   docker-compose up -d
 ```
 

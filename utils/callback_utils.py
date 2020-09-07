@@ -46,6 +46,14 @@ def get_remove_trigger(trigger):
     dataset = index[1]
     return fname, dataset, is_open
 
+def is_user_login(trigger):
+    prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
+    index = prop_id['idx']
+    if index == 'login':
+        return True
+    else:
+        return False
+
 
 def remove_unused_fname_alerts(falerts):
     new_falerts = []

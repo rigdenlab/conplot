@@ -15,7 +15,7 @@ def InvalidAddTrackCollapse():
     return dbc.Collapse(InvalidFormatCard(), id='invalid-track-collapse', is_open=True)
 
 
-def InvalidLoginCollapse():
+def InvalidLoginCollapse(id='invalid-login-collapse'):
     return dbc.Collapse(
         dbc.Card(
             dbc.CardBody([
@@ -27,7 +27,7 @@ def InvalidLoginCollapse():
             color="danger",
             outline=True
         ),
-        id='invalid-login-collapse', is_open=False
+        id=id, is_open=False
     )
 
 

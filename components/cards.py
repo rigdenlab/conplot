@@ -37,17 +37,50 @@ def NoPageFoundCard(url):
     ])
 
 
-def UserLoginCard(not_logged_in=False):
-    if not_logged_in:
-        warning = html.H5('You must login before accessing the members only area', style={'text-align': "center"})
+def UserPortalCardBody(username):
+    if username is not None:
+        return [
+            html.H6('You are currently logged in as %s. Do you want to logout?' % username,
+                    style={'text-align': "center"}),
+            html.Div([
+                components.UserNameInput('login-username-input'),
+                components.PasswordInput('login-password-input'),
+                components.InvalidLoginCollapse(id='user-portal-invalid-login-collapse'),
+            ], id='place-holder-user-portal', style={'display': 'none'}),
+            html.Br(),
+            dbc.Button("Logout", color="danger", block=True, id={'type': 'user-portal-button', 'idx': 'logout'}),
+        ]
     else:
-        warning = None
+        return [
+            components.UserNameInput('login-username-input'),
+            components.PasswordInput('login-password-input'),
+            components.InvalidLoginCollapse(id='user-portal-invalid-login-collapse'),
+            html.Br(),
+            dbc.Button("Login", color="primary", block=True, id={'type': 'user-portal-button', 'idx': 'login'})
+        ]
 
+
+def UserPortalCard(username):
     return dbc.Card([
         dbc.CardBody([
-            html.H3('User login', className="card-text", style={'text-align': "center"}),
+            html.H3('User portal', className="card-text", style={'text-align': "center"}),
             html.Hr(),
-            warning,
+            html.Br(),
+            html.Br(),
+            dbc.Spinner(html.Div(UserPortalCardBody(username), id='user-portal-div')),
+            html.Br(),
+            html.Div(id='user-portal-alert-div'),
+        ])
+    ])
+
+
+def UserLoginCard():
+    return dbc.Card([
+        dbc.CardBody([
+            html.H3('User login', className="card-text", style={'text-align': "center", 'color': 'red'}),
+            html.Hr(),
+            html.H5('You must login before accessing the members only area',
+                    style={'text-align': "center", 'color': 'red'}),
             html.Br(),
             components.UserNameInput(),
             components.PasswordInput(),
@@ -55,25 +88,7 @@ def UserLoginCard(not_logged_in=False):
             html.Br(),
             dbc.Spinner(html.Div(id='success-login-alert-div')),
             html.Br(),
-            dbc.Button("Login", color="primary", block=True, id='user-login-button'),
-            html.Br(),
-        ])
-    ])
-
-
-def UserLogoutCard(username):
-    return dbc.Card([
-        dbc.CardBody([
-            html.H3('User logout', className="card-text", style={'text-align': "center"}),
-            html.Hr(),
-            html.Br(),
-            html.Br(),
-            html.H6('You are currently logged in as %s. Do you want to logout?' % username,
-                    style={'text-align': "center"}),
-            html.Br(),
-            dbc.Spinner(html.Div(id='success-logout-alert-div')),
-            html.Br(),
-            dbc.Button("Logout", color="danger", block=True, id='user-logout-button'),
+            dbc.Button("Login", color="primary", block=True, id='require-user-login-button'),
             html.Br(),
         ])
     ])
@@ -313,18 +328,20 @@ def InvalidFormatCard():
 def CreateUserCard():
     return dbc.Card([
         dbc.CardBody([
+            html.Div(id='create-user-modal-div'),
             html.H3('Create a new user', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            components.UserNameInput(),
-            components.PasswordInput(),
-            components.EmailInput(),
+            components.UserNameInput('create-username-input'),
+            components.PasswordInput('create-password-input'),
+            components.EmailInput('create-email-input'),
             components.InvalidNewUserCollapse(),
             html.Br(),
-            dbc.Spinner(html.Div(id='success-create-user-alert-div')),
             components.GdprAgreementCheckbox(),
             html.Br(),
-            dbc.Button("Create new user", color="primary", block=True, id='create-user-button', disabled=True),
+            dbc.Button([
+                dbc.Spinner(html.Div("Create new user", id='create-user-button-div'), size='sm')
+            ], color="primary", block=True, id='create-user-button', disabled=True)
         ]),
     ])
 
@@ -332,8 +349,12 @@ def CreateUserCard():
 def UserStoredSessionsCard(username, current_session_pkid=None):
     return dbc.Card([
         dbc.CardBody([
-            html.H3('%s stored sessions' % username, className="card-text", style={'text-align': "center"}),
+            html.H3('Stored sessions', className="card-text", style={'text-align': "center"}),
             html.Hr(),
+            html.P('Here you will find a list of all the sessions you have saved in your personal storage. These '
+                   'sessions are private and only you and those user you decide to share them with will be able '
+                   'to access them.',
+                   style={'text-align': "center"}),
             html.Br(),
             dbc.Spinner(components.SessionList(username, components.SessionListType.STORED, current_session_pkid),
                         id='stored-sessions-list-spinner')
@@ -344,8 +365,12 @@ def UserStoredSessionsCard(username, current_session_pkid=None):
 def UserSharedSessionsCard(username, current_session_pkid=None):
     return dbc.Card([
         dbc.CardBody([
-            html.H3('Sessions shared with %s' % username, className="card-text", style={'text-align': "center"}),
+            html.H3('Shared sessions', className="card-text", style={'text-align': "center"}),
             html.Hr(),
+            html.P('Here you will find a list with all the sessions that other users have shared with you. You only '
+                   'have read permissions to these sessions, but once you load them you will be able to save a copy '
+                   'into your personal storage from the Plot tab. You can also decide to stop sharing them at any '
+                   'moment.', style={'text-align': "center"}),
             html.Br(),
             dbc.Spinner(components.SessionList(username, components.SessionListType.SHARED, current_session_pkid),
                         id='shared-sessions-list-spinner')
@@ -362,7 +387,7 @@ def ShareSessionsCard(username):
             html.P('By sharing a session you grant another user with read-only permissions on '
                    'your data. They will also be able to see your username, the name of the session and the '
                    'date when you created it. If you update the contents of the shared session, they will '
-                   'also be able to see the updated data.'),
+                   'also be able to see the updated data.', style={'text-align': "center"}),
             html.Br(),
             components.SessionList(username, components.SessionListType.TO_SHARE),
         ])

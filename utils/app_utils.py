@@ -1,4 +1,5 @@
 import components
+from dash.dash import no_update
 import layouts
 from loaders import DatasetReference
 from utils import UrlIndex, postgres_utils, cache_utils
@@ -17,14 +18,14 @@ def change_password(new_password, old_password, cache, session_id, logger):
 
 def create_user(username, password, email, session_id, cache, logger):
     if any([True for x in (username, password, email) if x is None or x == '']):
-        return True, None
+        return True, None, no_update, no_update, no_update, no_update
     try:
         postgres_utils.create_user(username, password, email)
         logger.info('Session {} created user {} - {}'.format(session_id, username, email))
         cache.hset(session_id, cache_utils.CacheKeys.USER.value, compress_data(username))
-        return False, components.SuccessCreateUserAlert(username)
+        return False, components.SuccessCreateUserModal(username), None, None, None, no_update
     except (UserExists, EmailAlreadyUsed, IntegrityError) as e:
-        return True, None
+        return True, None, no_update, no_update, no_update, no_update
 
 
 def user_logout(session_id, cache, logger):
@@ -33,16 +34,16 @@ def user_logout(session_id, cache, logger):
     for dataset in DatasetReference:
         cache.hdel(session_id, dataset.value)
     logger.info('Session {} logout user'.format(session_id))
-    return components.SuccessLogoutAlert()
+    return no_update, components.SuccessLogoutAlert(), components.UserPortalCardBody(None)
 
 
 def user_login(username, password, session_id, cache, logger):
     if postgres_utils.userlogin(username, password):
         logger.info('Session {} login user {}'.format(session_id, username))
         cache.hset(session_id, cache_utils.CacheKeys.USER.value, compress_data(username))
-        return False, components.SuccessLoginAlert(username)
+        return False, components.SuccessLoginAlert(username), components.UserPortalCardBody(username)
     else:
-        return True, None
+        return True, None, no_update
 
 
 def serve_url(url, session_id, cache, logger):

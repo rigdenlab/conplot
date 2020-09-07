@@ -2,6 +2,26 @@ Changelog
 =========
 
 
+0.2.3
+-----
+
+Added
+~~~~~
+- Ensure user reads GDPR before creating account
+- Created tutorial about ab initio model validation by superimposing contact maps
+- Handle database conection errors
+
+
+Changed
+~~~~~~~
+- Moved all docker related files to a separate repository
+- Migrate cache to KeyDB
+- Several improvements to UI based on user feedback
+- Bug fix: handle exceptions when uploading binary files
+- Bug fix: superimposing a contact prediction with a PDB file shows all contacts in the PDB model indepdently of L/ filter
+- Implement PDB parser based on biopython. Only reads first chain for performance.
+
+
 0.2.2
 -----
 

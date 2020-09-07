@@ -175,7 +175,7 @@ def require_user_login(n_clicks, username, password, session_id):
     elif not callback_utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    return app_utils.user_login(username, password, session_id, cache, app.logger)
+    return app_utils.user_login(username, password, session_id, cache, app.logger)[:-1]
 
 
 @app.callback([Output('user-portal-invalid-login-collapse', 'is_open'),

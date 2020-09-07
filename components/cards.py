@@ -48,7 +48,7 @@ def UserPortalCardBody(username):
                 components.InvalidLoginCollapse(id='user-portal-invalid-login-collapse'),
             ], id='place-holder-user-portal', style={'display': 'none'}),
             html.Br(),
-            dbc.Button("Logout", color="danger", block=True, id={'type': 'user-portal-button', 'idx': 'logout'}),
+            dbc.Button("Logout", color="primary", block=True, id={'type': 'user-portal-button', 'idx': 'logout'}),
         ]
     else:
         return [

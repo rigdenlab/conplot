@@ -105,7 +105,11 @@ def toggle_palette_modal(n_clicks):
     return callback_utils.toggle_modal(trigger)
 
 
-@app.callback(Output('contact-form-modal-div', 'children'),
+@app.callback([Output('contact-form-modal-div', 'children'),
+               Output('contact-email-input', 'value'),
+               Output('contact-name-input', 'value'),
+               Output('issue-select', 'value'),
+               Output('contact-text-area-input', 'value')],
               [Input('submit-contact-form-button', 'n_clicks')],
               [State('contact-name-input', 'value'),
                State('contact-email-input', 'value'),
@@ -117,11 +121,11 @@ def submit_contact_form(n_clicks, name, email, subject, description, session_id)
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return components.SessionTimedOutModal()
+        return components.SessionTimedOutModal(), None, None, None, None
     elif not callback_utils.ensure_triggered(trigger):
-        return no_update
+        return no_update, no_update, no_update, no_update, no_update
 
-    return callback_utils.submit_form(name, email, subject, description, app.logger)
+    return callback_utils.submit_form(name, email, subject, description, app.logger), None, None, None, None
 
 
 @app.callback([Output('track-selection-card', "color"),

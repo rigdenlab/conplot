@@ -267,6 +267,12 @@ def PaletteModal(*args, **kwargs):
     return PaletteModal(*args, **kwargs)
 
 
+def SuccessCreateUserModal(*args, **kwargs):
+    from components.modals import SuccessCreateUserModal
+
+    return SuccessCreateUserModal(*args, **kwargs)
+
+
 def UserAccountHelpList(*args, **kwargs):
     from components.listgrpoups import UserAccountHelpList
 
@@ -561,10 +567,16 @@ def CreateUserCard(*args, **kwargs):
     return CreateUserCard(*args, **kwargs)
 
 
-def UserLogoutCard(*args, **kwargs):
-    from components.cards import UserLogoutCard
+def UserPortalCard(*args, **kwargs):
+    from components.cards import UserPortalCard
 
-    return UserLogoutCard(*args, **kwargs)
+    return UserPortalCard(*args, **kwargs)
+
+
+def UserPortalCardBody(*args, **kwargs):
+    from components.cards import UserPortalCardBody
+
+    return UserPortalCardBody(*args, **kwargs)
 
 
 def DisplayControlCard(*args, **kwargs):

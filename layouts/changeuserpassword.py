@@ -8,7 +8,7 @@ def Body(username=None):
         return html.Div([
             html.Br(),
             html.Br(),
-            dbc.Container(UserLoginCard(True))
+            dbc.Container(UserLoginCard())
         ])
     else:
         return html.Div([

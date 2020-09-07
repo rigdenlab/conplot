@@ -34,7 +34,7 @@ def get_base_url():
 
 class UrlIndex(Enum):
     """An enumerator with an index of all the paths in conplot-web"""
-    ROOT = '/conplot'
+    ROOT = '/{}'.format(get_base_url())
     HOME = '{}/home'.format(get_base_url())
     PLOT = '{}/plot'.format(get_base_url())
     CONTACT = '{}/contact'.format(get_base_url())

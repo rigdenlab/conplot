@@ -105,7 +105,11 @@ def toggle_palette_modal(n_clicks):
     return callback_utils.toggle_modal(trigger)
 
 
-@app.callback(Output('contact-form-modal-div', 'children'),
+@app.callback([Output('contact-form-modal-div', 'children'),
+               Output('contact-email-input', 'value'),
+               Output('contact-name-input', 'value'),
+               Output('issue-select', 'value'),
+               Output('contact-text-area-input', 'value')],
               [Input('submit-contact-form-button', 'n_clicks')],
               [State('contact-name-input', 'value'),
                State('contact-email-input', 'value'),
@@ -117,11 +121,11 @@ def submit_contact_form(n_clicks, name, email, subject, description, session_id)
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return components.SessionTimedOutModal()
+        return components.SessionTimedOutModal(), None, None, None, None
     elif not callback_utils.ensure_triggered(trigger):
-        return no_update
+        return no_update, no_update, no_update, no_update, no_update
 
-    return callback_utils.submit_form(name, email, subject, description, app.logger)
+    return callback_utils.submit_form(name, email, subject, description, app.logger), None, None, None, None
 
 
 @app.callback([Output('track-selection-card', "color"),
@@ -158,11 +162,11 @@ def display_page(url, session_id):
 
 @app.callback([Output('invalid-login-collapse', 'is_open'),
                Output('success-login-alert-div', 'children')],
-              [Input("user-login-button", 'n_clicks')],
+              [Input("require-user-login-button", 'n_clicks')],
               [State('username-input', 'value'),
                State('password-input', 'value'),
                State('session-id', 'data')])
-def user_login(n_clicks, username, password, session_id):
+def require_user_login(n_clicks, username, password, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
@@ -171,39 +175,50 @@ def user_login(n_clicks, username, password, session_id):
     elif not callback_utils.ensure_triggered(trigger):
         return no_update, no_update
 
-    return app_utils.user_login(username, password, session_id, cache, app.logger)
+    return app_utils.user_login(username, password, session_id, cache, app.logger)[:-1]
 
 
-@app.callback(Output('success-logout-alert-div', 'children'),
-              [Input("user-logout-button", 'n_clicks')],
-              [State('session-id', 'data')])
-def user_logout(n_clicks, session_id):
+@app.callback([Output('user-portal-invalid-login-collapse', 'is_open'),
+               Output('user-portal-alert-div', 'children'),
+               Output('user-portal-div', 'children')],
+              [Input({'type': 'user-portal-button', 'idx': ALL}, 'n_clicks')],
+              [State('login-username-input', 'value'),
+               State('login-password-input', 'value'),
+               State('session-id', 'data')])
+def user_portal(n_clicks, username, password, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return components.SessionTimedOutToast()
+        return no_update, components.SessionTimedOutToast(), no_update
     elif not callback_utils.ensure_triggered(trigger):
-        return no_update
+        return no_update, no_update, no_update
 
-    return app_utils.user_logout(session_id, cache, app.logger)
+    if callback_utils.is_user_login(trigger):
+        return app_utils.user_login(username, password, session_id, cache, app.logger)
+    else:
+        return app_utils.user_logout(session_id, cache, app.logger)
 
 
 @app.callback([Output('invalid-create-user-collapse', 'is_open'),
-               Output('success-create-user-alert-div', 'children')],
+               Output('create-user-modal-div', 'children'),
+               Output('create-username-input', 'value'),
+               Output('create-password-input', 'value'),
+               Output('create-email-input', 'value'),
+               Output('create-user-button-div', 'children')],
               [Input("create-user-button", 'n_clicks')],
-              [State('username-input', 'value'),
-               State('password-input', 'value'),
-               State('email-input', 'value'),
+              [State('create-username-input', 'value'),
+               State('create-password-input', 'value'),
+               State('create-email-input', 'value'),
                State('session-id', 'data')])
 def create_user(n_clicks, username, password, email, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update, components.SessionTimedOutModal()
+        return no_update, components.SessionTimedOutModal(), no_update, no_update, no_update, no_update
     elif not callback_utils.ensure_triggered(trigger):
-        return no_update, no_update
+        return no_update, no_update, no_update, no_update, no_update, no_update
 
     return app_utils.create_user(username, password, email, session_id, cache, app.logger)
 

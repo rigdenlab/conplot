@@ -147,6 +147,16 @@ def SuccessContactFormModal():
         ),
     ], id='success-contact-form-modal', is_open=True)
 
+def SuccessCreateUserModal(username):
+    return dbc.Modal([
+        ModalHeader(html.H4("Success", className="alert-heading", style={'color': 'green'})),
+        dbc.ModalBody(
+            html.P("""You have successfully created a new user. You are now logged in as {}.""".format(username),
+                   style={'text-align': "justify"})
+        ),
+    ], id='success-contact-form-modal', is_open=True)
+
+
 
 def CustomFormatDescriptionModal():
     return dbc.Modal([

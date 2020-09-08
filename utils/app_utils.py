@@ -1,7 +1,6 @@
 import components
 from dash.dash import no_update
 import layouts
-from loaders import DatasetReference
 from utils import UrlIndex, postgres_utils, cache_utils
 from utils import decompress_data, compress_data
 from utils.exceptions import IntegrityError, UserExists, EmailAlreadyUsed
@@ -29,10 +28,9 @@ def create_user(username, password, email, session_id, cache, logger):
 
 
 def user_logout(session_id, cache, logger):
+    cache_utils.clear_cache(session_id, cache)
     cache.hdel(session_id, cache_utils.CacheKeys.USER.value)
     cache.hdel(session_id, cache_utils.CacheKeys.SESSION_PKID.value)
-    for dataset in DatasetReference:
-        cache.hdel(session_id, dataset.value)
     logger.info('Session {} logout user'.format(session_id))
     return no_update, components.SuccessLogoutAlert(), components.UserPortalCardBody(None)
 

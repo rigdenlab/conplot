@@ -91,3 +91,17 @@ def decompressBytesToString(inputBytes):
             return bio.read().decode("utf-8")
         bio.write(chunk)
     return None
+
+
+def clear_cache(session_id, cache):
+    for dataset in loaders.DatasetReference.exclude_seq():
+        if cache.hexists(session_id, dataset.value):
+            fname_list = decompress_data(cache.hget(session_id, dataset.value))
+            if fname_list:
+                for fname in fname_list:
+                    cache.hdel(session_id, fname)
+            cache.hdel(session_id, dataset.value)
+    if cache.hexists(session_id, CacheKeys.SEQUENCE.value):
+        cache.hdel(session_id, decompress_data(cache.hget(session_id, CacheKeys.SEQUENCE.value)))
+        cache.hdel(session_id, CacheKeys.SEQUENCE.value)
+        cache.hdel(session_id, CacheKeys.SEQUENCE_HYDROPHOBICITY.value)

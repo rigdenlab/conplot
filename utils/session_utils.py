@@ -1,7 +1,6 @@
 from operator import attrgetter
 import components
 from utils.exceptions import UserDoesntExist
-import loaders
 import uuid
 from utils import decompress_data, compress_data, postgres_utils, cache_utils
 
@@ -21,13 +20,7 @@ def load_session(username, selected_session_pkid, session_id, cache, logger):
     logger.info('Session {} user {} loads session {} - {} - {}'
                 ''.format(session_id, username, owner_user, session_name, selected_session_pkid))
 
-    for dataset in loaders.DatasetReference:
-        if cache.hexists(session_id, dataset.value):
-            fname_list = decompress_data(cache.hget(session_id, dataset.value))
-            if fname_list:
-                for fname in fname_list:
-                    cache.hdel(session_id, fname)
-            cache.hdel(session_id, dataset.value)
+    cache_utils.clear_cache(session_id, cache)
 
     cache.hset(session_id, cache_utils.CacheKeys.SESSION_PKID.value, selected_session_pkid)
     for key in loaded_session.keys():

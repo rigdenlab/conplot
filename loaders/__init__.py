@@ -11,6 +11,12 @@ class DatasetReference(Enum):
     DISORDER = 'disorder'
     CUSTOM = 'custom'
 
+    @classmethod
+    def exclude_seq(cls):
+        for item in cls:
+            if item.value != 'sequence':
+                yield item
+
 
 class AdditionalDatasetReference(Enum):
     TOPCONS = DatasetReference.MEMBRANE_TOPOLOGY.value
@@ -18,11 +24,6 @@ class AdditionalDatasetReference(Enum):
     IUPRED = DatasetReference.DISORDER.value
     CONSURF = DatasetReference.CONSERVATION.value
     CUSTOM = DatasetReference.CUSTOM.value
-
-
-class MandatoryDatasetReference(Enum):
-    SEQUENCE = DatasetReference.SEQUENCE.value
-    CONTACT_MAP = DatasetReference.CONTACT_MAP.value
 
 
 def decode_raw_file(raw_file):

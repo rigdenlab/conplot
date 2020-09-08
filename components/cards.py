@@ -66,7 +66,6 @@ def UserPortalCard(username):
             html.H3('User portal', className="card-text", style={'text-align': "center"}),
             html.Hr(),
             html.Br(),
-            html.Br(),
             dbc.Spinner(html.Div(UserPortalCardBody(username), id='user-portal-div')),
             html.Br(),
             html.Div(id='user-portal-alert-div'),

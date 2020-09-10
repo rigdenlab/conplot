@@ -10,6 +10,8 @@ class CacheKeys(Enum):
     USER = 'user'
     SESSION_PKID = 'session_pkid'
     SEQUENCE_HYDROPHOBICITY = 'hydro'
+    FIGURE_JSON = 'figure_json'
+    DISPLAY_CONTROL_JSON = 'display_control_json'
     CONTACT_MAP = loaders.DatasetReference.CONTACT_MAP.value
     CUSTOM = loaders.DatasetReference.CUSTOM.value
     SEQUENCE = loaders.DatasetReference.SEQUENCE.value
@@ -93,7 +95,18 @@ def decompressBytesToString(inputBytes):
     return None
 
 
+def store_figure(session_id, figure_json, display_json, cache):
+    cache.hset(session_id, CacheKeys.FIGURE_JSON.value, compress_data(figure_json))
+    cache.hset(session_id, CacheKeys.DISPLAY_CONTROL_JSON.value, compress_data(display_json))
+
+
 def clear_cache(session_id, cache):
+    remove_datasets(session_id, cache)
+    remove_figure(session_id, cache)
+    remove_sequence(session_id, cache)
+
+
+def remove_datasets(session_id, cache):
     for dataset in loaders.DatasetReference.exclude_seq():
         if cache.hexists(session_id, dataset.value):
             fname_list = decompress_data(cache.hget(session_id, dataset.value))
@@ -101,6 +114,15 @@ def clear_cache(session_id, cache):
                 for fname in fname_list:
                     cache.hdel(session_id, fname)
             cache.hdel(session_id, dataset.value)
+
+
+def remove_figure(session_id, cache):
+    if cache.hexists(session_id, CacheKeys.FIGURE_JSON.value):
+        cache.hdel(session_id, CacheKeys.FIGURE_JSON.value)
+        cache.hdel(session_id, CacheKeys.DISPLAY_CONTROL_JSON.value)
+
+
+def remove_sequence(session_id, cache):
     if cache.hexists(session_id, CacheKeys.SEQUENCE.value):
         cache.hdel(session_id, decompress_data(cache.hget(session_id, CacheKeys.SEQUENCE.value)))
         cache.hdel(session_id, CacheKeys.SEQUENCE.value)

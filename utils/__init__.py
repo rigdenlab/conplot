@@ -127,6 +127,24 @@ def compress_data(*args, **kwargs):
     return compress_data(*args, **kwargs)
 
 
+def get_display_control_card(*args, **kwargs):
+    from utils.plot_utils import get_display_control_card
+
+    return get_display_control_card(*args, **kwargs)
+
+
+def load_figure_json(*args, **kwargs):
+    from utils.plot_utils import load_figure_json
+
+    return load_figure_json(*args, **kwargs)
+
+
+def load_display_settings(*args, **kwargs):
+    from utils.plot_utils import load_display_settings
+
+    return load_display_settings(*args, **kwargs)
+
+
 def get_upload_id(*args, **kwargs):
     from utils.callback_utils import get_upload_id
 

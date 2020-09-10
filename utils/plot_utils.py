@@ -1,12 +1,21 @@
+from collections import namedtuple
 import components
 from enum import Enum
+import json
 from operator import itemgetter
 from parsers import DatasetStates
 import plotly.graph_objects as go
 from loaders import DatasetReference, AdditionalDatasetReference
 from layouts import ContextReference
-from utils import decompress_session, color_palettes
+from utils import decompress_session, color_palettes, cache_utils
 import dash_core_components as dcc
+
+DisplayControlSettings = namedtuple('DisplayControlSettings', ('available_tracks', 'selected_tracks', 'axis_range',
+                                                               'contact_marker_size', 'factor', 'track_marker_size',
+                                                               'transparent', 'track_separation', 'selected_cmaps',
+                                                               'available_maps', 'superimpose', 'selected_palettes',
+                                                               'seq_length', 'seq_fname', 'alpha', 'cmap_selection',
+                                                               'available_cmaps'))
 
 
 class DefaultTrackLayout(Enum):
@@ -17,70 +26,69 @@ class DefaultTrackLayout(Enum):
     CUSTOM = DatasetReference.CUSTOM.value.encode()
 
 
-def create_ConPlot(session, trigger, selected_tracks, cmap_selection, selected_palettes, factor=2,
+def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, selected_palettes, factor=2,
                    contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False):
-    session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, contact_marker_size, \
-    track_separation, alpha, selected_palettes, error = process_args(session, trigger, selected_tracks, cmap_selection,
-                                                                     factor, contact_marker_size, track_separation,
-                                                                     transparent, selected_palettes)
+    session = cache.hgetall(session_id)
+    session, display_settings, error = process_args(session, trigger, selected_tracks, cmap_selection,
+                                                    factor, contact_marker_size, track_separation,
+                                                    transparent, selected_palettes, superimpose,
+                                                    track_marker_size)
 
     if error is not None:
+        cache_utils.remove_figure(session_id, cache)
         return components.PlotPlaceHolder(), error, components.DisplayControlCard(), True
 
-    display_card = components.DisplayControlCard(available_tracks=available_tracks, selected_tracks=selected_tracks,
-                                                 contact_marker_size=contact_marker_size, factor=factor,
-                                                 track_marker_size=track_marker_size, transparent=transparent,
-                                                 track_separation=track_separation, selected_cmaps=cmap_selection,
-                                                 available_maps=available_cmaps, superimpose=superimpose,
-                                                 selected_palettes=selected_palettes)
-    seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
-    axis_range = (0, len(session[seq_fname.encode()]) + 1)
-    figure = create_figure(axis_range)
+    display_card = get_display_control_card(display_settings)
+    figure = create_figure(display_settings.axis_range)
 
     if not superimpose:
-        for idx, fname in enumerate(cmap_selection):
+        for idx, fname in enumerate(display_settings.cmap_selection):
             if fname == '---':
                 continue
             figure.add_trace(
-                create_contact_trace(cmap=session[fname.encode()], idx=idx, marker_size=contact_marker_size,
-                                     seq_length=len(session[seq_fname.encode()]), factor=factor)
+                create_contact_trace(cmap=session[fname.encode()], idx=idx, factor=display_settings.factor,
+                                     marker_size=display_settings.contact_marker_size,
+                                     seq_length=display_settings.seq_length)
             )
     else:
         reference, matched, mismatched = get_superimposed_contact_traces(
-            reference_cmap=session[cmap_selection[0].encode()],
-            secondary_cmap=session[cmap_selection[1].encode()],
-            seq_length=len(session[seq_fname.encode()]),
-            factor=factor)
+            reference_cmap=session[display_settings.cmap_selection[0].encode()],
+            secondary_cmap=session[display_settings.cmap_selection[1].encode()],
+            seq_length=display_settings.seq_length, factor=display_settings.factor)
         figure.add_trace(
-            create_superimposed_contact_traces(reference, marker_size=contact_marker_size,
+            create_superimposed_contact_traces(reference, marker_size=display_settings.contact_marker_size,
                                                color='grey', symbol='circle')
         )
         figure.add_trace(
-            create_superimposed_contact_traces(mismatched, marker_size=contact_marker_size,
+            create_superimposed_contact_traces(mismatched, marker_size=display_settings.contact_marker_size,
                                                color='red', symbol='circle')
         )
         figure.add_trace(
-            create_superimposed_contact_traces(matched, marker_size=contact_marker_size,
+            create_superimposed_contact_traces(matched, marker_size=display_settings.contact_marker_size,
                                                color='black', symbol='circle')
         )
 
-    for idx, fname in enumerate(selected_tracks):
+    for idx, fname in enumerate(display_settings.selected_tracks):
         if fname == '---':
             continue
 
         dataset = get_dataset(session, fname)
         index = [x.name for x in color_palettes.DatasetColorPalettes].index(dataset)
-        palette = selected_palettes[index]
+        palette = display_settings.selected_palettes[index]
 
         if idx == 4:
-            traces = get_diagonal_traces(sequence=session[seq_fname.encode()], dataset=dataset, color_palette=palette,
-                                         marker_size=track_marker_size, prediction=session[fname.encode()], alpha=alpha)
+            traces = get_diagonal_traces(sequence=session[display_settings.seq_fname.encode()],
+                                         dataset=dataset, color_palette=palette, prediction=session[fname.encode()],
+                                         marker_size=display_settings.track_marker_size, alpha=display_settings.alpha)
         else:
-            traces = get_traces(track_idx=idx, track_separation=track_separation, marker_size=track_marker_size,
-                                dataset=dataset, prediction=session[fname.encode()], alpha=alpha, color_palette=palette)
+            traces = get_traces(track_idx=idx, track_separation=display_settings.track_separation, dataset=dataset,
+                                marker_size=display_settings.track_marker_size, alpha=display_settings.alpha,
+                                color_palette=palette, prediction=session[fname.encode()])
 
         for trace in traces:
             figure.add_trace(trace)
+
+    cache_utils.store_figure(session_id, figure.to_json(), json.dumps(display_settings._asdict()), cache)
 
     graph = dcc.Graph(
         className='square-content', id='plot-graph', figure=figure,
@@ -89,6 +97,29 @@ def create_ConPlot(session, trigger, selected_tracks, cmap_selection, selected_p
     )
 
     return graph, None, display_card, False
+
+
+def get_display_control_card(display_settings):
+    return components.DisplayControlCard(factor=display_settings.factor, superimpose=display_settings.superimpose,
+                                         available_tracks=display_settings.available_tracks,
+                                         selected_tracks=display_settings.selected_tracks,
+                                         contact_marker_size=display_settings.contact_marker_size,
+                                         track_marker_size=display_settings.track_marker_size,
+                                         transparent=display_settings.transparent,
+                                         track_separation=display_settings.track_separation,
+                                         selected_cmaps=display_settings.cmap_selection,
+                                         available_maps=display_settings.available_cmaps,
+                                         selected_palettes=display_settings.selected_palettes)
+
+
+def load_figure_json(figure_json):
+    figure_kwargs = json.loads(figure_json)
+    return go.Figure(**figure_kwargs)
+
+
+def load_display_settings(display_json):
+    display_dict = json.loads(display_json)
+    return DisplayControlSettings(**display_dict)
 
 
 def get_missing_data(session):
@@ -143,16 +174,17 @@ def lookup_input_errors(session):
 
 
 def process_args(session, trigger, selected_tracks, cmap_selection, factor, contact_marker_size, track_separation,
-                 transparent, selected_palettes):
+                 transparent, selected_palettes, superimpose, track_marker_size):
     session = decompress_session(session)
 
     error = lookup_input_errors(session)
     if error is not None:
-        return None, None, None, None, None, None, None, None, None, None, error
+        return None, None, error
 
     available_tracks, available_cmaps = get_available_data(session)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
     seq_length = len(session[seq_fname.encode()])
+    axis_range = (0, len(session[seq_fname.encode()]) + 1)
 
     if transparent:
         alpha = '0.6'
@@ -169,8 +201,17 @@ def process_args(session, trigger, selected_tracks, cmap_selection, factor, cont
     else:
         selected_tracks, cmap_selection = get_user_selection(cmap_selection, available_cmaps,
                                                              selected_tracks, available_tracks)
-    return session, available_tracks, selected_tracks, available_cmaps, cmap_selection, factor, contact_marker_size, \
-           track_separation, alpha, selected_palettes, error
+
+    display_settings = DisplayControlSettings(available_tracks=available_tracks, selected_tracks=selected_tracks,
+                                              contact_marker_size=contact_marker_size, factor=factor,
+                                              track_marker_size=track_marker_size, transparent=transparent,
+                                              track_separation=track_separation, selected_cmaps=cmap_selection,
+                                              available_maps=available_cmaps, superimpose=superimpose,
+                                              selected_palettes=selected_palettes, axis_range=axis_range,
+                                              seq_length=seq_length, seq_fname=seq_fname, alpha=alpha,
+                                              cmap_selection=cmap_selection, available_cmaps=available_cmaps)
+
+    return session, display_settings, error
 
 
 def get_available_data(session):
@@ -286,7 +327,6 @@ def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, 
             del reference_cmap[-1]
         else:
             reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
-
 
     reference_contacts = [contact[:2] for contact in reference_cmap]
     secondary_contacts = [contact[:2] for contact in secondary_cmap]

@@ -1,4 +1,5 @@
 import os
+from operator import attrgetter
 from collections import namedtuple
 from components import SessionListType
 from enum import Enum
@@ -212,7 +213,7 @@ def list_sessions(username, list_type):
     for session in all_sessions:
         result.append(SessionData(owner=session[0], name=session[1], date=session[2], pkid=session[3]))
 
-    return result
+    return sorted(result, key=attrgetter('date'))
 
 
 def delete_session(session_pkid):

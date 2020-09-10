@@ -407,7 +407,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if not callback_utils.ensure_triggered(trigger):
-        return components.PlotPlaceHolder(), None, components.DisplayControlCard(), True
+        return no_update, None, no_update, no_update
     elif session_utils.is_expired_session(session_id, cache, app.logger):
         return components.PlotPlaceHolder(), components.SessionTimedOutModal(), components.DisplayControlCard(), True
 
@@ -419,11 +419,10 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     elif superimpose and ('---' in cmap_selection or len(set(cmap_selection)) == 1):
         return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 
-    session = cache.hgetall(session_id)
-
     app.logger.info('Session {} creating conplot'.format(session_id))
-    return plot_utils.create_ConPlot(session, trigger, track_selection, cmap_selection, selected_palettes, factor,
-                                     contact_marker_size, track_marker_size, track_separation, transparent, superimpose)
+    return plot_utils.create_ConPlot(session_id, cache, trigger, track_selection, cmap_selection, selected_palettes,
+                                     factor, contact_marker_size, track_marker_size, track_separation, transparent,
+                                     superimpose)
 
 
 # ==============================================================

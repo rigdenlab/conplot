@@ -55,7 +55,12 @@ def serve_url(url, session_id, cache, logger):
     elif url == UrlIndex.CONTACT.value:
         return layouts.Contact(session_id, username)
     elif url == UrlIndex.PLOT.value:
-        return layouts.Plot(session_id, username)
+        if cache.hexists(session_id, cache_utils.CacheKeys.FIGURE_JSON.value):
+            figure = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.FIGURE_JSON.value))
+            display_settings = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.DISPLAY_CONTROL_JSON.value))
+            return layouts.Plot(session_id, username, figure, display_settings)
+        else:
+            return layouts.Plot(session_id, username)
     elif url == UrlIndex.HELP.value:
         return layouts.Help(session_id, username)
     elif url == UrlIndex.RIGDEN.value:

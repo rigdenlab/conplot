@@ -86,7 +86,7 @@ def decompress_session(session):
     return session
 
 
-def is_expired_session(session_id, cache, logger, expire_time=900):
+def is_expired_session(session_id, cache, logger, expire_time=3600):
     if not cache.exists(session_id):
         logger.info('Session {} has expired'.format(session_id))
         return True
@@ -95,7 +95,7 @@ def is_expired_session(session_id, cache, logger, expire_time=900):
         return False
 
 
-def initiate_session(cache, logger, expire_time=900):
+def initiate_session(cache, logger, expire_time=3600):
     session_id = str(uuid.uuid4())
     logger.info('New session initiated {}'.format(session_id))
     cache.hset(session_id, cache_utils.CacheKeys.ID.value, compress_data(session_id))

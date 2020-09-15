@@ -50,16 +50,17 @@ app.layout = serve_layout
 # Define callbacks for the app
 # ==============================================================
 
-@app.callback(Output('session-id', 'data'),
+@app.callback([Output('session-id', 'data'),
+               Output('url', 'pathname')],
               [Input({'type': 'clear-storage-button', 'index': ALL}, 'n_clicks')])
 def start_new_session(n_clicks):
     trigger = dash.callback_context.triggered[0]
     if not callback_utils.ensure_triggered(trigger):
-        return no_update
+        return no_update, no_update
     else:
         cache = keydb.KeyDB(connection_pool=keydb_pool)
         new_session_id = session_utils.initiate_session(cache, app.logger)
-        return new_session_id
+        return new_session_id, UrlIndex.HOME.value
 
 
 @app.callback([Output('contact-alert-div', 'children'),

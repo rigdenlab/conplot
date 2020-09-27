@@ -41,16 +41,7 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
     display_card = get_display_control_card(display_settings)
     figure = create_figure(display_settings.axis_range)
 
-    if not superimpose:
-        for idx, fname in enumerate(display_settings.cmap_selection):
-            if fname == '---':
-                continue
-            figure.add_trace(
-                create_contact_trace(cmap=session[fname.encode()], idx=idx, factor=display_settings.factor,
-                                     marker_size=display_settings.contact_marker_size,
-                                     seq_length=display_settings.seq_length)
-            )
-    else:
+    if display_settings.superimpose:
         reference, matched, mismatched = get_superimposed_contact_traces(
             reference_cmap=session[display_settings.cmap_selection[0].encode()],
             secondary_cmap=session[display_settings.cmap_selection[1].encode()],
@@ -67,6 +58,15 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
             create_superimposed_contact_traces(matched, marker_size=display_settings.contact_marker_size,
                                                color='black', symbol='circle')
         )
+    else:
+        for idx, fname in enumerate(display_settings.cmap_selection):
+            if fname == '---':
+                continue
+            figure.add_trace(
+                create_contact_trace(cmap=session[fname.encode()], idx=idx, factor=display_settings.factor,
+                                     marker_size=display_settings.contact_marker_size,
+                                     seq_length=display_settings.seq_length)
+            )
 
     for idx, fname in enumerate(display_settings.selected_tracks):
         if fname == '---':
@@ -201,6 +201,9 @@ def process_args(session, trigger, selected_tracks, cmap_selection, factor, cont
     else:
         selected_tracks, cmap_selection = get_user_selection(cmap_selection, available_cmaps,
                                                              selected_tracks, available_tracks)
+
+    if superimpose and any(selection not in available_cmaps for selection in cmap_selection):
+        superimpose = False
 
     display_settings = DisplayControlSettings(available_tracks=available_tracks, selected_tracks=selected_tracks,
                                               contact_marker_size=contact_marker_size, factor=factor,

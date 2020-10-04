@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from components import NavBar, Header, UserLoginCard, ChangeUserPasswordCard
+from components import NavBar, Header, UserLoginCard, ChangeUserPasswordCard, Footer
 
 
 def Body(username=None):
@@ -23,5 +23,6 @@ def ChangeUserPassword(username=None):
     return html.Div([
         Header(username),
         NavBar(),
-        Body(username)
+        Body(username),
+        Footer(True)
     ])

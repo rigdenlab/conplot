@@ -441,6 +441,12 @@ def NavBar(*args, **kwargs):
     return NavBar(*args, **kwargs)
 
 
+def Footer(*args, **kwargs):
+    from components.navbar import Footer
+
+    return Footer(*args, **kwargs)
+
+
 def Header(*args, **kwargs):
     from components.headers import Header
 

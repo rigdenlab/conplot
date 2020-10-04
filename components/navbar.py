@@ -47,3 +47,24 @@ def NavBar(pathname=None):
         )
     ], pills=True, fill=True, justified=True, style={'border-bottom': '2px solid', 'border-top': '2px solid'}
     )
+
+
+def Footer(fixed=False):
+    if fixed:
+        style = {'position': 'fixed', 'background': 'gray', 'width': '100%', 'bottom': '0px'}
+    else:
+        style = {}
+
+    return html.Div([
+        html.Br(),
+        html.Br(),
+        html.Br(),
+        dbc.Navbar([
+            dbc.Row(
+                dbc.Col([
+                    html.Small('Hosted by', className='mr-3'),
+                    html.A(html.Img(src='/assets/ccp4-online_logo.png', height='35hv'), href=UrlIndex.CCP4_ONLINE.value)
+                ], width=12), className='text-center container-fluid'
+            )
+        ], className='footer py-3', style=style)
+    ])

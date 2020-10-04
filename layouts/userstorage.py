@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from components import NavBar, Header, UserLoginCard, UserStoredSessionsCard, UserSharedSessionsCard
+from components import NavBar, Header, UserLoginCard, UserStoredSessionsCard, UserSharedSessionsCard, Footer
 
 
 def Body(username=None, current_session_pkid=None):
@@ -8,7 +8,8 @@ def Body(username=None, current_session_pkid=None):
         return html.Div([
             html.Br(),
             html.Br(),
-            dbc.Container(UserLoginCard())
+            dbc.Container(UserLoginCard()),
+            Footer(True)
         ])
     else:
         return html.Div([

@@ -1,6 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
-from components import NavBar, Header, UserPortalCard
+from components import NavBar, Header, UserPortalCard, Footer
 
 
 def UsersPortal(username=None):
@@ -11,4 +11,5 @@ def UsersPortal(username=None):
         html.Br(),
         html.Br(),
         dbc.Container(UserPortalCard(username)),
+        Footer(True)
     ])

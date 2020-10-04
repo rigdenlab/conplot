@@ -234,4 +234,5 @@ def Help(session_id, username):
         components.Header(username),
         components.NavBar(UrlIndex.HELP.value),
         Body(),
+        components.Footer()
     ])

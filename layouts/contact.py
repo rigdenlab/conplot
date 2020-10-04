@@ -1,4 +1,4 @@
-from components import NavBar, Header, EmailInput, EmailIssueSelect, ProblemDescriptionInput, NameInput
+from components import NavBar, Header, EmailInput, EmailIssueSelect, ProblemDescriptionInput, NameInput, Footer
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from utils import UrlIndex
@@ -41,4 +41,5 @@ def Contact(session_id, username):
         Header(username),
         NavBar(UrlIndex.CONTACT.value),
         Body(),
+        Footer(True)
     ])

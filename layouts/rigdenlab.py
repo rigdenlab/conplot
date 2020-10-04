@@ -1,6 +1,6 @@
 from utils import UrlIndex
 import dash_html_components as html
-from components import NavBar, Header, AmpleJumbotron, SwampJumbotron, SimbadJumbotron, ConkitJumbotron
+from components import NavBar, Header, AmpleJumbotron, SwampJumbotron, SimbadJumbotron, ConkitJumbotron, Footer
 import dash_bootstrap_components as dbc
 
 
@@ -46,4 +46,5 @@ def RigdenLab(session_id, username):
         Header(username),
         NavBar(UrlIndex.RIGDEN.value),
         Body(),
+        Footer()
     ])

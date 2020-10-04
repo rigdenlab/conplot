@@ -1,7 +1,7 @@
 from components import GdprPolicyModal, GdprPolicyAlert
 from utils import UrlIndex
 import dash_html_components as html
-from components import NavBar, Header
+from components import NavBar, Header, Footer
 import dash_bootstrap_components as dbc
 
 
@@ -36,7 +36,9 @@ def Body():
                                 dbc.CardLink(html.U("Rigden Lab"), href=UrlIndex.RIGDEN.value),
                                 """ group at the """,
                                 html.A(html.U("University of Liverpool"), href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
-                                """ this new tool provides an interactive interface for researchers in the field of 
+                                """ and hosted by """,
+                                html.A(html.U("CCP4-Online"), href=UrlIndex.CCP4_ONLINE.value),
+                                """, this new tool provides an interactive interface for researchers in the field of 
                                 protein bioinformatics that are interested in analysing data on a given protein at a 
                                 glance."""
                             ], style={"font-size": "120%", "text-align": "justify"}),
@@ -90,4 +92,5 @@ def Home(session_id, username):
         Header(username),
         NavBar(UrlIndex.HOME.value),
         Body(),
+        Footer()
     ])

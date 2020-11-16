@@ -254,8 +254,8 @@ def TutorialOneModal():
             html.Br(),
             "This banners represent the space allocated for the uploaded file in ConPlot's memory, if you wish to "
             'remove any of them simply click on the cross on the right side of the banner to remove them from the '
-            'memory. As you have already uploaded the input required to create a minimal contact map plot, if you '
-            'click on ', html.I('Generate Plot'),
+            'memory -but do not do this now. As you have already uploaded the input required to create a minimal contact '
+            'map plot, if you click on ', html.I('Generate Plot'),
             ', you will generate a contact map plot without any additional information, as shown in this figure:',
             html.Img(src=UrlIndex.TUTORIAL1_FIG3.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
@@ -268,7 +268,7 @@ def TutorialOneModal():
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'Next, in order to add more tracks of information to the plot, we will upload the example sequence '
-            'predictions using the designated are in the input panel. If you scroll down the input panel, you will '
+            'predictions using the designated area in the input panel. If you scroll down the input panel, you will '
             'see the ', html.I('Additional Tracks'),
             ' input area. Again, here you will be presented with a format selection menu highlighted in red, '
             'indicating that we will need to select a format before uploading the first file. You have been provided '
@@ -296,7 +296,7 @@ def TutorialOneModal():
             'plot you are likely to need to use some of the controls on the right of the plot. You may have '
             'noticed that since you generated the first bare contact map a display control panel appeared '
             'on the right of the plot. This panel contains numerous switches and menus that will let you '
-            'tweak the exact way the plot looks, you can read all about these on section',
+            'tweak the exact way the plot looks, you can read all about these on section ',
             html.I('4. Adjust the plot layout'),
             '. In this particular case, since we are interested in making the tiles big enough that they will overlay '
             'into a continuous solid line, you will need to adjust the size of the additional tracks: increase its '
@@ -336,7 +336,7 @@ def TutorialTwoModal():
             " modelling and predicted residue contacts. To showcase this functionality, we will be using data from "
             "protein TOXD, an alpha-dendrotoxin. You can download this data ",
             html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
-            ". The data includes the crystal structure of this toxin -a PDB file-, its sequence -a FASTA file-"
+            ". The data includes the crystal structure of this toxin -a PDB file-, its sequence -a FASTA file- "
             "and a contact prediction map in ccmpred format -a MAT file-. First, access the ", html.I('Plot'),
             " tab and upload the sequence fasta file as you have done on the previous tutorial. Then, proceed to "
             "select the ", html.I('CCMPRED'), " contact map format and upload the file ", html.I('toxd.mat'),
@@ -344,7 +344,7 @@ def TutorialTwoModal():
             ' but remember to change the contact format to ', html.I('PDB'),
             ' first. Once you have done this, simply click on ', html.I('Generate Plot'),
             ' to create a plot as described on previous tutorial. By default, ConPlot will display the first contact '
-            'map you uplaoded. For example, in this case we first uploaded ', html.I('toxd.mat'),
+            'map you uploaded. For example, in this case we first uploaded ', html.I('toxd.mat'),
             ' so ConPlot created a plot using the contacts found in this file:',
             html.Img(src=UrlIndex.TUTORIAL2_FIG1.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
@@ -356,7 +356,7 @@ def TutorialTwoModal():
             ' selectors on the ', html.I('Display Control'),
             ' panel. By default, these selectors control which map is displayed on each half of the map -you can try '
             'to change these values now and click on ', html.I('Adjust Plot'),
-            ' button to experiment with this-. However, the role of these selectors changes when you turn on the ',
+            ' button to experiment with this. However, the role of these selectors changes when you turn on the ',
             html.I('Superimpose Maps'), ' switch. Then, ConPlot will use the selection on the ', html.I('Map A'),
             ' as the reference map, and the selection on ', html.I('Map B'),
             ' as the secondary map. Thus, if we want to compare the ', html.I('todx.mat'),
@@ -388,7 +388,7 @@ def TutorialThreeModal():
             'to store data, and share it among your collaborators. First thing is to create an user account in '
             'ConPlot. To do this, first click on the ', html.I('LOGIN'),
             ' dropdown menu on the top right of the website. This menu will let you access the user portal and the '
-            'members only area -only available once you login-.',
+            'members only area -only available once you login.',
             html.Img(src=UrlIndex.TUTORIAL3_FIG1.value, height='300vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
@@ -420,21 +420,21 @@ def TutorialThreeModal():
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'If you want to check out any session that you have saved following this method, click again on the ',
-            html.I('LOGIN'), 'dropdown menu and select the ', html.I('Access Personal Storage'),
-            'option. This will take you to a list of all the sessions that you have saved with your user account, plus '
+            html.I('LOGIN'), ' dropdown menu and select the ', html.I('Access Personal Storage'),
+            ' option. This will take you to a list of all the sessions that you have saved with your user account, plus '
             'those that have been shared with you:',
             html.Img(src=UrlIndex.TUTORIAL3_FIG5.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'As you can see, in this case we can see the EXAMPLE session that we just stored. To load any of the '
-            'sessions listed here, simply click on the button with the disk icon. Alternatively, if you wish to delete '
-            'a session, click on the button with the trash icon. Notice how there is another section for those '
+            'sessions listed here, simply click on the load button. Alternatively, if you wish to delete '
+            'a session, click on the delete button. Notice how there is another section for those '
             'sessions that have been shared with your user. This section is likely to be empty as you just created '
             'your user, but as your collaborators start to use ConPlot as well, this functionality can become an easy '
             'way to share data across other lab members. To share a session with another user, click again on the ',
-            html.I('LOGIN'), 'dropdown menu and select the ', html.I('Share Sessions'),
-            'option. This will take you to a list of all the sessions that you have saved with your user account. Next '
-            'to each item, there is a text box that you can use to write the name of the user that you want to share '
-            'that particular session with, and a share button.',
+            html.I('LOGIN'), ' dropdown menu and select the ', html.I('Share Sessions'),
+            ' option. This will take you to a list of all the sessions that you have saved with your user account. '
+            'Next to each item, there is a text box that you can use to write the name of the user that you want to '
+            'share that particular session with, and a share button.',
             html.Img(src=UrlIndex.TUTORIAL3_FIG6.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'Once you share a session with another user, they will be able to see this session listed in their '
@@ -443,12 +443,12 @@ def TutorialThreeModal():
             html.Img(src=UrlIndex.TUTORIAL3_FIG7.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             'In the same way as you can do with your own stored sessions, if you want to load a shared session simply '
-            'click on the button with the disk icon. However, please note that you will not be able to delete shared '
-            'sessions -this can only be done by the owner of the session-. Instead, you may click on the button with '
-            'the stop icon to stop sharing that session -this way it will not appear on your personal storage '
+            'click on the load button. However, please note that you will not be able to delete shared '
+            'sessions -this can only be done by the owner of the session. Instead, you may click on the stop button '
+            'to stop sharing that session -this way it will not appear on your personal storage '
             'anymore-. Also please note that session sharing is dynamic, which means that as the owner of the session '
             'adds/removes files from the session, those users with shared access will be able to see these changes '
-            '-but only the session owner can make changes on the session-.', html.Br(), html.Br()
+            '-but only the session owner can make changes on the session.', html.Br(), html.Br()
         ])
     ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)

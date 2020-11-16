@@ -2,6 +2,20 @@ Changelog
 =========
 
 
+0.2.4
+-----
+
+Added
+~~~~~
+- Fixed minor bugs (issues #101, #104 and #106)
+- Added references to web-app hosting by CCP4-online
+- Updated help page and tutorials to match latest version
+
+Changed
+~~~~~~~
+- Figure and display settings are now stored in the cache
+
+
 0.2.3
 -----
 

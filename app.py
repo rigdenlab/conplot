@@ -414,7 +414,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
 
     app.logger.info('Session {} plot requested'.format(session_id))
 
-    if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None]):
+    if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None or x < 0]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
     elif superimpose and ('---' in cmap_selection or len(set(cmap_selection)) == 1):

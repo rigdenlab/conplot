@@ -230,16 +230,6 @@ def Body():
                                                '    --preload --workers=6 --timeout 120 --graceful-timeout 120 \ \n'
                                                '    --max-requests 5 --log-level=info')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
-                            html.P(['However, if you want to deploy ConPlot as a docker container, we recommend you '
-                                   'automate the creation of the multiple containers required to run the app using '
-                                    'the ', html.I('docker-compose.yml'), ' file found at the ',
-                                    html.A(html.U('conplot-docker repository'), href=UrlIndex.CONPLOT_DOCKER.value),
-                                    ' instead. Do this by running:']),
-                            dbc.Col([
-                                html.Plaintext('$   git clone https://github.com/rigdenlab/conplot-docker \n'
-                                               '$   cd conplot-docker \n'
-                                               '$   docker-compose up -d')
-                            ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P(['After you set up running the docker container, you will be able to access the '
                                     'app on http://0.0.0.0:80/home.',
                                     html.Br(), html.Br(), html.H5('8.2 Locally using Flask development server'),

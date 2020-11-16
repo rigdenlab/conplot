@@ -39,15 +39,6 @@ $   docker run --name redis_db -d redis:latest
 $   docker run --name conplot_app --link redis_db:redis -e KEYDB_URL="redis://redis_db:6379" -p 80:80 -d filosanrod/conplot:latest gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
 ```
 
-However, if you want to deploy ConPlot as a docker container, we recommend you automate the creation of the 
-multiple containers required to run the app using the `docker-compose.yml` file found at the `conplot-docker` repository. Do this by running:
-
-```bash 
-$   git clone https://github.com/rigdenlab/conplot-docker
-$   cd conplot-docker
-$   docker-compose up -d
-```
-
 After you set up running the docker container, you will be able to access the app on `http://0.0.0.0:80/home`.
 
 ### Locally using Flask development server

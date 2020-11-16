@@ -90,6 +90,8 @@ class UrlIndex(Enum):
     CONSURF_WEB = 'https://consurf.tau.ac.il/'
     CONSURF_CITATION = 'https://doi.org/10.1093/nar/gkw408'
     GDPR_WEBSITE = 'https://gdpr-info.eu'
+    DOCKER_HUB = 'https://hub.docker.com/r/filosanrod/conplot'
+    CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'
 
 
 def create_ConPlot(*args, **kwargs):

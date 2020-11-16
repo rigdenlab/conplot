@@ -143,7 +143,7 @@ def AdjustPlotHelpList():
     return html.Ul([
         html.Li(['Section 1: Adjust Contact Map. In this section it is possible to modify '
                  'aspects about how the residue contact information is displayed through a '
-                 'series of dropdown menus:',
+                 'series of input menus:',
                  html.Ul([
                      html.Li(['L/N selector: Change the values of ', html.I('N'),
                               ' with this selector to choose how many contacts should be '
@@ -151,12 +151,12 @@ def AdjustPlotHelpList():
                               'protein sequence, residues are sorted by their probability '
                               'score). If you set ', html.I('N'),
                               ' to 0, then all contacts in the file will be displayed. Please '
-                              'note that only numerical values between 0 and 10 are allowed.']),
+                              'note that only numerical values between 0 and 10 are recommended.']),
                      html.Li('Size selector: Change the size of the contact markers in the '
                              'plot. ConPlot will set a default value depending on the size of '
                              'the protein you are working with, but you can still change this '
                              'if you would like to make the markers smaller or bigger. Please '
-                             'note that only numerical values between 1 and 15 are allowed'),
+                             'note that only numerical values between 1 and 15 are recommended.'),
                      html.Li(['Map A and Map B selectors: These two selectors let you choose '
                               'which contact data should be displayed on the plot. By '
                               'default, ', html.I('Map A'),
@@ -187,10 +187,12 @@ def AdjustPlotHelpList():
                  'displayed in the plot:',
                  html.Ul([
                      html.Li('Size selector: Change the size of the tiles used to create the '
-                             'tracks on the diagonal of the plot. By increasing this vallue, '
+                             'tracks on the diagonal of the plot. By changing this value, '
                              'you will be able to create create the effect of a continuous '
-                             'uninterrupted line if you wish to.Please note that only '
-                             'numerical values between 1 and 20 are allowed'),
+                             'uninterrupted line if you wish to. Increasing this value can '
+                             'be helpful if due to the default settings of ConPlot individual '
+                             'squared tiles are visible in the diagonal tracks. Please note that only '
+                             'numerical values between 1 and 20 are recommended.'),
                      html.Li('Separation selector: Change the separation between the different '
                              'tracks displayed on the plot. This can be useful if due to '
                              'the default settings of ConPlot some tracks are laid on '
@@ -281,14 +283,7 @@ def PanelLayoutHelpList():
         html.Li(['Panel 1: This panel contains the navigation bar that is displayed throughout '
                  'all ConPlot. The tabs on this bar should be your preferred method to browse '
                  'through ConPlot, as using the arrow keys or the refresh button on your '
-                 'browser will cause you to lose your session and lose any unsaved data. '
-                 'Also, you may notice that after you create a plot and browse away to a '
-                 'different tab within the website, plots will disappear when you come back to the ',
-                 html.I('Plot'),
-                 ' tab. Nevertheless, ConPlot kept everything for you so if you want to '
-                 'see your plot again simply click on ',
-                 html.I('Generate Plot'),
-                 ' to get it back!'],
+                 'browser may cause you to lose your session and lose any unsaved data. '],
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['Panel 2: This is the input panel: here you can upload all the data you want '
                  'to integrate into a plot. The panel is divided into three sections (from top '
@@ -298,12 +293,12 @@ def PanelLayoutHelpList():
                  'minimal input to create a plot-; second an ',
                  html.I('Additional Tracks'),
                  ' section, where you upload prediction files containing the information to '
-                 'be display as coloured tracks in the diagonal of the map; and finally a ',
+                 'be displayed as coloured tracks in the diagonal of the map; and finally a ',
                  html.I('Store Session'),
                  ' section, where you will be able to store sessions -only after you login '
                  'into your user account-.'],
                 style={"font-size": "110%", 'text-align': "justify"}),
-        html.Li(["Panel 3: This is the plot panel, and is the panel where the plots that you "
+        html.Li(["Panel 3: This is the plot panel where the plots that you "
                  "create will be displayed. A grey placeholder with ConPlot's logo will be "
                  "displayed until you generate a plot. Plots are interactive, if you hover "
                  "over the contacts on the map or the tracks on the diagonal ConPlot will show "
@@ -343,7 +338,9 @@ def MandatoryInputHelpList():
                  html.A(html.U('ConKit'), href=UrlIndex.CONKIT_READDOCS.value),
                  ', a python library able to read and convert most contact formats. This tool '
                  'will enable you to convert the file of interest into a format ConPlot is '
-                 'able to read.'],
+                 'able to read. Additionally, it is possible to upload PDB files using this panel, '
+                 'which ConPlot will parse in order to compute residue proximity information '
+                 'and generate a contact map derived from the structure (first model, first chain).'],
                 style={"font-size": "110%", 'text-align': "justify"})
     ])
 
@@ -391,9 +388,9 @@ def AutomaticInfoCollectedList():
 def CustomFormatFieldsHelpList():
     return html.Ul([
         html.Li('Field 1: corresponds with the first residue number of the record  -inclusive, i.e. '
-                'indicates where the record should start-.', style={"text-align": "justify"}),
+                'indicates where the record should start.', style={"text-align": "justify"}),
         html.Li('Field 2: corresponds with the last residue number of the record -inclusive, i.e. '
-                'indicates where the record should end-.', style={"text-align": "justify"}),
+                'indicates where the record should end.', style={"text-align": "justify"}),
         html.Li('Field 3: indicates the color that should be used to depict this record. This is indicated '
                 'with a number between 1 and 11, that in turn is used by ConPlot to assign a color to this '
                 'record. A complete list of the mapping between these numbers and the actual color that '

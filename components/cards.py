@@ -176,7 +176,7 @@ def StoreSessionCard(username=None):
 
 
 def NoUserLoggedCard():
-    return dbc.Card(dbc.CardBody("You must loggin before saving session data"), color="danger", outline=True,
+    return dbc.Card(dbc.CardBody("You must login before saving session data"), color="danger", outline=True,
                     id='user-not-logged-card', style={'text-align': "center"})
 
 

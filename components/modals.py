@@ -164,10 +164,10 @@ def CustomFormatDescriptionModal():
         dbc.ModalBody([
             dbc.Row([
                 html.P('Custom files can be used to add personalised tracks to your plots. These files are plain text '
-                       'files, and can be created manually in Notepad or similar text editors. The first line of this '
-                       'file should start with the flag "LEN", followed by the length of the protein sequence that '
-                       'this file is intended to be used with. Subsequent lines indicate records to be added in the '
-                       'track, each defined using three fields, which are separated by white spaces:',
+                       'files, and can be created manually in Notepad++ or similar text editors. The first line of '
+                       'this file should start with the flag "LEN", followed by the length of the protein sequence '
+                       'that this file is intended to be used with. Subsequent lines indicate records to be added in '
+                       'the track, each defined using three fields, which are separated by white spaces:',
                        style={"text-align": "justify"}),
                 components.CustomFormatFieldsHelpList(),
                 html.P('Bellow there is a sample of the first four lines of an example custom file. As you can see, '

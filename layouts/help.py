@@ -32,7 +32,7 @@ def Body():
                                     'that will guide you through the process of understanding what data files you need '
                                     'to create a plot, how to adjust the layout of a plot and even store these plots '
                                     'in your user storage area. If you came here looking for an example of the data '
-                                    'files used as an input, you can download them right ',
+                                    'files used as an input, you can download them ',
                                     html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
                                     '.'], style={"font-size": "110%", "text-align": "justify"}),
                             html.Br(),
@@ -55,20 +55,23 @@ def Body():
                                 'TIPS:',
                                 html.Ul([
                                     html.Br(),
-                                    html.Li(["Plots that you create will disappear when you browse through the "
-                                             "different tabs in ConPlot. Nevertheless, ConPlot will keep all the data "
-                                             "for you so if you want to see the plot again simply click on ",
-                                             html.I('Generate Plot'), " to see your plot back again!"]),
+                                    html.Li(["Note the difference between the ",
+                                             html.I('Generate Plot'), ' and the ', html.I('Adjust Plot'),
+                                             " buttons. Use the former to create plots for the first time or after you "
+                                             "upload new data files into the current session, and the latter to adjust "
+                                             "the way the plot looks after tweaking the settings on the display "
+                                             "control panel."]),
                                     html.Li("If you hover to the top right of the plot panel, the plot's mode bar will "
                                             "appear. Use the buttons on this bar to control the behaviour of the "
                                             "hovering tool, zoom in and out, change the scale of the plot or to "
                                             "download the plot image as a png file.")
                                 ])
                             ], style={'text-align': "justify"}, color='info'),
-                            dbc.Alert("WARNING: Do not click on the refresh button in your browser! Doing this will "
-                                      "cause your session to expire and you will lose any unsaved data and "
-                                      "plots. Instead, use ConPlot's navigation bar on the top panel to safely browse "
-                                      "through the website.", style={'text-align': "justify"}, color='danger'),
+                            dbc.Alert("WARNING: Do not click on the refresh button in your browser! Depending on your "
+                                      "browser, doing this may cause your session to expire and you will lose any "
+                                      "unsaved data and plots. Instead, use ConPlot's navigation bar on the top panel "
+                                      "to safely browse through the website.",
+                                      style={'text-align': "justify"}, color='danger'),
                             html.Br(),
                             html.H4('2. Required input', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
@@ -88,7 +91,7 @@ def Body():
                                       style={'text-align': "justify"},
                                       color='info'),
                             dbc.Alert('WARNING: It is important that the numbering used in all the uploaded contact '
-                                      'map files matches the one used in the sequence of residues present in the '
+                                      'map files matches the sequence of residues present in the '
                                       'provided FASTA file. If this numbering does not match, this could result in '
                                       'misrepresentations of data or even failure to create a plot.',
                                       style={'text-align': "justify"}, color='danger'),
@@ -107,6 +110,12 @@ def Body():
                                 'TIPS:',
                                 html.Ul([
                                     html.Br(),
+                                    html.Li(['PSIPRED server produces two output files that contain the same '
+                                             'information, but using different formats: a ',
+                                             html.I('.ss2'), ' file and a ', html.I('.horiz'),
+                                             ' file. ConPlot is only compatible with the ', html.I('ss2'),
+                                             ' format file, please do not attempt to uploade the ', html.I('.horiz'),
+                                             ' file.']),
                                     html.Li('You will not be able to upload a file until you first select its format '
                                             'in the dropdown selection menu.'),
                                     html.Li(['If you would like to upload a sequence prediction that is not '
@@ -144,11 +153,23 @@ def Body():
                                    style={"font-size": "110%", "text-align": "justify"}),
                             components.AdjustPlotHelpList(),
                             html.Br(),
-                            dbc.Alert(['TIP: If you have just uploaded a file, it may be that this file '
-                                       'does not appear listed on the track selection layout. You may need to click on '
-                                       'the ',
-                                       html.I('Generate Plot'),
-                                       ' button before being able to choose it in the dropdown menu.'],
+                            dbc.Alert(['TIPS: ',
+                                       html.Ul([
+                                           html.Br(),
+                                           html.Li(['If you have just created a plot with the ',
+                                                    html.I('Generate Plot'),
+                                                    ' button and you can see individual squared tiles in the diagonal '
+                                                    'tracks, try increasing the default value of the additional track '
+                                                    'marker size.']),
+                                           html.Li(['If you have just uploaded a file, it may be that this file is '
+                                                    'not listed on the track selection layout. You may need to '
+                                                    'click on the ', html.I('Generate Plot'),
+                                                    ' button before being able to choose it in the dropdown menu.']),
+                                           html.Li(['If you have just created a plot with the ',
+                                                    html.I('Generate Plot'),
+                                                    ' button and the diagonal tracks overlap with each other, try '
+                                                    'increasing the default value of the additional track separation.'])
+                                       ])],
                                       style={'text-align': "justify"}, color='info'),
                             html.Br(),
                             html.H4('5. Colour Palettes', className="card-text", style={'text-align': "center"}),
@@ -166,9 +187,14 @@ def Body():
                                     'additional features that will enable you to store sessions indefinitely and share '
                                     'them with other users. You can access the user account menu with the ',
                                     html.I('LOGIN'),
-                                    ' dropdown menu on the left of the navigation bar -panel 1 in Figure 1-.'],
+                                    ' dropdown menu on the top right of the navigation bar -panel 1 in Figure 1.'],
                                    style={"font-size": "110%", "text-align": "justify"}),
                             components.UserAccountHelpList(),
+                            html.Br(),
+                            dbc.Alert('TIP: Interactive sessions expire after 60 minutes of inactivity. If you '
+                                      'wish to permanently save the data and plots, create a user account and store '
+                                      'the session before it expires.',
+                                      style={'text-align': "justify"}, color='info'),
                             html.Br(),
                             html.H4('7. Tutorials', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
@@ -188,10 +214,38 @@ def Body():
                             html.H4('8. Using ConPlot locally', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            html.P('ConPlot is a web-based application, and as such we recommend you make use of it '
-                                   'through this website. However, it is also possible to use ConPlot locally on your '
-                                   'personal machine using the localhost. To do this you will first need to install '
-                                   'redis, which is the cache memory server used by ConPlot.'),
+                            html.P(['ConPlot is a web-based application, and as such we recommend you make use of it '
+                                    'through this website. However, it is also possible to use ConPlot locally on your '
+                                    'personal machine using the localhost. There are two possible ways to achieve '
+                                    'this.', html.Br(), html.Br(),
+                                    html.H5('8.1 Using Docker image at DockerHub'),
+                                    "ConPlot is distributed as a docker image on the project's ",
+                                    html.A(html.U('Docker hub repository'), href=UrlIndex.DOCKER_HUB.value),
+                                    '. To use it, you will need to link it with a Redis container:']),
+                            dbc.Col([
+                                html.Plaintext('$   docker pull filosanrod/conplot:latest\n$   docker run --name '
+                                               'redis_db -d redis:latest \n$   docker run --name conplot_app'
+                                               '\n    -d filosanrod/conplot:latest gunicorn app:server -p 80:80 -b :80 \ '
+                                               '\n    --link redis_db:redis -e KEYDB_URL="redis://redis_db:6379" \ \n'
+                                               '    --preload --workers=6 --timeout 120 --graceful-timeout 120 \ \n'
+                                               '    --max-requests 5 --log-level=info')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P(['However, if you want to deploy ConPlot as a docker container, we recommend you '
+                                   'automate the creation of the multiple containers required to run the app using '
+                                    'the ', html.I('docker-compose.yml'), ' file found at the ',
+                                    html.A(html.U('conplot-docker repository'), href=UrlIndex.CONPLOT_DOCKER.value),
+                                    ' instead. Do this by running:']),
+                            dbc.Col([
+                                html.Plaintext('$   git clone https://github.com/rigdenlab/conplot-docker \n'
+                                               '$   cd conplot-docker \n'
+                                               '$   docker-compose up -d')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P(['After you set up running the docker container, you will be able to access the '
+                                    'app on http://0.0.0.0:80/home.',
+                                    html.Br(), html.Br(), html.H5('8.2 Locally using Flask development server'),
+                                    'It is also possible to use Flask development server to run ConPlot on your '
+                                    'localhost. To do this you will first need to install redis, which is the cache '
+                                    'memory server used by ConPlot.']),
                             dbc.Col([
                                 html.Plaintext('$   sudo apt update\n$   sudo apt install redis-server\n$   sudo '
                                                'service redis start\n$   KEYDB_URL=redis://localhost:6379')

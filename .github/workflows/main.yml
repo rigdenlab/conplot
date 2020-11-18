@@ -36,6 +36,7 @@ jobs:
       - name: Run tests.py
         run: |
           python tests.py
+
   job_build:
     name: Publish docker image
     runs-on: ubuntu-latest
@@ -53,4 +54,5 @@ jobs:
           tags: latest
           dockerfile: .docker/Dockerfile
           push: true
+          tag_with_ref: true
 

@@ -6,3 +6,6 @@
 /static/docker/.env.db
 /static/docker/postgres-data/
 /static/docker/redis-data/
+/.docker/.env
+/.docker/.env.db
+/.docker/.env.web

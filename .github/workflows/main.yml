@@ -36,7 +36,6 @@ jobs:
       - name: Run tests.py
         run: |
           python tests.py
-
   job_build:
     name: Publish docker image
     runs-on: ubuntu-latest
@@ -51,7 +50,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
-          tags: latest
+          tags: /conplot:latest
           dockerfile: .docker/Dockerfile
           push: true
           tag_with_ref: true

@@ -9,8 +9,10 @@ on:
     branches:
       - master
   release:
-    types: [ published, created, edited ]
-  tags: v*
+    types:
+      - published
+      - created
+      - edited
 
 jobs:
   jobs_tests:

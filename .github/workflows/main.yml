@@ -2,13 +2,11 @@ name: Build
 
 on:
   push:
-    branches: [ master, development ]
+    branches:
+      - master
   pull_request:
-    branches: master
-  release:
-    types: [published, created, edited]
-  tags: v*
-
+    branches:
+      - master
 
 jobs:
   jobs_tests:

@@ -51,7 +51,7 @@ jobs:
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
           repository: filomenosanchez/conplot/conplot
-          tags: "latest,v0.2.4"
+          tags: latest
           dockerfile: .docker/Dockerfile
           push: true
           tag_with_ref: true

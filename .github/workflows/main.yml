@@ -44,6 +44,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
+      - name: Set version into env
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
@@ -51,7 +54,7 @@ jobs:
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
           repository: filomenosanchez/conplot/conplot
-          tags: latest
+          tags: latest,${{ steps.vars.outputs.tag }}
           dockerfile: .docker/Dockerfile
           push: true
           tag_with_ref: true

@@ -1,4 +1,4 @@
-name: Build
+name: Test & Build
 
 on:
   push:
@@ -18,11 +18,12 @@ on:
 
 jobs:
   jobs_tests:
-    name: tests
+    name: Run tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
-      - name: Set up Python 3.6
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Set up Python3.6 x64
         uses: actions/setup-python@v1
         with:
           python-version: 3.6
@@ -32,6 +33,30 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install docker-py
-      - name: Run tests
+      - name: Run tests.py
         run: |
           python tests.py
+  job_build:
+    on:
+      push:
+        branches:
+          - master
+    needs: job_tests
+    name: Publish docker image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v1
+      - name: Push to GitHub Packages
+        uses: docker/build-push-action@v1
+        with:
+          username: ${{ github.actor }}
+          password: ${{ secrets.PAT }}
+          registry: docker.pkg.github.com
+          tags: |
+            user/conplot:latest
+            user/conplot:v0.2.4
+          file: .docker/Dockerfile
+          push: true
+          repository: filomenosanchez/conplot/conplot
+

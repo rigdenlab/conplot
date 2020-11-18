@@ -4,9 +4,13 @@ on:
   push:
     branches:
       - master
+      - development
   pull_request:
     branches:
       - master
+  release:
+    types: [ published, created, edited ]
+  tags: v*
 
 jobs:
   jobs_tests:

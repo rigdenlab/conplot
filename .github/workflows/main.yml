@@ -4,7 +4,7 @@ on:
   push:
     branches: [ master, development ]
   pull_request:
-    branches: [ master ]
+    branches: master
   release:
     types: [published, created, edited]
   tags: v*

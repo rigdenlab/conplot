@@ -1,6 +1,6 @@
 # ConPlot: Online Analysis of Contact Plots
 
-[![CI Status](https://travis-ci.com/rigdenlab/conplot.svg?branch=master)](https://travis-ci.com/rigdenlab/conplot)
+[![Actions Status](https://github.com/rigdenlab/conplot/workflows/Test%20&%20Build/badge.svg)](https://github.com/rigdenlab/conplot/actions)
 ![Docker Automated build](https://img.shields.io/docker/automated/filosanrod/conplot)
 
 ## About ConPlot

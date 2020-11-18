@@ -50,9 +50,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
-          tags: |
-            conplot:latest
-            conplot:v0.2.4
+          tags: latest
           dockerfile: .docker/Dockerfile
           push: true
 

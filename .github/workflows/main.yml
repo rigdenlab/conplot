@@ -44,9 +44,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v1
-      - name: 'Get latest tag'
-        id: latesttag
-        uses: "WyriHaximus/github-action-get-previous-tag@master"
+      - name: Set version into env
+        id: vars
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/master/v*}
       - name: Push to GitHub Packages
         uses: docker/build-push-action@v1
         with:
@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
           repository: filomenosanchez/conplot/conplot
-          tags: latest,${{ steps.latesttag.outpus.tag }}
+          tags: latest,${{ steps.vars.outputs.tag }}
           dockerfile: .docker/Dockerfile
           push: true
           tag_with_ref: true

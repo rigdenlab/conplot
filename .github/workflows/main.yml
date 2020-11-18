@@ -45,12 +45,12 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v1
       - name: Push to GitHub Packages
-        uses: docker/build-push-action@v2
+        uses: docker/build-push-action@v1
         with:
           username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
-          name: filomenosanchez/conplot/conplot
+          repository: filomenosanchez/conplot/conplot
           tags: "latest,v0.2.4"
           dockerfile: .docker/Dockerfile
           push: true

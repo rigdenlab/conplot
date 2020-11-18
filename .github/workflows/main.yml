@@ -37,10 +37,6 @@ jobs:
         run: |
           python tests.py
   job_build:
-    on:
-      push:
-        branches:
-          - master
     needs: job_tests
     name: Publish docker image
     runs-on: ubuntu-latest

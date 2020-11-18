@@ -54,7 +54,7 @@ jobs:
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
           repository: filomenosanchez/conplot/conplot
-          tags: latest,${{ steps.vars.outputs.latesttag }}
+          tags: latest,${{ steps.latesttag.outpus.tag }}
           dockerfile: .docker/Dockerfile
           push: true
           tag_with_ref: true

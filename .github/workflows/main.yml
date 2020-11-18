@@ -50,7 +50,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
           registry: docker.pkg.github.com
-          repository: filomenosanchez/conplot/conplot
+          repository: rigdenlab/conplot/conplot
           tags: latest
           dockerfile: .docker/Dockerfile
           push: true

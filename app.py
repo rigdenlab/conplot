@@ -399,7 +399,7 @@ def refresh_button_clicked(n_clicks, session_id):
         return no_update
     else:
         app.logger.info('Fetching example data')
-        session_utils.load_session('user_1', 32, session_id, cache, app.logger)
+        session_utils.load_session('user_1', 34, session_id, cache, app.logger)
         return "location.reload();"
 
 

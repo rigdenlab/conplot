@@ -465,7 +465,7 @@ def RedisConnectionErrorModal():
                     ". Alternatively, if you are running ConPlot on localhost please ensure that redis server "
                     "is running and that the URL for the connection is available as an environment variable "
                     "called KEYDB_URL as explained on our ",
-                    html.A(html.U('Github repository'), href=UrlIndex.GITHUB.value), "."],
+                    html.A(html.U('Github repository'), href=UrlIndex.GITHUB_ISSUE.value), "."],
                    style={'text-align': "justify"}),
             components.StartNewSessionLink()
         ]),

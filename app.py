@@ -50,19 +50,6 @@ app.layout = serve_layout
 # Define callbacks for the app
 # ==============================================================
 
-@app.callback([Output('session-id', 'data'),
-               Output('url', 'pathname')],
-              [Input({'type': 'clear-storage-button', 'index': ALL}, 'n_clicks')])
-def start_new_session(n_clicks):
-    trigger = dash.callback_context.triggered[0]
-    if not callback_utils.ensure_triggered(trigger):
-        return no_update, no_update
-    else:
-        cache = keydb.KeyDB(connection_pool=keydb_pool)
-        new_session_id = session_utils.initiate_session(cache, app.logger)
-        return new_session_id, UrlIndex.HOME.value
-
-
 @app.callback([Output('contact-alert-div', 'children'),
                Output('submit-contact-form-button', 'disabled')],
               [Input('issue-select', 'value')])
@@ -386,21 +373,26 @@ def remove_dataset(alerts_open, session_id):
     return None
 
 
-@app.callback(Output('javascript-exe', 'run'),
+@app.callback([Output('javascript-exe', 'run'),
+               Output('session-id', 'data')],
               [Input({'type': 'javascript-exe-button', 'index': ALL}, 'n_clicks')],
               [State('session-id', 'data')])
-def load_example_data(n_clicks, session_id):
-    trigger = dash.callback_context.triggered[0]
+def javascript_exe_button(n_clicks, session_id):
+    trigger = dash.callback_context.triggered[-1]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
-    if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update
-    elif not callback_utils.ensure_triggered(trigger):
-        return no_update
+    if not callback_utils.ensure_triggered(trigger):
+        return no_update, no_update
+
+    elif 'new-session' in trigger['prop_id'] or session_utils.is_expired_session(session_id, cache, app.logger):
+        cache = keydb.KeyDB(connection_pool=keydb_pool)
+        new_session_id = session_utils.initiate_session(cache, app.logger)
+        return "location.reload();", new_session_id
+
     else:
         app.logger.info('Fetching example data')
         session_utils.load_session('user_1', 34, session_id, cache, app.logger)
-        return "location.reload();"
+        return "location.reload();", no_update
 
 
 @app.callback([Output('plot-div', 'children'),

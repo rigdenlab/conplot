@@ -386,10 +386,10 @@ def remove_dataset(alerts_open, session_id):
     return None
 
 
-@app.callback(Output('refresh-page', 'run'),
-              [Input('load-example-button', 'n_clicks')],
+@app.callback(Output('javascript-exe', 'run'),
+              [Input({'type': 'javascript-exe-button', 'index': ALL}, 'n_clicks')],
               [State('session-id', 'data')])
-def refresh_button_clicked(n_clicks, session_id):
+def load_example_data(n_clicks, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 

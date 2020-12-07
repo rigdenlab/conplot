@@ -1,7 +1,6 @@
 import dash_html_components as html
 import dash_bootstrap_components as dbc
 from components import HelpBadge, ExampleLinkButton
-import visdcc
 
 
 def HelpToolTip(id, text, msg, example_url=None):
@@ -17,7 +16,6 @@ def HelpToolTip(id, text, msg, example_url=None):
         children.append(
             html.Span([
                 ExampleLinkButton(example_url),
-                visdcc.Run_js(id='refresh-page')
             ], id='{}-example-tooltip'.format(id))
         )
         children.append(dbc.Tooltip('Click here to get example data', target='{}-example-tooltip'.format(id)))

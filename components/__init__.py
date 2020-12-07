@@ -597,10 +597,10 @@ def HelpToolTip(*args, **kwargs):
     return HelpToolTip(*args, **kwargs)
 
 
-def ExampleLinkBadge(*args, **kwargs):
-    from components.badges import ExampleLinkBadge
+def ExampleLinkButton(*args, **kwargs):
+    from components.badges import ExampleLinkButton
 
-    return ExampleLinkBadge(*args, **kwargs)
+    return ExampleLinkButton(*args, **kwargs)
 
 
 def HelpBadge(*args, **kwargs):

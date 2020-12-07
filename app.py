@@ -386,6 +386,23 @@ def remove_dataset(alerts_open, session_id):
     return None
 
 
+@app.callback(Output('refresh-page', 'run'),
+              [Input('load-example-button', 'n_clicks')],
+              [State('session-id', 'data')])
+def refresh_button_clicked(n_clicks, session_id):
+    trigger = dash.callback_context.triggered[0]
+    cache = keydb.KeyDB(connection_pool=keydb_pool)
+
+    if session_utils.is_expired_session(session_id, cache, app.logger):
+        return no_update
+    elif not callback_utils.ensure_triggered(trigger):
+        return no_update
+    else:
+        app.logger.info('Fetching example data')
+        session_utils.load_session('user_1', 34, session_id, cache, app.logger)
+        return "location.reload();"
+
+
 @app.callback([Output('plot-div', 'children'),
                Output('plot-modal-div', 'children'),
                Output('display-control-cardbody', 'children'),

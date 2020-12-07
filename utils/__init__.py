@@ -73,6 +73,7 @@ class UrlIndex(Enum):
     CONKIT_LOGO = '{}/assets/conkit_logo.png'.format(get_base_url())
     RIGDEN_GITHUB = 'https://github.com/rigdenlab'
     GITHUB = 'https://github.com/rigdenlab/conplot'
+    GITHUB_ISSUE = 'https://github.com/rigdenlab/conplot/issues/new?assignees=&labels=&template=bug_report.md&title='
     FONT_AWESOME = "https://use.fontawesome.com/releases/v5.7.2/css/all.css"
     SWAMP_READDOCS = 'https://swamp.readthedocs.io/en/latest/'
     SIMBAD_READDOCS = 'https://simbad.readthedocs.io/en/latest/'

@@ -8,7 +8,5 @@ def HelpBadge():
     ], color="light", className="mr-1")
 
 
-def ExampleLinkBadge(url):
-    return dbc.Badge([
-        html.I(className="fas fa-download"),
-    ], color="light", className="mr-1", href=url)
+def ExampleLinkButton(url):
+    return dbc.Button('Example', size='sm', outline=True, color='primary', id='load-example-button')

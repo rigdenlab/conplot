@@ -88,6 +88,9 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
         for trace in traces:
             figure.add_trace(trace)
 
+    figure.update_xaxes(spikemode="across", showspikes=False)
+    figure.update_yaxes(spikemode="across", showspikes=False)
+
     cache_utils.store_figure(session_id, figure.to_json(), json.dumps(display_settings._asdict()), cache)
 
     graph = dcc.Graph(

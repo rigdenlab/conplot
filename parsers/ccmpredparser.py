@@ -14,7 +14,10 @@ def CCMpredParser(input):
             continue
 
         for res_2, raw_score in enumerate(line, 1):
-            raw_score = float(raw_score)
+            try:
+                raw_score = float(raw_score)
+            except ValueError:
+                raise InvalidFormat('Unable to parse contacts')
             if raw_score == '' or raw_score < 0.1:
                 continue
 

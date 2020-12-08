@@ -64,7 +64,7 @@ class ParserFormats(Enum):
     PSICOV = ContactParser
     METAPSICOV = ContactParser
     NEBCON = ContactParser
-    CASPRR = ContactParser
+    CASPRR_MODE1 = ContactParser
     GREMLIN = ContactParser
     EPCMAP = ContactParser
     EVFOLD = ContactParser
@@ -79,29 +79,31 @@ class ParserFormats(Enum):
     CCMPRED = CCMpredParser
     COLSTATS = CCMpredParser
     PDB = PDBParser
+    CASPRR_MODE2 = DistogramParser
 
 
 class ContactFormats(Enum):
     PSICOV = 0
     METAPSICOV = 1
     NEBCON = 2
-    CASPRR = 3
-    GREMLIN = 4
-    EPCMAP = 5
-    EVFOLD = 6
-    FREECONTACT = 7
-    PLMDCA = 8
-    PCONS = 9
-    FLIB = 10
-    SAINT2 = 11
-    BCLCONTCATS = 12
-    BBCONTACTS = 13
-    COMSAT = 14
-    CCMPRED = 15
-    COLSTATS = 16
-    MAPALIGN = 17
-    ALEIGEN = 18
-    PDB = 19
+    CASPRR_MODE1 = 3
+    CASPRR_MODE2 = 4
+    GREMLIN = 5
+    EPCMAP = 6
+    EVFOLD = 7
+    FREECONTACT = 8
+    PLMDCA = 9
+    PCONS = 10
+    FLIB = 11
+    SAINT2 = 12
+    BCLCONTCATS = 13
+    BBCONTACTS = 14
+    COMSAT = 15
+    CCMPRED = 16
+    COLSTATS = 17
+    MAPALIGN = 18
+    ALEIGEN = 19
+    PDB = 20
 
 
 class MembraneStates(Enum):

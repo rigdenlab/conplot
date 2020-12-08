@@ -7,6 +7,12 @@ def ConsurfParser(*args, **kwargs):
     return ConsurfParser(*args, **kwargs)
 
 
+def DistogramParser(*args, **kwargs):
+    from parsers.distogramparser import DistogramParser
+
+    return DistogramParser(*args, **kwargs)
+
+
 def TopconsParser(*args, **kwargs):
     from parsers.topconsparser import TopconsParser
 

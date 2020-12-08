@@ -38,6 +38,7 @@ D U M M Y
 """
         with self.assertRaises(InvalidFormat):
             output = CCMpredParser(dummy_prediction)
+            self.assertListEqual(output, [])
 
     def test_3(self):
         dummy_prediction = """###

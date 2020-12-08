@@ -148,9 +148,17 @@ class Custom_ColorPalettes(Enum):
     PALETTE_2 = Custom_GrayColorPalette
 
 
+class Heatmap_ColorPalettes(Enum):
+    PALETTE_1 = 'Greys'
+    PALETTE_2 = 'viridis'
+    PALETTE_3 = 'balance'
+    PALETTE_4 = 'Inferno'
+
+
 class DatasetColorPalettes(Enum):
     membranetopology = MembraneTopology_ColorPalettes
     secondarystructure = SecondaryStructure_ColorPalettes
     disorder = Disorder_ColorPalettes
     conservation = Conservation_ColorPalettes
     custom = Custom_ColorPalettes
+    heatmap = Heatmap_ColorPalettes

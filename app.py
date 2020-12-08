@@ -391,7 +391,7 @@ def javascript_exe_button(n_clicks, session_id):
 
     else:
         app.logger.info('Fetching example data')
-        session_utils.load_session('user_1', 34, session_id, cache, app.logger)
+        session_utils.load_session('user_1', 1, session_id, cache, app.logger)
         return "location.reload();", no_update
 
 

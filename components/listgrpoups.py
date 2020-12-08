@@ -330,7 +330,7 @@ def MandatoryInputHelpList():
                 'any given time. If you want to upload a new sequence, that means you will '
                 'need to delete the one you uploaded already first.',
                 style={"font-size": "110%", 'text-align': "justify"}),
-        html.Li(['Contact map file. This file informs about which residue pairs are in close '
+        html.Li(['Contact information file. This file informs about which residue pairs are in close '
                  'contact in the three-dimensional structure of the protein of interest. There '
                  'are many formats used for such files, but ConPlot is able to parse the '
                  'most common ones. If you wish to upload a contact map file in a format not supported '

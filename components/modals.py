@@ -49,6 +49,16 @@ def InvalidMapSelectionModal():
     ], id='invalid-map-selection-modal', is_open=True)
 
 
+def InvalidSuperposeDistanceMatrixModal():
+    return dbc.Modal([
+        ModalHeader("Invalid Input"),
+        dbc.ModalBody([
+            html.P("""Superposition of heatmaps is not supported yet!""",
+                   style={'text-align': "justify"})
+        ]),
+    ], id='invalid-map-selection-modal', is_open=True)
+
+
 def SequenceAlreadyUploadedModal():
     return dbc.Modal([
         ModalHeader("Sequence already uploaded"),
@@ -147,6 +157,7 @@ def SuccessContactFormModal():
         ),
     ], id='success-contact-form-modal', is_open=True)
 
+
 def SuccessCreateUserModal(username):
     return dbc.Modal([
         ModalHeader(html.H4("Success", className="alert-heading", style={'color': 'green'})),
@@ -155,7 +166,6 @@ def SuccessCreateUserModal(username):
                    style={'text-align': "justify"})
         ),
     ], id='success-contact-form-modal', is_open=True)
-
 
 
 def CustomFormatDescriptionModal():

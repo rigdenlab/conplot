@@ -367,26 +367,41 @@ def create_distogram(cmap, idx, distances, hover, verbose_labels=None):
         del cmap[-1]
 
     elif cmap[-1] == 'DISTO':
-        hover_template = 'Contact: {} - {} | Distance {} | Confidence: {}'
         cmap = cmap[:-1]
 
-        for contact in cmap:
-            distances[contact[idx_x]][contact[idx_y]] = 9 - contact[3]
-            label = DistanceLabels.__getitem__(('BIN_{}'.format(contact[3]))).value
-            hover_label = hover_template.format(contact[idx_x], contact[idx_y], label, contact[4])
-            if verbose_labels is not None:
-                hover_label += '<br>%s<br>%s' % (verbose_labels[contact[idx_x] - 1], verbose_labels[contact[idx_y] - 1])
-            hover[contact[idx_x]][contact[idx_y]] = hover_label
+        if verbose_labels is not None:
+            hover_template = 'Contact: {} - {} | Distance {} | Confidence: {}<br>{}<br>{}'
+            for contact in cmap:
+                distances[contact[idx_x]][contact[idx_y]] = 9 - contact[3]
+                label = DistanceLabels.__getitem__(('BIN_{}'.format(contact[3]))).value
+                hover_label = hover_template.format(contact[idx_y], contact[idx_x], label, contact[4],
+                                                    verbose_labels[contact[idx_y] - 1],
+                                                    verbose_labels[contact[idx_x] - 1])
+                hover[contact[idx_x]][contact[idx_y]] = hover_label
+        else:
+            hover_template = 'Contact: {} - {} | Distance {} | Confidence: {}'
+            for contact in cmap:
+                distances[contact[idx_x]][contact[idx_y]] = 9 - contact[3]
+                label = DistanceLabels.__getitem__(('BIN_{}'.format(contact[3]))).value
+                hover_label = hover_template.format(contact[idx_y], contact[idx_x], label, contact[4])
+                hover[contact[idx_x]][contact[idx_y]] = hover_label
 
         return distances, hover
 
-    hover_template = 'Contact: {} - {} | Confidence: {}'
-    for contact in cmap:
-        distances[contact[idx_x]][contact[idx_y]] = contact[2]
-        hover_label = hover_template.format(contact[idx_x], contact[idx_y], contact[2])
-        if verbose_labels is not None:
-            hover_label += '<br>%s<br>%s' % (verbose_labels[contact[idx_x] - 1], verbose_labels[contact[idx_y] - 1])
-        hover[contact[idx_x]][contact[idx_y]] = hover_label
+    if verbose_labels is None:
+        hover_template = 'Contact: {} - {} | Confidence: {}'
+        for contact in cmap:
+            distances[contact[idx_x]][contact[idx_y]] = contact[2]
+            hover_label = hover_template.format(contact[idx_y], contact[idx_x], contact[2])
+            hover[contact[idx_x]][contact[idx_y]] = hover_label
+
+    else:
+        hover_template = 'Contact: {} - {} | Confidence: {}<br>{}<br>{}'
+        for contact in cmap:
+            distances[contact[idx_x]][contact[idx_y]] = contact[2]
+            hover_label = hover_template.format(contact[idx_y], contact[idx_x], contact[2],
+                                                verbose_labels[contact[idx_y] - 1], verbose_labels[contact[idx_x] - 1])
+            hover[contact[idx_x]][contact[idx_y]] = hover_label
 
     return distances, hover
 
@@ -398,31 +413,34 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2, verbose
     if factor != 0:
         cmap = cmap[:int(round(seq_length / factor, 0))]
 
+    if idx == 1:
+        idx_x = 0
+        idx_y = 1
+    else:
+        idx_x = 1
+        idx_y = 0
+
     res1_list = []
     res2_list = []
-    hover_1 = []
-    hover_2 = []
-    for contact in cmap:
-        res1_list.append(contact[0])
-        res2_list.append(contact[1])
-        if verbose_labels is not None:
-            res_1_label = verbose_labels[contact[0] - 1]
-            res_2_label = verbose_labels[contact[1] - 1]
-            hover_1.append('Contact: %s - %s | Confidence: %s<br>%s<br>%s' % (
-                contact[0], contact[1], contact[2], res_1_label, res_2_label))
-            hover_2.append('Contact: %s - %s | Confidence: %s<br>%s<br>%s' % (
-                contact[1], contact[0], contact[2], res_2_label, res_1_label))
-        else:
-            hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
-            hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+    hover = []
 
-    if idx == 1:
-        return create_scatter(x=res1_list, y=res2_list, symbol='circle', hovertext=hover_1, marker_size=marker_size,
-                              color='black')
-
+    if verbose_labels is not None:
+        hover_template = 'Contact: %s - %s | Confidence: %s<br>%s<br>%s'
+        for contact in cmap:
+            res1_list.append(contact[idx_x])
+            res2_list.append(contact[idx_y])
+            res_x_label = verbose_labels[contact[idx_x] - 1]
+            res_y_label = verbose_labels[contact[idx_y] - 1]
+            hover.append(hover_template % (contact[idx_x], contact[idx_y], contact[2], res_x_label, res_y_label))
     else:
-        return create_scatter(x=res2_list, y=res1_list, symbol='circle', hovertext=hover_2, marker_size=marker_size,
-                              color='black')
+        hover_template = 'Contact: %s - %s | Confidence: %s'
+        for contact in cmap:
+            res1_list.append(contact[idx_x])
+            res2_list.append(contact[idx_y])
+            hover.append(hover_template % (contact[idx_x], contact[idx_y], contact[2]))
+
+    return create_scatter(x=res1_list, y=res2_list, symbol='circle', hovertext=hover,
+                          marker_size=marker_size, color='black')
 
 
 def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
@@ -459,19 +477,22 @@ def create_superimposed_contact_traces(contacts, marker_size=5, color='black', s
     hover_1 = []
     hover_2 = []
 
-    for contact in contacts:
-        res1_list.append(contact[0])
-        res2_list.append(contact[1])
-        if verbose_labels is not None:
+    if verbose_labels is not None:
+        hover_template = 'Contact: %s - %s | Confidence: %s<br>%s<br>%s'
+        for contact in contacts:
+            res1_list.append(contact[0])
+            res2_list.append(contact[1])
             res_1_label = verbose_labels[contact[0] - 1]
             res_2_label = verbose_labels[contact[1] - 1]
-            hover_1.append('Contact: %s - %s | Confidence: %s<br>%s<br>%s' % (
-                contact[0], contact[1], contact[2], res_1_label, res_2_label))
-            hover_2.append('Contact: %s - %s | Confidence: %s<br>%s<br>%s' % (
-                contact[1], contact[0], contact[2], res_2_label, res_1_label))
-        else:
-            hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
-            hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+            hover_1.append(hover_template % (contact[0], contact[1], contact[2], res_1_label, res_2_label))
+            hover_2.append(hover_template % (contact[1], contact[0], contact[2], res_2_label, res_1_label))
+    else:
+        hover_template = 'Contact: %s - %s | Confidence: %s'
+        for contact in contacts:
+            res1_list.append(contact[0])
+            res2_list.append(contact[1])
+            hover_1.append(hover_template % (contact[0], contact[1], contact[2]))
+            hover_2.append(hover_template % (contact[1], contact[0], contact[2]))
 
     x = res1_list + res2_list
     y = res2_list + res1_list

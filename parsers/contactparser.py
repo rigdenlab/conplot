@@ -9,7 +9,7 @@ class FieldSeparatorContactFormats(Enum):
     PSICOV = re.compile(r'\s+')
     METAPSICOV = re.compile(r'\s+')
     NEBCON = re.compile(r'\s+')
-    CASPRR_MODE1 = re.compile(r'\s+')
+    CASPRR_MODE_1 = re.compile(r'\s+')
     GREMLIN = re.compile(r'\s+')
     EPCMAP = re.compile(r'\s+')
     EVFOLD = re.compile(r'\s+')
@@ -29,7 +29,7 @@ class LineSizeContactFormats(Enum):
     PSICOV = 5
     METAPSICOV = 5
     NEBCON = 5
-    CASPRR_MODE1 = 5
+    CASPRR_MODE_1 = 5
     GREMLIN = 5
     EPCMAP = 5
     EVFOLD = 5
@@ -49,7 +49,7 @@ class FieldResidueOneContactFormats(Enum):
     PSICOV = 0
     METAPSICOV = 0
     NEBCON = 0
-    CASPRR_MODE1 = 0
+    CASPRR_MODE_1 = 0
     GREMLIN = 0
     EPCMAP = 0
     EVFOLD = 0
@@ -69,7 +69,7 @@ class FieldResidueTwoContactFormats(Enum):
     PSICOV = 1
     METAPSICOV = 1
     NEBCON = 1
-    CASPRR_MODE1 = 1
+    CASPRR_MODE_1 = 1
     GREMLIN = 1
     EPCMAP = 1
     EVFOLD = 2
@@ -89,7 +89,7 @@ class FieldRawScoreContactFormats(Enum):
     PSICOV = 4
     METAPSICOV = 4
     NEBCON = 4
-    CASPRR_MODE1 = 4
+    CASPRR_MODE_1 = 4
     GREMLIN = 4
     EPCMAP = 4
     EVFOLD = 5

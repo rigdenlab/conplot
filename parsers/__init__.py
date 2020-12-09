@@ -64,7 +64,7 @@ class ParserFormats(Enum):
     PSICOV = ContactParser
     METAPSICOV = ContactParser
     NEBCON = ContactParser
-    CASPRR_MODE1 = ContactParser
+    CASPRR_MODE_1 = ContactParser
     GREMLIN = ContactParser
     EPCMAP = ContactParser
     EVFOLD = ContactParser
@@ -79,15 +79,15 @@ class ParserFormats(Enum):
     CCMPRED = CCMpredParser
     COLSTATS = CCMpredParser
     PDB = PDBParser
-    CASPRR_MODE2 = DistogramParser
+    CASPRR_MODE_2 = DistogramParser
 
 
 class ContactFormats(Enum):
     PSICOV = 0
     METAPSICOV = 1
     NEBCON = 2
-    CASPRR_MODE1 = 3
-    CASPRR_MODE2 = 4
+    CASPRR_MODE_1 = 3
+    CASPRR_MODE_2 = 4
     GREMLIN = 5
     EPCMAP = 6
     EVFOLD = 7

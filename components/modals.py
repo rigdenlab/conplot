@@ -497,6 +497,19 @@ def PostgresConnectionErrorModal():
     ], id='postgres-connection-error-modal', is_open=True, backdrop='static', keyboard=False)
 
 
+def ExampleSessionConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader("PostgreSQL connection error"),
+        dbc.ModalBody([
+            html.P(['It was impossible to connect with PostgreSQL database in order to get the example session. If '
+                    'you are using ConPlot web services on ', html.I('www.conplot.org'),
+                    ' please report this issue in the "Get in touch" tab. While we fix this, you can download the '
+                    'example data ', dbc.CardLink(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value), "."],
+                   style={'text-align': "justify"}),
+        ]),
+    ], id='example-session-error-modal', is_open=True)
+
+
 def SlackConnectionErrorModal():
     return dbc.Modal([
         ModalHeader("Helpdesk connection error"),

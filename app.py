@@ -5,6 +5,7 @@ import layouts
 import loaders
 import logging
 import keydb
+import psycopg2
 from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, UrlIndex
 from dash.dash import no_update
 import dash_bootstrap_components as dbc
@@ -374,6 +375,7 @@ def remove_dataset(alerts_open, session_id):
 
 
 @app.callback([Output('javascript-exe', 'run'),
+               Output('javascript-exe-modal-div', 'children'),
                Output('session-id', 'data')],
               [Input({'type': 'javascript-exe-button', 'index': ALL}, 'n_clicks')],
               [State('session-id', 'data')])
@@ -382,17 +384,21 @@ def javascript_exe_button(n_clicks, session_id):
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
     if not callback_utils.ensure_triggered(trigger):
-        return no_update, no_update
+        return no_update, no_update, no_update
 
     elif 'new-session' in trigger['prop_id'] or session_utils.is_expired_session(session_id, cache, app.logger):
         cache = keydb.KeyDB(connection_pool=keydb_pool)
         new_session_id = session_utils.initiate_session(cache, app.logger)
-        return "location.reload();", new_session_id
+        return "location.reload();", no_update, new_session_id
 
     else:
         app.logger.info('Fetching example data')
-        session_utils.load_session('user_1', 35, session_id, cache, app.logger)
-        return "location.reload();", no_update
+        try:
+            session_utils.load_session('user_1', 4, session_id, cache, app.logger)
+        except (psycopg2.OperationalError, AttributeError) as e:
+            app.logger.error('Unable to fetch example data: {}'.format(e))
+            return no_update, components.ExampleSessionConnectionErrorModal(), no_update
+        return "location.reload();", no_update, no_update
 
 
 @app.callback([Output('plot-div', 'children'),

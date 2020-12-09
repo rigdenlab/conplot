@@ -28,6 +28,12 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def ExampleSessionConnectionErrorModal(*args, **kwargs):
+    from components.modals import ExampleSessionConnectionErrorModal
+
+    return ExampleSessionConnectionErrorModal(*args, **kwargs)
+
+
 def InvalidSuperposeDistanceMatrixModal(*args, **kwargs):
     from components.modals import InvalidSuperposeDistanceMatrixModal
 

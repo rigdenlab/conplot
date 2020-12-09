@@ -4,7 +4,7 @@ import dash_bootstrap_components as dbc
 from utils import UrlIndex
 
 
-def Body():
+def Body(cache):
     return html.Div(
         [
             html.Br(),
@@ -260,8 +260,13 @@ def Body():
                                     'disabled. Similarly, you will not be able to get in touch with us using the '
                                     '"Get in touch" tab.']),
                             html.Br(),
-                            html.H4('9. Privacy Policy', className="card-text",
-                                    style={'text-align': "center"}),
+                            html.H4('9. Server status', className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            components.ServerStatusList(cache),
+                            html.Br(),
+                            html.Br(),
+                            html.H4('10. Privacy Policy', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
                             components.GdprPolicyAlert(False)
@@ -273,10 +278,10 @@ def Body():
     )
 
 
-def Help(session_id, username):
+def Help(session_id, username, cache):
     return html.Div([
         components.Header(username),
         components.NavBar(UrlIndex.HELP.value),
-        Body(),
+        Body(cache),
         components.Footer()
     ])

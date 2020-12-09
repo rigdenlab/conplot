@@ -352,6 +352,12 @@ def TutorialList(*args, **kwargs):
     return TutorialList(*args, **kwargs)
 
 
+def ServerStatusList(*args, **kwargs):
+    from components.listgrpoups import ServerStatusList
+
+    return ServerStatusList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
     from components.toasts import SessionTimedOutToast
 

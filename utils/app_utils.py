@@ -62,7 +62,7 @@ def serve_url(url, session_id, cache, logger):
         else:
             return layouts.Plot(session_id, username)
     elif url == UrlIndex.HELP.value:
-        return layouts.Help(session_id, username)
+        return layouts.Help(session_id, username, cache)
     elif url == UrlIndex.RIGDEN.value:
         return layouts.RigdenLab(session_id, username)
     elif url == UrlIndex.PRIVACY_POLICY.value:

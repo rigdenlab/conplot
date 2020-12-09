@@ -127,3 +127,14 @@ def remove_sequence(session_id, cache):
         cache.hdel(session_id, decompress_data(cache.hget(session_id, CacheKeys.SEQUENCE.value)))
         cache.hdel(session_id, CacheKeys.SEQUENCE.value)
         cache.hdel(session_id, CacheKeys.SEQUENCE_HYDROPHOBICITY.value)
+
+
+def is_redis_available(cache):
+    try:
+        cache.ping()
+        return True
+    except:
+        return False
+
+def get_active_sessions(cache):
+    return cache.dbsize()

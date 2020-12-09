@@ -101,13 +101,14 @@ class SqlQueries(Enum):
                SqlFieldNames.SESSION_PKID.value)
 
 
-def is_postgres_available(logger):
+def is_postgres_available(logger=None):
     try:
         connection = psycopg2.connect(os.environ['DATABASE_URL'], sslmode='disable')
         connection.close()
         return True
     except (Exception, psycopg2.DatabaseError) as error:
-        logger.error('Cannot establish connection with postgres database! {}'.format(error))
+        if logger is not None:
+            logger.error('Cannot establish connection with postgres database! {}'.format(error))
         return False
 
 

@@ -1,7 +1,7 @@
 from components import ShareWithInput, SessionListType
 import dash_bootstrap_components as dbc
 import dash_html_components as html
-from utils import postgres_utils, UrlIndex
+from utils import postgres_utils, UrlIndex, conplot_version, is_redis_available, get_active_sessions
 
 
 def SessionListItem(session, list_type, color='secondary'):
@@ -93,6 +93,49 @@ def TutorialList():
             TutorialItem(idx=1, name='Creating your first plot'),
             TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
+        ], style={'width': '75%'}
+        ), justify='center', align='center')
+
+
+def StatusItem(idx, name, status_badge):
+    style = {'border-bottom': '1px solid', 'border-left': '1px solid', 'border-right': '1px solid'}
+    if idx == 1:
+        style['border-top'] = '1px solid'
+
+    return dbc.ListGroupItem([
+        dbc.Row([
+            dbc.Col(
+                html.H5(name, style={'vertical-align': 'middle', 'margin-top': 8}),
+                style={'align-items': 'center', 'justify-content': 'left', 'display': 'flex'}, width=9
+            ),
+            dbc.Col(
+                status_badge,
+                style={'align-items': 'center', 'justify-content': 'right', 'display': 'flex'}
+            )
+        ], justify='around', align='around')
+    ], style=style)
+
+
+def ServerStatusList(cache):
+    version = html.H4(dbc.Badge(conplot_version(), color='primary', pill=True))
+    if is_redis_available(cache):
+        redis_badge = html.H4(dbc.Badge('OK', color='success', pill=True))
+        active_sessions = html.H4(dbc.Badge(get_active_sessions(cache), color='primary', pill=True))
+    else:
+        redis_badge = html.H4(dbc.Badge('ERROR', color='danger', pill=True))
+        active_sessions = html.H4(dbc.Badge('ERROR', color='danger', pill=True))
+
+    if postgres_utils.is_postgres_available():
+        postgres_badge = html.H4(dbc.Badge('OK', color='success', pill=True))
+    else:
+        postgres_badge = html.H4(dbc.Badge('ERROR', color='danger', pill=True))
+
+    return dbc.Row(
+        dbc.ListGroup([
+            StatusItem(idx=1, name='Cache status', status_badge=redis_badge),
+            StatusItem(idx=2, name='Database status', status_badge=postgres_badge),
+            StatusItem(idx=3, name='Server load', status_badge=active_sessions),
+            StatusItem(idx=4, name='App version', status_badge=version)
         ], style={'width': '75%'}
         ), justify='center', align='center')
 

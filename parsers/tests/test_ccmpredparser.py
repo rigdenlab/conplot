@@ -38,3 +38,12 @@ D U M M Y
 """
         with self.assertRaises(InvalidFormat):
             output = CCMpredParser(dummy_prediction)
+            self.assertListEqual(output, [])
+
+    def test_3(self):
+        dummy_prediction = """###
+CRYST1   73.530   39.060   23.150  90.00  90.00  90.00 P 21 21 21    4
+100 8 5.382865
+"""
+        with self.assertRaises(InvalidFormat):
+            output = CCMpredParser(dummy_prediction)

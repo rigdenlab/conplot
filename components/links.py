@@ -5,7 +5,7 @@ from utils import UrlIndex
 
 def StartNewSessionLink():
     return dbc.Button("Start new session", block=True, color='danger',
-                      id={'type': 'clear-storage-button', 'index': '1'})
+                      id={'type': 'javascript-exe-button', 'index': 'new-session'})
 
 
 def GitHubLink():

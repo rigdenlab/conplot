@@ -5,6 +5,7 @@ import layouts
 import loaders
 import logging
 import keydb
+import psycopg2
 from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, UrlIndex
 from dash.dash import no_update
 import dash_bootstrap_components as dbc
@@ -49,19 +50,6 @@ app.layout = serve_layout
 # ==============================================================
 # Define callbacks for the app
 # ==============================================================
-
-@app.callback([Output('session-id', 'data'),
-               Output('url', 'pathname')],
-              [Input({'type': 'clear-storage-button', 'index': ALL}, 'n_clicks')])
-def start_new_session(n_clicks):
-    trigger = dash.callback_context.triggered[0]
-    if not callback_utils.ensure_triggered(trigger):
-        return no_update, no_update
-    else:
-        cache = keydb.KeyDB(connection_pool=keydb_pool)
-        new_session_id = session_utils.initiate_session(cache, app.logger)
-        return new_session_id, UrlIndex.HOME.value
-
 
 @app.callback([Output('contact-alert-div', 'children'),
                Output('submit-contact-form-button', 'disabled')],
@@ -386,21 +374,31 @@ def remove_dataset(alerts_open, session_id):
     return None
 
 
-@app.callback(Output('refresh-page', 'run'),
-              [Input('load-example-button', 'n_clicks')],
+@app.callback([Output('javascript-exe', 'run'),
+               Output('javascript-exe-modal-div', 'children'),
+               Output('session-id', 'data')],
+              [Input({'type': 'javascript-exe-button', 'index': ALL}, 'n_clicks')],
               [State('session-id', 'data')])
-def refresh_button_clicked(n_clicks, session_id):
-    trigger = dash.callback_context.triggered[0]
+def javascript_exe_button(n_clicks, session_id):
+    trigger = dash.callback_context.triggered[-1]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
-    if session_utils.is_expired_session(session_id, cache, app.logger):
-        return no_update
-    elif not callback_utils.ensure_triggered(trigger):
-        return no_update
+    if not callback_utils.ensure_triggered(trigger):
+        return no_update, no_update, no_update
+
+    elif 'new-session' in trigger['prop_id'] or session_utils.is_expired_session(session_id, cache, app.logger):
+        cache = keydb.KeyDB(connection_pool=keydb_pool)
+        new_session_id = session_utils.initiate_session(cache, app.logger)
+        return "location.reload();", no_update, new_session_id
+
     else:
         app.logger.info('Fetching example data')
-        session_utils.load_session('user_1', 34, session_id, cache, app.logger)
-        return "location.reload();"
+        try:
+            session_utils.load_session('user_1', 35, session_id, cache, app.logger)
+        except (psycopg2.OperationalError, AttributeError) as e:
+            app.logger.error('Unable to fetch example data: {}'.format(e))
+            return no_update, components.ExampleSessionConnectionErrorModal(), no_update
+        return "location.reload();", no_update, no_update
 
 
 @app.callback([Output('plot-div', 'children'),
@@ -417,10 +415,13 @@ def refresh_button_clicked(n_clicks, session_id):
                State({'type': "halfsquare-select", 'index': ALL}, 'value'),
                State("transparent-tracks-switch", 'value'),
                State('superimpose-maps-switch', 'value'),
+               State('distance-matrix-switch', 'value'),
+               State('verbose-labels-switch', 'value'),
                State({'type': 'colorpalette-select', 'index': ALL}, 'value'),
                State('session-id', 'data')])
 def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track_marker_size, track_separation,
-                   track_selection, cmap_selection, transparent, superimpose, selected_palettes, session_id):
+                   track_selection, cmap_selection, transparent, superimpose, distance_matrix, verbose_labels,
+                   selected_palettes, session_id):
     trigger = dash.callback_context.triggered[0]
     cache = keydb.KeyDB(connection_pool=keydb_pool)
 
@@ -434,13 +435,15 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None or x < 0]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
+    elif superimpose and distance_matrix:
+        return no_update, components.InvalidSuperposeDistanceMatrixModal(), no_update, no_update
     elif superimpose and ('---' in cmap_selection or len(set(cmap_selection)) == 1):
         return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 
     app.logger.info('Session {} creating conplot'.format(session_id))
     return plot_utils.create_ConPlot(session_id, cache, trigger, track_selection, cmap_selection, selected_palettes,
                                      factor, contact_marker_size, track_marker_size, track_separation, transparent,
-                                     superimpose)
+                                     superimpose, distance_matrix, verbose_labels)
 
 
 # ==============================================================

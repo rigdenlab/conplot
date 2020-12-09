@@ -1,14 +1,13 @@
+import components
 from utils import UrlIndex, get_display_control_card, load_display_settings, load_figure_json
 import dash_core_components as dcc
 import dash_html_components as html
-from components import NavBar, Header, PlotPlaceHolder, DisplayControlCard, MandatoryUploadCard, \
-    AdditionalTracksUploadCard, StoreSessionCard
 import dash_bootstrap_components as dbc
 
 
 def Body(username, figure_json=None, display_settings_json=None):
     if figure_json is None:
-        graph = PlotPlaceHolder()
+        graph = components.PlotPlaceHolder()
     else:
         graph = dcc.Graph(
             className='square-content', id='plot-graph', figure=load_figure_json(figure_json),
@@ -17,7 +16,7 @@ def Body(username, figure_json=None, display_settings_json=None):
         )
 
     if display_settings_json is None:
-        display_control_card = DisplayControlCard()
+        display_control_card = components.DisplayControlCard()
         adjust_plot_disabled = True
     else:
         display_settings = load_display_settings(display_settings_json)
@@ -28,7 +27,7 @@ def Body(username, figure_json=None, display_settings_json=None):
         dbc.Spinner(html.Div(id='contact-upload-modal-div'), fullscreen=True, fullscreenClassName="spinner-with-text"),
         dbc.Spinner(html.Div(id='sequence-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='removefiles-modal-div'), fullscreen=True),
-        dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True),
+        dbc.Spinner(html.Div(id='plot-modal-div'), fullscreen=True, fullscreenClassName="spinner-with-text"),
         dbc.Spinner(html.Div(id='additional-tracks-upload-modal-div'), fullscreen=True),
         dbc.Spinner(html.Div(id='store-session-modal-div'), fullscreen=True),
         html.Br(),
@@ -37,13 +36,13 @@ def Body(username, figure_json=None, display_settings_json=None):
                 html.Div([
                     dbc.Card([
                         dbc.CardBody(
-                            MandatoryUploadCard()
+                            components.MandatoryUploadCard()
                         ),
                         dbc.CardBody(
-                            AdditionalTracksUploadCard(),
+                            components.AdditionalTracksUploadCard(),
                         ),
                         dbc.CardBody(
-                            StoreSessionCard(username),
+                            components.StoreSessionCard(username),
                         )
                     ])
                 ], className='InputPanel', style={'height': '70vh', 'overflow-y': 'scroll'}),
@@ -75,7 +74,7 @@ def Body(username, figure_json=None, display_settings_json=None):
 
 def Plot(session_id, username, figure=None, display_settings=None):
     return html.Div([
-        Header(username),
-        NavBar(UrlIndex.PLOT.value),
+        components.Header(username),
+        components.NavBar(UrlIndex.PLOT.value),
         Body(username, figure, display_settings)
     ])

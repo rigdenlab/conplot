@@ -9,4 +9,5 @@ def HelpBadge():
 
 
 def ExampleLinkButton(url):
-    return dbc.Button('Example', size='sm', outline=True, color='primary', id='load-example-button')
+    return dbc.Button('Example', size='sm', outline=True, color='primary',
+                      id={'index': 'load-example', 'type': 'javascript-exe-button'})

@@ -115,7 +115,7 @@ def AdditionalTrackFormatSelectionCard():
 def ContactUploadCard():
     return dbc.Card([
         dbc.CardBody([
-            html.H5('Contact Map', style={'text-align': "center"}),
+            html.H5('Contact Information', style={'text-align': "center"}),
             html.Br(),
             ContactFormatSelectionCard(),
             html.Br(),
@@ -194,6 +194,8 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
             dbc.Input(id='L-cutoff-input', value=2),
             components.TransparentSwitch(True),
             components.SuperimposeSwitch(False),
+            components.DistanceMatrixSwitch(False),
+            components.VerboseLabelsSwitch(False),
             dbc.Input(id='contact-marker-size-input', value=contact_marker_size),
             dbc.Input(id='track-marker-size-input', value=track_marker_size),
             dbc.Input(id='track-separation-size-input', value=track_separation),
@@ -206,7 +208,8 @@ def NoPlotDisplayControlCard(contact_marker_size, track_marker_size, track_separ
 
 def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cmaps=None, available_maps=None,
                        selected_palettes=None, factor=2, contact_marker_size=5, track_marker_size=5,
-                       track_separation=2, transparent=True, superimpose=False):
+                       track_separation=2, transparent=True, superimpose=False, distance_matrix=False,
+                       verbose_labels=False):
     if available_tracks is None or available_maps is None or selected_palettes is None:
         return dbc.Card(
             dbc.CardBody(
@@ -229,16 +232,21 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.H5("Adjust contact map", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            dbc.Card(components.LFactorSelector(factor), outline=False),
+                            dbc.Card(components.LFactorSelector(factor, distance_matrix), outline=False),
                             html.Br(),
-                            dbc.Card(components.SizeSelector('contact-marker-size-input', contact_marker_size, 1, 15),
-                                     outline=False),
+                            dbc.Card(
+                                components.SizeSelector(
+                                    'contact-marker-size-input', contact_marker_size, 1, 15, disabled=distance_matrix
+                                ), outline=False
+                            ),
                             html.Br(),
                             HalfSquareSelectionCard('A', selection=selected_cmaps[0], available_cmaps=available_maps),
                             html.Br(),
                             HalfSquareSelectionCard('B', selection=selected_cmaps[1], available_cmaps=available_maps),
                             html.Br(),
                             components.SuperimposeSwitch(superimpose),
+                            components.DistanceMatrixSwitch(distance_matrix),
+                            components.VerboseLabelsSwitch(verbose_labels),
                             html.Br(),
                             html.H5('Adjust additional tracks', className="card-text", style={'text-align': "center"}),
                             html.Hr(),
@@ -287,6 +295,8 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             ColorPaletteSelectionCard('conservation', selected_palettes[3]),
                             html.Br(),
                             ColorPaletteSelectionCard('custom', selected_palettes[4]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('heatmap', selected_palettes[5]),
                             html.Br(),
                         ])
                     ]

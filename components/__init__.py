@@ -7,6 +7,7 @@ class UserReadableTrackNames(Enum):
     disorder = 'Seq. Disorder'
     conservation = 'Seq. Conservation'
     custom = 'Custom Tracks'
+    heatmap = 'Heatmap'
 
 
 class EmailIssueReference(Enum):
@@ -25,6 +26,18 @@ def SessionStoreModal(*args, **kwargs):
     from components.modals import SessionStoreModal
 
     return SessionStoreModal(*args, **kwargs)
+
+
+def ExampleSessionConnectionErrorModal(*args, **kwargs):
+    from components.modals import ExampleSessionConnectionErrorModal
+
+    return ExampleSessionConnectionErrorModal(*args, **kwargs)
+
+
+def InvalidSuperposeDistanceMatrixModal(*args, **kwargs):
+    from components.modals import InvalidSuperposeDistanceMatrixModal
+
+    return InvalidSuperposeDistanceMatrixModal(*args, **kwargs)
 
 
 def GdprPolicySectionOne(*args, **kwargs):
@@ -339,6 +352,12 @@ def TutorialList(*args, **kwargs):
     return TutorialList(*args, **kwargs)
 
 
+def ServerStatusList(*args, **kwargs):
+    from components.listgrpoups import ServerStatusList
+
+    return ServerStatusList(*args, **kwargs)
+
+
 def SessionTimedOutToast(*args, **kwargs):
     from components.toasts import SessionTimedOutToast
 
@@ -625,6 +644,18 @@ def SuperimposeSwitch(*args, **kwargs):
     from components.inputgroups import SuperimposeSwitch
 
     return SuperimposeSwitch(*args, **kwargs)
+
+
+def DistanceMatrixSwitch(*args, **kwargs):
+    from components.inputgroups import DistanceMatrixSwitch
+
+    return DistanceMatrixSwitch(*args, **kwargs)
+
+
+def VerboseLabelsSwitch(*args, **kwargs):
+    from components.inputgroups import VerboseLabelsSwitch
+
+    return VerboseLabelsSwitch(*args, **kwargs)
 
 
 def TrackLayoutSelector(*args, **kwargs):

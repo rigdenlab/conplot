@@ -3,13 +3,13 @@ import dash_html_components as html
 from loaders import AdditionalDatasetReference
 from parsers import ContactFormats
 from components import EmailIssueReference, UserReadableTrackNames
-from utils.plot_utils import DefaultTrackLayout
+from utils.plot_utils import PaletteDefaultLayout
 from utils import UrlIndex
 
 
 def ContactFormatSelector():
     format_list = sorted([{"label": map_format, "value": map_format} for map_format in
-                          ContactFormats.__dict__.keys() if '_' not in map_format], key=lambda k: k['label'])
+                          ContactFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
     return dbc.InputGroup(
         [
             dbc.Select(
@@ -21,20 +21,30 @@ def ContactFormatSelector():
     )
 
 
-def SizeSelector(id, marker_size, min, max, text='Size'):
+def SizeSelector(id, marker_size, min, max, text='Size', disabled=False):
+    if disabled == [1]:
+        disabled = True
+    elif not disabled:
+        disabled = False
+
     return dbc.InputGroup(
         [
             dbc.InputGroupAddon(text, addon_type="prepend"),
-            dbc.Input(id=id, type="number", min=min, max=max, step=1, value=marker_size),
+            dbc.Input(id=id, type="number", min=min, max=max, step=1, value=marker_size, disabled=disabled),
         ]
     )
 
 
-def LFactorSelector(factor=2):
+def LFactorSelector(factor=2, disabled=False):
+    if disabled == [1]:
+        disabled = True
+    elif not disabled:
+        disabled = False
+
     return dbc.InputGroup(
         [
             dbc.InputGroupAddon("L /", addon_type="prepend"),
-            dbc.Input(id='L-cutoff-input', type="number", min=0, max=10, step=1, value=factor)
+            dbc.Input(id='L-cutoff-input', type="number", min=0, max=10, step=1, value=factor, disabled=disabled)
         ]
     )
 
@@ -72,13 +82,12 @@ def TrackLayoutSelector(idx, options, value):
 
 
 def PaletteSelector(dataset, options, value):
-    index = [x.value for x in DefaultTrackLayout].index(dataset.encode())
-    return dbc.InputGroup(
-        [
-            dbc.InputGroupAddon(UserReadableTrackNames.__getattr__(dataset).value, addon_type="prepend"),
-            dbc.Select(id={'type': 'colorpalette-select', 'index': index}, options=options, value=value)
-        ]
-    )
+    index = [x.value for x in PaletteDefaultLayout].index(dataset.encode())
+
+    return dbc.InputGroup([
+        dbc.InputGroupAddon(UserReadableTrackNames.__getattr__(dataset).value, addon_type="prepend"),
+        dbc.Select(id={'type': 'colorpalette-select', 'index': index}, options=options, value=value)
+    ])
 
 
 def EmailInput(id='email-input'):
@@ -164,6 +173,26 @@ def TransparentSwitch(transparent):
     )
 
 
+def VerboseLabelsSwitch(verbose):
+    if verbose:
+        value = [1]
+    else:
+        value = []
+
+    return dbc.FormGroup(
+        [
+            dbc.Checklist(
+                options=[
+                    {"label": "Verbose labels", "value": 1},
+                ],
+                value=value,
+                id="verbose-labels-switch",
+                switch=True,
+            ),
+        ], className='mr-1'
+    )
+
+
 def SuperimposeSwitch(superimpose):
     if superimpose:
         value = [1]
@@ -178,6 +207,26 @@ def SuperimposeSwitch(superimpose):
                 ],
                 value=value,
                 id="superimpose-maps-switch",
+                switch=True,
+            ),
+        ], className='mr-1'
+    )
+
+
+def DistanceMatrixSwitch(make_matrix):
+    if make_matrix:
+        value = [1]
+    else:
+        value = []
+
+    return dbc.FormGroup(
+        [
+            dbc.Checklist(
+                options=[
+                    {"label": "Create heatmap", "value": 1},
+                ],
+                value=value,
+                id="distance-matrix-switch",
                 switch=True,
             ),
         ], className='mr-1'

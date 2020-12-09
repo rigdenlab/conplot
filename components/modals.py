@@ -49,6 +49,16 @@ def InvalidMapSelectionModal():
     ], id='invalid-map-selection-modal', is_open=True)
 
 
+def InvalidSuperposeDistanceMatrixModal():
+    return dbc.Modal([
+        ModalHeader("Invalid Input"),
+        dbc.ModalBody([
+            html.P("""Superposition of heatmaps is not supported yet!""",
+                   style={'text-align': "justify"})
+        ]),
+    ], id='invalid-map-selection-modal', is_open=True)
+
+
 def SequenceAlreadyUploadedModal():
     return dbc.Modal([
         ModalHeader("Sequence already uploaded"),
@@ -147,6 +157,7 @@ def SuccessContactFormModal():
         ),
     ], id='success-contact-form-modal', is_open=True)
 
+
 def SuccessCreateUserModal(username):
     return dbc.Modal([
         ModalHeader(html.H4("Success", className="alert-heading", style={'color': 'green'})),
@@ -155,7 +166,6 @@ def SuccessCreateUserModal(username):
                    style={'text-align': "justify"})
         ),
     ], id='success-contact-form-modal', is_open=True)
-
 
 
 def CustomFormatDescriptionModal():
@@ -485,6 +495,19 @@ def PostgresConnectionErrorModal():
             components.StartNewSessionLink()
         ]),
     ], id='postgres-connection-error-modal', is_open=True, backdrop='static', keyboard=False)
+
+
+def ExampleSessionConnectionErrorModal():
+    return dbc.Modal([
+        ModalHeader("PostgreSQL connection error"),
+        dbc.ModalBody([
+            html.P(['It was impossible to connect with PostgreSQL database in order to get the example session. If '
+                    'you are using ConPlot web services on ', html.I('www.conplot.org'),
+                    ' please report this issue in the "Get in touch" tab. While we fix this, you can download the '
+                    'example data ', dbc.CardLink(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value), "."],
+                   style={'text-align': "justify"}),
+        ]),
+    ], id='example-session-error-modal', is_open=True)
 
 
 def SlackConnectionErrorModal():

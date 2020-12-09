@@ -25,6 +25,10 @@ class WimleyWhiteHydrophobicityScale(Enum):
     K = 1.81
 
 
+def conplot_version():
+    return 'v0.2.4'
+
+
 def get_base_url():
     if 'PRODUCTION_SERVER' in os.environ:
         return '/conplot'
@@ -135,6 +139,18 @@ def get_display_control_card(*args, **kwargs):
     from utils.plot_utils import get_display_control_card
 
     return get_display_control_card(*args, **kwargs)
+
+
+def is_redis_available(*args, **kwargs):
+    from utils.cache_utils import is_redis_available
+
+    return is_redis_available(*args, **kwargs)
+
+
+def get_active_sessions(*args, **kwargs):
+    from utils.cache_utils import get_active_sessions
+
+    return get_active_sessions(*args, **kwargs)
 
 
 def load_figure_json(*args, **kwargs):

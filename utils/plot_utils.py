@@ -15,7 +15,7 @@ DisplayControlSettings = namedtuple('DisplayControlSettings', ('available_tracks
                                                                'transparent', 'track_separation', 'selected_cmaps',
                                                                'available_maps', 'superimpose', 'selected_palettes',
                                                                'seq_length', 'seq_fname', 'alpha', 'cmap_selection',
-                                                               'available_cmaps'))
+                                                               'available_cmaps', 'distance_matrix', 'verbose_labels'))
 
 
 class DefaultTrackLayout(Enum):
@@ -26,13 +26,36 @@ class DefaultTrackLayout(Enum):
     CUSTOM = DatasetReference.CUSTOM.value.encode()
 
 
+class PaletteDefaultLayout(Enum):
+    MEMBRANE_TOPOLOGY = DatasetReference.MEMBRANE_TOPOLOGY.value.encode()
+    SECONDARY_STRUCTURE = DatasetReference.SECONDARY_STRUCTURE.value.encode()
+    DISORDER = DatasetReference.DISORDER.value.encode()
+    CONSERVATION = DatasetReference.CONSERVATION.value.encode()
+    CUSTOM = DatasetReference.CUSTOM.value.encode()
+    HEATMAP = b'heatmap'
+
+
+class DistanceLabels(Enum):
+    BIN_0 = 'd ≤ 4Å'
+    BIN_1 = '4Å < d ≤ 6Å'
+    BIN_2 = '6Å < d ≤ 8Å'
+    BIN_3 = '8Å < d ≤ 10Å'
+    BIN_4 = '10Å < d ≤ 12Å'
+    BIN_5 = '12Å < d ≤ 14Å'
+    BIN_6 = '14Å < d ≤ 16Å'
+    BIN_7 = '16Å < d ≤ 18Å'
+    BIN_8 = '18Å < d ≤ 20Å'
+    BIN_9 = 'd > 20Å'
+
+
 def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, selected_palettes, factor=2,
-                   contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False):
+                   contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False,
+                   distance_matrix=False, verbose_labels=False):
     session = cache.hgetall(session_id)
-    session, display_settings, error = process_args(session, trigger, selected_tracks, cmap_selection,
-                                                    factor, contact_marker_size, track_separation,
-                                                    transparent, selected_palettes, superimpose,
-                                                    track_marker_size)
+    session, display_settings, verbose_labels, error = process_args(session, trigger, selected_tracks, cmap_selection,
+                                                                    factor, contact_marker_size, track_separation,
+                                                                    transparent, selected_palettes, superimpose,
+                                                                    track_marker_size, distance_matrix, verbose_labels)
 
     if error is not None:
         cache_utils.remove_figure(session_id, cache)
@@ -48,16 +71,30 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
             seq_length=display_settings.seq_length, factor=display_settings.factor)
         figure.add_trace(
             create_superimposed_contact_traces(reference, marker_size=display_settings.contact_marker_size,
-                                               color='grey', symbol='circle')
+                                               color='grey', symbol='circle', verbose_labels=verbose_labels)
         )
         figure.add_trace(
             create_superimposed_contact_traces(mismatched, marker_size=display_settings.contact_marker_size,
-                                               color='red', symbol='circle')
+                                               color='red', symbol='circle', verbose_labels=verbose_labels)
         )
         figure.add_trace(
             create_superimposed_contact_traces(matched, marker_size=display_settings.contact_marker_size,
-                                               color='black', symbol='circle')
+                                               color='black', symbol='circle', verbose_labels=verbose_labels)
         )
+
+    elif display_settings.distance_matrix:
+
+        heat = [[0 for x in range(display_settings.seq_length + 1)] for y in range(display_settings.seq_length + 1)]
+        hover = [[None for x in range(display_settings.seq_length + 1)] for y in range(display_settings.seq_length + 1)]
+
+        for idx, fname in enumerate(display_settings.cmap_selection):
+            if fname == '---':
+                continue
+            heat, hover = create_distogram(session[fname.encode()], idx, heat, hover, verbose_labels)
+
+        palette = color_palettes.Heatmap_ColorPalettes.__getattr__(display_settings.selected_palettes[-1]).value
+        figure.add_trace(create_heatmap(hovertext=hover, distances=heat, colorscale=palette))
+
     else:
         for idx, fname in enumerate(display_settings.cmap_selection):
             if fname == '---':
@@ -65,7 +102,7 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
             figure.add_trace(
                 create_contact_trace(cmap=session[fname.encode()], idx=idx, factor=display_settings.factor,
                                      marker_size=display_settings.contact_marker_size,
-                                     seq_length=display_settings.seq_length)
+                                     seq_length=display_settings.seq_length, verbose_labels=verbose_labels)
             )
 
     for idx, fname in enumerate(display_settings.selected_tracks):
@@ -112,7 +149,9 @@ def get_display_control_card(display_settings):
                                          track_separation=display_settings.track_separation,
                                          selected_cmaps=display_settings.cmap_selection,
                                          available_maps=display_settings.available_cmaps,
-                                         selected_palettes=display_settings.selected_palettes)
+                                         selected_palettes=display_settings.selected_palettes,
+                                         distance_matrix=display_settings.distance_matrix,
+                                         verbose_labels=display_settings.verbose_labels)
 
 
 def load_figure_json(figure_json):
@@ -151,7 +190,7 @@ def lookup_input_errors(session):
 
     mismatched = []
     for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        if session[cmap_fname.encode()][-1] == 'PDB':
+        if session[cmap_fname.encode()][-1] == 'PDB' or session[cmap_fname.encode()][-1] == 'DISTO':
             cmap_max_register = max((max(session[cmap_fname.encode()][:-1], key=itemgetter(0))[0],
                                      max(session[cmap_fname.encode()][:-1], key=itemgetter(1))[0]))
         else:
@@ -177,12 +216,12 @@ def lookup_input_errors(session):
 
 
 def process_args(session, trigger, selected_tracks, cmap_selection, factor, contact_marker_size, track_separation,
-                 transparent, selected_palettes, superimpose, track_marker_size):
+                 transparent, selected_palettes, superimpose, track_marker_size, distance_matrix, verbose_labels):
     session = decompress_session(session)
 
     error = lookup_input_errors(session)
     if error is not None:
-        return None, None, error
+        return None, None, None, error
 
     available_tracks, available_cmaps = get_available_data(session)
     seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
@@ -215,9 +254,16 @@ def process_args(session, trigger, selected_tracks, cmap_selection, factor, cont
                                               available_maps=available_cmaps, superimpose=superimpose,
                                               selected_palettes=selected_palettes, axis_range=axis_range,
                                               seq_length=seq_length, seq_fname=seq_fname, alpha=alpha,
-                                              cmap_selection=cmap_selection, available_cmaps=available_cmaps)
+                                              cmap_selection=cmap_selection, available_cmaps=available_cmaps,
+                                              distance_matrix=distance_matrix, verbose_labels=verbose_labels)
 
-    return session, display_settings, error
+    if verbose_labels:
+        fnames = [fname for fname in selected_tracks if fname != '---']
+        verbose_labels = get_verbose_labels(fnames, session[display_settings.seq_fname.encode()], session)
+    else:
+        verbose_labels = None
+
+    return session, display_settings, verbose_labels, error
 
 
 def get_available_data(session):
@@ -285,6 +331,15 @@ def create_figure(axis_range):
     )
 
 
+def create_heatmap(distances, hovertext=None, colorscale='Greys'):
+    return go.Heatmap(
+        z=distances,
+        hovertext=hovertext,
+        colorscale=colorscale,
+        hoverinfo='text' if hovertext is not None else 'none',
+    )
+
+
 def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
     return go.Scatter(
         x=x,
@@ -300,36 +355,98 @@ def create_scatter(x, y, symbol, marker_size, color, hovertext=None):
     )
 
 
-def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2):
+def create_distogram(cmap, idx, distances, hover, verbose_labels=None):
+    if idx == 1:
+        idx_x = 1
+        idx_y = 0
+    else:
+        idx_x = 0
+        idx_y = 1
+
     if cmap[-1] == 'PDB':
+        del cmap[-1]
+
+    elif cmap[-1] == 'DISTO':
+        cmap = cmap[:-1]
+
+        if verbose_labels is not None:
+            hover_template = 'Contact: {} - {} | Distance {} | Confidence: {}<br>{}<br>{}'
+            for contact in cmap:
+                distances[contact[idx_x]][contact[idx_y]] = 9 - contact[3]
+                label = DistanceLabels.__getitem__(('BIN_{}'.format(contact[3]))).value
+                hover_label = hover_template.format(contact[idx_y], contact[idx_x], label, contact[4],
+                                                    verbose_labels[contact[idx_y] - 1],
+                                                    verbose_labels[contact[idx_x] - 1])
+                hover[contact[idx_x]][contact[idx_y]] = hover_label
+        else:
+            hover_template = 'Contact: {} - {} | Distance {} | Confidence: {}'
+            for contact in cmap:
+                distances[contact[idx_x]][contact[idx_y]] = 9 - contact[3]
+                label = DistanceLabels.__getitem__(('BIN_{}'.format(contact[3]))).value
+                hover_label = hover_template.format(contact[idx_y], contact[idx_x], label, contact[4])
+                hover[contact[idx_x]][contact[idx_y]] = hover_label
+
+        return distances, hover
+
+    if verbose_labels is None:
+        hover_template = 'Contact: {} - {} | Confidence: {}'
+        for contact in cmap:
+            distances[contact[idx_x]][contact[idx_y]] = contact[2]
+            hover_label = hover_template.format(contact[idx_y], contact[idx_x], contact[2])
+            hover[contact[idx_x]][contact[idx_y]] = hover_label
+
+    else:
+        hover_template = 'Contact: {} - {} | Confidence: {}<br>{}<br>{}'
+        for contact in cmap:
+            distances[contact[idx_x]][contact[idx_y]] = contact[2]
+            hover_label = hover_template.format(contact[idx_y], contact[idx_x], contact[2],
+                                                verbose_labels[contact[idx_y] - 1], verbose_labels[contact[idx_x] - 1])
+            hover[contact[idx_x]][contact[idx_y]] = hover_label
+
+    return distances, hover
+
+
+def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2, verbose_labels=None):
+    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
         del cmap[-1]
 
     if factor != 0:
         cmap = cmap[:int(round(seq_length / factor, 0))]
 
+    if idx == 1:
+        idx_x = 0
+        idx_y = 1
+    else:
+        idx_x = 1
+        idx_y = 0
+
     res1_list = []
     res2_list = []
-    hover_1 = []
-    hover_2 = []
-    for contact in cmap:
-        res1_list.append(contact[0])
-        res2_list.append(contact[1])
-        hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
-        hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+    hover = []
 
-    if idx == 1:
-        return create_scatter(x=res1_list, y=res2_list, symbol='circle', hovertext=hover_1, marker_size=marker_size,
-                              color='black')
-
+    if verbose_labels is not None:
+        hover_template = 'Contact: %s - %s | Confidence: %s<br>%s<br>%s'
+        for contact in cmap:
+            res1_list.append(contact[idx_x])
+            res2_list.append(contact[idx_y])
+            res_x_label = verbose_labels[contact[idx_x] - 1]
+            res_y_label = verbose_labels[contact[idx_y] - 1]
+            hover.append(hover_template % (contact[idx_x], contact[idx_y], contact[2], res_x_label, res_y_label))
     else:
-        return create_scatter(x=res2_list, y=res1_list, symbol='circle', hovertext=hover_2, marker_size=marker_size,
-                              color='black')
+        hover_template = 'Contact: %s - %s | Confidence: %s'
+        for contact in cmap:
+            res1_list.append(contact[idx_x])
+            res2_list.append(contact[idx_y])
+            hover.append(hover_template % (contact[idx_x], contact[idx_y], contact[2]))
+
+    return create_scatter(x=res1_list, y=res2_list, symbol='circle', hovertext=hover,
+                          marker_size=marker_size, color='black')
 
 
 def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
     if factor != 0:
         secondary_cmap = secondary_cmap[:int(round(seq_length / factor, 0))]
-        if reference_cmap[-1] == 'PDB':
+        if reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
             del reference_cmap[-1]
         else:
             reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
@@ -354,17 +471,28 @@ def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, 
     return reference, matched, mismatched
 
 
-def create_superimposed_contact_traces(contacts, marker_size=5, color='black', symbol='circle'):
+def create_superimposed_contact_traces(contacts, marker_size=5, color='black', symbol='circle', verbose_labels=None):
     res1_list = []
     res2_list = []
     hover_1 = []
     hover_2 = []
 
-    for contact in contacts:
-        res1_list.append(contact[0])
-        res2_list.append(contact[1])
-        hover_1.append('Contact: %s - %s | Confidence: %s' % (contact[0], contact[1], contact[2]))
-        hover_2.append('Contact: %s - %s | Confidence: %s' % (contact[1], contact[0], contact[2]))
+    if verbose_labels is not None:
+        hover_template = 'Contact: %s - %s | Confidence: %s<br>%s<br>%s'
+        for contact in contacts:
+            res1_list.append(contact[0])
+            res2_list.append(contact[1])
+            res_1_label = verbose_labels[contact[0] - 1]
+            res_2_label = verbose_labels[contact[1] - 1]
+            hover_1.append(hover_template % (contact[0], contact[1], contact[2], res_1_label, res_2_label))
+            hover_2.append(hover_template % (contact[1], contact[0], contact[2], res_2_label, res_1_label))
+    else:
+        hover_template = 'Contact: %s - %s | Confidence: %s'
+        for contact in contacts:
+            res1_list.append(contact[0])
+            res2_list.append(contact[1])
+            hover_1.append(hover_template % (contact[0], contact[1], contact[2]))
+            hover_2.append(hover_template % (contact[1], contact[0], contact[2]))
 
     x = res1_list + res2_list
     y = res2_list + res1_list
@@ -443,3 +571,63 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
         traces.append(create_scatter(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
+
+
+def get_verbose_labels(fnames, sequence, session):
+    states_dict = {
+        DatasetReference.MEMBRANE_TOPOLOGY.value: {
+            1: 'INSIDE',
+            2: 'OUTSIDE',
+            3: 'INSERTED'
+        },
+        DatasetReference.CONSERVATION.value: {
+            1: 'VARIABLE_1',
+            2: 'VARIABLE_2',
+            3: 'VARIABLE_3',
+            4: 'AVERAGE_4',
+            5: 'AVERAGE_5',
+            6: 'AVERAGE_6',
+            7: 'CONSERVED_7',
+            8: 'CONSERVED_8',
+            9: 'CONSERVED_9'
+        },
+        DatasetReference.CUSTOM.value: {
+            1: 'CUSTOM_1',
+            2: 'CUSTOM_2',
+            3: 'CUSTOM_3',
+            4: 'CUSTOM_4',
+            5: 'CUSTOM_5',
+            6: 'CUSTOM_6',
+            7: 'CUSTOM_7',
+            8: 'CUSTOM_8',
+            9: 'CUSTOM_9',
+            10: 'CUSTOM_10',
+            11: 'CUSTOM_11',
+            'NAN': 'CUSTOM_NAN'
+        },
+        DatasetReference.DISORDER.value: {
+            1: 'DISORDER',
+            2: 'ORDER'
+        },
+        DatasetReference.SECONDARY_STRUCTURE.value: {
+            1: 'HELIX',
+            2: 'COIL',
+            3: 'SHEET'
+        }
+    }
+
+    all_predictions = []
+    for fname in set(fnames):
+        dataset = get_dataset(session, fname)
+        dataset_dict = states_dict[dataset]
+        prediction = [dataset_dict[x] for x in session[fname.encode()]]
+        all_predictions.append(prediction)
+
+    labels = []
+    for idx, residue in enumerate(sequence, 1):
+        current_label = 'Residue {} ({})'.format(idx, residue)
+        for prediction in all_predictions:
+            current_label += ' | {}'.format(prediction[idx - 1])
+        labels.append(current_label)
+
+    return labels

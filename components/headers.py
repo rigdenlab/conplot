@@ -28,8 +28,10 @@ def AdditionalInputHeader():
                    children=HelpToolTip(id='additional-input',
                                         text="Additional tracks ",
                                         msg='Here you can upload files with the data for additional tracks of '
-                                            'information to be displayed on your plot. Remember that you will need '
-                                            'to select a track format before attempting to upload a file!'))
+                                            'information to be displayed on your plot. You can only upload one file '
+                                            'at a time but you can do this multiple times to add multiple tracks to '
+                                            'the plot. Remember that you will need to select a track file format '
+                                            'before attempting to upload a file!'))
 
 
 def StoreSessionHeader():

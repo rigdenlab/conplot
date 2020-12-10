@@ -92,8 +92,8 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
                 continue
             heat, hover = create_distogram(session[fname.encode()], idx, heat, hover, verbose_labels)
 
-        palette = color_palettes.Heatmap_ColorPalettes.__getattr__(display_settings.selected_palettes[-1]).value
-        figure.add_trace(create_heatmap(hovertext=hover, distances=heat, colorscale=palette))
+        colorscale = color_palettes.get_heatmap_colorscale(display_settings.selected_palettes[-1])
+        figure.add_trace(create_heatmap(hovertext=hover, distances=heat, colorscale=colorscale))
 
     else:
         for idx, fname in enumerate(display_settings.cmap_selection):
@@ -331,7 +331,7 @@ def create_figure(axis_range):
     )
 
 
-def create_heatmap(distances, hovertext=None, colorscale='Greys'):
+def create_heatmap(distances, colorscale, hovertext=None):
     return go.Heatmap(
         z=distances,
         hovertext=hovertext,

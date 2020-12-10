@@ -15,6 +15,7 @@ def Body(cache):
             components.PaletteModal('disorder', 3),
             components.PaletteModal('membranetopology', 4),
             components.PaletteModal('secondarystructure', 5),
+            components.PaletteModal('heatmap', 6),
             components.GdprPolicyModal(),
             components.TutorialOneModal(),
             components.TutorialTwoModal(),

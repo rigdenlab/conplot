@@ -466,5 +466,6 @@ def PaletteList():
             PaletteItem(idx=3, name='Disorder'),
             PaletteItem(idx=4, name='Membrane Topology'),
             PaletteItem(idx=5, name='Secondary Structure'),
+            PaletteItem(idx=6, name='Heatmap')
         ], style={'width': '75%'}
         ), justify='center', align='center')

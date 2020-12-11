@@ -42,7 +42,7 @@ class UrlIndex(Enum):
     HOME = '{}/home'.format(get_base_url())
     PLOT = '{}/plot'.format(get_base_url())
     CONTACT = '{}/contact'.format(get_base_url())
-    RIGDEN = '{}/ridgen-group'.format(get_base_url())
+    RIGDEN = '{}/rigden-group'.format(get_base_url())
     HELP = '{}/help'.format(get_base_url())
     USERS_PORTAL = '{}/users-portal'.format(get_base_url())
     CREATE_USER = '{}/new-user'.format(get_base_url())
@@ -60,6 +60,9 @@ class UrlIndex(Enum):
     TUTORIAL1_FIG5 = '{}/static/Tutorial1_Figure5.png'.format(get_base_url())
     TUTORIAL1_FIG6 = '{}/static/Tutorial1_Figure6.png'.format(get_base_url())
     TUTORIAL1_FIG7 = '{}/static/Tutorial1_Figure7.png'.format(get_base_url())
+    TUTORIAL1_FIG8 = '{}/static/Tutorial1_Figure8.png'.format(get_base_url())
+    TUTORIAL1_FIG9 = '{}/static/Tutorial1_Figure9.png'.format(get_base_url())
+    TUTORIAL1_FIG10 = '{}/static/Tutorial1_Figure10.png'.format(get_base_url())
     TUTORIAL2_FIG1 = '{}/static/Tutorial2_Figure1.png'.format(get_base_url())
     TUTORIAL2_FIG2 = '{}/static/Tutorial2_Figure2.png'.format(get_base_url())
     TUTORIAL2_FIG3 = '{}/static/Tutorial2_Figure3.png'.format(get_base_url())
@@ -70,6 +73,8 @@ class UrlIndex(Enum):
     TUTORIAL3_FIG5 = '{}/static/Tutorial3_Figure5.png'.format(get_base_url())
     TUTORIAL3_FIG6 = '{}/static/Tutorial3_Figure6.png'.format(get_base_url())
     TUTORIAL3_FIG7 = '{}/static/Tutorial3_Figure7.png'.format(get_base_url())
+    TUTORIAL4_FIG1 = '{}/static/Tutorial4_Figure1.png'.format(get_base_url())
+    TUTORIAL4_FIG2 = '{}/static/Tutorial4_Figure2.png'.format(get_base_url())
     CONPLOT_LOGO = '{}/assets/conplot_logo.png'.format(get_base_url())
     SWAMP_LOGO = '{}/assets/swamp_logo.png'.format(get_base_url())
     SIMBAD_LOGO = '{}/assets/simbad_logo.png'.format(get_base_url())
@@ -86,6 +91,7 @@ class UrlIndex(Enum):
     EXAMPLE_DATA = 'https://github.com/rigdenlab/conplot-examples/archive/master.zip'
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
     CCP4_ONLINE = 'https://www.ccp4.ac.uk/'
+    CASP14_RRFORMAT = 'https://predictioncenter.org/casp14/index.cgi?page=format'
     TOPCONS_WEB = 'http://topcons.cbr.su.se/'
     TOPCONS_CITATION = 'https://dx.doi.org/10.1093%2Fnar%2Fgkv485'
     PSIPRED_WEB = 'http://bioinf.cs.ucl.ac.uk/psipred/'

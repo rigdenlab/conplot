@@ -82,7 +82,7 @@ class ParserFormats(Enum):
     CASPRR_MODE_2 = DistogramParser
 
 
-class ContactFormats(Enum):
+class ContactInformationFormats(Enum):
     PSICOV = 0
     METAPSICOV = 1
     NEBCON = 2
@@ -104,6 +104,36 @@ class ContactFormats(Enum):
     MAPALIGN = 18
     ALEIGEN = 19
     PDB = 20
+
+
+class ContactMapFormats(Enum):
+    PSICOV = 0
+    METAPSICOV = 1
+    NEBCON = 2
+    CASPRR_MODE_1 = 3
+    GREMLIN = 5
+    EPCMAP = 6
+    EVFOLD = 7
+    FREECONTACT = 8
+    PLMDCA = 9
+    PCONS = 10
+    FLIB = 11
+    SAINT2 = 12
+    BCLCONTCATS = 13
+    BBCONTACTS = 14
+    COMSAT = 15
+    CCMPRED = 16
+    COLSTATS = 17
+    MAPALIGN = 18
+    ALEIGEN = 19
+
+
+class StructuralInformationFormats(Enum):
+    PDB = 1
+
+
+class DistanceInformationFormats(Enum):
+    CASPRR_MODE_2 = 1
 
 
 class MembraneStates(Enum):

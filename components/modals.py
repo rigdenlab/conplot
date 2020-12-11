@@ -264,8 +264,8 @@ def TutorialOneModal():
             html.Br(),
             "This banners represent the space allocated for the uploaded file in ConPlot's memory, if you wish to "
             'remove any of them simply click on the cross on the right side of the banner to remove them from the '
-            'memory -but do not do this now. As you have already uploaded the input required to create a minimal contact '
-            'map plot, if you click on ', html.I('Generate Plot'),
+            'memory -but do not do this now. As you have already uploaded the input required to create a minimal '
+            'contact map plot, if you click on ', html.I('Generate Plot'),
             ', you will generate a contact map plot without any additional information, as shown in this figure:',
             html.Img(src=UrlIndex.TUTORIAL1_FIG3.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
@@ -317,6 +317,31 @@ def TutorialOneModal():
             'plot after uploading more data to ConPlot. Since we did not upload more data, we are just adjusting the '
             'way the plot looks, we click on ', html.I('Adjust Plot'), '.',
             html.Img(src=UrlIndex.TUTORIAL1_FIG7.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'You have now created a contact map that integrates several sources of information on the diagonal, '
+            'allowing easy visual cross-referencing of multiple sources. However, you may have noticed that sometimes '
+            'it can result difficult to map a specific contact with its corresponding annotations on the diagonal. '
+            'To get around this, you can try activating the ', html.I("Toggle spike lines"),
+            ' on the mode bar at the top right corner of the plot:',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG8.value, height='100vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'When this button is active, horizontal and vertical spike lines appear when hovering on top of a contact, '
+            'allowing you to map it to its position in the diagonal. Alternatively, the tooltip text that appears when '
+            'hovering on top of a contact can be changed to display all the additional information available for the '
+            'specific residues involved on each contact by activating the ', html.I("Verbose labels"),
+            ' switch at the ', html.I('Display Control Panel'), ' on the right of the plot.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG9.value, height='400vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'You may have also noticed the ', html.I('Create heatmap'), ' switch right on top of the ',
+            html.I("Verbose labels"),
+            ' one. By activating this switch, users can choose to display their contact information as a heatmap where '
+            'all the contacts present in the uploaded file are displayed coloured according to the confidence assigned '
+            'to each specific contact. This mode becomes specially relevant when visualising residue-residue distance '
+            'predictions, as you will see in ', html.I('Tutorial 4. Residue-Residue distance predictions'), '.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG10.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'That will be all for this tutorial, now you are able to create a plot that integrates several '
@@ -461,6 +486,58 @@ def TutorialThreeModal():
             '-but only the session owner can make changes on the session.', html.Br(), html.Br()
         ])
     ], id={'type': 'tutorial-modal', 'index': 3}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
+def TutorialFourModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 4: Residue-Residue Distance Predictions'),
+        dbc.ModalBody([
+            "In this tutorial, you will learn how to use ConPlot's heatmap mode, which allows you to visualise data "
+            "derived from residue-residue distance predictions. These files contain information about real value "
+            "distances predicted between residue pairs, and are becoming increasingly popular in the field of "
+            "structural bioinformatics. We will be using the same data used in ",
+            html.I("Tutorial 1. Creating your first plot"),
+            ", which corresponds with Uniprot entry ", html.I("W9DY28"),
+            ", a putative membrane domain. Remember that tutorial data can be downloaded ",
+            html.A(html.U('here'), href=UrlIndex.EXAMPLE_DATA.value),
+            ". First, let's start by uploading the following data:",
+            html.Ul([
+                html.Li(['Click on ', html.I('UPLOAD SEQUENCE'),
+                         ' to upload a FASTA file with the sequence of the protein of interest, '
+                         'in this case that will be ', html.I('W9DY28.FASTA')]),
+                html.Li(['Click on the ', html.I('Format'),
+                         ' dropdown menu highlighted in red to select the format of the contact information file that '
+                         'you will be uploading. In this case, that will be ', html.I('CASPRR_MODE2'),
+                         ' format. This is the format used by ConPlot to upload residue-residue distance prediction '
+                         'files, a description of this format can be found ',
+                         html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value), '.']),
+                html.Li(['Click on ', html.I('UPLOAD CONTACT'),
+                         ' to upload a contact prediction file, in this case that will be the file ',
+                         html.I('W9DY28.CASPRR_2')])
+            ]),
+            'You can now optionally upload the same prediction files that wre used on ',
+            html.I('Tutorial 1.Creating your first plot'),
+            ' if you wish to have the same data displayed on the diagonal this time, and then and click on ',
+            html.I('Generate Plot'),
+            ' to create a plot. As you can see, by default ConPlot will generate a contact map based on the '
+            'information present on the uploaded file. However, we are only looking at a small fraction of the data '
+            'contained in the ', html.I('CASPRR MODE2'),
+            ' which also informs about predicted real-value residue-residue distances. To display this information, we '
+            'can turn on the ', html.I('Create heatmap'), ' switch on the ', html.I('Display Control'),
+            ' panel and then click on the ', html.I('Adjust plot'), ' button.',
+            html.Img(src=UrlIndex.TUTORIAL4_FIG1.value, height='400vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'As you can see, a distogram with the residue-residue distance prediction is displayed in place of the '
+            'default contact map. In these representations, contacts are coloured according to the predicted distance '
+            'of each specific pair of residues. You may also notice that the predicted distance between residue pairs '
+            'has been added to the tooltip text that appears when you hover on top of a given contact.',
+            html.Img(src=UrlIndex.TUTORIAL4_FIG2.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+        ])
+    ], id={'type': 'tutorial-modal', 'index': 4}, is_open=False, size='xl', scrollable=True, centered=True,
         autoFocus=True)
 
 

@@ -93,6 +93,7 @@ def TutorialList():
             TutorialItem(idx=1, name='Creating your first plot'),
             TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
+            TutorialItem(idx=4, name='Residue-Residue distance predictions')
         ], style={'width': '75%'}
         ), justify='center', align='center')
 
@@ -222,7 +223,22 @@ def AdjustPlotHelpList():
                               'reference in grey -absent-, and those that only appear in the '
                               'secondary map in red -mismatch-. Please note that you can only '
                               'use this mode if you select two different contact map files in ',
-                              html.I('Map A'), ' and ', html.I('Map B'), ' selectors.'])
+                              html.I('Map A'), ' and ', html.I('Map B'), ' selectors.']),
+                     html.Li(['Create Heatmap Switch: If this switch is activated, a heatmap will be created with the '
+                              'provided residue contact information. By default, if a contact map is uploaded, the '
+                              'intensity of the colours in this heatmap will correspond with the confidence of each '
+                              'contact. Alternatively, if a residue-residue distance prediction file has been uploaded '
+                              '(', html.I('CASPRR_MODE2'),
+                              ' format), the heatmap will correspond with the predicted distances for '
+                              'each residue pair oin this file. Please note that when this mode is active, the ',
+                              html.I('L/N'), ' selector and the ', html.I('Size'),
+                              ' selector will be disabled. You can read more about how to visualise residue-residue '
+                              'distance predictions at ',
+                              html.I('Tutorial 4. Residue-Residue distance predictions'), '.']),
+                     html.Li('Verbose Labels Switch: If activated, the tooltip text that appears when users hover on '
+                             'top of contacts includes all the additional information available for the residues '
+                             'involved on each specific contact, in addition to contact information that '
+                             'would normally be displayed.')
                  ])],
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['Section 2: Adjust additional tracks. In this section you will find selectors '
@@ -359,7 +375,8 @@ def PanelLayoutHelpList():
                  'displayed on each track...etc. Once you have tweaked these settings, click '
                  'on ',
                  html.I('Adjust Plot'),
-                 ' to refresh the plot with the adjusted parameters.'],
+                 ' to refresh the plot with the adjusted parameters. Changes you make on these settings will not be '
+                 'displayed on the plot until you click this button.'],
                 style={"font-size": "110%", 'text-align': "justify"}),
     ])
 
@@ -374,18 +391,27 @@ def MandatoryInputHelpList():
                 'need to delete the one you uploaded already first.',
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['Contact information file. This file informs about which residue pairs are in close '
-                 'contact in the three-dimensional structure of the protein of interest. There '
-                 'are many formats used for such files, but ConPlot is able to parse the '
-                 'most common ones. If you wish to upload a contact map file in a format not supported '
-                 'by ConPlot, we suggest you take a look at ',
-                 html.A(html.U('ConKit'), href=UrlIndex.CONKIT_READDOCS.value),
-                 ', a python library able to read and convert most contact formats. This tool '
-                 'will enable you to convert the file of interest into a format ConPlot is '
-                 'able to read. Additionally, it is possible to upload PDB files using this panel, '
-                 'which ConPlot will parse in order to compute residue proximity information '
-                 'and generate a contact map derived from the structure (first model, first chain).'],
-                style={"font-size": "110%", 'text-align': "justify"})
-    ])
+                 'contact in the three-dimensional structure of the protein of interest. There are three main '
+                 'types that can be uploaded to ConPlot: ',
+                 html.Ul([
+                     html.Li(['Residue Distance Prediction: these files contain information about real value distances '
+                              'between residue pairs, and are rapidly replacing contact prediction maps in protein '
+                              'structure prediction pipelines. ConPlot currently supports CASP RR MODE 2 format, the '
+                              'specifications for this format can be found ',
+                              html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value), '.']),
+                     html.Li(['Contact Maps: There are many formats used for such files, but ConPlot is able to parse '
+                              'the most common ones. If you wish to upload a contact map file in a format not '
+                              'supported by ConPlot, we suggest you take a look at ',
+                              html.A(html.U('ConKit'), href=UrlIndex.CONKIT_READDOCS.value),
+                              ', a python library able to read and convert most contact formats. This tool will enable '
+                              'you to convert the file of interest into a format ConPlot is able to read. ',
+                              ]),
+                     html.Li('Structural Information: PDB files can be uploaded to ConPlot, which will be parsed'
+                             'in order to compute residue proximity information and generate a contact map derived '
+                             'from the structure (only first model, first chain).')
+                 ])
+                 ])
+    ], style={"font-size": "110%", 'text-align': "justify"})
 
 
 def GdprRightsList():
@@ -466,5 +492,6 @@ def PaletteList():
             PaletteItem(idx=3, name='Disorder'),
             PaletteItem(idx=4, name='Membrane Topology'),
             PaletteItem(idx=5, name='Secondary Structure'),
+            PaletteItem(idx=6, name='Heatmap')
         ], style={'width': '75%'}
         ), justify='center', align='center')

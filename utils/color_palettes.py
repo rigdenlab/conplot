@@ -148,11 +148,67 @@ class Custom_ColorPalettes(Enum):
     PALETTE_2 = Custom_GrayColorPalette
 
 
+class Heatmap_GreyColorPalette(Enum):
+    BIN_10 = 'rgb(255,255,255)'
+    BIN_9 = 'rgb(229,229,229)'
+    BIN_8 = 'rgb(204,204,204)'
+    BIN_7 = 'rgb(179,179,179)'
+    BIN_6 = 'rgb(153,153,153)'
+    BIN_5 = 'rgb(127,127,127)'
+    BIN_4 = 'rgb(102,102,102)'
+    BIN_3 = 'rgb(77,77,77)'
+    BIN_2 = 'rgb(51,51,51)'
+    BIN_1 = 'rgb(25,25,25)'
+    BIN_0 = 'rgb(0,0,0)'
+
+
+class Heatmap_Viridis(Enum):
+    BIN_10 = sequential.Viridis[0]
+    BIN_9 = sequential.Viridis[0]
+    BIN_8 = sequential.Viridis[1]
+    BIN_7 = sequential.Viridis[2]
+    BIN_6 = sequential.Viridis[3]
+    BIN_5 = sequential.Viridis[4]
+    BIN_4 = sequential.Viridis[5]
+    BIN_3 = sequential.Viridis[6]
+    BIN_2 = sequential.Viridis[7]
+    BIN_1 = sequential.Viridis[8]
+    BIN_0 = sequential.Viridis[9]
+
+
+class Heatmap_BuRd(Enum):
+    BIN_10 = diverging.RdYlBu[10]
+    BIN_9 = diverging.RdYlBu[9]
+    BIN_8 = diverging.RdYlBu[8]
+    BIN_7 = diverging.RdYlBu[7]
+    BIN_6 = diverging.RdYlBu[6]
+    BIN_5 = diverging.RdYlBu[5]
+    BIN_4 = diverging.RdYlBu[4]
+    BIN_3 = diverging.RdYlBu[3]
+    BIN_2 = diverging.RdYlBu[2]
+    BIN_1 = diverging.RdYlBu[1]
+    BIN_0 = diverging.RdYlBu[0]
+
+
+class Heatmap_Inferno(Enum):
+    BIN_10 = sequential.Inferno[0]
+    BIN_9 = sequential.Inferno[0]
+    BIN_8 = sequential.Inferno[1]
+    BIN_7 = sequential.Inferno[2]
+    BIN_6 = sequential.Inferno[3]
+    BIN_5 = sequential.Inferno[4]
+    BIN_4 = sequential.Inferno[5]
+    BIN_3 = sequential.Inferno[6]
+    BIN_2 = sequential.Inferno[7]
+    BIN_1 = sequential.Inferno[8]
+    BIN_0 = sequential.Inferno[9]
+
+
 class Heatmap_ColorPalettes(Enum):
-    PALETTE_1 = 'Greys'
-    PALETTE_2 = 'viridis'
-    PALETTE_3 = 'balance'
-    PALETTE_4 = 'Inferno'
+    PALETTE_1 = Heatmap_GreyColorPalette
+    PALETTE_2 = Heatmap_Viridis
+    PALETTE_3 = Heatmap_BuRd
+    PALETTE_4 = Heatmap_Inferno
 
 
 class DatasetColorPalettes(Enum):
@@ -162,3 +218,20 @@ class DatasetColorPalettes(Enum):
     conservation = Conservation_ColorPalettes
     custom = Custom_ColorPalettes
     heatmap = Heatmap_ColorPalettes
+
+
+def get_heatmap_colorscale(selected_palette):
+    palette = Heatmap_ColorPalettes.__getattr__(selected_palette).value
+    return [
+        (0, palette.__getitem__('BIN_10').value),
+        (.1, palette.__getitem__('BIN_9').value),
+        (.2, palette.__getitem__('BIN_8').value),
+        (.3, palette.__getitem__('BIN_7').value),
+        (.4, palette.__getitem__('BIN_6').value),
+        (.5, palette.__getitem__('BIN_5').value),
+        (.6, palette.__getitem__('BIN_4').value),
+        (.7, palette.__getitem__('BIN_3').value),
+        (.8, palette.__getitem__('BIN_2').value),
+        (.9, palette.__getitem__('BIN_1').value),
+        (1, palette.__getitem__('BIN_0').value)
+    ]

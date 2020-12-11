@@ -1,15 +1,25 @@
 import dash_bootstrap_components as dbc
 import dash_html_components as html
 from loaders import AdditionalDatasetReference
-from parsers import ContactFormats
+from parsers import ContactMapFormats, StructuralInformationFormats, DistanceInformationFormats
 from components import EmailIssueReference, UserReadableTrackNames
 from utils.plot_utils import PaletteDefaultLayout
 from utils import UrlIndex
 
 
 def ContactFormatSelector():
-    format_list = sorted([{"label": map_format, "value": map_format} for map_format in
-                          ContactFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+    format_list = [{'label': '--- Structural Information ---', 'value': 'Structural_Separator', 'disabled': True}]
+    format_list += sorted([{"label": map_format, "value": map_format} for map_format in
+                           StructuralInformationFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+
+    format_list.append({'label': '--- Residue Distance ---', 'value': 'Distance_Separator', 'disabled': True})
+    format_list += sorted([{"label": map_format, "value": map_format} for map_format in
+                           DistanceInformationFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+
+    format_list.append({'label': '--- Contact Map ---', 'value': 'ContactMap_Separator', 'disabled': True})
+    format_list += sorted([{"label": map_format, "value": map_format} for map_format in
+                          ContactMapFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+
     return dbc.InputGroup(
         [
             dbc.Select(

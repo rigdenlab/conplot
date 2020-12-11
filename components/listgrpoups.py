@@ -414,7 +414,6 @@ def MandatoryInputHelpList():
     ], style={"font-size": "110%", 'text-align': "justify"})
 
 
-
 def GdprRightsList():
     return html.Ul([
         html.Li('The right of transparency and modalities. The privacy policy should be clear and '

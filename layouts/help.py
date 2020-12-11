@@ -181,7 +181,7 @@ def Body(cache):
                                                     ' button before being able to choose it in the dropdown menu.']),
                                            html.Li(['You may notice that when you zoom into a contact map, the contact '
                                                     'markers retain their size. There are two ways you can get around '
-                                                    'this, we recommend using the ', html.I('Heatmap mode'),
+                                                    'this, we recommend using the ', html.I('Create heatmap'),
                                                     ' to create a heatmap where contact markers increase in size when '
                                                     'you zoom in. Alternatively, you can also change the contact '
                                                     'marker size with the ', html.I("Size selector"),

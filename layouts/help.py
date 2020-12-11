@@ -20,6 +20,7 @@ def Body(cache):
             components.TutorialOneModal(),
             components.TutorialTwoModal(),
             components.TutorialThreeModal(),
+            components.TutorialFourModal(),
             components.CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([
@@ -95,10 +96,10 @@ def Body(cache):
                                     html.Li(['You can repeat the process of uploading a residue contact prediction '
                                              'file using the ', html.I('Upload Contact'),
                                              ' as many times as you wish in order to upload multiple contact maps.'])
-                                         ])
+                                ])
                             ],
-                                      style={'text-align': "justify"},
-                                      color='info'),
+                                style={'text-align': "justify"},
+                                color='info'),
                             dbc.Alert('WARNING: It is important that the numbering used in all the uploaded contact '
                                       'map files matches the sequence of residues present in the '
                                       'provided FASTA file. If this numbering does not match, this could result in '
@@ -178,6 +179,18 @@ def Body(cache):
                                                     'not listed on the track selection layout. You may need to '
                                                     'click on the ', html.I('Generate Plot'),
                                                     ' button before being able to choose it in the dropdown menu.']),
+                                           html.Li(['You may notice that when you zoom into a contact map, the contact '
+                                                    'markers retain their size. There are two ways you can get around '
+                                                    'this, we recommend using the ', html.I('Heatmap mode'),
+                                                    ' to create a heatmap where contact markers increase in size when '
+                                                    'you zoom in. Alternatively, you can also change the contact '
+                                                    'marker size with the ', html.I("Size selector"),
+                                                    ' and click on ', html.I("Adjust Plot"),
+                                                    ' and then zoom-in. This can be done repeatedly until the desired '
+                                                    'size is chosen.']),
+                                           html.Li(['Sometimes it is difficult to map a specific contact with its '
+                                                    'annotations at the diagonal. Try turning on the ',
+                                                    html.I('Verbose labels'), ' switch.']),
                                            html.Li(['If you have just created a plot with the ',
                                                     html.I('Generate Plot'),
                                                     ' button and the diagonal tracks overlap with each other, try '

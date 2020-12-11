@@ -480,6 +480,16 @@ def TutorialThreeModal():
         autoFocus=True)
 
 
+def TutorialFourModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 4: Residue-Residue Distance Predictions'),
+        dbc.ModalBody([
+            'Tutorial goes here'
+        ])
+    ], id={'type': 'tutorial-modal', 'index': 4}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
 def RedisConnectionErrorModal():
     return dbc.Modal([
         ModalHeader("Redis connection error"),

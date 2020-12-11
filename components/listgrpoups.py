@@ -93,6 +93,7 @@ def TutorialList():
             TutorialItem(idx=1, name='Creating your first plot'),
             TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
+            TutorialItem(idx=4, name='Residue-Residue distance predictions')
         ], style={'width': '75%'}
         ), justify='center', align='center')
 
@@ -223,6 +224,17 @@ def AdjustPlotHelpList():
                               'secondary map in red -mismatch-. Please note that you can only '
                               'use this mode if you select two different contact map files in ',
                               html.I('Map A'), ' and ', html.I('Map B'), ' selectors.']),
+                     html.Li(['Create Heatmap Switch: If this switch is activated, a heatmap will be created with the '
+                              'provided residue contact information. By default, if a contact map is uploaded, the '
+                              'intensity of the colours in this heatmap will correspond with the confidence of each '
+                              'contact. Alternatively, if a residue-residue distance prediction file has been uploaded '
+                              '(', html.I('CASPRR_MODE2'),
+                              ' format), the heatmap will correspond with the predicted distances for '
+                              'each residue pair oin this file. Please note that when this mode is active, the ',
+                              html.I('L/N'), ' selector and the ', html.I('Size'),
+                              ' selector will be disabled. You can read more about how to visualise residue-residue '
+                              'distance predictions at ',
+                              html.I('Tutorial 4. Residue-Residue distance predictions'), '.']),
                      html.Li('Verbose Labels Switch: If activated, the tooltip text that appears when users hover on '
                              'top of contacts includes all the additional information available for the residues '
                              'involved on each specific contact, in addition to contact information that '

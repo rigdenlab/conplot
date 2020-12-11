@@ -391,18 +391,28 @@ def MandatoryInputHelpList():
                 'need to delete the one you uploaded already first.',
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['Contact information file. This file informs about which residue pairs are in close '
-                 'contact in the three-dimensional structure of the protein of interest. There '
-                 'are many formats used for such files, but ConPlot is able to parse the '
-                 'most common ones. If you wish to upload a contact map file in a format not supported '
-                 'by ConPlot, we suggest you take a look at ',
-                 html.A(html.U('ConKit'), href=UrlIndex.CONKIT_READDOCS.value),
-                 ', a python library able to read and convert most contact formats. This tool '
-                 'will enable you to convert the file of interest into a format ConPlot is '
-                 'able to read. Additionally, it is possible to upload PDB files using this panel, '
-                 'which ConPlot will parse in order to compute residue proximity information '
-                 'and generate a contact map derived from the structure (first model, first chain).'],
-                style={"font-size": "110%", 'text-align': "justify"})
-    ])
+                 'contact in the three-dimensional structure of the protein of interest. There are three main '
+                 'types that can be uploaded to ConPlot: ',
+                 html.Ul([
+                     html.Li(['Residue Distance Prediction: these files contain information about real value distances '
+                              'between residue pairs, and are rapidly replacing contact prediction maps in protein '
+                              'structure prediction pipelines. ConPlot currently supports CASP RR MODE 2 format, the '
+                              'specifications for this format can be found ',
+                              html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value), '.']),
+                     html.Li(['Contact Maps: There are many formats used for such files, but ConPlot is able to parse '
+                              'the most common ones. If you wish to upload a contact map file in a format not '
+                              'supported by ConPlot, we suggest you take a look at ',
+                              html.A(html.U('ConKit'), href=UrlIndex.CONKIT_READDOCS.value),
+                              ', a python library able to read and convert most contact formats. This tool will enable '
+                              'you to convert the file of interest into a format ConPlot is able to read. ',
+                              ]),
+                     html.Li('Structural Information: PDB files can be uploaded to ConPlot, which will be parsed'
+                             'in order to compute residue proximity information and generate a contact map derived '
+                             'from the structure (only first model, first chain).')
+                 ])
+                 ])
+    ], style={"font-size": "110%", 'text-align': "justify"})
+
 
 
 def GdprRightsList():

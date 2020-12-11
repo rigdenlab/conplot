@@ -88,6 +88,7 @@ class UrlIndex(Enum):
     EXAMPLE_DATA = 'https://github.com/rigdenlab/conplot-examples/archive/master.zip'
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
     CCP4_ONLINE = 'https://www.ccp4.ac.uk/'
+    CASP14_RRFORMAT = 'https://predictioncenter.org/casp14/index.cgi?page=format'
     TOPCONS_WEB = 'http://topcons.cbr.su.se/'
     TOPCONS_CITATION = 'https://dx.doi.org/10.1093%2Fnar%2Fgkv485'
     PSIPRED_WEB = 'http://bioinf.cs.ucl.ac.uk/psipred/'

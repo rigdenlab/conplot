@@ -60,6 +60,8 @@ class UrlIndex(Enum):
     TUTORIAL1_FIG5 = '{}/static/Tutorial1_Figure5.png'.format(get_base_url())
     TUTORIAL1_FIG6 = '{}/static/Tutorial1_Figure6.png'.format(get_base_url())
     TUTORIAL1_FIG7 = '{}/static/Tutorial1_Figure7.png'.format(get_base_url())
+    TUTORIAL1_FIG8 = '{}/static/Tutorial1_Figure8.png'.format(get_base_url())
+    TUTORIAL1_FIG9 = '{}/static/Tutorial1_Figure9.png'.format(get_base_url())
     TUTORIAL2_FIG1 = '{}/static/Tutorial2_Figure1.png'.format(get_base_url())
     TUTORIAL2_FIG2 = '{}/static/Tutorial2_Figure2.png'.format(get_base_url())
     TUTORIAL2_FIG3 = '{}/static/Tutorial2_Figure3.png'.format(get_base_url())

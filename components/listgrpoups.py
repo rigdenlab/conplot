@@ -222,7 +222,11 @@ def AdjustPlotHelpList():
                               'reference in grey -absent-, and those that only appear in the '
                               'secondary map in red -mismatch-. Please note that you can only '
                               'use this mode if you select two different contact map files in ',
-                              html.I('Map A'), ' and ', html.I('Map B'), ' selectors.'])
+                              html.I('Map A'), ' and ', html.I('Map B'), ' selectors.']),
+                     html.Li('Verbose Labels Switch: If activated, the tooltip text that appears when users hover on '
+                             'top of contacts includes all the additional information available for the residues '
+                             'involved on each specific contact, in addition to contact information that '
+                             'would normally be displayed.')
                  ])],
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['Section 2: Adjust additional tracks. In this section you will find selectors '
@@ -359,7 +363,8 @@ def PanelLayoutHelpList():
                  'displayed on each track...etc. Once you have tweaked these settings, click '
                  'on ',
                  html.I('Adjust Plot'),
-                 ' to refresh the plot with the adjusted parameters.'],
+                 ' to refresh the plot with the adjusted parameters. Changes you make on these settings will not be '
+                 'displayed on the plot until you click this button.'],
                 style={"font-size": "110%", 'text-align': "justify"}),
     ])
 

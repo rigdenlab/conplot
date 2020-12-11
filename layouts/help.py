@@ -87,8 +87,16 @@ def Body(cache):
                                     'wish, as it is possible to compare them or dynamically change which contact file '
                                     'is loaded in the plot. More on how to do this will be explained later on.'
                                     ], style={"font-size": "110%", 'text-align': "justify"}),
-                            dbc.Alert('TIP: If you wish to remove a file that you have uploaded, simply close the '
-                                      'banner with its name and ConPlot will do the rest.',
+                            dbc.Alert([
+                                'TIPS:',
+                                html.Ul([
+                                    html.Li('If you wish to remove a file that you have uploaded, simply close the '
+                                            'banner with its name and ConPlot will do the rest.'),
+                                    html.Li(['You can repeat the process of uploading a residue contact prediction '
+                                             'file using the ', html.I('Upload Contact'),
+                                             ' as many times as you wish in order to upload multiple contact maps.'])
+                                         ])
+                            ],
                                       style={'text-align': "justify"},
                                       color='info'),
                             dbc.Alert('WARNING: It is important that the numbering used in all the uploaded contact '
@@ -119,6 +127,10 @@ def Body(cache):
                                              ' file.']),
                                     html.Li('You will not be able to upload a file until you first select its format '
                                             'in the dropdown selection menu.'),
+                                    html.Li(['You can only upload one file at a time when you use the ',
+                                             html.I('Add track'),
+                                             ' button, but you can do this as many times as you wish in order to add '
+                                             'multiple tracks to the plot.']),
                                     html.Li(['If you would like to upload a sequence prediction that is not '
                                              'included in the list of supported formats, you can always create a '
                                              'custom file and add the information manually. If you think it would be '

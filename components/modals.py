@@ -264,8 +264,8 @@ def TutorialOneModal():
             html.Br(),
             "This banners represent the space allocated for the uploaded file in ConPlot's memory, if you wish to "
             'remove any of them simply click on the cross on the right side of the banner to remove them from the '
-            'memory -but do not do this now. As you have already uploaded the input required to create a minimal contact '
-            'map plot, if you click on ', html.I('Generate Plot'),
+            'memory -but do not do this now. As you have already uploaded the input required to create a minimal '
+            'contact map plot, if you click on ', html.I('Generate Plot'),
             ', you will generate a contact map plot without any additional information, as shown in this figure:',
             html.Img(src=UrlIndex.TUTORIAL1_FIG3.value, height='500vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
@@ -317,6 +317,22 @@ def TutorialOneModal():
             'plot after uploading more data to ConPlot. Since we did not upload more data, we are just adjusting the '
             'way the plot looks, we click on ', html.I('Adjust Plot'), '.',
             html.Img(src=UrlIndex.TUTORIAL1_FIG7.value, height='500vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'You have now created a contact map that integrates several sources of information on the diagonal, '
+            'allowing easy visual cross-referencing of multiple sources. However, you may have noticed that sometimes '
+            'it can result difficult to map a specific contact with its corresponding annotations on the diagonal. '
+            'To get around this, you can try activating the ', html.I("Toggle spike lines"),
+            ' on the mode bar at the top right corner of the plot:',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG8.value, height='100vh', className='mt-3',
+                     style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
+            html.Br(),
+            'When this button is active, horizontal and vertical spike lines appear when hovering on top of a contact, '
+            'allowing you to map it to its position in the diagonal. Alternatively, the tooltip text that appears when '
+            'hovering on top of a contact can be changed to display all the additional information available for the '
+            'specific residues involved on each contact by activating the ', html.I("Verbose labels"),
+            ' switch at the ', html.I('Display Control Panel'), ' on the right of the plot.',
+            html.Img(src=UrlIndex.TUTORIAL1_FIG9.value, height='400vh', className='mt-3',
                      style={'display': 'block', 'margin-left': 'auto', 'margin-right': 'auto'}),
             html.Br(),
             'That will be all for this tutorial, now you are able to create a plot that integrates several '

@@ -42,7 +42,7 @@ class UrlIndex(Enum):
     HOME = '{}/home'.format(get_base_url())
     PLOT = '{}/plot'.format(get_base_url())
     CONTACT = '{}/contact'.format(get_base_url())
-    RIGDEN = '{}/ridgen-group'.format(get_base_url())
+    RIGDEN = '{}/rigden-group'.format(get_base_url())
     HELP = '{}/help'.format(get_base_url())
     USERS_PORTAL = '{}/users-portal'.format(get_base_url())
     CREATE_USER = '{}/new-user'.format(get_base_url())

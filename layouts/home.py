@@ -27,12 +27,12 @@ def Body():
                             html.Br(),
                             html.P([
                                 """ConPlot is a web-based application for the visualisation of information derived from 
-                                residue contact predictions in combination with other sources of information, such as 
-                                secondary structure predictions, transmembrane helical topology, sequence conservation. 
-                                The plot allows the visual cross-referencing of sequence-based prediction data from 
-                                multiple sources. The exploitation of this novel cross-referencing method can be useful 
-                                to potentially expose structural features that would otherwise go undetected. Developed 
-                                by the """,
+                                residue contact and/or distance inter-residue predictions in combination with other 
+                                sources of information, such as secondary structure predictions, transmembrane helical 
+                                topology, sequence conservation. The plot allows the visual cross-referencing of 
+                                sequence-based prediction data from multiple sources. The exploitation of this novel 
+                                cross-referencing method can be useful to potentially expose structural features that 
+                                would otherwise go  undetected. Developed by the """,
                                 dbc.CardLink(html.U("Rigden Lab"), href=UrlIndex.RIGDEN.value),
                                 """ group at the """,
                                 html.A(html.U("University of Liverpool"), href=UrlIndex.UNIVERSITY_LIVERPOOL.value),
@@ -63,6 +63,10 @@ def Body():
                                 html.Li(
                                     'Upload multiple contact maps to compare them, either by plotting each of them in '
                                     'a half of the map or by superimposing one of top of the other.'),
+                                html.Li(
+                                    'Upload predictions of inter-residue distances and visualise them as heatmaps in '
+                                    'combination with other predicted data in the diagonal.'
+                                ),
                                 html.Li(
                                     'Full control over plot features such as contact marker size, track size or track '
                                     'arrangement.'),

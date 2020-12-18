@@ -2,6 +2,25 @@ Changelog
 =========
 
 
+0.3
+-----
+
+Added
+~~~~~
+- Added support for file upload of CASPRR RMODE 2 files (inter-residue distance predictions)
+- Added heatmap mode for visualisation of iner-residue distance predictions and/or contact maps
+- Fixed minor bugs (issues #115, #116 and #106)
+- Server status table added to the Help page
+- Added Tutorial 4: Residue-Residue distance predictions
+- Added verbose label switch for descriptive tooltips
+
+Changed
+~~~~~~~
+- Text in the Help and Home pages refer to support of inter-residue distance predictions
+- Example button at the Plot page now loads an example session instead of trigerring file download
+- Spike button on the mode bar now shows spikes accross the axis
+
+
 0.2.4
 -----
 

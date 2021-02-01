@@ -189,6 +189,20 @@ def user_portal(n_clicks, username, password, session_id):
         return app_utils.user_logout(session_id, cache, app.logger)
 
 
+@app.callback(Output('recovery-portal-modal-div', 'children'),
+              [Input('recover-account-button', 'n_clicks')],
+              [State('recovery-portal-username-input', 'value'),
+               State('recovery-portal-email-input', 'value'),
+               State('recovery-portal-secret-input', 'value'),
+               State('recovery-portal-password-1-input', 'value'),
+               State('recovery-portal-password-2-input', 'value')])
+def recover_account(n_clicks, username, email, secret, password_1, password_2):
+    trigger = dash.callback_context.triggered[0]
+    if not callback_utils.ensure_triggered(trigger):
+        return no_update
+
+    return app_utils.recover_account(username, email, secret, password_1, password_2)
+
 @app.callback([Output('invalid-create-user-collapse', 'is_open'),
                Output('create-user-modal-div', 'children'),
                Output('create-username-input', 'value'),

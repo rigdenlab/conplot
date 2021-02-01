@@ -10,15 +10,17 @@ from utils import UrlIndex
 def ContactFormatSelector():
     format_list = [{'label': '--- Structural Information ---', 'value': 'Structural_Separator', 'disabled': True}]
     format_list += sorted([{"label": map_format, "value": map_format} for map_format in
-                           StructuralInformationFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+                           StructuralInformationFormats.__dict__.keys() if not map_format.islower()],
+                          key=lambda k: k['label'])
 
     format_list.append({'label': '--- Residue Distance ---', 'value': 'Distance_Separator', 'disabled': True})
     format_list += sorted([{"label": map_format, "value": map_format} for map_format in
-                           DistanceInformationFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+                           DistanceInformationFormats.__dict__.keys() if not map_format.islower()],
+                          key=lambda k: k['label'])
 
     format_list.append({'label': '--- Contact Map ---', 'value': 'ContactMap_Separator', 'disabled': True})
     format_list += sorted([{"label": map_format, "value": map_format} for map_format in
-                          ContactMapFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
+                           ContactMapFormats.__dict__.keys() if not map_format.islower()], key=lambda k: k['label'])
 
     return dbc.InputGroup(
         [
@@ -100,14 +102,22 @@ def PaletteSelector(dataset, options, value):
     ])
 
 
-def EmailInput(id='email-input'):
-    return dbc.InputGroup([
-        dbc.InputGroupAddon("Email", addon_type="prepend"),
-        dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65),
-        dbc.InputGroupAddon('?', id='{}-tooltip'.format(id), addon_type='append', style={'font-size': '500%'}),
-        dbc.Tooltip('We will only use this email address to get in touch with you in case your forget your '
-                    'password or you request assistance from us.', target='{}-tooltip'.format(id))
-    ], className="mb-3")
+def EmailInput(id='email-input', show_tooltip=True):
+    if show_tooltip:
+        children = [
+            dbc.InputGroupAddon("Email", addon_type="prepend"),
+            dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65),
+            dbc.InputGroupAddon('?', id='{}-tooltip'.format(id), addon_type='append', style={'font-size': '500%'}),
+            dbc.Tooltip('We will only use this email address to get in touch with you in case your forget your '
+                        'password or you request assistance from us.', target='{}-tooltip'.format(id))
+        ]
+    else:
+        children = [
+            dbc.InputGroupAddon("Email", addon_type="prepend"),
+            dbc.Input(placeholder="example@email.com", type="email", id=id, minLength=1, maxLength=65),
+        ]
+
+    return dbc.InputGroup(children, className="mb-3")
 
 
 def NameInput():
@@ -154,6 +164,16 @@ def PasswordInput(id='password-input', placeholder='XXXX', addon="Password"):
     return dbc.InputGroup([
         dbc.InputGroupAddon(addon, addon_type="prepend"),
         dbc.Input(type="password", id=id, placeholder=placeholder)
+    ], className="mb-3")
+
+
+def VerificationCodeInput(id='verification-code-input', placeholder='XXXX', addon="Verification Code"):
+    return dbc.InputGroup([
+        dbc.InputGroupAddon(addon, addon_type="prepend"),
+        dbc.Input(type="password", id=id, placeholder=placeholder),
+        dbc.InputGroupAddon('?', id='{}-tooltip'.format(id), addon_type='append', style={'font-size': '500%'}),
+        dbc.Tooltip('You can find a verification code in the message that was sent to your registered email address.',
+                    target='{}-tooltip'.format(id))
     ], className="mb-3")
 
 

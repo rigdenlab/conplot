@@ -632,3 +632,36 @@ def PaletteModal(dataset, idx):
         dbc.ModalBody(modal_body)
     ], is_open=False, size='xl', scrollable=True, centered=True, autoFocus=True,
         id={'type': 'palette-modal', 'index': idx})
+
+
+def SuccessRecoverAccount():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4('Successful password reset', className="alert-heading", style={'color': 'green'})),
+        dbc.ModalBody(
+            html.P("""You have successfully changed your password. Please head back to the login page and try to
+            login with your new details.""", style={'text-align': "justify"})
+        ),
+    ], id='success-recovery-modal', is_open=True)
+
+
+def FailureRecoverAccount():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4('Password reset failed', className="alert-heading", style={'color': 'red'})),
+        dbc.ModalBody(
+            html.P("""Your attempt to reset your password has failed. Please check the spelling of your username, 
+            email address and the verification code. You can find the verification code in the message that was sent 
+            to your registered email address.""", style={'text-align': "justify"})
+        ),
+    ], id='fail-recovery-modal', is_open=True)
+
+def InvalidPasswordRecoverAccount():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4('Passwords do not match', className="alert-heading", style={'color': 'red'})),
+        dbc.ModalBody(
+            html.P("""Please make sure to type the same password when in the 'Confirm Password' input box.""",
+                   style={'text-align': "justify"})
+        ),
+    ], id='fail-recovery-modal', is_open=True)

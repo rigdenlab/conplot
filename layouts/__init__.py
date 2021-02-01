@@ -11,6 +11,12 @@ def noPage(*args, **kwargs):
     return noPage(*args, **kwargs)
 
 
+def AccountRecoveryPortal(*args, **kwargs):
+    from layouts.recoveryportal import AccountRecoveryPortal
+
+    return AccountRecoveryPortal(*args, **kwargs)
+
+
 def RedisConnectionError(*args, **kwargs):
     from layouts.redisconnectionerror import RedisConnectionError
 

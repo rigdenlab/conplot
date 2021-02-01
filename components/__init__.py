@@ -598,6 +598,18 @@ def CreateUserCard(*args, **kwargs):
     return CreateUserCard(*args, **kwargs)
 
 
+def RecoveryPortalCard(*args, **kwargs):
+    from components.cards import RecoveryPortalCard
+
+    return RecoveryPortalCard(*args, **kwargs)
+
+
+def VerificationCodeInput(*args, **kwargs):
+    from components.inputgroups import VerificationCodeInput
+
+    return VerificationCodeInput(*args, **kwargs)
+
+
 def UserPortalCard(*args, **kwargs):
     from components.cards import UserPortalCard
 

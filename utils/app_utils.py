@@ -68,7 +68,7 @@ def serve_url(url, session_id, cache, logger):
     elif url == UrlIndex.PRIVACY_POLICY.value:
         return layouts.PrivacyPolicy(session_id)
     elif url in (UrlIndex.USERS_PORTAL.value, UrlIndex.CREATE_USER.value, UrlIndex.CHANGE_PASSWORD.value,
-                 UrlIndex.SHARE_SESSIONS.value, UrlIndex.USER_STORAGE.value):
+                 UrlIndex.SHARE_SESSIONS.value, UrlIndex.USER_STORAGE.value, UrlIndex.ACCOUNT_RECOVERY.value):
         if not postgres_utils.is_postgres_available(logger):
             return layouts.PostgresConnectionError()
         elif url == UrlIndex.USERS_PORTAL.value:
@@ -79,6 +79,8 @@ def serve_url(url, session_id, cache, logger):
             return layouts.ChangeUserPassword(username)
         elif url == UrlIndex.SHARE_SESSIONS.value:
             return layouts.ShareSession(username)
+        elif url == UrlIndex.ACCOUNT_RECOVERY.value:
+            return layouts.AccountRecoveryPortal()
         elif url == UrlIndex.USER_STORAGE.value:
             if cache.hexists(session_id, cache_utils.CacheKeys.SESSION_PKID.value):
                 session_pkid = int(cache.hget(session_id, cache_utils.CacheKeys.SESSION_PKID.value))

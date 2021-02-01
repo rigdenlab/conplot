@@ -113,8 +113,8 @@ def ContactForgotPsswrdAlert():
         html.P(
             "If you forgot your password, make sure to fill in with your registered username on the 'Name' input field "
             "and the same email address you provided when registering on the 'Email' input field. If we find this "
-            "username and email address registered in our site, we will send you an email with a new automatically "
-            "generated password shortly after you click on 'Send'."
+            "username and email address registered in our site, we will send you an email with further instructions to "
+            "recover your password."
         ),
     ],
         dismissable=False,

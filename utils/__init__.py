@@ -51,6 +51,7 @@ class UrlIndex(Enum):
     CHANGE_PASSWORD = '{}/user-change-password'.format(get_base_url())
     SESSION_TIMEOUT = '{}/session-timeout'.format(get_base_url())
     PRIVACY_POLICY = '{}/privacy-policy-statement'.format(get_base_url())
+    ACCOUNT_RECOVERY = '{}/account-recovery'.format(get_base_url())
     GITHUB_LOGO = '{}/assets/github_logo.png'.format(get_base_url())
     HELP_FIG1 = '{}/static/Help_Figure_1.png'.format(get_base_url())
     TUTORIAL1_FIG1 = '{}/static/Tutorial1_Figure1.png'.format(get_base_url())

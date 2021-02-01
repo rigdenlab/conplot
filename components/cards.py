@@ -37,6 +37,28 @@ def NoPageFoundCard(url):
     ])
 
 
+def RecoveryPortalCard():
+    return dbc.Card([
+        dbc.CardHeader(dbc.Col(html.H1('ConPlot', style={'font-size': '7vh', 'text-align': 'center'}))),
+        dbc.CardBody([
+            html.H3('Account recovery portal', className="card-text", style={'text-align': "center"}),
+            html.Hr(),
+            html.Br(),
+            dbc.Spinner(html.Div([
+                components.UserNameInput('recovery-portal-username-input'),
+                components.EmailInput('recovery-portal-email-input', show_tooltip=False),
+                components.VerificationCodeInput(id='recovery-portal-secret-input'),
+                components.PasswordInput(id='recovery-portal-password-1-input', addon='New Password'),
+                components.PasswordInput(id='recovery-portal-password-2-input', addon='Repeat Password'),
+                html.Br(),
+                dbc.Button("Recover", color="primary", block=True, id='recover-account-button')
+            ], id='recovery-portal-div')),
+            html.Br(),
+            html.Div(id='recovery-portal-alert-div'),
+        ])
+    ])
+
+
 def UserPortalCardBody(username):
     if username is not None:
         return [

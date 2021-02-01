@@ -7,7 +7,8 @@ CREATE TABLE user_data
     email        varchar(65) unique,
     password     text        not null,
     created_date date        not null default current_date,
-    last_login   date        not null default current_date
+    last_login   date        not null default current_date,
+    recovery     text        not null default 'null'
 );
 CREATE TABLE session_data
 (

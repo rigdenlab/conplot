@@ -27,6 +27,7 @@ class SqlFieldNames(Enum):
     LAST_ACCESS = 'last_access_date'
     CREATED_DATE = 'created_date'
     LAST_LOGIN = 'last_login'
+    RECOVERY = 'recovery'
     SHARED = 'shared_with'
     SESSION_PKID = 'session_pkid'
 
@@ -58,6 +59,14 @@ class SqlQueries(Enum):
     CHANGE_PASSWORD = """UPDATE {} SET {} = crypt(%s, {}) WHERE {} = %s
     """.format(TableNames.USER_DATA.value, SqlFieldNames.PASSWORD.value, SqlFieldNames.PASSWORD.value,
                SqlFieldNames.USERNAME.value)
+
+    CHECK_IS_RECOVERY = """SELECT {} FROM {} WHERE {} = crypt(%s, {}) AND {} = %s AND {} = %s
+    """.format(SqlFieldNames.ID.value, TableNames.USER_DATA.value, SqlFieldNames.RECOVERY.value,
+               SqlFieldNames.RECOVERY.value, SqlFieldNames.USERNAME.value, SqlFieldNames.EMAIL.value)
+
+    RESET_RECOVERY = """UPDATE {} SET {} = 'null' WHERE {} = crypt(%s, {}) AND {} = %s AND {} = %s
+    """.format(TableNames.USER_DATA.value, SqlFieldNames.RECOVERY.value, SqlFieldNames.RECOVERY.value,
+               SqlFieldNames.RECOVERY.value, SqlFieldNames.USERNAME.value, SqlFieldNames.EMAIL.value)
 
     UPDATE_SESSION = """UPDATE {} SET {} = %s WHERE {} = %s AND {} = %s
     """.format(TableNames.SESSION_DATA.value, SqlFieldNames.SESSION_JSON.value, SqlFieldNames.OWNER.value,
@@ -168,6 +177,17 @@ def userlogin(username, psswrd):
         return True
     else:
         return False
+
+
+def recover_account(username, email, secret, new_password):
+    user_id = perform_query(SqlQueries.CHECK_IS_RECOVERY.value, args=(secret, username, email), fetch=True)
+
+    if user_id:
+        perform_query(SqlQueries.CHANGE_PASSWORD.value, args=(new_password, username), commit=True)
+        perform_query(SqlQueries.RESET_RECOVERY.value, args=(secret, username, email), commit=True)
+        return True
+
+    return False
 
 
 def store_session(username, session_name, session):

@@ -6,6 +6,19 @@ from utils import decompress_data, compress_data
 from utils.exceptions import IntegrityError, UserExists, EmailAlreadyUsed
 
 
+def recover_account(username, email, secret, password_1, password_2):
+
+    if password_1 != password_2:
+        return components.InvalidPasswordRecoverAccount()
+
+    success = postgres_utils.recover_account(username, email, secret, password_1)
+
+    if success:
+        return components.SuccessRecoverAccount()
+
+    return components.FailureRecoverAccount()
+
+
 def change_password(new_password, old_password, cache, session_id, logger):
     username = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.USER.value))
     if postgres_utils.change_password(username, old_password, new_password):

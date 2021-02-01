@@ -172,7 +172,7 @@ def VerificationCodeInput(id='verification-code-input', placeholder='XXXX', addo
         dbc.InputGroupAddon(addon, addon_type="prepend"),
         dbc.Input(type="password", id=id, placeholder=placeholder),
         dbc.InputGroupAddon('?', id='{}-tooltip'.format(id), addon_type='append', style={'font-size': '500%'}),
-        dbc.Tooltip('You can find a verification code in the email that was sent to your registered address.',
+        dbc.Tooltip('You can find a verification code in the message that was sent to your registered email address.',
                     target='{}-tooltip'.format(id))
     ], className="mb-3")
 

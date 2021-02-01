@@ -610,6 +610,24 @@ def VerificationCodeInput(*args, **kwargs):
     return VerificationCodeInput(*args, **kwargs)
 
 
+def SuccessRecoverAccount(*args, **kwargs):
+    from components.modals import SuccessRecoverAccount
+
+    return SuccessRecoverAccount(*args, **kwargs)
+
+
+def InvalidPasswordRecoverAccount(*args, **kwargs):
+    from components.modals import InvalidPasswordRecoverAccount
+
+    return InvalidPasswordRecoverAccount(*args, **kwargs)
+
+
+def FailureRecoverAccount(*args, **kwargs):
+    from components.modals import FailureRecoverAccount
+
+    return FailureRecoverAccount(*args, **kwargs)
+
+
 def UserPortalCard(*args, **kwargs):
     from components.cards import UserPortalCard
 

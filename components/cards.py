@@ -51,10 +51,10 @@ def RecoveryPortalCard():
                 components.PasswordInput(id='recovery-portal-password-1-input', addon='New Password'),
                 components.PasswordInput(id='recovery-portal-password-2-input', addon='Repeat Password'),
                 html.Br(),
+                html.Div(id='recovery-portal-modal-div'),
                 dbc.Button("Recover", color="primary", block=True, id='recover-account-button')
             ], id='recovery-portal-div')),
             html.Br(),
-            html.Div(id='recovery-portal-alert-div'),
         ])
     ])
 

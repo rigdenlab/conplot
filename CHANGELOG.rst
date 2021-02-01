@@ -2,6 +2,14 @@ Changelog
 =========
 
 
+0.3.1
+-----
+
+Added
+~~~~~
+- Added an account recovery site that enables users to reset their password after they get in touch
+
+
 0.3
 -----
 

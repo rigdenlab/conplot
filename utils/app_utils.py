@@ -6,7 +6,7 @@ from utils import decompress_data, compress_data
 from utils.exceptions import IntegrityError, UserExists, EmailAlreadyUsed
 
 
-def recover_account(username, email, secret, password_1, password_2):
+def recover_account(username, email, secret, password_1, password_2, logger):
 
     if password_1 != password_2:
         return components.InvalidPasswordRecoverAccount()
@@ -14,8 +14,10 @@ def recover_account(username, email, secret, password_1, password_2):
     success = postgres_utils.recover_account(username, email, secret, password_1)
 
     if success:
+        logger.info('User {} reset password successful'.format(username))
         return components.SuccessRecoverAccount()
 
+    logger.info('User {} reset password failure'.format(username))
     return components.FailureRecoverAccount()
 
 

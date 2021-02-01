@@ -201,7 +201,7 @@ def recover_account(n_clicks, username, email, secret, password_1, password_2):
     if not callback_utils.ensure_triggered(trigger):
         return no_update
 
-    return app_utils.recover_account(username, email, secret, password_1, password_2)
+    return app_utils.recover_account(username, email, secret, password_1, password_2, app.logger)
 
 @app.callback([Output('invalid-create-user-collapse', 'is_open'),
                Output('create-user-modal-div', 'children'),

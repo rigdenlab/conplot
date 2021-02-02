@@ -14,10 +14,10 @@ def recover_account(username, email, secret, password_1, password_2, logger):
     success = postgres_utils.recover_account(username, email, secret, password_1)
 
     if success:
-        logger.info('User {} reset password successful'.format(username))
+        logger.info('Username {} reset password successful'.format(username))
         return components.SuccessRecoverAccount()
 
-    logger.info('User {} reset password failure'.format(username))
+    logger.info('Username {} failed to reset password'.format(username))
     return components.FailureRecoverAccount()
 
 

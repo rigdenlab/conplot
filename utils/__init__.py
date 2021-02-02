@@ -104,6 +104,8 @@ class UrlIndex(Enum):
     GDPR_WEBSITE = 'https://gdpr-info.eu'
     DOCKER_HUB = 'https://hub.docker.com/r/filosanrod/conplot'
     CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'
+    CONPLOT_MAIL = 'conplot.noreply@gmail.com'
+    CONPLOT_USERNAME = 'conplot.noreply'
 
 
 def create_ConPlot(*args, **kwargs):

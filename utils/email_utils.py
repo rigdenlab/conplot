@@ -10,7 +10,7 @@ def send_email(recipient, subject, contents):
 
 
 def register_mail():
-    keyring.get_keyring()
+    #keyring.set_keyring(keyring.a
     keyring.set_password('yagmail', UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
     #yagmail.register(UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
 

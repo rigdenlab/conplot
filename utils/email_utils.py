@@ -36,5 +36,5 @@ The ConPlot Team
         logger.info('Sent email to {} - {} for password recovery'.format(username, email))
         return True
     except Exception as e:
-        logger.error('Cannot send recovery meail to {} - {}. Exception found: {}'.format(username, email, e))
+        logger.error('Cannot send recovery email to {} - {}. Exception found: {}'.format(username, email, e))
         return False

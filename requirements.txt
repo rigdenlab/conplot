@@ -18,4 +18,3 @@ slackclient~=2.6.1
 visdcc~=0.0.40
 yagmail~=0.14.245
 keyring~=22.0.1
-dbus-python~=1.2.16

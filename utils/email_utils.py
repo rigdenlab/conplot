@@ -1,5 +1,6 @@
 import os
 import yagmail
+import keyring
 from utils import UrlIndex
 
 
@@ -9,7 +10,9 @@ def send_email(recipient, subject, contents):
 
 
 def register_mail():
-    yagmail.register(UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
+    keyring.get_keyring()
+    keyring.set_password('yagmail', UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
+    #yagmail.register(UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
 
 
 def acount_recovery(username, email, secret, logger):

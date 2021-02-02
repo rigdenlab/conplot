@@ -26,7 +26,7 @@ class WimleyWhiteHydrophobicityScale(Enum):
 
 
 def conplot_version():
-    return 'v0.3'
+    return 'v0.3.1'
 
 
 def get_base_url():

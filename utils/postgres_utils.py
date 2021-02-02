@@ -1,4 +1,5 @@
 import os
+import uuid
 from operator import attrgetter
 from collections import namedtuple
 from components import SessionListType
@@ -59,6 +60,13 @@ class SqlQueries(Enum):
     CHANGE_PASSWORD = """UPDATE {} SET {} = crypt(%s, {}) WHERE {} = %s
     """.format(TableNames.USER_DATA.value, SqlFieldNames.PASSWORD.value, SqlFieldNames.PASSWORD.value,
                SqlFieldNames.USERNAME.value)
+
+    CHECK_USER_AND_EMAIL = """SELECT * FROM {} WHERE {} = %s AND {} = %s
+            """.format(TableNames.USER_DATA.value, SqlFieldNames.USERNAME.value, SqlFieldNames.EMAIL.value)
+
+    ACTIVATE_RECOVERY = """UPDATE {} SET {} = crypt(%s, {}) WHERE {} = %s AND {} = %s
+    """.format(TableNames.USER_DATA.value, SqlFieldNames.RECOVERY.value, SqlFieldNames.RECOVERY.value,
+               SqlFieldNames.USERNAME.value, SqlFieldNames.EMAIL.value)
 
     CHECK_IS_RECOVERY = """SELECT {} FROM {} WHERE {} = crypt(%s, {}) AND {} = %s AND {} = %s
     """.format(SqlFieldNames.ID.value, TableNames.USER_DATA.value, SqlFieldNames.RECOVERY.value,
@@ -188,6 +196,17 @@ def recover_account(username, email, secret, new_password):
         return True
 
     return False
+
+
+def activate_recovery_mode(username, email):
+    rslt = perform_query(SqlQueries.CHECK_USER_AND_EMAIL.value, args=(username, email), fetch=True)
+    if not rslt:
+        return None
+
+    secret = str(uuid.uuid4())
+    perform_query(SqlQueries.ACTIVATE_RECOVERY.value, args=(secret, username, email), commit=True)
+
+    return secret
 
 
 def store_session(username, session_name, session):

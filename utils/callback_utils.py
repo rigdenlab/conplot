@@ -4,7 +4,7 @@ import components
 from dash import no_update
 from components import EmailIssueReference
 from loaders import DatasetReference, AdditionalDatasetReference
-from utils import slack_utils, decompress_data, cache_utils
+from utils import slack_utils, decompress_data, cache_utils, email_utils, postgres_utils
 
 
 class DatasetIndex(Enum):
@@ -45,6 +45,7 @@ def get_remove_trigger(trigger):
     fname = index[0]
     dataset = index[1]
     return fname, dataset, is_open
+
 
 def is_user_login(trigger):
     prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
@@ -109,10 +110,24 @@ def get_session_action(trigger):
 def submit_form(name, email, subject, description, logger):
     if not name or not email or not description or not subject:
         return components.InvalidContactFormModal()
-    elif slack_utils.user_get_in_touch(name, email, subject, description, logger):
+
+    elif subject != EmailIssueReference.FORGOT_PSSWRD.value:
+        slack_success = slack_utils.user_get_in_touch(name, email, subject, description, logger)
+        if not slack_success:
+            return components.SlackConnectionErrorModal()
         return components.SuccessContactFormModal()
+
     else:
-        return components.SlackConnectionErrorModal()
+        secret = postgres_utils.activate_recovery_mode(name, email)
+        if secret is None:
+            return components.ContactWrongAccountModal()
+
+        email_success = email_utils.acount_recovery(name, email, secret, logger)
+        slack_success = slack_utils.user_get_in_touch(name, email, subject, description, logger)
+        if not email_success or not slack_success:
+            return components.SlackConnectionErrorModal()
+
+        return components.ContactRecoverAccountModal()
 
 
 def retrieve_contact_fnames(session_id, cache):

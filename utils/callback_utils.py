@@ -110,16 +110,20 @@ def submit_form(name, email, subject, description, logger):
     if not name or not email or not description or not subject:
         return components.InvalidContactFormModal()
 
-    success = slack_utils.user_get_in_touch(name, email, subject, description, logger)
+    slack_success = slack_utils.user_get_in_touch(name, email, subject, description, logger)
 
-    if not success:
+    if not slack_success:
         return components.SlackConnectionErrorModal()
 
     elif subject == EmailIssueReference.FORGOT_PSSWRD.value:
         secret = postgres_utils.activate_recovery_mode(name, email)
         if secret is None:
             return components.ContactWrongAccountModal()
-        email_utils.acount_recovery(name, email, secret, logger)
+
+        email_success = email_utils.acount_recovery(name, email, secret, logger)
+        if not email_success:
+            return components.SlackConnectionErrorModal()
+
         return components.ContactRecoverAccountModal()
 
     return components.SuccessContactFormModal()

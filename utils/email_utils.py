@@ -31,7 +31,10 @@ The ConPlot Team
 """.format(secret)
 
     try:
+        register_mail()
         send_email(email, subject, body)
         logger.info('Sent email to {} - {} for password recovery'.format(username, email))
+        return True
     except Exception as e:
         logger.error('Cannot send recovery meail to {} - {}. Exception found: {}'.format(username, email, e))
+        return False

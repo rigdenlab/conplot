@@ -601,6 +601,29 @@ def SlackConnectionErrorModal():
     ], id='slack-connection-error-modal', is_open=True)
 
 
+def ContactWrongAccountModal():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4('Wrong account details', className="alert-heading", style={'color': 'red'})),
+        dbc.ModalBody(
+            html.P("""We cannot match the information you provided with any account on our database. If you wish to 
+            recover your password please make sure to provide the same email address and username you have registered 
+            when creating the account.""", style={'text-align': "justify"})
+        ),
+    ], id='slack-fail-recovery-modal', is_open=True)
+
+
+def ContactRecoverAccountModal():
+    return dbc.Modal([
+        dbc.ModalHeader(
+            html.H4('Account recovery', className="alert-heading", style={'color': 'green'})),
+        dbc.ModalBody(
+            html.P("""We have sent a message to your email address with further instructions to reset your password. 
+            PLEASE MAKE SURE TO CHECK YOUR SPAM FOLDER.""", style={'text-align': "justify"})
+        ),
+    ], id='slack-success-recovery-modal', is_open=True)
+
+
 def PaletteModal(dataset, idx):
     palette_dict = {}
     palette_list = []

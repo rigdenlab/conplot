@@ -19,18 +19,16 @@ def acount_recovery(username, email, secret, logger):
 Dear ConPlot user,
     
 We are sending this email because you have requested to reset your password. To regain access to your account, please
-go to {} and complete the form. You will need the include the following details:
+go to www.conplot.org/contact and complete the form. You will need to include the following verification code:
 
-Username: {}
-Email: {}
 Verification Code: {}
 
 This is an automated email, please do not reply to this message. To get in touch with us again, use to the form at 
-{}
+www.conplot.org/account-recovery
     
 Best wishes,
 The ConPlot Team
-""".format(UrlIndex.ACCOUNT_RECOVERY.value, username, email, secret, UrlIndex.CONTACT.value)
+""".format(secret)
 
     try:
         send_email(email, subject, body)

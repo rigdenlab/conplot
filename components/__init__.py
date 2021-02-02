@@ -622,6 +622,18 @@ def InvalidPasswordRecoverAccount(*args, **kwargs):
     return InvalidPasswordRecoverAccount(*args, **kwargs)
 
 
+def ContactWrongAccountModal(*args, **kwargs):
+    from components.modals import ContactWrongAccountModal
+
+    return ContactWrongAccountModal(*args, **kwargs)
+
+
+def ContactRecoverAccountModal(*args, **kwargs):
+    from components.modals import ContactRecoverAccountModal
+
+    return ContactRecoverAccountModal(*args, **kwargs)
+
+
 def FailureRecoverAccount(*args, **kwargs):
     from components.modals import FailureRecoverAccount
 

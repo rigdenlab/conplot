@@ -46,6 +46,7 @@ def get_remove_trigger(trigger):
     dataset = index[1]
     return fname, dataset, is_open
 
+
 def is_user_login(trigger):
     prop_id = json.loads(trigger['prop_id'].replace('.n_clicks', ''))
     index = prop_id['idx']
@@ -122,16 +123,11 @@ def submit_form(name, email, subject, description, logger):
             return components.ContactWrongAccountModal()
 
         email_success = email_utils.acount_recovery(name, email, secret, logger)
-        if not email_success:
-            return components.SlackConnectionErrorModal()
-
         slack_success = slack_utils.user_get_in_touch(name, email, subject, description, logger)
-        if not slack_success:
+        if not email_success or not slack_success:
             return components.SlackConnectionErrorModal()
 
         return components.ContactRecoverAccountModal()
-
-
 
 
 def retrieve_contact_fnames(session_id, cache):

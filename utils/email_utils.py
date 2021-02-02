@@ -1,7 +1,21 @@
 import os
 import yagmail
 import keyring
+from keyrings.cryptfile.cryptfile import CryptFileKeyring
 from utils import UrlIndex
+
+
+def no_keyring():
+    kr = keyring.get_keyring()
+    if not isinstance(kr, CryptFileKeyring):
+        return True
+    return False
+
+
+def set_keyring():
+    kr = CryptFileKeyring()
+    kr.keyring_key = os.environ["KEYRING_CRYPTFILE_PSSWRD"]
+    keyring.set_keyring(kr)
 
 
 def send_email(recipient, subject, contents):
@@ -10,9 +24,7 @@ def send_email(recipient, subject, contents):
 
 
 def register_mail():
-    #keyring.set_keyring(keyring.a
-    keyring.set_password('yagmail', UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
-    #yagmail.register(UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
+    yagmail.register(UrlIndex.CONPLOT_MAIL.value, os.environ['MAIL_PSSWRD'])
 
 
 def acount_recovery(username, email, secret, logger):
@@ -34,7 +46,9 @@ The ConPlot Team
 """.format(secret)
 
     try:
-        register_mail()
+        if no_keyring():
+            set_keyring()
+            register_mail()
         send_email(email, subject, body)
         logger.info('Sent email to {} - {} for password recovery'.format(username, email))
         return True

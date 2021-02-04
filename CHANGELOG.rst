@@ -2,6 +2,27 @@ Changelog
 =========
 
 
+0.3.2
+-----
+
+Added
+~~~~~
+- Citation on home page
+
+Changed
+~~~~~
+- Account recovery is automated: users will receive an automated email with instructions to reset password
+- Docker image now deployed on fedora 33 instead of CentOS 8
+
+
+0.3.1
+-----
+
+Added
+~~~~~
+- Added an account recovery site that enables users to reset their password after they get in touch
+
+
 0.3
 -----
 

@@ -82,6 +82,19 @@ def Body():
                                 dbc.CardLink(html.U('help page'), href=UrlIndex.HELP.value),
                                 ' to read about how to use ConPlot and take advantage of its full potential!'
                             ], style={"font-size": "120%", "text-align": "justify"}),
+                            html.Br(),
+                            html.Br(),
+                            html.H4('Cite us', className="card-text", style={'text-align': "center"}),
+                            html.Hr(),
+                            html.Br(),
+                            html.P('If you found ConPlot useful for your work and you would like to cite us '
+                                   'please use the following reference:',
+                                   style={"font-size": "120%", "text-align": "justify"}),
+                            html.I('Sánchez Rodríguez, et al., ConPlot: Web-based application for the visualisation of '
+                                   'protein contact maps integrated with other data, Bioinformatics, 2021',
+                                   style={"font-size": "120%", "text-align": "justify"}),
+                            html.Br(),
+                            html.I('https://doi.org/10.1093/bioinformatics/btab049')
                         ]),
                     ]),
                 ], width=10)

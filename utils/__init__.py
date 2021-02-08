@@ -106,6 +106,7 @@ class UrlIndex(Enum):
     CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'
     CONPLOT_MAIL = 'conplot.noreply@gmail.com'
     CONPLOT_USERNAME = 'conplot.noreply'
+    CITATION = 'https://doi.org/10.1093/bioinformatics/btab049'
 
 
 def create_ConPlot(*args, **kwargs):

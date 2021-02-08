@@ -3,6 +3,7 @@
 [![Actions Status](https://github.com/rigdenlab/conplot/workflows/Test%20&%20Build/badge.svg)](https://github.com/rigdenlab/conplot/actions)
 [![Docker Automated build](https://img.shields.io/docker/automated/filosanrod/conplot)](https://hub.docker.com/r/filosanrod/conplot)
 [![RRID](https://img.shields.io/badge/RRID-SCR_019216-informational)](https://scicrunch.org/scicrunch/Resources/record/nlx_144509-1/SCR_019216/resolver)
+[![DOI](https://img.shields.io/badge/DOI-10.1093%2Fbioinformatics%2Fbtab049-blue.svg)](https://doi.org/10.1093/bioinformatics/btab049)
 
 ## About ConPlot
 

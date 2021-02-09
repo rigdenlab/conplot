@@ -56,7 +56,7 @@ D U M M Y
 
         output = ContactParser(dummy_prediction, 'BBCONTACTS')
 
-        self.assertEquals(6, len(output))
+        self.assertEqual(6, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
@@ -79,7 +79,7 @@ D U M M Y
         expected_score = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
         output = ContactParser(dummy_prediction, 'COMSAT')
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
@@ -102,7 +102,7 @@ D U M M Y
                           0.9883262, 0.98828995]
 
         output = ContactParser(dummy_prediction, 'EVFOLD')
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
@@ -125,7 +125,7 @@ D U M M Y
                           0.9883262, 0.98828995]
 
         output = ContactParser(dummy_prediction, 'FLIB')
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
@@ -148,7 +148,7 @@ D U M M Y
                           0.9883262, 0.98828995]
 
         output = ContactParser(dummy_prediction, 'PCONS')
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
@@ -171,7 +171,7 @@ D U M M Y
                           0.9883262, 0.98828995]
 
         output = ContactParser(dummy_prediction, 'FREECONTACT')
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])

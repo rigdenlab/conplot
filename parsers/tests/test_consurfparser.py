@@ -69,7 +69,7 @@ or the confidence interval for the estimated score is equal to- or larger than- 
                     8, 6, 4, 6, 8, 8, 4, 9, 6, 4, 9, 9, 9, 7, 8, 9, 9, 4]
 
         output = ConsurfParser(dummy_prediction)
-        self.assertEquals(37, len(output))
+        self.assertEqual(37, len(output))
         self.assertListEqual(expected, output)
 
     def test_2(self):

@@ -30,8 +30,8 @@ END
         expected_score = [0.934108, 0.920229]
 
         output = PDBParser(dummy_prediction)
-        self.assertEquals(3, len(output))
-        self.assertEquals('PDB', output.pop(-1))
+        self.assertEqual(3, len(output))
+        self.assertEqual('PDB', output.pop(-1))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])

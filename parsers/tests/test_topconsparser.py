@@ -69,7 +69,7 @@ Predicted TOPCONS reliability (left column=sequence position; right column=relia
         ]
 
         output = TopconsParser(dummy_prediction)
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected, output)
 
     def test_2(self):

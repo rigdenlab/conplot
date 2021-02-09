@@ -39,7 +39,7 @@ class IupredParserTestCase(unittest.TestCase):
         ]
 
         output = IupredParser(dummy_prediction)
-        self.assertEquals(10, len(output))
+        self.assertEqual(10, len(output))
         self.assertListEqual(expected, output)
 
     def test_2(self):

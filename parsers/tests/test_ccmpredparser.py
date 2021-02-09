@@ -26,7 +26,7 @@ class CCMpredParserTestCase(unittest.TestCase):
                           0.33913296461105347, 0.27737972140312195, 0.26654472947120667]
 
         output = CCMpredParser(dummy_prediction)
-        self.assertEquals(15, len(output))
+        self.assertEqual(15, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])

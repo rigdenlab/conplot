@@ -9,13 +9,11 @@ class KeydbUtilsTestCase(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        REDIS_HOST = '127.0.0.1'
-        REDIS_PORT = 6379
-        cls.REDIS_CONNECTION_POOL = redis.ConnectionPool(host=REDIS_HOST, port=REDIS_PORT, db=0)
+        cls.keydb_pool = keydb_utils.create_pool('redis://127.0.0.1:6379')
 
     def test_1(self):
-        self.assertIsInstance(self.REDIS_CONNECTION_POOL, redis.connection.ConnectionPool)
+        self.assertIsInstance(self.keydb_pool, redis.connection.ConnectionPool)
 
     def test_2(self):
-        cache = keydb.KeyDB(connection_pool=self.REDIS_CONNECTION_POOL)
+        cache = keydb.KeyDB(connection_pool=self.keydb_pool)
         cache.ping()

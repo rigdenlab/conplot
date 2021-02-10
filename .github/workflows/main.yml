@@ -33,6 +33,10 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install docker-py
+      - name: Start Redis Server
+        uses: supercharge/redis-github-action@1.2.0
+        with:
+          redis-version: 3.5
       - name: Run tests.py
         env:
           KEYDB_URL: $ {{ secrets.KEYDB_URL }}

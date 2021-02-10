@@ -136,5 +136,6 @@ def is_redis_available(cache):
     except:
         return False
 
+
 def get_active_sessions(cache):
     return cache.dbsize()

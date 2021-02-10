@@ -36,7 +36,7 @@ jobs:
       - name: Start Redis Server
         uses: supercharge/redis-github-action@1.2.0
         with:
-          redis-version: 3.5
+          redis-version: 5.0
       - name: Run tests.py
         env:
           KEYDB_URL: $ {{ secrets.KEYDB_URL }}

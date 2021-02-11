@@ -383,8 +383,8 @@ def PanelLayoutHelpList():
 
 def MandatoryInputHelpList():
     return html.Ul([
-        html.Li('FASTA file. This file should contain only one sequence, the one corresponding '
-                'with the structure of interest. If there are multiple sequences, ConPlot will '
+        html.Li('Sequence file. This should be a FASTA file containing only one sequence, the one '
+                'corresponding with the structure of interest. If there are multiple sequences, ConPlot will '
                 'only consider the first sequence present in the file. Please note that unlike '
                 'other types of input, only one sequence can be uploaded in each session at '
                 'any given time. If you want to upload a new sequence, that means you will '

@@ -120,12 +120,6 @@ def Body(cache):
                                 'TIPS:',
                                 html.Ul([
                                     html.Br(),
-                                    html.Li(['PSIPRED server produces two output files that contain the same '
-                                             'information, but using different formats: a ',
-                                             html.I('.ss2'), ' file and a ', html.I('.horiz'),
-                                             ' file. ConPlot is only compatible with the ', html.I('ss2'),
-                                             ' format file, please do not attempt to uploade the ', html.I('.horiz'),
-                                             ' file.']),
                                     html.Li('You will not be able to upload a file until you first select its format '
                                             'in the dropdown selection menu.'),
                                     html.Li(['You can only upload one file at a time when you use the ',

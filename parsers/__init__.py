@@ -7,6 +7,24 @@ def ConsurfParser(*args, **kwargs):
     return ConsurfParser(*args, **kwargs)
 
 
+def Ss2Parser(*args, **kwargs):
+    from parsers.ss2parser import Ss2Parser
+
+    return Ss2Parser(*args, **kwargs)
+
+
+def HorizParser(*args, **kwargs):
+    from parsers.horizparser import HorizParser
+
+    return HorizParser(*args, **kwargs)
+
+
+def guess_psipred_format(*args, **kwargs):
+    from parsers.psipredparser import guess_psipred_format
+
+    return guess_psipred_format(*args, **kwargs)
+
+
 def DistogramParser(*args, **kwargs):
     from parsers.distogramparser import DistogramParser
 

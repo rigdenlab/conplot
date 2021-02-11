@@ -26,7 +26,7 @@ class WimleyWhiteHydrophobicityScale(Enum):
 
 
 def conplot_version():
-    return 'v0.3.1'
+    return 'v0.3.2'
 
 
 def get_base_url():
@@ -106,6 +106,7 @@ class UrlIndex(Enum):
     CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'
     CONPLOT_MAIL = 'conplot.noreply@gmail.com'
     CONPLOT_USERNAME = 'conplot.noreply'
+    CITATION = 'https://doi.org/10.1093/bioinformatics/btab049'
 
 
 def create_ConPlot(*args, **kwargs):

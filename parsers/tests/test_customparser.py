@@ -21,7 +21,7 @@ LEN 46
                     5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 3, 3, 'NAN', 8, 9, 'NAN', 1, 1, 1, 1, 'NAN']
 
         output = CustomParser(dummy_prediction)
-        self.assertEquals(46, len(output))
+        self.assertEqual(46, len(output))
         self.assertListEqual(expected, output)
 
     def test_2(self):

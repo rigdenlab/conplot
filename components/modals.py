@@ -8,7 +8,7 @@ def MismatchModal(*args):
     return dbc.Modal([
         ModalHeader("Mismatch Detected"),
         dbc.ModalBody([
-            html.P("""We are having problems to match the uploaded sequence with the following prediction files. Please 
+            html.P("""We were unable to match the uploaded sequence with the following prediction files. Please 
                 ensure that these predictions correspond with the protein sequence in the uploaded FASTA file.""",
                    style={'text-align': "justify"}),
             html.Ul([html.Li('%s' % arg) for arg in args], id='mismatched-fnames-div')
@@ -20,7 +20,7 @@ def MismatchSequenceModal(*args):
     return dbc.Modal([
         ModalHeader("Sequence Mismatch"),
         dbc.ModalBody([
-            html.P("""We are having problems to match the uploaded sequence with contact maps in the following files. 
+            html.P("""We were unable to match the uploaded sequence with contact maps in the following files. 
             Please ensure that the provided the sequence corresponds with the structure in these contact maps.""",
                    style={'text-align': "justify"}),
             html.Ul([html.Li('File: %s' % arg) for arg in args], id='mismatched-maps-div')
@@ -112,7 +112,7 @@ def InvalidFormatModal():
             html.P("""The file you just attempted to upload does not comply with the file format guidelines. Make sure 
             that you are uploading the correct file and you have selected the correct format. If you are not sure about 
             how the file format looks like, you can read about each format on our help page. If you are sure that the 
-            format of your file is correct, please report the bug on the 'Contact' tab.""",
+            format of your file is correct, please report the bug on the 'Get in touch with us' tab.""",
                    style={'text-align': "justify"})
         ),
     ], id='invalid-input-modal', is_open=True)

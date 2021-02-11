@@ -43,7 +43,7 @@ if 'PRODUCTION_SERVER' in os.environ:
         'routes_pathname_prefix': '/conplot/',
         'requests_pathname_prefix': '/conplot/',
     })
-keydb_pool = keydb_utils.create_pool()
+keydb_pool = keydb_utils.create_pool(os.environ.get('KEYDB_URL'))
 app.layout = serve_layout
 
 

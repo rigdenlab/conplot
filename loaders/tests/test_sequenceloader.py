@@ -51,7 +51,7 @@ class SequenceLoaderTestCase(unittest.TestCase):
         self.assertIsNone(hydro_data)
         self.assertTrue(invalid)
 
-    def test_6(self):
+    def test_3(self):
         expected = [0.33, 0.22, 0.5, 0.12, -0.58, 1.14, -0.06, -0.81, 1.81, -0.69, -0.44, 0.43, -0.31, 0.19, 1.0, 0.33,
                     0.11, -0.53, -0.24, 0.23]
         seq = protein.letters

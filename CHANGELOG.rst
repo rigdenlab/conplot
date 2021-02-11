@@ -8,11 +8,13 @@ Changelog
 Added
 ~~~~~
 - Citation on home page
+- Added more exhaustive tests
 
 Changed
 ~~~~~
 - Account recovery is automated: users will receive an automated email with instructions to reset password
 - Docker image now deployed on fedora 33 instead of CentOS 8
+- Users can upload both VFORMAT and HFORMAT psipred files instead of only VFORMAT
 
 
 0.3.1

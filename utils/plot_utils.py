@@ -3,6 +3,9 @@ import components
 from enum import Enum
 import json
 from operator import itemgetter
+from sklearn.cluster import estimate_bandwidth
+from sklearn.neighbors import KernelDensity
+import numpy as np
 from parsers import DatasetStates
 import plotly.graph_objects as go
 from loaders import DatasetReference, AdditionalDatasetReference
@@ -631,3 +634,18 @@ def get_verbose_labels(fnames, sequence, session):
         labels.append(current_label)
 
     return labels
+
+
+def get_contact_density(contact_list, sequence_range, normalize=True):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
+
+    x = np.array([i for c in contact_list for i in np.arange(c[0], c[1] + 1)], dtype=np.int64)[:, np.newaxis]
+    bw = estimate_bandwidth(x)
+    kde = KernelDensity(bw).fit(x)
+    x_fit = np.arange(sequence_range.min(), sequence_range.max() + 1)[:, np.newaxis]
+    density = np.exp(kde.score_samples(x_fit)).tolist()
+
+    if normalize:
+        return [float(i)/max(density) for i in density]
+    else:
+        return density

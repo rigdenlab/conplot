@@ -188,33 +188,6 @@ def lookup_input_errors(session):
     if any(missing_data):
         return components.MissingInputModal(*[missing.name for missing in missing_data])
 
-    seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
-    seq_length = len(session[seq_fname.encode()])
-
-    mismatched = []
-    for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        if session[cmap_fname.encode()][-1] == 'PDB' or session[cmap_fname.encode()][-1] == 'DISTO':
-            cmap_max_register = max((max(session[cmap_fname.encode()][:-1], key=itemgetter(0))[0],
-                                     max(session[cmap_fname.encode()][:-1], key=itemgetter(1))[0]))
-        else:
-            cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
-                                     max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
-        if cmap_max_register > seq_length:
-            mismatched.append(cmap_fname)
-
-    if any(mismatched):
-        return components.MismatchSequenceModal(*mismatched)
-
-    mismatched = []
-    for dataset in AdditionalDatasetReference:
-        if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
-            for fname in session[dataset.value.encode()]:
-                if len(session[fname.encode()]) != seq_length:
-                    mismatched.append(fname)
-
-    if any(mismatched):
-        return components.MismatchModal(*mismatched)
-
     return None
 
 
@@ -539,7 +512,8 @@ def get_diagonal_traces(prediction, dataset, marker_size, sequence, alpha, color
         color = color.format(alpha)
 
         traces.append(
-            create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
+            create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext)
+        )
 
     return traces
 

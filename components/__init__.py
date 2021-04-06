@@ -454,6 +454,12 @@ def NoAdditionalTracksCard(*args, **kwargs):
     return NoAdditionalTracksCard(*args, **kwargs)
 
 
+def MismatchDatasetModal(*args, **kwargs):
+    from components.modals import MismatchDatasetModal
+
+    return MismatchDatasetModal(*args, **kwargs)
+
+
 def ContactDisplayControlCard(*args, **kwargs):
     from components.cards import DisplayControlCard
 

@@ -107,7 +107,8 @@ class UrlIndex(Enum):
     CONPLOT_MAIL = 'conplot.noreply@gmail.com'
     CONPLOT_USERNAME = 'conplot.noreply'
     CITATION = 'https://doi.org/10.1093/bioinformatics/btab049'
-
+    YOUTUBE_EMBED = 'https://www.youtube.com/embed/dQw4w9WgXcQ'
+    YOUTUBE_LINK = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
 
 def create_ConPlot(*args, **kwargs):
     from utils.plot_utils import create_ConPlot

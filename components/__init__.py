@@ -94,6 +94,12 @@ def TutorialFourModal(*args, **kwargs):
     return TutorialFourModal(*args, **kwargs)
 
 
+def TutorialFiveModal(*args, **kwargs):
+    from components.modals import TutorialFiveModal
+
+    return TutorialFiveModal(*args, **kwargs)
+
+
 def GdprAgreementCheckbox(*args, **kwargs):
     from components.inputgroups import GdprAgreementCheckbox
 

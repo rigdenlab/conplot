@@ -90,7 +90,7 @@ def Body():
                             html.P('If you found ConPlot useful for your work and you would like to cite us '
                                    'please use the following reference:',
                                    style={"font-size": "120%", "text-align": "justify"}),
-                            html.I('Sánchez Rodríguez, et al., ConPlot: Web-based application for the visualisation '
+                            html.I('Sánchez Rodríguez et al., ConPlot: Web-based application for the visualisation '
                                    'of protein contact maps integrated with other data, Bioinformatics, 2021.',
                                    style={"font-size": "120%", "text-align": "justify"}),
                             html.Br(),

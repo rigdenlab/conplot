@@ -552,6 +552,23 @@ def TutorialFourModal():
         autoFocus=True)
 
 
+def TutorialFiveModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 5: Video Tutorial'),
+        dbc.ModalBody([
+            'Below there is a short video tutorial with an overview of the main ConPlot features. ',
+            html.Br(),
+            html.Br(),
+            html.Iframe(width=1100, height=630, src=UrlIndex.YOUTUBE_EMBED.value,
+                        style={'frameborder': 0, 'allow': "accelerometer; autoplay; clipboard-write; "
+                                                          "encrypted-media; gyroscope; picture-in-picture"}),
+            html.Br(),
+            'If you cannot see the video click ', html.A(html.U('here'), href=UrlIndex.YOUTUBE_LINK.value), '.'
+        ])
+    ], id={'type': 'tutorial-modal', 'index': 5}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
 def RedisConnectionErrorModal():
     return dbc.Modal([
         ModalHeader("Redis connection error"),

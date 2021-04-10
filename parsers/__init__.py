@@ -25,10 +25,10 @@ def guess_psipred_format(*args, **kwargs):
     return guess_psipred_format(*args, **kwargs)
 
 
-def DistogramParser(*args, **kwargs):
-    from parsers.distogramparser import DistogramParser
+def CASPRR2Parser(*args, **kwargs):
+    from parsers.casprr2parser import CASPRR2Parser
 
-    return DistogramParser(*args, **kwargs)
+    return CASPRR2Parser(*args, **kwargs)
 
 
 def TopconsParser(*args, **kwargs):
@@ -103,7 +103,7 @@ class ParserFormats(Enum):
     CCMPRED = CCMpredParser
     COLSTATS = CCMpredParser
     PDB = PDBParser
-    CASPRR_MODE_2 = DistogramParser
+    CASPRR_MODE_2 = CASPRR2Parser
     trROSETTA_NPZ = NpzParser
 
 

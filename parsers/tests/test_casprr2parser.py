@@ -1,9 +1,9 @@
 import unittest
-from parsers import DistogramParser
+from parsers import CASPRR2Parser
 from utils.exceptions import InvalidFormat
 
 
-class ContactParserTestCase(unittest.TestCase):
+class CASPRRMODE2ParserTestCase(unittest.TestCase):
 
     def test_1(self):
         dummy_prediction = """PFRMAT RR
@@ -33,7 +33,7 @@ END"""
         expected_bin_distance = [0, 0, 1, 0, 0, 0, 1, 2, 2, 1, 2, 3]
         expected_bin_score = [0.345, 0.34, 0.56, 0.34, 0.33, 0.33, 0.51, 0.305, 0.3, 0.2, 0.2, 0.3]
 
-        output = DistogramParser(dummy_prediction)
+        output = CASPRR2Parser(dummy_prediction)
 
         self.assertEqual('DISTO', output.pop(-1))
         self.assertEqual(12, len(output))
@@ -49,5 +49,5 @@ D U M M Y
 100 8 5.382865
 """
         with self.assertRaises(InvalidFormat):
-            output = DistogramParser(dummy_prediction)
+            output = CASPRR2Parser(dummy_prediction)
             self.assertListEqual(output, [])

@@ -3,7 +3,7 @@ from utils import unique_by_key
 from utils.exceptions import InvalidFormat
 
 
-def DistogramParser(input, input_format=None):
+def CASPRR2Parser(input, input_format=None):
     contents = input.split('\n')
     output = []
     res_1_idx = 0

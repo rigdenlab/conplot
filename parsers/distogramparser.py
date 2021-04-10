@@ -32,7 +32,7 @@ def DistogramParser(input, input_format=None):
             output.append((tuple(contact[:2]), *contact[2:]))
 
     if not output:
-        raise InvalidFormat('Unable to parse contacts')
+        raise InvalidFormat('Unable to parse CASPRR_MODE_2 file')
     else:
         unique_contacts = unique_by_key(output, key=itemgetter(0))
         output = [(*contact[0], *contact[1:]) for contact in unique_contacts]

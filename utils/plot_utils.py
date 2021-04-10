@@ -422,8 +422,11 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2, verbose
 def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
     if factor != 0:
         secondary_cmap = secondary_cmap[:int(round(seq_length / factor, 0))]
-        if reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
+        if reference_cmap[-1] == 'PDB':
             del reference_cmap[-1]
+        elif reference_cmap[-1] == 'DISTO':
+            del reference_cmap[-1]
+            reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
         else:
             reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
 

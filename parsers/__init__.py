@@ -73,6 +73,12 @@ def CustomParser(*args, **kwargs):
     return CustomParser(*args, **kwargs)
 
 
+def NpzParser(*args, **kwargs):
+    from parsers.npzparser import NpzParser
+
+    return NpzParser(*args, **kwargs)
+
+
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
     CONSURF = ConsurfParser
@@ -98,6 +104,7 @@ class ParserFormats(Enum):
     COLSTATS = CCMpredParser
     PDB = PDBParser
     CASPRR_MODE_2 = DistogramParser
+    trROSETTA_NPZ = NpzParser
 
 
 class ContactInformationFormats(Enum):
@@ -122,6 +129,7 @@ class ContactInformationFormats(Enum):
     MAPALIGN = 18
     ALEIGEN = 19
     PDB = 20
+    trROSETTA_NPZ = 21
 
 
 class ContactMapFormats(Enum):
@@ -152,6 +160,7 @@ class StructuralInformationFormats(Enum):
 
 class DistanceInformationFormats(Enum):
     CASPRR_MODE_2 = 1
+    trROSETTA_NPZ = 2
 
 
 class MembraneStates(Enum):

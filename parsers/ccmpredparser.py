@@ -3,7 +3,7 @@ from utils.exceptions import InvalidFormat
 from utils import unique_by_key
 
 
-def CCMpredParser(input):
+def CCMpredParser(input, input_format=None):
     contents = input.split('\n')
 
     output = []

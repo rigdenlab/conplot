@@ -2,7 +2,7 @@ from utils.exceptions import InvalidFormat
 from parsers import CustomStates
 
 
-def CustomParser(input):
+def CustomParser(input, input_format=None):
     contents = input.split('\n')
 
     len_flag = []

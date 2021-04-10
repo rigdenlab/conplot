@@ -2,7 +2,7 @@ from parsers import MembraneStates
 from utils.exceptions import InvalidFormat
 
 
-def TopconsParser(input):
+def TopconsParser(input, input_format=None):
     contents = input.split('\n')
 
     try:

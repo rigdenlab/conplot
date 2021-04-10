@@ -2,7 +2,7 @@ from parsers import DisorderStates
 from utils.exceptions import InvalidFormat
 
 
-def IupredParser(input):
+def IupredParser(input, input_format=None):
     contents = input.split('\n')
     output = []
 

@@ -2,9 +2,6 @@ from collections import namedtuple
 import components
 from enum import Enum
 import json
-from operator import itemgetter
-from sklearn.cluster import estimate_bandwidth
-from sklearn.neighbors import KernelDensity
 import numpy as np
 from parsers import DatasetStates
 import plotly.graph_objects as go
@@ -615,7 +612,8 @@ def get_verbose_labels(fnames, sequence, session):
 
 def get_contact_density(contact_list, sequence_range, normalize=True):
     """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
-
+    from sklearn.cluster import estimate_bandwidth
+    from sklearn.neighbors import KernelDensity
     x = np.array([i for c in contact_list for i in np.arange(c[0], c[1] + 1)], dtype=np.int64)[:, np.newaxis]
     bw = estimate_bandwidth(x)
     kde = KernelDensity(bw).fit(x)

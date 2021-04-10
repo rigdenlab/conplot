@@ -12,7 +12,7 @@ def guess_psipred_format(contents):
     raise InvalidFormat('Unable to guess psipred file format')
 
 
-def PsipredParser(input):
+def PsipredParser(input, input_format=None):
     contents = input.split('\n')
     parser = guess_psipred_format(contents)
     return parser(contents)

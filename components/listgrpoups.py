@@ -93,7 +93,8 @@ def TutorialList():
             TutorialItem(idx=1, name='Creating your first plot'),
             TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
-            TutorialItem(idx=4, name='Residue-Residue distance predictions')
+            TutorialItem(idx=4, name='Residue-Residue distance predictions'),
+            #TutorialItem(idx=5, name='Video tutorial')
         ], style={'width': '75%'}
         ), justify='center', align='center')
 

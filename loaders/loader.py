@@ -10,12 +10,11 @@ def Loader(raw_file, input_format):
 
     if raw_file is not None:
         try:
-            decoded = decode_raw_file(raw_file)
-            if input_format in ContactInformationFormats.__members__ and input_format != ContactInformationFormats.CCMPRED.name \
-                    and input_format != ContactInformationFormats.PDB.name:
+            if input_format != ContactInformationFormats.trROSETTA_NPZ.name:
+                decoded = decode_raw_file(raw_file)
                 data_raw = ParserFormats.__dict__[input_format](decoded, input_format)
             else:
-                data_raw = ParserFormats.__dict__[input_format](decoded)
+                data_raw = ParserFormats.__dict__[input_format](raw_file, input_format)
             data = compress_data(data_raw)
         except (InvalidFormat, UnicodeDecodeError) as e:
             data = None

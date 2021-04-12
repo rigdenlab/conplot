@@ -2,7 +2,7 @@ from collections import namedtuple
 import components
 from enum import Enum
 import json
-from operator import itemgetter
+import numpy as np
 from parsers import DatasetStates
 import plotly.graph_objects as go
 from loaders import DatasetReference, AdditionalDatasetReference
@@ -184,33 +184,6 @@ def lookup_input_errors(session):
 
     if any(missing_data):
         return components.MissingInputModal(*[missing.name for missing in missing_data])
-
-    seq_fname = session[DatasetReference.SEQUENCE.value.encode()]
-    seq_length = len(session[seq_fname.encode()])
-
-    mismatched = []
-    for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        if session[cmap_fname.encode()][-1] == 'PDB' or session[cmap_fname.encode()][-1] == 'DISTO':
-            cmap_max_register = max((max(session[cmap_fname.encode()][:-1], key=itemgetter(0))[0],
-                                     max(session[cmap_fname.encode()][:-1], key=itemgetter(1))[0]))
-        else:
-            cmap_max_register = max((max(session[cmap_fname.encode()], key=itemgetter(0))[0],
-                                     max(session[cmap_fname.encode()], key=itemgetter(1))[0]))
-        if cmap_max_register > seq_length:
-            mismatched.append(cmap_fname)
-
-    if any(mismatched):
-        return components.MismatchSequenceModal(*mismatched)
-
-    mismatched = []
-    for dataset in AdditionalDatasetReference:
-        if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
-            for fname in session[dataset.value.encode()]:
-                if len(session[fname.encode()]) != seq_length:
-                    mismatched.append(fname)
-
-    if any(mismatched):
-        return components.MismatchModal(*mismatched)
 
     return None
 
@@ -446,8 +419,11 @@ def create_contact_trace(cmap, idx, seq_length, marker_size=5, factor=2, verbose
 def get_superimposed_contact_traces(reference_cmap, secondary_cmap, seq_length, factor=2):
     if factor != 0:
         secondary_cmap = secondary_cmap[:int(round(seq_length / factor, 0))]
-        if reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
+        if reference_cmap[-1] == 'PDB':
             del reference_cmap[-1]
+        elif reference_cmap[-1] == 'DISTO':
+            del reference_cmap[-1]
+            reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
         else:
             reference_cmap = reference_cmap[:int(round(seq_length / factor, 0))]
 
@@ -536,7 +512,8 @@ def get_diagonal_traces(prediction, dataset, marker_size, sequence, alpha, color
         color = color.format(alpha)
 
         traces.append(
-            create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
+            create_scatter(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext)
+        )
 
     return traces
 
@@ -631,3 +608,19 @@ def get_verbose_labels(fnames, sequence, session):
         labels.append(current_label)
 
     return labels
+
+
+def get_contact_density(contact_list, sequence_range, normalize=True):
+    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
+    from sklearn.cluster import estimate_bandwidth
+    from sklearn.neighbors import KernelDensity
+    x = np.array([i for c in contact_list for i in np.arange(c[0], c[1] + 1)], dtype=np.int64)[:, np.newaxis]
+    bw = estimate_bandwidth(x)
+    kde = KernelDensity(bw).fit(x)
+    x_fit = np.arange(sequence_range.min(), sequence_range.max() + 1)[:, np.newaxis]
+    density = np.exp(kde.score_samples(x_fit)).tolist()
+
+    if normalize:
+        return [float(i)/max(density) for i in density]
+    else:
+        return density

@@ -1,7 +1,56 @@
 import components
 from dash import no_update
 import loaders
-from utils import callback_utils, cache_utils, compress_data
+from operator import itemgetter
+from utils import callback_utils, cache_utils, compress_data, decompress_data
+
+
+def check_sequence_mismatch(session_id, cache, seq_length):
+    mismatched = []
+
+    if cache.hexists(session_id, cache_utils.CacheKeys.CONTACT_MAP.value):
+        cmap_fnames = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.CONTACT_MAP.value))
+        for cmap_fname in cmap_fnames:
+            cmap_data = decompress_data(cache.hget(session_id, cmap_fname))
+            if cmap_data[-1] == 'PDB' or cmap_data[-1] == 'DISTO':
+                cmap_data.pop()
+            cmap_max_register = max((max(cmap_data, key=itemgetter(0))[0], max(cmap_data, key=itemgetter(1))[0]))
+            if cmap_max_register > seq_length:
+                mismatched.append(cmap_fname)
+
+    for dataset in loaders.AdditionalDatasetReference:
+        if cache.hexists(session_id, dataset.value):
+            fnames = decompress_data(cache.hget(session_id, dataset.value))
+            for fname in fnames:
+                data = decompress_data(cache.hget(session_id, fname))
+                if data is not None and len(data) != seq_length:
+                    mismatched.append(fname)
+
+    return mismatched
+
+
+def check_dataset_mismatch(session_id, cache, data, dataset):
+    if not cache.hexists(session_id, cache_utils.CacheKeys.SEQUENCE.value):
+        return False
+
+    seq_fname = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.SEQUENCE.value))
+    seq_length = len(decompress_data(cache.hget(session_id, seq_fname)))
+    data = decompress_data(data)
+
+    if dataset in loaders.AdditionalDatasetReference._value2member_map_:
+        if len(data) != seq_length:
+            return seq_fname
+        else:
+            return False
+    elif data[-1] == 'PDB' or data[-1] == 'DISTO':
+        max_register = max((max(data[:-1], key=itemgetter(0))[0], max(data[:-1], key=itemgetter(1))[0]))
+    else:
+        max_register = max((max(data, key=itemgetter(0))[0], max(data, key=itemgetter(1))[0]))
+
+    if max_register > seq_length:
+        return seq_fname
+
+    return False
 
 
 def upload_sequence(fname, fcontent, session_id, cache, logger):
@@ -19,12 +68,17 @@ def upload_sequence(fname, fcontent, session_id, cache, logger):
     if invalid:
         logger.info('Session {} file {} is invalid sequence file'.format(session_id, fname))
         return no_update, None, components.InvalidFormatModal()
-    else:
-        logger.info('Session {} uploads {} - sequence'.format(session_id, fname))
-        cache.hset(session_id, fname, sequence_data)
-        cache.hset(session_id, cache_utils.CacheKeys.SEQUENCE_HYDROPHOBICITY.value, seq_hydrophobicity)
-        cache.hset(session_id, cache_utils.CacheKeys.SEQUENCE.value, compress_data(fname))
-        return components.FilenameAlert(fname, loaders.DatasetReference.SEQUENCE.value), None, None
+
+    mismatched = check_sequence_mismatch(session_id, cache, len(decompress_data(sequence_data)))
+    if any(mismatched):
+        logger.info('Session {} mismatch {} sequence file detected'.format(session_id, fname))
+        return no_update, None, components.MismatchSequenceModal(*mismatched)
+
+    logger.info('Session {} uploads {} - sequence'.format(session_id, fname))
+    cache.hset(session_id, fname, sequence_data)
+    cache.hset(session_id, cache_utils.CacheKeys.SEQUENCE_HYDROPHOBICITY.value, seq_hydrophobicity)
+    cache.hset(session_id, cache_utils.CacheKeys.SEQUENCE.value, compress_data(fname))
+    return components.FilenameAlert(fname, loaders.DatasetReference.SEQUENCE.value), None, None
 
 
 def upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cache, logger, dataset=None):
@@ -43,6 +97,11 @@ def upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cach
     if invalid:
         logger.info('Session {} file {} is invalid {}'.format(session_id, fname, dataset))
         return fname_alerts, None, components.InvalidFormatModal()
+
+    mismatched = check_dataset_mismatch(session_id, cache, data, dataset)
+    if mismatched:
+        logger.info('Session {} mismatch {} file detected'.format(session_id, fname))
+        return no_update, None, components.MismatchDatasetModal(fname, mismatched)
     else:
         logger.info('Session {} uploads {} - {}'.format(session_id, fname, dataset))
         fname_alerts = [alert for alert in fname_alerts

@@ -1,7 +1,7 @@
 from utils.exceptions import InvalidFormat
 
 
-def ConsurfParser(input):
+def ConsurfParser(input, input_format=None):
     contents = input.split('\n')
     output = []
 

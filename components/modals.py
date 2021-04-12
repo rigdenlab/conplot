@@ -16,12 +16,23 @@ def MismatchModal(*args):
     ], id='mismatch-modal', is_open=True)
 
 
+def MismatchDatasetModal(fname, seq_fname):
+    return dbc.Modal([
+        ModalHeader("Mismatch Detected"),
+        dbc.ModalBody([
+            html.P("""We were unable to match the sequence at {} with the data at the file {}. Please 
+                ensure that the file you attempt to upload corresponds with the protein sequence 
+                in the provided FASTA file.""".format(seq_fname, fname), style={'text-align': "justify"}),
+        ])
+    ], id='mismatch-dataset-modal', is_open=True)
+
+
 def MismatchSequenceModal(*args):
     return dbc.Modal([
         ModalHeader("Sequence Mismatch"),
         dbc.ModalBody([
-            html.P("""We were unable to match the uploaded sequence with contact maps in the following files. 
-            Please ensure that the provided the sequence corresponds with the structure in these contact maps.""",
+            html.P("""We were unable to match the uploaded sequence with datasets in the following files. 
+            Please ensure that the provided sequence corresponds with the structure described in these datasets.""",
                    style={'text-align': "justify"}),
             html.Ul([html.Li('File: %s' % arg) for arg in args], id='mismatched-maps-div')
         ])
@@ -541,6 +552,23 @@ def TutorialFourModal():
         autoFocus=True)
 
 
+def TutorialFiveModal():
+    return dbc.Modal([
+        dbc.ModalHeader('Tutorial 5: Video Tutorial'),
+        dbc.ModalBody([
+            'Below there is a short video tutorial with an overview of the main ConPlot features. ',
+            html.Br(),
+            html.Br(),
+            html.Iframe(width=1100, height=630, src=UrlIndex.YOUTUBE_EMBED.value,
+                        style={'frameborder': 0, 'allow': "accelerometer; autoplay; clipboard-write; "
+                                                          "encrypted-media; gyroscope; picture-in-picture"}),
+            html.Br(),
+            'If you cannot see the video click ', html.A(html.U('here'), href=UrlIndex.YOUTUBE_LINK.value), '.'
+        ])
+    ], id={'type': 'tutorial-modal', 'index': 5}, is_open=False, size='xl', scrollable=True, centered=True,
+        autoFocus=True)
+
+
 def RedisConnectionErrorModal():
     return dbc.Modal([
         ModalHeader("Redis connection error"),
@@ -678,6 +706,7 @@ def FailureRecoverAccount():
             to your registered email address.""", style={'text-align': "justify"})
         ),
     ], id='fail-recovery-modal', is_open=True)
+
 
 def InvalidPasswordRecoverAccount():
     return dbc.Modal([

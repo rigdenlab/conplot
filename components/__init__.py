@@ -94,6 +94,12 @@ def TutorialFourModal(*args, **kwargs):
     return TutorialFourModal(*args, **kwargs)
 
 
+def TutorialFiveModal(*args, **kwargs):
+    from components.modals import TutorialFiveModal
+
+    return TutorialFiveModal(*args, **kwargs)
+
+
 def GdprAgreementCheckbox(*args, **kwargs):
     from components.inputgroups import GdprAgreementCheckbox
 
@@ -452,6 +458,12 @@ def NoAdditionalTracksCard(*args, **kwargs):
     from components.cards import NoAdditionalTracksCard
 
     return NoAdditionalTracksCard(*args, **kwargs)
+
+
+def MismatchDatasetModal(*args, **kwargs):
+    from components.modals import MismatchDatasetModal
+
+    return MismatchDatasetModal(*args, **kwargs)
 
 
 def ContactDisplayControlCard(*args, **kwargs):

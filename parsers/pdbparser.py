@@ -73,7 +73,7 @@ def remove_atoms(chain):
                 chain[residue.id].detach_child(atom.id)
 
 
-def PDBParser(input):
+def PDBParser(input, input_format=None):
     try:
         parser = BioPDBParser().get_structure('pdb', io.StringIO(input))
         chain = list(parser.get_chains())[0]

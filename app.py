@@ -203,6 +203,7 @@ def recover_account(n_clicks, username, email, secret, password_1, password_2):
 
     return app_utils.recover_account(username, email, secret, password_1, password_2, app.logger)
 
+
 @app.callback([Output('invalid-create-user-collapse', 'is_open'),
                Output('create-user-modal-div', 'children'),
                Output('create-username-input', 'value'),

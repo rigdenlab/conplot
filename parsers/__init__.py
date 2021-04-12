@@ -25,10 +25,10 @@ def guess_psipred_format(*args, **kwargs):
     return guess_psipred_format(*args, **kwargs)
 
 
-def DistogramParser(*args, **kwargs):
-    from parsers.distogramparser import DistogramParser
+def CASPRR2Parser(*args, **kwargs):
+    from parsers.casprr2parser import CASPRR2Parser
 
-    return DistogramParser(*args, **kwargs)
+    return CASPRR2Parser(*args, **kwargs)
 
 
 def TopconsParser(*args, **kwargs):
@@ -73,6 +73,12 @@ def CustomParser(*args, **kwargs):
     return CustomParser(*args, **kwargs)
 
 
+def NpzParser(*args, **kwargs):
+    from parsers.npzparser import NpzParser
+
+    return NpzParser(*args, **kwargs)
+
+
 class ParserFormats(Enum):
     TOPCONS = TopconsParser
     CONSURF = ConsurfParser
@@ -97,7 +103,8 @@ class ParserFormats(Enum):
     CCMPRED = CCMpredParser
     COLSTATS = CCMpredParser
     PDB = PDBParser
-    CASPRR_MODE_2 = DistogramParser
+    CASPRR_MODE_2 = CASPRR2Parser
+    trROSETTA_NPZ = NpzParser
 
 
 class ContactInformationFormats(Enum):
@@ -122,6 +129,7 @@ class ContactInformationFormats(Enum):
     MAPALIGN = 18
     ALEIGEN = 19
     PDB = 20
+    trROSETTA_NPZ = 21
 
 
 class ContactMapFormats(Enum):
@@ -152,6 +160,7 @@ class StructuralInformationFormats(Enum):
 
 class DistanceInformationFormats(Enum):
     CASPRR_MODE_2 = 1
+    trROSETTA_NPZ = 2
 
 
 class MembraneStates(Enum):

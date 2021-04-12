@@ -1,5 +1,4 @@
-from operator import itemgetter
-from utils import unique_by_key
+from utils import get_unique_distances
 from utils.exceptions import InvalidFormat
 
 
@@ -34,8 +33,5 @@ def CASPRR2Parser(input, input_format=None):
     if not output:
         raise InvalidFormat('Unable to parse CASPRR_MODE_2 file')
     else:
-        unique_contacts = unique_by_key(output, key=itemgetter(0))
-        output = [(*contact[0], *contact[1:]) for contact in unique_contacts]
-        output = sorted(output, key=itemgetter(2), reverse=True)
-        output.append('DISTO')
-        return output
+        unique_contacts = get_unique_distances(output)
+        return unique_contacts

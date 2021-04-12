@@ -1,4 +1,5 @@
 import os
+from operator import itemgetter
 from enum import Enum
 
 
@@ -109,6 +110,7 @@ class UrlIndex(Enum):
     CITATION = 'https://doi.org/10.1093/bioinformatics/btab049'
     YOUTUBE_EMBED = 'https://www.youtube.com/embed/dQw4w9WgXcQ'
     YOUTUBE_LINK = 'https://www.youtube.com/watch?v=dQw4w9WgXcQ'
+
 
 def create_ConPlot(*args, **kwargs):
     from utils.plot_utils import create_ConPlot
@@ -236,9 +238,19 @@ def get_session_action(*args, **kwargs):
     return get_session_action(*args, **kwargs)
 
 
-def unique_by_key(elements, key=None):
+def get_unique_contacts(elements):
     # Credits to: https://stackoverflow.com/questions/31499259/making-a-sequence-of-tuples-unique-by-a-specific-element
-    if key is None:
-        # no key: the whole element must be unique
-        key = lambda e: e
-    return list({key(el): el for el in elements}.values())
+    key = itemgetter(0)
+    unique = list({key(el): el for el in elements}.values())
+    output = [(*contact[0], contact[1]) for contact in unique]
+    output = sorted(output, key=itemgetter(2), reverse=True)
+    return output
+
+
+def get_unique_distances(elements):
+    key = itemgetter(0)
+    unique_contacts = list({key(el): el for el in elements}.values())
+    output = [(*contact[0], *contact[1:]) for contact in unique_contacts]
+    output = sorted(output, key=itemgetter(2), reverse=True)
+    output.append('DISTO')
+    return output

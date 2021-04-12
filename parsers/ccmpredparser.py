@@ -1,6 +1,5 @@
-from operator import itemgetter
 from utils.exceptions import InvalidFormat
-from utils import unique_by_key
+from utils import get_unique_contacts
 
 
 def CCMpredParser(input, input_format=None):
@@ -31,7 +30,5 @@ def CCMpredParser(input, input_format=None):
     if not output:
         raise InvalidFormat('Unable to parse contacts')
     else:
-        unique_contacts = unique_by_key(output, key=itemgetter(0))
-        output = [(*contact[0], contact[1]) for contact in unique_contacts]
-        output = sorted(output, key=itemgetter(2), reverse=True)
-        return output
+        unique_contacts = get_unique_contacts(output)
+        return unique_contacts

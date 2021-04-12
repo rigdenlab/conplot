@@ -1,9 +1,8 @@
 import io
 import base64
 import numpy as np
-from operator import itemgetter
 from utils.exceptions import InvalidFormat
-from utils import unique_by_key
+from utils import get_unique_distances
 
 
 def parse_array(array):
@@ -31,7 +30,6 @@ def NpzParser(input, input_format=None):
     except (OSError, KeyError, IndexError) as e:
         raise InvalidFormat('Unable to parse distance NPZ file')
 
-
     for contact in tmp_output:
         # contact = [res_1, res_2, raw_score, distance_bin, distance_score]
         contact[:2] = sorted(contact[:2], reverse=True)
@@ -40,8 +38,5 @@ def NpzParser(input, input_format=None):
     if not output:
         raise InvalidFormat('Unable to parse NPZ file')
     else:
-        unique_contacts = unique_by_key(output, key=itemgetter(0))
-        output = [(*contact[0], *contact[1:]) for contact in unique_contacts]
-        output = sorted(output, key=itemgetter(2), reverse=True)
-        output.append('DISTO')
-        return output
+        unique_contacts = get_unique_distances(output)
+        return unique_contacts

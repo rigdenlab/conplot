@@ -33,6 +33,34 @@ def decode_raw_file(raw_file):
     return decoded
 
 
+class ResidueHydrophobicityStates(Enum):
+    HYDROPHOBIC = 1
+    INDIFFERENT = 2
+
+
+class ResidueHydrophobicity(Enum):
+    I = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    L = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    F = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    V = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    M = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    P = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    W = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    H = ResidueHydrophobicityStates.INDIFFERENT.value
+    T = ResidueHydrophobicityStates.INDIFFERENT.value
+    E = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    Q = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    C = ResidueHydrophobicityStates.HYDROPHOBIC.value
+    Y = ResidueHydrophobicityStates.INDIFFERENT.value
+    A = ResidueHydrophobicityStates.INDIFFERENT.value
+    S = ResidueHydrophobicityStates.INDIFFERENT.value
+    N = ResidueHydrophobicityStates.INDIFFERENT.value
+    D = ResidueHydrophobicityStates.INDIFFERENT.value
+    R = ResidueHydrophobicityStates.INDIFFERENT.value
+    G = ResidueHydrophobicityStates.INDIFFERENT.value
+    K = ResidueHydrophobicityStates.INDIFFERENT.value
+
+
 def Loader(*args, **kwargs):
     from loaders.loader import Loader
 

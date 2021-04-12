@@ -1,15 +1,15 @@
-from loaders import decode_raw_file
+from loaders import decode_raw_file, ResidueHydrophobicity
 from Bio import SeqIO
 from Bio.Alphabet.IUPAC import protein
 from io import StringIO
-from utils import compress_data, WimleyWhiteHydrophobicityScale
+from utils import compress_data
 
 
 def get_hydrophobicity(seq):
     hydro = []
     try:
         for residue in seq:
-            hydro.append(WimleyWhiteHydrophobicityScale.__getattr__(residue).value)
+            hydro.append(ResidueHydrophobicity.__getattr__(residue).value)
     except AttributeError:
         return None
     return hydro

@@ -67,6 +67,12 @@ def PDBParser(*args, **kwargs):
     return PDBParser(*args, **kwargs)
 
 
+def MappredParser(*args, **kwargs):
+    from parsers.mappred import MappredParser
+
+    return MappredParser(*args, **kwargs)
+
+
 def CustomParser(*args, **kwargs):
     from parsers.customparser import CustomParser
 
@@ -105,6 +111,7 @@ class ParserFormats(Enum):
     PDB = PDBParser
     CASPRR_MODE_2 = CASPRR2Parser
     trROSETTA_NPZ = NpzParser
+    MAPPRED = MappredParser
 
 
 class ContactInformationFormats(Enum):
@@ -130,6 +137,7 @@ class ContactInformationFormats(Enum):
     ALEIGEN = 19
     PDB = 20
     trROSETTA_NPZ = 21
+    MAPPRED = 22
 
 
 class ContactMapFormats(Enum):
@@ -161,6 +169,7 @@ class StructuralInformationFormats(Enum):
 class DistanceInformationFormats(Enum):
     CASPRR_MODE_2 = 1
     trROSETTA_NPZ = 2
+    MAPPRED = 3
 
 
 class MembraneStates(Enum):

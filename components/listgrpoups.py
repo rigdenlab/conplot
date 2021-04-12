@@ -397,10 +397,12 @@ def MandatoryInputHelpList():
                  html.Ul([
                      html.Li(['Residue Distance Prediction: these files contain information about real value distances '
                               'between residue pairs, and are rapidly replacing contact prediction maps in protein '
-                              'structure prediction pipelines. ConPlot currently supports two formats: CASP RR MODE '
+                              'structure prediction pipelines. ConPlot currently supports three formats: CASP RR MODE '
                               '2 format (read more ', html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value),
-                              ') and trRosetta npz files (you can obtain them ',
-                              html.A(html.U('here'), href=UrlIndex.TRROSETTA_WEBSITE.value), ').']),
+                              '), MapPred output files (get them ',
+                              html.A(html.U('here'), href=UrlIndex.MAPPRED_SERVER.value),
+                              ') and trRosetta npz files (get them ',
+                              html.A(html.U('here'), href=UrlIndex.TRROSETTA_SERVER.value), ').']),
                      html.Li(['Contact Maps: There are many formats used for such files, but ConPlot is able to parse '
                               'the most common ones. If you wish to upload a contact map file in a format not '
                               'supported by ConPlot, we suggest you take a look at ',

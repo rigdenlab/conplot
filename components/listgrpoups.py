@@ -94,7 +94,7 @@ def TutorialList():
             TutorialItem(idx=2, name='Compare a contact prediction with a PDB file'),
             TutorialItem(idx=3, name='Storing, loading and sharing a session'),
             TutorialItem(idx=4, name='Residue-Residue distance predictions'),
-            #TutorialItem(idx=5, name='Video tutorial')
+            # TutorialItem(idx=5, name='Video tutorial')
         ], style={'width': '75%'}
         ), justify='center', align='center')
 
@@ -397,9 +397,10 @@ def MandatoryInputHelpList():
                  html.Ul([
                      html.Li(['Residue Distance Prediction: these files contain information about real value distances '
                               'between residue pairs, and are rapidly replacing contact prediction maps in protein '
-                              'structure prediction pipelines. ConPlot currently supports CASP RR MODE 2 format, the '
-                              'specifications for this format can be found ',
-                              html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value), '.']),
+                              'structure prediction pipelines. ConPlot currently supports two formats: CASP RR MODE '
+                              '2 format (read more ', html.A(html.U('here'), href=UrlIndex.CASP14_RRFORMAT.value),
+                              ') and trRosetta npz files (you can obtain them ',
+                              html.A(html.U('here'), href=UrlIndex.TRROSETTA_WEBSITE.value), ').']),
                      html.Li(['Contact Maps: There are many formats used for such files, but ConPlot is able to parse '
                               'the most common ones. If you wish to upload a contact map file in a format not '
                               'supported by ConPlot, we suggest you take a look at ',

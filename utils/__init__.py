@@ -94,6 +94,7 @@ class UrlIndex(Enum):
     UNIVERSITY_LIVERPOOL = 'https://www.liverpool.ac.uk/'
     CCP4_ONLINE = 'https://www.ccp4.ac.uk/'
     CASP14_RRFORMAT = 'https://predictioncenter.org/casp14/index.cgi?page=format'
+    TRROSETTA_WEBSITE = 'https://yanglab.nankai.edu.cn/trRosetta/'
     TOPCONS_WEB = 'http://topcons.cbr.su.se/'
     TOPCONS_CITATION = 'https://dx.doi.org/10.1093%2Fnar%2Fgkv485'
     PSIPRED_WEB = 'http://bioinf.cs.ucl.ac.uk/psipred/'

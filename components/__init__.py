@@ -34,10 +34,10 @@ def ExampleSessionConnectionErrorModal(*args, **kwargs):
     return ExampleSessionConnectionErrorModal(*args, **kwargs)
 
 
-def InvalidSuperposeDistanceMatrixModal(*args, **kwargs):
-    from components.modals import InvalidSuperposeDistanceMatrixModal
+def InvalidSuperposeHeatmapModal(*args, **kwargs):
+    from components.modals import InvalidSuperposeHeatmapModal
 
-    return InvalidSuperposeDistanceMatrixModal(*args, **kwargs)
+    return InvalidSuperposeHeatmapModal(*args, **kwargs)
 
 
 def GdprPolicySectionOne(*args, **kwargs):

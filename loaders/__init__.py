@@ -71,3 +71,46 @@ def SequenceLoader(*args, **kwargs):
     from loaders.sequenceloader import SequenceLoader
 
     return SequenceLoader(*args, **kwargs)
+
+
+STATES = {
+    DatasetReference.MEMBRANE_TOPOLOGY.value: {
+        1: 'INSIDE',
+        2: 'OUTSIDE',
+        3: 'INSERTED'
+    },
+    DatasetReference.CONSERVATION.value: {
+        1: 'VARIABLE_1',
+        2: 'VARIABLE_2',
+        3: 'VARIABLE_3',
+        4: 'AVERAGE_4',
+        5: 'AVERAGE_5',
+        6: 'AVERAGE_6',
+        7: 'CONSERVED_7',
+        8: 'CONSERVED_8',
+        9: 'CONSERVED_9'
+    },
+    DatasetReference.CUSTOM.value: {
+        1: 'CUSTOM_1',
+        2: 'CUSTOM_2',
+        3: 'CUSTOM_3',
+        4: 'CUSTOM_4',
+        5: 'CUSTOM_5',
+        6: 'CUSTOM_6',
+        7: 'CUSTOM_7',
+        8: 'CUSTOM_8',
+        9: 'CUSTOM_9',
+        10: 'CUSTOM_10',
+        11: 'CUSTOM_11',
+        'NAN': 'CUSTOM_NAN'
+    },
+    DatasetReference.DISORDER.value: {
+        1: 'DISORDER',
+        2: 'ORDER'
+    },
+    DatasetReference.SECONDARY_STRUCTURE.value: {
+        1: 'HELIX',
+        2: 'COIL',
+        3: 'SHEET'
+    }
+}

@@ -60,12 +60,12 @@ def InvalidMapSelectionModal():
     ], id='invalid-map-selection-modal', is_open=True)
 
 
-def InvalidSuperposeDistanceMatrixModal():
+def InvalidSuperposeHeatmapModal():
     return dbc.Modal([
         ModalHeader("Invalid Input"),
         dbc.ModalBody([
-            html.P("""Superposition of heatmaps is not supported yet!""",
-                   style={'text-align': "justify"})
+            html.P("""Superposition of residue contact predictions is not supported while the heatmap mode is 
+            activated.""", style={'text-align': "justify"})
         ]),
     ], id='invalid-map-selection-modal', is_open=True)
 

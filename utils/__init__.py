@@ -1,6 +1,8 @@
 import os
 from operator import itemgetter
 from enum import Enum
+from fast_enum import FastEnum
+
 
 def conplot_version():
     return 'v0.3.2'
@@ -11,6 +13,28 @@ def get_base_url():
         return '/conplot'
     else:
         return ''
+
+
+class DistanceLabels(FastEnum):
+    BIN_0 = 'd ≤ 4Å'
+    BIN_1 = '4Å < d ≤ 6Å'
+    BIN_2 = '6Å < d ≤ 8Å'
+    BIN_3 = '8Å < d ≤ 10Å'
+    BIN_4 = '10Å < d ≤ 12Å'
+    BIN_5 = '12Å < d ≤ 14Å'
+    BIN_6 = '14Å < d ≤ 16Å'
+    BIN_7 = '16Å < d ≤ 18Å'
+    BIN_8 = '18Å < d ≤ 20Å'
+    BIN_9 = 'd > 20Å'
+
+
+class HoverTemplates(FastEnum):
+    DISTOGRAM = 'Contact: {} - {}<br>Distance {}<br>Confidence: {}'
+    DISTOGRAM_VERBOSE = 'Contact: {} - {}<br>Distance {}<br>Confidence: {}<br>{}<br>{}'
+    CMAP = 'Contact: {} - {}<br>Confidence: {}'
+    CMAP_VERBOSE = 'Contact: {} - {}<br>Confidence: {}<br>{}<br>{}'
+    DISTOGRAM_SUPERIMPOSE = 'Contact: {} - {}<br>Map A Distance {}<br>Map B Distance {}<br>Error: {}'
+    DISTOGRAM_SUPERIMPOSE_VERBOSE = 'Contact: {} - {}<br>Map A Distance {}<br>Map B Distance {}<br>Error: {}<br>{}<br>{}'
 
 
 class UrlIndex(Enum):
@@ -208,6 +232,12 @@ def toggle_alert(*args, **kwargs):
     from utils.callback_utils import toggle_alert
 
     return toggle_alert(*args, **kwargs)
+
+
+def create_cmap_trace(*args, **kwargs):
+    from utils.cmap_utils import create_cmap_trace
+
+    return create_cmap_trace(*args, **kwargs)
 
 
 def get_session_action(*args, **kwargs):

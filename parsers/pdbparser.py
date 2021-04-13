@@ -1,42 +1,11 @@
 from Bio.PDB import PDBParser as BioPDBParser
-from enum import Enum
 import io
 import itertools
 from operator import itemgetter
 from utils.exceptions import InvalidFormat
 
-
-class AminoAcidThreeToOne(Enum):
-    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
-    ALA = "A"
-    ARG = "R"
-    ASN = "N"
-    ASP = "D"
-    CME = "C"
-    CYS = "C"
-    GLN = "Q"
-    GLU = "E"
-    GLY = "G"
-    HIS = "H"
-    ILE = "I"
-    LEU = "L"
-    LYS = "K"
-    MET = "M"
-    MSE = "M"
-    PHE = "F"
-    PRO = "P"
-    PYL = "O"
-    SER = "S"
-    SEC = "U"
-    THR = "T"
-    TRP = "W"
-    TYR = "Y"
-    VAL = "V"
-    ASX = "B"
-    GLX = "Z"
-    XAA = "X"
-    UNK = "X"
-    XLE = "J"
+VALID_AMINOACIDS = {"A", "R", "N", "D", "C", "C", "Q", "E", "G", "H", "I", "L", "K", "M", "M", "F", "P", "O", "S", "U",
+                    "T", "W", "Y", "V", "B", "Z", "X", "X", "J"}
 
 
 def get_chain_contacts(chain):
@@ -51,9 +20,16 @@ def get_chain_contacts(chain):
             continue
         for atom1, atom2 in itertools.product(residue1, residue2):
             xyz_distance = atom1 - atom2
-            if xyz_distance > 8:
-                continue
-            contact = (int(residue1.id[1]), int(residue2.id[1]), round(1.0 - (xyz_distance / 100), 6))
+            if xyz_distance > 20:
+                d_bin = 9
+            elif xyz_distance <= 4:
+                d_bin = 0
+            else:
+                d_bin = int(round((xyz_distance - 4) / 2, 0))
+            if xyz_distance < 8:
+                contact = (int(residue1.id[1]), int(residue2.id[1]), round(1.0 - (xyz_distance / 100), 6), d_bin, 1)
+            else:
+                contact = (int(residue1.id[1]), int(residue2.id[1]), 0, d_bin, 1)
             contacts.append(contact)
     return contacts
 
@@ -61,7 +37,7 @@ def get_chain_contacts(chain):
 def remove_atoms(chain):
     """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/conkit/io/pdb.py"""
     for residue in chain.copy():
-        if residue.id[0].strip() and residue.resname not in AminoAcidThreeToOne.__members__:
+        if residue.id[0].strip() and residue.resname not in VALID_AMINOACIDS:
             chain.detach_child(residue.id)
             continue
         for atom in residue.copy():

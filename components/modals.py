@@ -101,6 +101,16 @@ def InvalidInputModal():
     ], id='invalid-input-modal', is_open=True)
 
 
+def InvalidFnameModal(fname):
+    return dbc.Modal([
+        ModalHeader("Invalid file name"),
+        dbc.ModalBody(
+            html.P("""Sorry but we cannot process files named '{}'. You will need to rename your file.""".format(fname),
+                   style={'text-align': "justify"})
+        ),
+    ], id='invalid-fname-modal', is_open=True)
+
+
 def SessionTimedOutModal():
     return dbc.Modal([
         ModalHeader("Session timed-out"),

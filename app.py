@@ -6,7 +6,7 @@ import loaders
 import logging
 import keydb
 import psycopg2
-from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, UrlIndex
+from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, cache_utils, UrlIndex
 from dash.dash import no_update
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL, MATCH
@@ -327,6 +327,8 @@ def upload_sequence(fname, fcontent, session_id):
         return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
         return callback_utils.retrieve_sequence_fname(session_id, cache), None, None
+    elif not cache_utils.is_valid_fname(fname):
+        return no_update, no_update, components.InvalidFnameModal(fname)
 
     return data_utils.upload_sequence(fname, fcontent, session_id, cache, app.logger)
 
@@ -347,6 +349,8 @@ def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
         return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
         return callback_utils.retrieve_contact_fnames(session_id, cache), None, None
+    elif not cache_utils.is_valid_fname(fname):
+        return no_update, no_update, components.InvalidFnameModal(fname)
 
     return data_utils.upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cache, app.logger,
                                      dataset=loaders.DatasetReference.CONTACT_MAP.value)

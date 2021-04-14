@@ -86,8 +86,10 @@ def populate_superimposed_heatmap(reference_cmap, secondary_cmap, heat, hover, v
 
     if verbose_labels is not None:
         for reference_distance in reference_cmap:
-            predicted_distance = predicted_set[tuple(reference_distance[:2])] if tuple(
-                reference_distance[:2]) in predicted_set.keys() else 9
+            if tuple(reference_distance[:2]) in predicted_set.keys():
+                predicted_distance = predicted_set[tuple(reference_distance[:2])]
+            else:
+                predicted_distance = 9
             error = abs((9 - reference_distance[3]) - (9 - predicted_distance))
             heat[reference_distance[idx_x]][reference_distance[idx_y]] = error
             heat[reference_distance[idx_y]][reference_distance[idx_x]] = error
@@ -105,8 +107,10 @@ def populate_superimposed_heatmap(reference_cmap, secondary_cmap, heat, hover, v
             hover[reference_distance[idx_y]][reference_distance[idx_x]] = hover_label_b
     else:
         for reference_distance in reference_cmap:
-            predicted_distance = predicted_set[tuple(reference_distance[:2])] if tuple(
-                reference_distance[:2]) in predicted_set.keys() else 9
+            if tuple(reference_distance[:2]) in predicted_set.keys():
+                predicted_distance = predicted_set[tuple(reference_distance[:2])]
+            else:
+                predicted_distance = 9
             error = abs((9 - reference_distance[3]) - (9 - predicted_distance))
             heat[reference_distance[idx_x]][reference_distance[idx_y]] = error
             heat[reference_distance[idx_y]][reference_distance[idx_x]] = error

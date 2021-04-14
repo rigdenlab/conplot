@@ -18,10 +18,7 @@ def create_cmap_trace(x, y, symbol, marker_size, color, hovertext=None):
 
 
 def create_cmap(cmap, idx, display_settings, verbose_labels=None):
-
     if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        print('CREATE CMAP')
-        print('DELETEEEE')
         del cmap[-1]
 
     if display_settings.factor != 0:
@@ -56,7 +53,6 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
 
 
 def superimpose_cmaps(reference_cmap, predicted_cmap, display_settings):
-
     if display_settings.factor != 0:
         predicted_cmap = predicted_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
         if reference_cmap[-1] == 'PDB':
@@ -118,20 +114,3 @@ def create_superimposed_cmap(contacts, verbose_labels):
     hovertext = hover_1 + hover_2
 
     return x, y, hovertext
-
-
-def get_contact_density(contact_list, sequence_range, normalize=True):
-    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
-    from sklearn.cluster import estimate_bandwidth
-    from sklearn.neighbors import KernelDensity
-    import numpy as np
-    x = np.array([i for c in contact_list for i in np.arange(c[0], c[1] + 1)], dtype=np.int64)[:, np.newaxis]
-    bw = estimate_bandwidth(x)
-    kde = KernelDensity(bw).fit(x)
-    x_fit = np.arange(sequence_range.min(), sequence_range.max() + 1)[:, np.newaxis]
-    density = np.exp(kde.score_samples(x_fit)).tolist()
-
-    if normalize:
-        return [float(i) / max(density) for i in density]
-    else:
-        return density

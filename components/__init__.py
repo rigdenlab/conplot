@@ -8,6 +8,8 @@ class UserReadableTrackNames(Enum):
     conservation = 'Seq. Conservation'
     custom = 'Custom Tracks'
     heatmap = 'Heatmap'
+    hydrophobicity = 'Hydrophobicity'
+    density = 'Contact density'
 
 
 class EmailIssueReference(Enum):
@@ -26,6 +28,11 @@ def SessionStoreModal(*args, **kwargs):
     from components.modals import SessionStoreModal
 
     return SessionStoreModal(*args, **kwargs)
+
+
+def InvalidFnameModal(*args, **kwargs):
+    from components.modals import InvalidFnameModal
+    return InvalidFnameModal(*args, **kwargs)
 
 
 def ExampleSessionConnectionErrorModal(*args, **kwargs):

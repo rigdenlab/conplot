@@ -120,7 +120,13 @@ def remove_dataset(trigger, cache, session_id, logger):
 
     if is_open:
         logger.info('Session {} removal of {} aborted'.format(session_id, dataset))
+        return
     else:
         logger.info('Session {} removed {} - {}'.format(session_id, fname, dataset))
         cache.hdel(session_id, fname)
         cache_utils.remove_fname(cache, session_id, fname, dataset)
+
+    if dataset == loaders.DatasetReference.SEQUENCE.value:
+        cache_utils.remove_all_density(session_id, cache)
+    elif dataset == loaders.DatasetReference.CONTACT_MAP.value:
+        cache_utils.remove_density(session_id, cache, fname)

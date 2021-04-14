@@ -491,11 +491,13 @@ def PaletteItem(idx, name):
 def PaletteList():
     return dbc.Row(
         dbc.ListGroup([
-            PaletteItem(idx=1, name='Conservation'),
-            PaletteItem(idx=2, name='Custom files'),
-            PaletteItem(idx=3, name='Disorder'),
-            PaletteItem(idx=4, name='Membrane Topology'),
-            PaletteItem(idx=5, name='Secondary Structure'),
-            PaletteItem(idx=6, name='Heatmap')
+            PaletteItem(idx=1, name='Contact Density'),
+            PaletteItem(idx=2, name='Conservation'),
+            PaletteItem(idx=3, name='Custom files'),
+            PaletteItem(idx=4, name='Disorder'),
+            PaletteItem(idx=5, name='Membrane Topology'),
+            PaletteItem(idx=6, name='Secondary Structure'),
+            PaletteItem(idx=7, name='Hydrophobicity'),
+            PaletteItem(idx=8, name='Heatmap'),
         ], style={'width': '75%'}
         ), justify='center', align='center')

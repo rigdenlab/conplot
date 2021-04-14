@@ -1,10 +1,13 @@
 from enum import Enum
 import base64
+from parsers import HydrophobicityStates
 
 
 class DatasetReference(Enum):
     SEQUENCE = 'sequence'
+    HYDROPHOBICITY = 'hydrophobicity'
     CONTACT_MAP = 'contact'
+    CONTACT_DENSITY = 'density'
     MEMBRANE_TOPOLOGY = 'membranetopology'
     SECONDARY_STRUCTURE = 'secondarystructure'
     CONSERVATION = 'conservation'
@@ -14,7 +17,7 @@ class DatasetReference(Enum):
     @classmethod
     def exclude_seq(cls):
         for item in cls:
-            if item.value != 'sequence':
+            if item.value != 'sequence' and item.value != 'hydrophobicity':
                 yield item
 
 
@@ -25,6 +28,20 @@ class AdditionalDatasetReference(Enum):
     CONSURF = DatasetReference.CONSERVATION.value
     CUSTOM = DatasetReference.CUSTOM.value
 
+    @classmethod
+    def include_hydrophobicity(cls):
+        new_enum = Enum('AdditionalDatasetReference', {
+            'TOPCONS': DatasetReference.MEMBRANE_TOPOLOGY.value,
+            'PSIPRED': DatasetReference.SECONDARY_STRUCTURE.value,
+            'IUPRED': DatasetReference.DISORDER.value,
+            'CONSURF': DatasetReference.CONSERVATION.value,
+            'CUSTOM': DatasetReference.CUSTOM.value,
+            'HYDROPHOBICITY': DatasetReference.HYDROPHOBICITY.value
+        })
+
+        for item in new_enum:
+            yield item
+
 
 def decode_raw_file(raw_file):
     content_type, content_string = raw_file.split(',')
@@ -33,32 +50,27 @@ def decode_raw_file(raw_file):
     return decoded
 
 
-class ResidueHydrophobicityStates(Enum):
-    HYDROPHOBIC = 1
-    INDIFFERENT = 2
-
-
 class ResidueHydrophobicity(Enum):
-    I = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    L = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    F = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    V = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    M = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    P = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    W = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    H = ResidueHydrophobicityStates.INDIFFERENT.value
-    T = ResidueHydrophobicityStates.INDIFFERENT.value
-    E = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    Q = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    C = ResidueHydrophobicityStates.HYDROPHOBIC.value
-    Y = ResidueHydrophobicityStates.INDIFFERENT.value
-    A = ResidueHydrophobicityStates.INDIFFERENT.value
-    S = ResidueHydrophobicityStates.INDIFFERENT.value
-    N = ResidueHydrophobicityStates.INDIFFERENT.value
-    D = ResidueHydrophobicityStates.INDIFFERENT.value
-    R = ResidueHydrophobicityStates.INDIFFERENT.value
-    G = ResidueHydrophobicityStates.INDIFFERENT.value
-    K = ResidueHydrophobicityStates.INDIFFERENT.value
+    I = HydrophobicityStates.HYDROPHOBIC.value
+    L = HydrophobicityStates.HYDROPHOBIC.value
+    F = HydrophobicityStates.HYDROPHOBIC.value
+    V = HydrophobicityStates.HYDROPHOBIC.value
+    M = HydrophobicityStates.HYDROPHOBIC.value
+    P = HydrophobicityStates.HYDROPHOBIC.value
+    W = HydrophobicityStates.HYDROPHOBIC.value
+    H = HydrophobicityStates.INDIFFERENT.value
+    T = HydrophobicityStates.INDIFFERENT.value
+    E = HydrophobicityStates.HYDROPHOBIC.value
+    Q = HydrophobicityStates.HYDROPHOBIC.value
+    C = HydrophobicityStates.HYDROPHOBIC.value
+    Y = HydrophobicityStates.INDIFFERENT.value
+    A = HydrophobicityStates.INDIFFERENT.value
+    S = HydrophobicityStates.INDIFFERENT.value
+    N = HydrophobicityStates.INDIFFERENT.value
+    D = HydrophobicityStates.INDIFFERENT.value
+    R = HydrophobicityStates.INDIFFERENT.value
+    G = HydrophobicityStates.INDIFFERENT.value
+    K = HydrophobicityStates.INDIFFERENT.value
 
 
 def Loader(*args, **kwargs):
@@ -112,5 +124,24 @@ STATES = {
         1: 'HELIX',
         2: 'COIL',
         3: 'SHEET'
+    },
+    DatasetReference.HYDROPHOBICITY.value: {
+        1: 'HYDROPHOBIC',
+        2: 'INDIFFERENT'
+
+    },
+    DatasetReference.CONTACT_DENSITY.value: {
+        0: 'DENSITY_0',
+        1: 'DENSITY_1',
+        2: 'DENSITY_2',
+        3: 'DENSITY_3',
+        4: 'DENSITY_4',
+        5: 'DENSITY_5',
+        6: 'DENSITY_6',
+        7: 'DENSITY_7',
+        8: 'DENSITY_8',
+        9: 'DENSITY_9',
+        10: 'DENSITY_10',
+
     }
 }

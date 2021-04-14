@@ -162,6 +162,20 @@ class Heatmap_GreyColorPalette(Enum):
     BIN_0 = 'rgb(0,0,0)'
 
 
+class Density_GreyColorPalette(Enum):
+    DENSITY_0 = 'rgba(255,255,255,{})'
+    DENSITY_1 = 'rgba(229,229,229,{})'
+    DENSITY_2 = 'rgba(204,204,204,{})'
+    DENSITY_3 = 'rgba(179,179,179,{})'
+    DENSITY_4 = 'rgba(153,153,153,{})'
+    DENSITY_5 = 'rgba(127,127,127,{})'
+    DENSITY_6 = 'rgba(102,102,102,{})'
+    DENSITY_7 = 'rgba(77,77,77,{})'
+    DENSITY_8 = 'rgba(51,51,51,{})'
+    DENSITY_9 = 'rgb(25,25,25)'
+    DENSITY_10 = 'rgba(0,0,0,{})'
+
+
 class Heatmap_Viridis(Enum):
     BIN_10 = sequential.Viridis[0]
     BIN_9 = sequential.Viridis[0]
@@ -174,6 +188,20 @@ class Heatmap_Viridis(Enum):
     BIN_2 = sequential.Viridis[7]
     BIN_1 = sequential.Viridis[8]
     BIN_0 = sequential.Viridis[9]
+
+
+class Density_Viridis(Enum):
+    DENSITY_0 = sequential.Viridis[0]
+    DENSITY_1 = sequential.Viridis[0]
+    DENSITY_2 = sequential.Viridis[1]
+    DENSITY_3 = sequential.Viridis[2]
+    DENSITY_4 = sequential.Viridis[3]
+    DENSITY_5 = sequential.Viridis[4]
+    DENSITY_6 = sequential.Viridis[5]
+    DENSITY_7 = sequential.Viridis[6]
+    DENSITY_8 = sequential.Viridis[7]
+    DENSITY_9 = sequential.Viridis[8]
+    DENSITY_10 = sequential.Viridis[9]
 
 
 class Heatmap_BuRd(Enum):
@@ -190,6 +218,20 @@ class Heatmap_BuRd(Enum):
     BIN_0 = diverging.RdYlBu[0]
 
 
+class Density_BuRd(Enum):
+    DENSITY_0 = diverging.RdYlBu[10]
+    DENSITY_1 = diverging.RdYlBu[10]
+    DENSITY_2 = diverging.RdYlBu[9]
+    DENSITY_3 = diverging.RdYlBu[8]
+    DENSITY_4 = diverging.RdYlBu[7]
+    DENSITY_5 = diverging.RdYlBu[6]
+    DENSITY_6 = diverging.RdYlBu[5]
+    DENSITY_7 = diverging.RdYlBu[4]
+    DENSITY_8 = diverging.RdYlBu[3]
+    DENSITY_9 = diverging.RdYlBu[2]
+    DENSITY_10 = diverging.RdYlBu[1]
+
+
 class Heatmap_Inferno(Enum):
     BIN_10 = sequential.Inferno[0]
     BIN_9 = sequential.Inferno[0]
@@ -204,6 +246,20 @@ class Heatmap_Inferno(Enum):
     BIN_0 = sequential.Inferno[9]
 
 
+class Density_Inferno(Enum):
+    DENSITY_0 = sequential.Inferno[0]
+    DENSITY_1 = sequential.Inferno[0]
+    DENSITY_2 = sequential.Inferno[1]
+    DENSITY_3 = sequential.Inferno[2]
+    DENSITY_4 = sequential.Inferno[3]
+    DENSITY_5 = sequential.Inferno[4]
+    DENSITY_6 = sequential.Inferno[5]
+    DENSITY_7 = sequential.Inferno[6]
+    DENSITY_8 = sequential.Inferno[7]
+    DENSITY_9 = sequential.Inferno[8]
+    DENSITY_10 = sequential.Inferno[9]
+
+
 class Heatmap_ColorPalettes(Enum):
     PALETTE_1 = Heatmap_GreyColorPalette
     PALETTE_2 = Heatmap_Viridis
@@ -211,13 +267,37 @@ class Heatmap_ColorPalettes(Enum):
     PALETTE_4 = Heatmap_Inferno
 
 
+class Density_ColorPalettes(Enum):
+    PALETTE_1 = Density_GreyColorPalette
+    PALETTE_2 = Density_Viridis
+    PALETTE_3 = Density_BuRd
+    PALETTE_4 = Density_Inferno
+
+
+class Hydrophobicity_BlueYellowColorPalette(Enum):
+    HYDROPHOBIC = 'rgba(66, 138, 245, {})'
+    INDIFFERENT = 'rgba(130, 130, 130, {})'
+
+
+class Hydrophobicity_GreenGreyColorPalette(Enum):
+    HYDROPHOBIC = 'rgba(59, 237, 74, {})'
+    INDIFFERENT = 'rgba(130, 130, 130, {})'
+
+
+class HydrophobicityColorPalettes(Enum):
+    PALETTE_1 = Hydrophobicity_BlueYellowColorPalette
+    PALETTE_2 = Hydrophobicity_GreenGreyColorPalette
+
+
 class DatasetColorPalettes(Enum):
-    membranetopology = MembraneTopology_ColorPalettes
-    secondarystructure = SecondaryStructure_ColorPalettes
-    disorder = Disorder_ColorPalettes
-    conservation = Conservation_ColorPalettes
+    density = Density_ColorPalettes
     custom = Custom_ColorPalettes
     heatmap = Heatmap_ColorPalettes
+    hydrophobicity = HydrophobicityColorPalettes
+    membranetopology = MembraneTopology_ColorPalettes
+    conservation = Conservation_ColorPalettes
+    disorder = Disorder_ColorPalettes
+    secondarystructure = SecondaryStructure_ColorPalettes
 
 
 def get_heatmap_colorscale(selected_palette):

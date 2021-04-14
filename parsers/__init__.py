@@ -216,9 +216,29 @@ class SecondaryStructureStates(Enum):
     SHEET = 3
 
 
+class HydrophobicityStates(Enum):
+    HYDROPHOBIC = 1
+    INDIFFERENT = 2
+
+
+class DensityStates(Enum):
+    DENSITY_1 = 1
+    DENSITY_2 = 2
+    DENSITY_3 = 3
+    DENSITY_4 = 4
+    DENSITY_5 = 5
+    DENSITY_6 = 6
+    DENSITY_7 = 7
+    DENSITY_8 = 8
+    DENSITY_9 = 9
+    DENSITY_10 = 10
+
+
 class DatasetStates(Enum):
     membranetopology = MembraneStates
     secondarystructure = SecondaryStructureStates
     conservation = ConservationStates
     disorder = DisorderStates
     custom = CustomStates
+    hydrophobicity = HydrophobicityStates
+    density = DensityStates

@@ -54,10 +54,10 @@ class CacheUtilsTestCase(unittest.TestCase):
 
     def test_6(self):
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'sequence')
-        cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'hydro')
+        cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'hydrophobicity')
         cache_utils.remove_fname(self.cache, self.session_id, 'dummy_fname', 'sequence')
         self.assertIsNone(self.cache.hget(self.session_id, 'sequence'))
-        self.assertIsNone(self.cache.hget(self.session_id, 'hydro'))
+        self.assertIsNone(self.cache.hget(self.session_id, 'hydrophobicity'))
 
     def test_7(self):
         cache_utils.store_figure(self.session_id, 'figure_json', 'display_control_json', self.cache)
@@ -68,7 +68,7 @@ class CacheUtilsTestCase(unittest.TestCase):
 
     def test_8(self):
         self.cache.hset(self.session_id, 'dummy_fname', 'sequence_data')
-        self.cache.hset(self.session_id, 'hydro', 'seq_hydrophobicity')
+        self.cache.hset(self.session_id, 'hydrophobicity', 'seq_hydrophobicity')
         self.cache.hset(self.session_id, 'sequence', cache_utils.compress_data('dummy_fname'))
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname_1', 'contact')
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname_2', 'disorder')

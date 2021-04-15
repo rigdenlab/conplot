@@ -261,11 +261,40 @@ class Density_Inferno(Enum):
     DENSITY_10 = sequential.Inferno[9]
 
 
+class Heatmap_Hot(Enum):
+    BIN_0 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    BIN_1 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    BIN_2 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    BIN_3 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    BIN_4 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    BIN_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    BIN_6 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    BIN_7 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    BIN_8 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    BIN_9 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    BIN_10 = 'rgb(255.0, 255.0, 255.0)'
+
+
+class Density_Hot(Enum):
+    DENSITY_10 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    DENSITY_9 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    DENSITY_8 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    DENSITY_7 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    DENSITY_6 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    DENSITY_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    DENSITY_4 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    DENSITY_3 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    DENSITY_2 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    DENSITY_1 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    DENSITY_0 = 'rgb(255.0, 255.0, 255.0)'
+
+
 class Heatmap_ColorPalettes(Enum):
     PALETTE_1 = Heatmap_GreyColorPalette
     PALETTE_2 = Heatmap_Viridis
     PALETTE_3 = Heatmap_BuRd
     PALETTE_4 = Heatmap_Inferno
+    PALETTE_5 = Heatmap_Hot
 
 
 class Density_ColorPalettes(Enum):
@@ -273,6 +302,7 @@ class Density_ColorPalettes(Enum):
     PALETTE_2 = Density_Viridis
     PALETTE_3 = Density_BuRd
     PALETTE_4 = Density_Inferno
+    PALETTE_5 = Density_Hot
 
 
 class Hydrophobicity_BlueYellowColorPalette(Enum):

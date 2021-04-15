@@ -496,8 +496,9 @@ def PaletteList():
             PaletteItem(idx=3, name='Custom files'),
             PaletteItem(idx=4, name='Disorder'),
             PaletteItem(idx=5, name='Membrane Topology'),
-            PaletteItem(idx=6, name='Secondary Structure'),
-            PaletteItem(idx=7, name='Hydrophobicity'),
-            PaletteItem(idx=8, name='Heatmap'),
+            PaletteItem(idx=6, name='MSA Coverage'),
+            PaletteItem(idx=7, name='Secondary Structure'),
+            PaletteItem(idx=8, name='Hydrophobicity'),
+            PaletteItem(idx=9, name='Heatmap'),
         ], style={'width': '75%'}
         ), justify='center', align='center')

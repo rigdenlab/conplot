@@ -3,6 +3,7 @@ from enum import Enum
 
 class UserReadableTrackNames(Enum):
     membranetopology = 'Membrane Topology'
+    msa = 'MSA Coverage'
     secondarystructure = 'Secondary Structure'
     disorder = 'Seq. Disorder'
     conservation = 'Seq. Conservation'

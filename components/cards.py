@@ -318,11 +318,13 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.Br(),
                             ColorPaletteSelectionCard('membranetopology', selected_palettes[4]),
                             html.Br(),
-                            ColorPaletteSelectionCard('conservation', selected_palettes[5]),
+                            ColorPaletteSelectionCard('msa', selected_palettes[5]),
                             html.Br(),
-                            ColorPaletteSelectionCard('disorder', selected_palettes[6]),
+                            ColorPaletteSelectionCard('conservation', selected_palettes[6]),
                             html.Br(),
-                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[7]),
+                            ColorPaletteSelectionCard('disorder', selected_palettes[7]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[8]),
                             html.Br(),
                         ])
                     ]

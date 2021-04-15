@@ -18,7 +18,6 @@ def A3mParser(input, input_format=None):
                     residue_count[idx] += 1
                 idx += 1
     except IndexError:
-        print('WOW')
         raise InvalidFormat('Unable to parse the A3M MSA file')
 
     norm = [int(round(x / n_sequences)) for x in residue_count]

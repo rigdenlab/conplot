@@ -132,7 +132,6 @@ def process_superimposed_cmap(contacts, reference_set, predicted_set, verbose_la
             hover_2.append(HoverTemplates.CMAP_SUPERIMPOSE_VERBOSE.format(*label))
     else:
         for contact in contacts:
-            print(contact)
             if tuple(contact[:2]) in predicted_set.keys():
                 pred_confidence = predicted_set[tuple(contact[:2])]
             else:
@@ -141,8 +140,6 @@ def process_superimposed_cmap(contacts, reference_set, predicted_set, verbose_la
                 ref_confidence = reference_set[tuple(contact[:2])]
             else:
                 ref_confidence = 0
-
-            print(pred_confidence, ref_confidence)
 
             res1_list.append(contact[0])
             res2_list.append(contact[1])

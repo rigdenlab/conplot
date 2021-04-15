@@ -2,6 +2,22 @@ Changelog
 =========
 
 
+0.4
+-----
+
+Added
+~~~~~
+- Added contact density, sequence hydrophobicity and MSA coverage tracks
+- Added support for trRosetta NPZ and MapPred residue distance formats
+- Added support of residue distance superposition
+
+Changed
+~~~~~
+- New heatmap color palette
+- Changed to vertical layout for verbose labels and increased verbosity
+- Parse PDB files as a residue distance format file
+
+
 0.3.2
 -----
 

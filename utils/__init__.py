@@ -5,7 +5,7 @@ from fast_enum import FastEnum
 
 
 def conplot_version():
-    return 'v0.3.2'
+    return 'v0.4'
 
 
 def get_base_url():

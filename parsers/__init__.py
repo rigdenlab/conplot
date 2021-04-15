@@ -222,6 +222,7 @@ class HydrophobicityStates(Enum):
 
 
 class DensityStates(Enum):
+    DENSITY_0 = 0
     DENSITY_1 = 1
     DENSITY_2 = 2
     DENSITY_3 = 3

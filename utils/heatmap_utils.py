@@ -15,7 +15,8 @@ def create_heatmap(session, display_settings, verbose_labels):
             continue
         heat, hover = populate_heatmap(session[fname.encode()], idx, heat, hover, verbose_labels)
 
-    colorscale = color_palettes.get_heatmap_colorscale(display_settings.selected_palettes[-1])
+    palette_idx = [x.value for x in color_palettes.PaletteDefaultLayout].index(b'heatmap')
+    colorscale = color_palettes.get_heatmap_colorscale(display_settings.selected_palettes[palette_idx])
     return heat, hover, colorscale
 
 
@@ -27,8 +28,8 @@ def superimpose_heatmaps(session, display_settings, verbose_labels):
         heat, hover = populate_superimposed_heatmap(session[display_settings.cmap_selection[0].encode()],
                                                     session[display_settings.cmap_selection[1].encode()],
                                                     heat, hover, verbose_labels)
-
-    colorscale = color_palettes.get_heatmap_colorscale(display_settings.selected_palettes[-1])
+    palette_idx = [x.value for x in color_palettes.PaletteDefaultLayout].index(b'heatmap')
+    colorscale = color_palettes.get_heatmap_colorscale(display_settings.selected_palettes[palette_idx])
     return heat, hover, colorscale
 
 

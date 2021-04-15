@@ -1,5 +1,6 @@
 from enum import Enum
 from plotly.colors import diverging, sequential
+from loaders import DatasetReference
 
 
 class Custom_SpectralColorPalette(Enum):
@@ -172,8 +173,8 @@ class Density_GreyColorPalette(Enum):
     DENSITY_6 = 'rgba(102,102,102,{})'
     DENSITY_7 = 'rgba(77,77,77,{})'
     DENSITY_8 = 'rgba(51,51,51,{})'
-    DENSITY_9 = 'rgb(25,25,25)'
-    DENSITY_10 = 'rgba(0,0,0,{})'
+    DENSITY_9 = 'rgba(25,25,25,{})'
+    DENSITY_10 = 'rgb(0,0,0,{})'
 
 
 class Heatmap_Viridis(Enum):
@@ -298,6 +299,17 @@ class DatasetColorPalettes(Enum):
     conservation = Conservation_ColorPalettes
     disorder = Disorder_ColorPalettes
     secondarystructure = SecondaryStructure_ColorPalettes
+
+
+class PaletteDefaultLayout(Enum):
+    CONTACT_DENSITY = DatasetReference.CONTACT_DENSITY.value.encode()
+    CUSTOM = DatasetReference.CUSTOM.value.encode()
+    HEATMAP = b'heatmap'
+    HYDROPHOBICITY = DatasetReference.HYDROPHOBICITY.value.encode()
+    MEMBRANE_TOPOLOGY = DatasetReference.MEMBRANE_TOPOLOGY.value.encode()
+    CONSERVATION = DatasetReference.CONSERVATION.value.encode()
+    DISORDER = DatasetReference.DISORDER.value.encode()
+    SECONDARY_STRUCTURE = DatasetReference.SECONDARY_STRUCTURE.value.encode()
 
 
 def get_heatmap_colorscale(selected_palette):

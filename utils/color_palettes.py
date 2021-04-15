@@ -383,18 +383,36 @@ class MsaCoverage_ColorPalettes(Enum):
     PALETTE_5 = Coverage_Hot
 
 
-class Hydrophobicity_BlueYellowColorPalette(Enum):
-    HYDROPHOBIC = 'rgba(66, 138, 245, {})'
-    INDIFFERENT = 'rgba(130, 130, 130, {})'
+class Hydrophobicity_BlueGreyColorPalette(Enum):
+    HYDROPATHY_10 = 'rgba(66,138,245,{})'
+    HYDROPATHY_9 = 'rgba(72,137,234,{})'
+    HYDROPATHY_8 = 'rgba(79,136,222,{})'
+    HYDROPATHY_7 = 'rgba(85,136,211,{})'
+    HYDROPATHY_6 = 'rgba(92,135,199,{})'
+    HYDROPATHY_5 = 'rgba(98,134,188,{})'
+    HYDROPATHY_4 = 'rgba(104,133,176,{})'
+    HYDROPATHY_3 = 'rgba(111,132,165,{})'
+    HYDROPATHY_2 = 'rgba(117,132,153,{})'
+    HYDROPATHY_1 = 'rgba(124,131,142,{})'
+    HYDROPATHY_0 = 'rgba(130,130,130,{})'
 
 
 class Hydrophobicity_GreenGreyColorPalette(Enum):
-    HYDROPHOBIC = 'rgba(59, 237, 74, {})'
-    INDIFFERENT = 'rgba(130, 130, 130, {})'
+    HYDROPATHY_10 = 'rgba(59,237,74,{})'
+    HYDROPATHY_9 = 'rgba(66,226,80,{})'
+    HYDROPATHY_8 = 'rgba(73,216,85,{})'
+    HYDROPATHY_7 = 'rgba(80,205,91,{})'
+    HYDROPATHY_6 = 'rgba(87,194,96,{})'
+    HYDROPATHY_5 = 'rgba(95,184,102,{})'
+    HYDROPATHY_4 = 'rgba(102,173,108,{})'
+    HYDROPATHY_3 = 'rgba(109,162,113,{})'
+    HYDROPATHY_2 = 'rgba(116,151,119,{})'
+    HYDROPATHY_1 = 'rgba(123,141,124,{})'
+    HYDROPATHY_0 = 'rgba(130,130,130,{})'
 
 
 class HydrophobicityColorPalettes(Enum):
-    PALETTE_1 = Hydrophobicity_BlueYellowColorPalette
+    PALETTE_1 = Hydrophobicity_BlueGreyColorPalette
     PALETTE_2 = Hydrophobicity_GreenGreyColorPalette
 
 

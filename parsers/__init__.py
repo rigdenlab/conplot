@@ -230,8 +230,17 @@ class SecondaryStructureStates(Enum):
 
 
 class HydrophobicityStates(Enum):
-    HYDROPHOBIC = 1
-    INDIFFERENT = 2
+    HYDROPATHY_10 = 10
+    HYDROPATHY_9 = 9
+    HYDROPATHY_8 = 8
+    HYDROPATHY_7 = 7
+    HYDROPATHY_6 = 6
+    HYDROPATHY_5 = 5
+    HYDROPATHY_4 = 4
+    HYDROPATHY_3 = 3
+    HYDROPATHY_2 = 2
+    HYDROPATHY_1 = 1
+    HYDROPATHY_0 = 0
 
 
 class DensityStates(Enum):

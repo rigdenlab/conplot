@@ -53,29 +53,6 @@ def decode_raw_file(raw_file):
     return decoded
 
 
-class ResidueHydrophobicity(Enum):
-    I = HydrophobicityStates.HYDROPHOBIC.value
-    L = HydrophobicityStates.HYDROPHOBIC.value
-    F = HydrophobicityStates.HYDROPHOBIC.value
-    V = HydrophobicityStates.HYDROPHOBIC.value
-    M = HydrophobicityStates.HYDROPHOBIC.value
-    P = HydrophobicityStates.HYDROPHOBIC.value
-    W = HydrophobicityStates.HYDROPHOBIC.value
-    H = HydrophobicityStates.INDIFFERENT.value
-    T = HydrophobicityStates.INDIFFERENT.value
-    E = HydrophobicityStates.HYDROPHOBIC.value
-    Q = HydrophobicityStates.HYDROPHOBIC.value
-    C = HydrophobicityStates.HYDROPHOBIC.value
-    Y = HydrophobicityStates.INDIFFERENT.value
-    A = HydrophobicityStates.INDIFFERENT.value
-    S = HydrophobicityStates.INDIFFERENT.value
-    N = HydrophobicityStates.INDIFFERENT.value
-    D = HydrophobicityStates.INDIFFERENT.value
-    R = HydrophobicityStates.INDIFFERENT.value
-    G = HydrophobicityStates.INDIFFERENT.value
-    K = HydrophobicityStates.INDIFFERENT.value
-
-
 def Loader(*args, **kwargs):
     from loaders.loader import Loader
 
@@ -129,10 +106,17 @@ STATES = {
         3: 'SHEET'
     },
     DatasetReference.HYDROPHOBICITY.value: {
-        1: 'HYDROPHOBIC',
-        2: 'INDIFFERENT'
-
-    },
+        0: 'HYDROPATHY_0',
+        1: 'HYDROPATHY_1',
+        2: 'HYDROPATHY_2',
+        3: 'HYDROPATHY_3',
+        4: 'HYDROPATHY_4',
+        5: 'HYDROPATHY_5',
+        6: 'HYDROPATHY_6',
+        7: 'HYDROPATHY_7',
+        8: 'HYDROPATHY_8',
+        9: 'HYDROPATHY_9',
+        10: 'HYDROPATHY_10'},
     DatasetReference.CONTACT_DENSITY.value: {
         0: 'CONTACT_DENSITY_0',
         1: 'CONTACT_DENSITY_1',

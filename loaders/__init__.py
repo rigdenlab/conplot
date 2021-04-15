@@ -13,6 +13,7 @@ class DatasetReference(Enum):
     CONSERVATION = 'conservation'
     DISORDER = 'disorder'
     CUSTOM = 'custom'
+    MSA = 'msa'
 
     @classmethod
     def exclude_seq(cls):
@@ -22,6 +23,7 @@ class DatasetReference(Enum):
 
 
 class AdditionalDatasetReference(Enum):
+    A3M = DatasetReference.MSA.value
     TOPCONS = DatasetReference.MEMBRANE_TOPOLOGY.value
     PSIPRED = DatasetReference.SECONDARY_STRUCTURE.value
     IUPRED = DatasetReference.DISORDER.value
@@ -31,6 +33,7 @@ class AdditionalDatasetReference(Enum):
     @classmethod
     def include_hydrophobicity(cls):
         new_enum = Enum('AdditionalDatasetReference', {
+            'A3M': DatasetReference.MSA.value,
             'TOPCONS': DatasetReference.MEMBRANE_TOPOLOGY.value,
             'PSIPRED': DatasetReference.SECONDARY_STRUCTURE.value,
             'IUPRED': DatasetReference.DISORDER.value,
@@ -131,17 +134,29 @@ STATES = {
 
     },
     DatasetReference.CONTACT_DENSITY.value: {
-        0: 'DENSITY_0',
-        1: 'DENSITY_1',
-        2: 'DENSITY_2',
-        3: 'DENSITY_3',
-        4: 'DENSITY_4',
-        5: 'DENSITY_5',
-        6: 'DENSITY_6',
-        7: 'DENSITY_7',
-        8: 'DENSITY_8',
-        9: 'DENSITY_9',
-        10: 'DENSITY_10',
-
+        0: 'CONTACT_DENSITY_0',
+        1: 'CONTACT_DENSITY_1',
+        2: 'CONTACT_DENSITY_2',
+        3: 'CONTACT_DENSITY_3',
+        4: 'CONTACT_DENSITY_4',
+        5: 'CONTACT_DENSITY_5',
+        6: 'CONTACT_DENSITY_6',
+        7: 'CONTACT_DENSITY_7',
+        8: 'CONTACT_DENSITY_8',
+        9: 'CONTACT_DENSITY_9',
+        10: 'CONTACT_DENSITY_10',
+    },
+    DatasetReference.MSA.value: {
+        0: 'MSA_COVERAGE_0',
+        1: 'MSA_COVERAGE_1',
+        2: 'MSA_COVERAGE_2',
+        3: 'MSA_COVERAGE_3',
+        4: 'MSA_COVERAGE_4',
+        5: 'MSA_COVERAGE_5',
+        6: 'MSA_COVERAGE_6',
+        7: 'MSA_COVERAGE_7',
+        8: 'MSA_COVERAGE_8',
+        9: 'MSA_COVERAGE_9',
+        10: 'MSA_COVERAGE_10',
     }
 }

@@ -55,6 +55,18 @@ def IupredParser(*args, **kwargs):
     return IupredParser(*args, **kwargs)
 
 
+def A3mParser(*args, **kwargs):
+    from parsers.a3mparser import A3mParser
+
+    return A3mParser(*args, **kwargs)
+
+
+def FastaMsaParser(*args, **kwargs):
+    from parsers.fastamsaparser import FastaMsaParser
+
+    return FastaMsaParser(*args, **kwargs)
+
+
 def CCMpredParser(*args, **kwargs):
     from parsers.ccmpredparser import CCMpredParser
 
@@ -112,6 +124,7 @@ class ParserFormats(Enum):
     CASPRR_MODE_2 = CASPRR2Parser
     trROSETTA_NPZ = NpzParser
     MAPPRED = MappredParser
+    A3M = A3mParser
 
 
 class ContactInformationFormats(Enum):
@@ -222,17 +235,31 @@ class HydrophobicityStates(Enum):
 
 
 class DensityStates(Enum):
-    DENSITY_0 = 0
-    DENSITY_1 = 1
-    DENSITY_2 = 2
-    DENSITY_3 = 3
-    DENSITY_4 = 4
-    DENSITY_5 = 5
-    DENSITY_6 = 6
-    DENSITY_7 = 7
-    DENSITY_8 = 8
-    DENSITY_9 = 9
-    DENSITY_10 = 10
+    CONTACT_DENSITY_0 = 0
+    CONTACT_DENSITY_1 = 1
+    CONTACT_DENSITY_2 = 2
+    CONTACT_DENSITY_3 = 3
+    CONTACT_DENSITY_4 = 4
+    CONTACT_DENSITY_5 = 5
+    CONTACT_DENSITY_6 = 6
+    CONTACT_DENSITY_7 = 7
+    CONTACT_DENSITY_8 = 8
+    CONTACT_DENSITY_9 = 9
+    CONTACT_DENSITY_10 = 10
+
+
+class MsaStates(Enum):
+    MSA_COVERAGE_0 = 0
+    MSA_COVERAGE_1 = 1
+    MSA_COVERAGE_2 = 2
+    MSA_COVERAGE_3 = 3
+    MSA_COVERAGE_4 = 4
+    MSA_COVERAGE_5 = 5
+    MSA_COVERAGE_6 = 6
+    MSA_COVERAGE_7 = 7
+    MSA_COVERAGE_8 = 8
+    MSA_COVERAGE_9 = 9
+    MSA_COVERAGE_10 = 10
 
 
 class DatasetStates(Enum):
@@ -243,3 +270,4 @@ class DatasetStates(Enum):
     custom = CustomStates
     hydrophobicity = HydrophobicityStates
     density = DensityStates
+    msa = MsaStates

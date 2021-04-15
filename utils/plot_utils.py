@@ -25,17 +25,6 @@ class DefaultTrackLayout(Enum):
     CUSTOM = DatasetReference.CUSTOM.value.encode()
 
 
-class PaletteDefaultLayout(Enum):
-    CONTACT_DENSITY = DatasetReference.CONTACT_DENSITY.value.encode()
-    CUSTOM = DatasetReference.CUSTOM.value.encode()
-    HEATMAP = b'heatmap'
-    HYDROPHOBICITY = DatasetReference.HYDROPHOBICITY.value.encode()
-    MEMBRANE_TOPOLOGY = DatasetReference.MEMBRANE_TOPOLOGY.value.encode()
-    CONSERVATION = DatasetReference.CONSERVATION.value.encode()
-    DISORDER = DatasetReference.DISORDER.value.encode()
-    SECONDARY_STRUCTURE = DatasetReference.SECONDARY_STRUCTURE.value.encode()
-
-
 def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, selected_palettes, factor=2,
                    contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False,
                    heatmap=False, verbose_labels=False):
@@ -72,7 +61,8 @@ def add_additional_tracks(session_id, session, display_settings, figure, cache):
         if fname == '---':
             continue
 
-        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname, display_settings, cache)
+        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname, display_settings,
+                                                                       cache)
         palette_idx = [x.name for x in color_palettes.DatasetColorPalettes].index(dataset)
         palette = display_settings.selected_palettes[palette_idx]
 
@@ -100,18 +90,10 @@ def add_contact_trace(session, display_settings, figure, verbose_labels):
     elif display_settings.superimpose:
         reference_cmap = session[display_settings.cmap_selection[0].encode()]
         predicted_cmap = session[display_settings.cmap_selection[1].encode()]
-        size = display_settings.contact_marker_size
 
-        ref, match, mismatch = cmap_utils.superimpose_cmaps(reference_cmap, predicted_cmap, display_settings)
-
-        x, y, hover = cmap_utils.create_superimposed_cmap(ref, verbose_labels)
-        figure.add_trace(cmap_utils.create_cmap_trace(x, y, 'circle', size, 'grey', hover))
-
-        x, y, hover = cmap_utils.create_superimposed_cmap(mismatch, verbose_labels)
-        figure.add_trace(cmap_utils.create_cmap_trace(x, y, 'circle', size, 'red', hover))
-
-        x, y, hover = cmap_utils.create_superimposed_cmap(match, verbose_labels)
-        figure.add_trace(cmap_utils.create_cmap_trace(x, y, 'circle', size, 'black', hover))
+        traces = cmap_utils.create_superimposed_cmap(reference_cmap, predicted_cmap, display_settings, verbose_labels)
+        for trace in traces:
+            figure.add_trace(trace)
 
     else:
         for idx, fname in enumerate(display_settings.cmap_selection):
@@ -229,7 +211,7 @@ def process_args(session_id, session, trigger, selected_tracks, cmap_selection, 
 
     if verbose_labels:
         fnames = [fname for fname in selected_tracks if fname != '---']
-        verbose_labels = get_verbose_labels(fnames, session, display_settings)
+        verbose_labels = get_verbose_labels(session_id, session, fnames, display_settings, cache)
     else:
         verbose_labels = None
 
@@ -298,20 +280,21 @@ def create_figure(axis_range):
     )
 
 
-def get_verbose_labels(fnames, session, display_settings):
+def get_verbose_labels(session_id, session, fnames, display_settings, cache):
     sequence = session[display_settings.seq_fname.encode()]
     all_predictions = []
     for fname in set(fnames):
-        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session, fname, display_settings)
+        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname,
+                                                                       display_settings, cache)
         dataset_dict = STATES[dataset]
         prediction = [dataset_dict[x] for x in prediction]
         all_predictions.append(prediction)
 
     labels = []
     for idx, residue in enumerate(sequence, 1):
-        current_label = 'Residue {} ({})'.format(idx, residue)
+        current_label = '------<br>Residue {} ({})'.format(idx, residue)
         for prediction in all_predictions:
-            current_label += ' | {}'.format(prediction[idx - 1])
+            current_label += '<br>{}'.format(prediction[idx - 1])
         labels.append(current_label)
 
     return labels

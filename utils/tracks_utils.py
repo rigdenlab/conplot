@@ -33,17 +33,17 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
             return dataset.value, session[fname.encode()]
 
 
-def transform_coords_diagonal_axis(coord, distance, lower_bound=False, ratio=1, y_axis=True):
+def transform_coords_diagonal_axis(coord, distance, low_bound=False, ratio=1, y_axis=True):
     if coord is None:
         return None
 
     if y_axis:
         factor = ratio * (distance / (1 + ratio ** 2))
-        if lower_bound:
+        if low_bound:
             factor = factor * -1
     else:
         factor = distance / (1 + ratio ** 2)
-        if not lower_bound:
+        if not low_bound:
             factor = factor * -1
 
     return coord + factor
@@ -85,18 +85,17 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
     track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
     if track_idx > 4:
-        lower_bound = True
+        low_bound = True
     else:
-        lower_bound = False
+        low_bound = False
 
     for state in states:
         y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
         if not any(y_diagonal):
             continue
 
-        y = [transform_coords_diagonal_axis(y, track_distance, lower_bound=lower_bound) for y in y_diagonal]
-        x = [transform_coords_diagonal_axis(x, track_distance, lower_bound=lower_bound, y_axis=False) for x in
-             x_diagonal]
+        y = [transform_coords_diagonal_axis(y, track_distance, low_bound=low_bound) for y in y_diagonal]
+        x = [transform_coords_diagonal_axis(x, track_distance, low_bound=low_bound, y_axis=False) for x in x_diagonal]
         hovertext = ['%s' % state.name for idx in enumerate(x)]
         color = palette.__getattr__(state.name).value
         color = color.format(alpha)

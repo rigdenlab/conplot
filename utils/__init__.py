@@ -33,6 +33,8 @@ class HoverTemplates(FastEnum):
     DISTOGRAM_VERBOSE = 'Contact: {} - {}<br>Distance {}<br>Confidence: {}<br>{}<br>{}'
     CMAP = 'Contact: {} - {}<br>Confidence: {}'
     CMAP_VERBOSE = 'Contact: {} - {}<br>Confidence: {}<br>{}<br>{}'
+    CMAP_SUPERIMPOSE = 'Contact: {} - {}<br>Map A Confidence: {}<br>Map B Confidence: {}'
+    CMAP_SUPERIMPOSE_VERBOSE = 'Contact: {} - {}<br>Map A Confidence: {}<br>Map B Confidence: {}<br>{}<br>{}'
     DISTOGRAM_SUPERIMPOSE = 'Contact: {} - {}<br>Map A Distance {}<br>Map B Distance {}<br>Error: {}'
     DISTOGRAM_SUPERIMPOSE_VERBOSE = 'Contact: {} - {}<br>Map A Distance {}<br>Map B Distance {}<br>Error: {}<br>{}<br>{}'
 

@@ -413,7 +413,7 @@ def javascript_exe_button(n_clicks, session_id):
     else:
         app.logger.info('Fetching example data')
         try:
-            session_utils.load_session('user_1', 35, session_id, cache, app.logger)
+            session_utils.load_session('user_1', 46, session_id, cache, app.logger)
         except (psycopg2.OperationalError, AttributeError) as e:
             app.logger.error('Unable to fetch example data: {}'.format(e))
             return no_update, components.ExampleSessionConnectionErrorModal(), no_update

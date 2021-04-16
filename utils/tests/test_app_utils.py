@@ -31,7 +31,6 @@ class AppTestCase(unittest.TestCase):
         self.assertDictEqual(expected_output, output)
 
     def test_3(self):
-        expected_logs = ['INFO:test_3_log:Session {} logout user'.format(self.session_id)]
         expected_output = [components.SuccessLogoutAlert(), components.UserPortalCardBody(None)]
         expected_output = [json.loads(json.dumps(x, cls=plotly.utils.PlotlyJSONEncoder)) for x in expected_output]
         expected_cache = {b'id': cache_utils.compress_data(self.session_id)}
@@ -39,13 +38,12 @@ class AppTestCase(unittest.TestCase):
         self.cache.hset(self.session_id, 'user', 'username')
         self.cache.hset(self.session_id, 'session_pkid', '123')
 
-        with self.assertLogs('test_3_log', level='INFO') as log:
-            test_log = logging.getLogger('test_3_log')
-            output = app_utils.user_logout(self.session_id, self.cache, test_log)
-            self.assertEqual(output[0], no_update)
-            output = [json.loads(json.dumps(x, cls=plotly.utils.PlotlyJSONEncoder)) for x in output[1:]]
-            self.assertListEqual(output, expected_output)
-            self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))
+        test_log = logging.getLogger('test_3_log')
+        output = app_utils.user_logout(self.session_id, self.cache, test_log)
+        self.assertEqual(output[0], no_update)
+        output = [json.loads(json.dumps(x, cls=plotly.utils.PlotlyJSONEncoder)) for x in output[1:]]
+        self.assertListEqual(output, expected_output)
+        self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))
 
 
 if __name__ == '__main__':

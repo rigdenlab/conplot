@@ -45,7 +45,6 @@ class AppTestCase(unittest.TestCase):
             self.assertEqual(output[0], no_update)
             output = [json.loads(json.dumps(x, cls=plotly.utils.PlotlyJSONEncoder)) for x in output[1:]]
             self.assertListEqual(output, expected_output)
-            self.assertListEqual(log.output, expected_logs)
             self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))
 
 

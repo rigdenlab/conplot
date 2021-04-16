@@ -3,11 +3,14 @@ from enum import Enum
 
 class UserReadableTrackNames(Enum):
     membranetopology = 'Membrane Topology'
+    msa = 'MSA Coverage'
     secondarystructure = 'Secondary Structure'
     disorder = 'Seq. Disorder'
     conservation = 'Seq. Conservation'
     custom = 'Custom Tracks'
     heatmap = 'Heatmap'
+    hydrophobicity = 'Hydrophobicity'
+    density = 'Contact density'
 
 
 class EmailIssueReference(Enum):
@@ -28,16 +31,21 @@ def SessionStoreModal(*args, **kwargs):
     return SessionStoreModal(*args, **kwargs)
 
 
+def InvalidFnameModal(*args, **kwargs):
+    from components.modals import InvalidFnameModal
+    return InvalidFnameModal(*args, **kwargs)
+
+
 def ExampleSessionConnectionErrorModal(*args, **kwargs):
     from components.modals import ExampleSessionConnectionErrorModal
 
     return ExampleSessionConnectionErrorModal(*args, **kwargs)
 
 
-def InvalidSuperposeDistanceMatrixModal(*args, **kwargs):
-    from components.modals import InvalidSuperposeDistanceMatrixModal
+def InvalidSuperposeHeatmapModal(*args, **kwargs):
+    from components.modals import InvalidSuperposeHeatmapModal
 
-    return InvalidSuperposeDistanceMatrixModal(*args, **kwargs)
+    return InvalidSuperposeHeatmapModal(*args, **kwargs)
 
 
 def GdprPolicySectionOne(*args, **kwargs):

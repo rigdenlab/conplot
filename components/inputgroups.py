@@ -3,7 +3,7 @@ import dash_html_components as html
 from loaders import AdditionalDatasetReference
 from parsers import ContactMapFormats, StructuralInformationFormats, DistanceInformationFormats
 from components import EmailIssueReference, UserReadableTrackNames
-from utils.plot_utils import PaletteDefaultLayout
+from utils.color_palettes import PaletteDefaultLayout
 from utils import UrlIndex
 
 

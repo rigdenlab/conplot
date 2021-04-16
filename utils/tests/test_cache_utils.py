@@ -54,10 +54,10 @@ class CacheUtilsTestCase(unittest.TestCase):
 
     def test_6(self):
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'sequence')
-        cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'hydro')
+        cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname', 'hydrophobicity')
         cache_utils.remove_fname(self.cache, self.session_id, 'dummy_fname', 'sequence')
         self.assertIsNone(self.cache.hget(self.session_id, 'sequence'))
-        self.assertIsNone(self.cache.hget(self.session_id, 'hydro'))
+        self.assertIsNone(self.cache.hget(self.session_id, 'hydrophobicity'))
 
     def test_7(self):
         cache_utils.store_figure(self.session_id, 'figure_json', 'display_control_json', self.cache)
@@ -68,7 +68,7 @@ class CacheUtilsTestCase(unittest.TestCase):
 
     def test_8(self):
         self.cache.hset(self.session_id, 'dummy_fname', 'sequence_data')
-        self.cache.hset(self.session_id, 'hydro', 'seq_hydrophobicity')
+        self.cache.hset(self.session_id, 'hydrophobicity', 'seq_hydrophobicity')
         self.cache.hset(self.session_id, 'sequence', cache_utils.compress_data('dummy_fname'))
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname_1', 'contact')
         cache_utils.store_fname(self.cache, self.session_id, 'dummy_fname_2', 'disorder')
@@ -76,3 +76,17 @@ class CacheUtilsTestCase(unittest.TestCase):
         cache_utils.clear_cache(self.session_id, self.cache)
         expected = {b'id': cache_utils.compress_data(self.session_id)}
         self.assertDictEqual(expected, self.cache.hgetall(self.session_id))
+
+    def test_9(self):
+        cachekey_1 = 'fname_1_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        density_1 = [1, 2, 3, 3, 4, 5]
+        cachekey_2 = 'fname_2_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        density_2 = [5, 6, 7, 8, 9, 0]
+
+        cache_utils.store_density(self.session_id, cachekey_1, density_1, self.cache)
+        cache_utils.store_density(self.session_id, cachekey_2, density_2, self.cache)
+        output = cache_utils.retrieve_density(self.session_id, cachekey_2, self.cache)
+        self.assertListEqual(output, density_2)
+        expected_cache = {b'id': cache_utils.compress_data(self.session_id)}
+        cache_utils.remove_all_density(self.session_id, self.cache)
+        self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))

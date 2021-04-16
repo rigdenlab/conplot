@@ -55,6 +55,18 @@ def IupredParser(*args, **kwargs):
     return IupredParser(*args, **kwargs)
 
 
+def A3mParser(*args, **kwargs):
+    from parsers.a3mparser import A3mParser
+
+    return A3mParser(*args, **kwargs)
+
+
+def FastaMsaParser(*args, **kwargs):
+    from parsers.fastamsaparser import FastaMsaParser
+
+    return FastaMsaParser(*args, **kwargs)
+
+
 def CCMpredParser(*args, **kwargs):
     from parsers.ccmpredparser import CCMpredParser
 
@@ -65,6 +77,12 @@ def PDBParser(*args, **kwargs):
     from parsers.pdbparser import PDBParser
 
     return PDBParser(*args, **kwargs)
+
+
+def MappredParser(*args, **kwargs):
+    from parsers.mappred import MappredParser
+
+    return MappredParser(*args, **kwargs)
 
 
 def CustomParser(*args, **kwargs):
@@ -105,6 +123,8 @@ class ParserFormats(Enum):
     PDB = PDBParser
     CASPRR_MODE_2 = CASPRR2Parser
     trROSETTA_NPZ = NpzParser
+    MAPPRED = MappredParser
+    A3M = A3mParser
 
 
 class ContactInformationFormats(Enum):
@@ -130,6 +150,7 @@ class ContactInformationFormats(Enum):
     ALEIGEN = 19
     PDB = 20
     trROSETTA_NPZ = 21
+    MAPPRED = 22
 
 
 class ContactMapFormats(Enum):
@@ -161,6 +182,7 @@ class StructuralInformationFormats(Enum):
 class DistanceInformationFormats(Enum):
     CASPRR_MODE_2 = 1
     trROSETTA_NPZ = 2
+    MAPPRED = 3
 
 
 class MembraneStates(Enum):
@@ -207,9 +229,54 @@ class SecondaryStructureStates(Enum):
     SHEET = 3
 
 
+class HydrophobicityStates(Enum):
+    HYDROPATHY_10 = 10
+    HYDROPATHY_9 = 9
+    HYDROPATHY_8 = 8
+    HYDROPATHY_7 = 7
+    HYDROPATHY_6 = 6
+    HYDROPATHY_5 = 5
+    HYDROPATHY_4 = 4
+    HYDROPATHY_3 = 3
+    HYDROPATHY_2 = 2
+    HYDROPATHY_1 = 1
+    HYDROPATHY_0 = 0
+
+
+class DensityStates(Enum):
+    CONTACT_DENSITY_0 = 0
+    CONTACT_DENSITY_1 = 1
+    CONTACT_DENSITY_2 = 2
+    CONTACT_DENSITY_3 = 3
+    CONTACT_DENSITY_4 = 4
+    CONTACT_DENSITY_5 = 5
+    CONTACT_DENSITY_6 = 6
+    CONTACT_DENSITY_7 = 7
+    CONTACT_DENSITY_8 = 8
+    CONTACT_DENSITY_9 = 9
+    CONTACT_DENSITY_10 = 10
+
+
+class MsaStates(Enum):
+    MSA_COVERAGE_0 = 0
+    MSA_COVERAGE_1 = 1
+    MSA_COVERAGE_2 = 2
+    MSA_COVERAGE_3 = 3
+    MSA_COVERAGE_4 = 4
+    MSA_COVERAGE_5 = 5
+    MSA_COVERAGE_6 = 6
+    MSA_COVERAGE_7 = 7
+    MSA_COVERAGE_8 = 8
+    MSA_COVERAGE_9 = 9
+    MSA_COVERAGE_10 = 10
+
+
 class DatasetStates(Enum):
     membranetopology = MembraneStates
     secondarystructure = SecondaryStructureStates
     conservation = ConservationStates
     disorder = DisorderStates
     custom = CustomStates
+    hydrophobicity = HydrophobicityStates
+    density = DensityStates
+    msa = MsaStates

@@ -1,5 +1,6 @@
 from enum import Enum
 from plotly.colors import diverging, sequential
+from loaders import DatasetReference
 
 
 class Custom_SpectralColorPalette(Enum):
@@ -162,6 +163,34 @@ class Heatmap_GreyColorPalette(Enum):
     BIN_0 = 'rgb(0,0,0)'
 
 
+class Density_GreyColorPalette(Enum):
+    CONTACT_DENSITY_0 = 'rgba(255,255,255,{})'
+    CONTACT_DENSITY_1 = 'rgba(229,229,229,{})'
+    CONTACT_DENSITY_2 = 'rgba(204,204,204,{})'
+    CONTACT_DENSITY_3 = 'rgba(179,179,179,{})'
+    CONTACT_DENSITY_4 = 'rgba(153,153,153,{})'
+    CONTACT_DENSITY_5 = 'rgba(127,127,127,{})'
+    CONTACT_DENSITY_6 = 'rgba(102,102,102,{})'
+    CONTACT_DENSITY_7 = 'rgba(77,77,77,{})'
+    CONTACT_DENSITY_8 = 'rgba(51,51,51,{})'
+    CONTACT_DENSITY_9 = 'rgba(25,25,25,{})'
+    CONTACT_DENSITY_10 = 'rgb(0,0,0,{})'
+
+
+class Coverage_GreyColorPalette(Enum):
+    MSA_COVERAGE_0 = 'rgba(255,255,255,{})'
+    MSA_COVERAGE_1 = 'rgba(229,229,229,{})'
+    MSA_COVERAGE_2 = 'rgba(204,204,204,{})'
+    MSA_COVERAGE_3 = 'rgba(179,179,179,{})'
+    MSA_COVERAGE_4 = 'rgba(153,153,153,{})'
+    MSA_COVERAGE_5 = 'rgba(127,127,127,{})'
+    MSA_COVERAGE_6 = 'rgba(102,102,102,{})'
+    MSA_COVERAGE_7 = 'rgba(77,77,77,{})'
+    MSA_COVERAGE_8 = 'rgba(51,51,51,{})'
+    MSA_COVERAGE_9 = 'rgba(25,25,25,{})'
+    MSA_COVERAGE_10 = 'rgb(0,0,0,{})'
+
+
 class Heatmap_Viridis(Enum):
     BIN_10 = sequential.Viridis[0]
     BIN_9 = sequential.Viridis[0]
@@ -174,6 +203,34 @@ class Heatmap_Viridis(Enum):
     BIN_2 = sequential.Viridis[7]
     BIN_1 = sequential.Viridis[8]
     BIN_0 = sequential.Viridis[9]
+
+
+class Density_Viridis(Enum):
+    CONTACT_DENSITY_0 = sequential.Viridis[0]
+    CONTACT_DENSITY_1 = sequential.Viridis[0]
+    CONTACT_DENSITY_2 = sequential.Viridis[1]
+    CONTACT_DENSITY_3 = sequential.Viridis[2]
+    CONTACT_DENSITY_4 = sequential.Viridis[3]
+    CONTACT_DENSITY_5 = sequential.Viridis[4]
+    CONTACT_DENSITY_6 = sequential.Viridis[5]
+    CONTACT_DENSITY_7 = sequential.Viridis[6]
+    CONTACT_DENSITY_8 = sequential.Viridis[7]
+    CONTACT_DENSITY_9 = sequential.Viridis[8]
+    CONTACT_DENSITY_10 = sequential.Viridis[9]
+
+
+class Coverage_Viridis(Enum):
+    MSA_COVERAGE_0 = sequential.Viridis[0]
+    MSA_COVERAGE_1 = sequential.Viridis[0]
+    MSA_COVERAGE_2 = sequential.Viridis[1]
+    MSA_COVERAGE_3 = sequential.Viridis[2]
+    MSA_COVERAGE_4 = sequential.Viridis[3]
+    MSA_COVERAGE_5 = sequential.Viridis[4]
+    MSA_COVERAGE_6 = sequential.Viridis[5]
+    MSA_COVERAGE_7 = sequential.Viridis[6]
+    MSA_COVERAGE_8 = sequential.Viridis[7]
+    MSA_COVERAGE_9 = sequential.Viridis[8]
+    MSA_COVERAGE_10 = sequential.Viridis[9]
 
 
 class Heatmap_BuRd(Enum):
@@ -190,6 +247,34 @@ class Heatmap_BuRd(Enum):
     BIN_0 = diverging.RdYlBu[0]
 
 
+class Density_BuRd(Enum):
+    CONTACT_DENSITY_0 = diverging.RdYlBu[10]
+    CONTACT_DENSITY_1 = diverging.RdYlBu[10]
+    CONTACT_DENSITY_2 = diverging.RdYlBu[9]
+    CONTACT_DENSITY_3 = diverging.RdYlBu[8]
+    CONTACT_DENSITY_4 = diverging.RdYlBu[7]
+    CONTACT_DENSITY_5 = diverging.RdYlBu[6]
+    CONTACT_DENSITY_6 = diverging.RdYlBu[5]
+    CONTACT_DENSITY_7 = diverging.RdYlBu[4]
+    CONTACT_DENSITY_8 = diverging.RdYlBu[3]
+    CONTACT_DENSITY_9 = diverging.RdYlBu[2]
+    CONTACT_DENSITY_10 = diverging.RdYlBu[1]
+
+
+class Coverage_BuRd(Enum):
+    MSA_COVERAGE_0 = diverging.RdYlBu[10]
+    MSA_COVERAGE_1 = diverging.RdYlBu[10]
+    MSA_COVERAGE_2 = diverging.RdYlBu[9]
+    MSA_COVERAGE_3 = diverging.RdYlBu[8]
+    MSA_COVERAGE_4 = diverging.RdYlBu[7]
+    MSA_COVERAGE_5 = diverging.RdYlBu[6]
+    MSA_COVERAGE_6 = diverging.RdYlBu[5]
+    MSA_COVERAGE_7 = diverging.RdYlBu[4]
+    MSA_COVERAGE_8 = diverging.RdYlBu[3]
+    MSA_COVERAGE_9 = diverging.RdYlBu[2]
+    MSA_COVERAGE_10 = diverging.RdYlBu[1]
+
+
 class Heatmap_Inferno(Enum):
     BIN_10 = sequential.Inferno[0]
     BIN_9 = sequential.Inferno[0]
@@ -204,20 +289,155 @@ class Heatmap_Inferno(Enum):
     BIN_0 = sequential.Inferno[9]
 
 
+class Density_Inferno(Enum):
+    CONTACT_DENSITY_0 = sequential.Inferno[0]
+    CONTACT_DENSITY_1 = sequential.Inferno[0]
+    CONTACT_DENSITY_2 = sequential.Inferno[1]
+    CONTACT_DENSITY_3 = sequential.Inferno[2]
+    CONTACT_DENSITY_4 = sequential.Inferno[3]
+    CONTACT_DENSITY_5 = sequential.Inferno[4]
+    CONTACT_DENSITY_6 = sequential.Inferno[5]
+    CONTACT_DENSITY_7 = sequential.Inferno[6]
+    CONTACT_DENSITY_8 = sequential.Inferno[7]
+    CONTACT_DENSITY_9 = sequential.Inferno[8]
+    CONTACT_DENSITY_10 = sequential.Inferno[9]
+
+
+class Coverage_Inferno(Enum):
+    MSA_COVERAGE_0 = sequential.Inferno[0]
+    MSA_COVERAGE_1 = sequential.Inferno[0]
+    MSA_COVERAGE_2 = sequential.Inferno[1]
+    MSA_COVERAGE_3 = sequential.Inferno[2]
+    MSA_COVERAGE_4 = sequential.Inferno[3]
+    MSA_COVERAGE_5 = sequential.Inferno[4]
+    MSA_COVERAGE_6 = sequential.Inferno[5]
+    MSA_COVERAGE_7 = sequential.Inferno[6]
+    MSA_COVERAGE_8 = sequential.Inferno[7]
+    MSA_COVERAGE_9 = sequential.Inferno[8]
+    MSA_COVERAGE_10 = sequential.Inferno[9]
+
+
+class Heatmap_Hot(Enum):
+    BIN_0 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    BIN_1 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    BIN_2 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    BIN_3 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    BIN_4 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    BIN_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    BIN_6 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    BIN_7 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    BIN_8 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    BIN_9 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    BIN_10 = 'rgb(255.0, 255.0, 255.0)'
+
+
+class Density_Hot(Enum):
+    CONTACT_DENSITY_10 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    CONTACT_DENSITY_9 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    CONTACT_DENSITY_8 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    CONTACT_DENSITY_7 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    CONTACT_DENSITY_6 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    CONTACT_DENSITY_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    CONTACT_DENSITY_4 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    CONTACT_DENSITY_3 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    CONTACT_DENSITY_2 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    CONTACT_DENSITY_1 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    CONTACT_DENSITY_0 = 'rgb(255.0, 255.0, 255.0)'
+
+
+class Coverage_Hot(Enum):
+    MSA_COVERAGE_10 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    MSA_COVERAGE_9 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    MSA_COVERAGE_8 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    MSA_COVERAGE_7 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    MSA_COVERAGE_6 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    MSA_COVERAGE_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    MSA_COVERAGE_4 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    MSA_COVERAGE_3 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    MSA_COVERAGE_2 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    MSA_COVERAGE_1 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    MSA_COVERAGE_0 = 'rgb(255.0, 255.0, 255.0)'
+
+
 class Heatmap_ColorPalettes(Enum):
     PALETTE_1 = Heatmap_GreyColorPalette
     PALETTE_2 = Heatmap_Viridis
     PALETTE_3 = Heatmap_BuRd
     PALETTE_4 = Heatmap_Inferno
+    PALETTE_5 = Heatmap_Hot
+
+
+class Density_ColorPalettes(Enum):
+    PALETTE_1 = Density_GreyColorPalette
+    PALETTE_2 = Density_Viridis
+    PALETTE_3 = Density_BuRd
+    PALETTE_4 = Density_Inferno
+    PALETTE_5 = Density_Hot
+
+
+class MsaCoverage_ColorPalettes(Enum):
+    PALETTE_1 = Coverage_GreyColorPalette
+    PALETTE_2 = Coverage_Viridis
+    PALETTE_3 = Coverage_BuRd
+    PALETTE_4 = Coverage_Inferno
+    PALETTE_5 = Coverage_Hot
+
+
+class Hydrophobicity_BlueGreyColorPalette(Enum):
+    HYDROPATHY_10 = 'rgba(66,138,245,{})'
+    HYDROPATHY_9 = 'rgba(72,137,234,{})'
+    HYDROPATHY_8 = 'rgba(79,136,222,{})'
+    HYDROPATHY_7 = 'rgba(85,136,211,{})'
+    HYDROPATHY_6 = 'rgba(92,135,199,{})'
+    HYDROPATHY_5 = 'rgba(98,134,188,{})'
+    HYDROPATHY_4 = 'rgba(104,133,176,{})'
+    HYDROPATHY_3 = 'rgba(111,132,165,{})'
+    HYDROPATHY_2 = 'rgba(117,132,153,{})'
+    HYDROPATHY_1 = 'rgba(124,131,142,{})'
+    HYDROPATHY_0 = 'rgba(130,130,130,{})'
+
+
+class Hydrophobicity_GreenGreyColorPalette(Enum):
+    HYDROPATHY_10 = 'rgba(59,237,74,{})'
+    HYDROPATHY_9 = 'rgba(66,226,80,{})'
+    HYDROPATHY_8 = 'rgba(73,216,85,{})'
+    HYDROPATHY_7 = 'rgba(80,205,91,{})'
+    HYDROPATHY_6 = 'rgba(87,194,96,{})'
+    HYDROPATHY_5 = 'rgba(95,184,102,{})'
+    HYDROPATHY_4 = 'rgba(102,173,108,{})'
+    HYDROPATHY_3 = 'rgba(109,162,113,{})'
+    HYDROPATHY_2 = 'rgba(116,151,119,{})'
+    HYDROPATHY_1 = 'rgba(123,141,124,{})'
+    HYDROPATHY_0 = 'rgba(130,130,130,{})'
+
+
+class HydrophobicityColorPalettes(Enum):
+    PALETTE_1 = Hydrophobicity_BlueGreyColorPalette
+    PALETTE_2 = Hydrophobicity_GreenGreyColorPalette
 
 
 class DatasetColorPalettes(Enum):
-    membranetopology = MembraneTopology_ColorPalettes
-    secondarystructure = SecondaryStructure_ColorPalettes
-    disorder = Disorder_ColorPalettes
-    conservation = Conservation_ColorPalettes
+    density = Density_ColorPalettes
     custom = Custom_ColorPalettes
     heatmap = Heatmap_ColorPalettes
+    hydrophobicity = HydrophobicityColorPalettes
+    membranetopology = MembraneTopology_ColorPalettes
+    msa = MsaCoverage_ColorPalettes
+    conservation = Conservation_ColorPalettes
+    disorder = Disorder_ColorPalettes
+    secondarystructure = SecondaryStructure_ColorPalettes
+
+
+class PaletteDefaultLayout(Enum):
+    CONTACT_DENSITY = DatasetReference.CONTACT_DENSITY.value.encode()
+    CUSTOM = DatasetReference.CUSTOM.value.encode()
+    HEATMAP = b'heatmap'
+    HYDROPHOBICITY = DatasetReference.HYDROPHOBICITY.value.encode()
+    MEMBRANE_TOPOLOGY = DatasetReference.MEMBRANE_TOPOLOGY.value.encode()
+    msa = DatasetReference.MSA.value.encode()
+    CONSERVATION = DatasetReference.CONSERVATION.value.encode()
+    DISORDER = DatasetReference.DISORDER.value.encode()
+    SECONDARY_STRUCTURE = DatasetReference.SECONDARY_STRUCTURE.value.encode()
 
 
 def get_heatmap_colorscale(selected_palette):

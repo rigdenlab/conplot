@@ -2,16 +2,20 @@ from loaders import decode_raw_file
 from Bio import SeqIO
 from Bio.Alphabet.IUPAC import protein
 from io import StringIO
-from utils import compress_data, WimleyWhiteHydrophobicityScale
+from utils import compress_data
+
+normalised_Kyte_Doolittle_hydrophobicity = {'A': 7, 'R': 0, 'N': 1, 'D': 1, 'C': 7, 'E': 1, 'Q': 1, 'G': 4, 'H': 1,
+                                            'I': 10, 'L': 9, 'K': 0, 'M': 7, 'F': 8, 'P': 3, 'S': 4, 'T': 4, 'W': 4,
+                                            'Y': 3, 'V': 9}
 
 
 def get_hydrophobicity(seq):
     hydro = []
-    try:
-        for residue in seq:
-            hydro.append(WimleyWhiteHydrophobicityScale.__getattr__(residue).value)
-    except AttributeError:
-        return None
+    for residue in seq:
+        try:
+            hydro.append(normalised_Kyte_Doolittle_hydrophobicity[residue])
+        except (AttributeError, KeyError):
+            hydro.append(0)
     return hydro
 
 

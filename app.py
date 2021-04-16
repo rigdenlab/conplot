@@ -6,7 +6,7 @@ import loaders
 import logging
 import keydb
 import psycopg2
-from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, UrlIndex
+from utils import callback_utils, data_utils, session_utils, app_utils, keydb_utils, plot_utils, cache_utils, UrlIndex
 from dash.dash import no_update
 import dash_bootstrap_components as dbc
 from dash.dependencies import Input, Output, State, ALL, MATCH
@@ -327,6 +327,8 @@ def upload_sequence(fname, fcontent, session_id):
         return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
         return callback_utils.retrieve_sequence_fname(session_id, cache), None, None
+    elif not cache_utils.is_valid_fname(fname):
+        return no_update, no_update, components.InvalidFnameModal(fname)
 
     return data_utils.upload_sequence(fname, fcontent, session_id, cache, app.logger)
 
@@ -347,6 +349,8 @@ def upload_contact(fname, fcontent, input_format, fname_alerts, session_id):
         return no_update, None, components.SessionTimedOutModal()
     elif not callback_utils.ensure_triggered(trigger):
         return callback_utils.retrieve_contact_fnames(session_id, cache), None, None
+    elif not cache_utils.is_valid_fname(fname):
+        return no_update, no_update, components.InvalidFnameModal(fname)
 
     return data_utils.upload_dataset(fname, fcontent, input_format, fname_alerts, session_id, cache, app.logger,
                                      dataset=loaders.DatasetReference.CONTACT_MAP.value)
@@ -409,7 +413,7 @@ def javascript_exe_button(n_clicks, session_id):
     else:
         app.logger.info('Fetching example data')
         try:
-            session_utils.load_session('user_1', 35, session_id, cache, app.logger)
+            session_utils.load_session('user_1', 46, session_id, cache, app.logger)
         except (psycopg2.OperationalError, AttributeError) as e:
             app.logger.error('Unable to fetch example data: {}'.format(e))
             return no_update, components.ExampleSessionConnectionErrorModal(), no_update
@@ -450,8 +454,6 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None or x < 0]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
-    elif superimpose and distance_matrix:
-        return no_update, components.InvalidSuperposeDistanceMatrixModal(), no_update, no_update
     elif superimpose and ('---' in cmap_selection or len(set(cmap_selection)) == 1):
         return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 

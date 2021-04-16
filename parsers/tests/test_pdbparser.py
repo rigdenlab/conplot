@@ -25,16 +25,20 @@ ATOM     16  CB  PHE A 208      31.726  43.102  -3.518  0.50 19.90           C
 END
 """
 
-        expected_res1 = [86, 208]
-        expected_res2 = [36, 86]
-        expected_score = [0.934108, 0.920229]
-
+        expected_res1 = [86, 208, 171, 171, 208, 208]
+        expected_res2 = [36, 86, 36, 86, 36, 171]
+        expected_score = [0.934108, 0.920229, 0, 0, 0, 0]
+        expected_distance = [1, 2, 8, 5, 4, 3]
+        expected_distance_prob = [1, 1, 1, 1, 1, 1]
         output = PDBParser(dummy_prediction)
-        self.assertEqual(3, len(output))
+
+        self.assertEqual(7, len(output))
         self.assertEqual('PDB', output.pop(-1))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])
+        self.assertListEqual(expected_distance, [contact[3] for contact in output])
+        self.assertListEqual(expected_distance_prob, [contact[4] for contact in output])
 
     def test_2(self):
         dummy_prediction = """###

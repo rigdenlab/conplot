@@ -60,12 +60,12 @@ def InvalidMapSelectionModal():
     ], id='invalid-map-selection-modal', is_open=True)
 
 
-def InvalidSuperposeDistanceMatrixModal():
+def InvalidSuperposeHeatmapModal():
     return dbc.Modal([
         ModalHeader("Invalid Input"),
         dbc.ModalBody([
-            html.P("""Superposition of heatmaps is not supported yet!""",
-                   style={'text-align': "justify"})
+            html.P("""Superposition of residue contact predictions is not supported while the heatmap mode is 
+            activated.""", style={'text-align': "justify"})
         ]),
     ], id='invalid-map-selection-modal', is_open=True)
 
@@ -99,6 +99,16 @@ def InvalidInputModal():
             highlighted on red and make sure the value you introduce is correct.""", style={'text-align': "justify"})
         ),
     ], id='invalid-input-modal', is_open=True)
+
+
+def InvalidFnameModal(fname):
+    return dbc.Modal([
+        ModalHeader("Invalid file name"),
+        dbc.ModalBody(
+            html.P("""Sorry but we cannot process files named '{}'. You will need to rename your file.""".format(fname),
+                   style={'text-align': "justify"})
+        ),
+    ], id='invalid-fname-modal', is_open=True)
 
 
 def SessionTimedOutModal():

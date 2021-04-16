@@ -77,10 +77,16 @@ class CacheUtilsTestCase(unittest.TestCase):
         expected = {b'id': cache_utils.compress_data(self.session_id)}
         self.assertDictEqual(expected, self.cache.hgetall(self.session_id))
 
-    def test_(self):
+    def test_9(self):
+        cachekey_1 = 'fname_1_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        density_1 = [1, 2, 3, 3, 4, 5]
+        cachekey_2 = 'fname_2_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        density_2 = [5, 6, 7, 8, 9, 0]
 
-        cache_utils.store_density(self.session_id, density_cachekey, density, self.cache)
-        cache_utils.store_density()
-        cache_utils.retrieve_density()
-        cache_utils.remove_density()
-        cache_utils.remove_all_density()
+        cache_utils.store_density(self.session_id, cachekey_1, density_1, self.cache)
+        cache_utils.store_density(self.session_id, cachekey_2, density_2, self.cache)
+        output = cache_utils.retrieve_density(self.session_id, cachekey_2, self.cache)
+        self.assertListEqual(output, density_2)
+        expected_cache = {b'id': cache_utils.compress_data(self.session_id)}
+        cache_utils.remove_all_density(self.session_id, self.cache)
+        self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))

@@ -33,27 +33,25 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
             return dataset.value, session[fname.encode()]
 
 
-def transform_coords_diagonal_axis(coord, distance, low_bound=False, ratio=1, y_axis=True):
-    if coord is None:
-        return None
+def transform_coords_diagonal_xaxis(indices, distance, track_idx, ratio=1):
+    factor = distance / (1 + ratio ** 2)
+    if track_idx < 4:
+        factor = factor * -1
+    return [idx + factor for idx in indices]
 
-    if y_axis:
-        factor = ratio * (distance / (1 + ratio ** 2))
-        if low_bound:
-            factor = factor * -1
-    else:
-        factor = distance / (1 + ratio ** 2)
-        if not low_bound:
-            factor = factor * -1
 
-    return coord + factor
+def transform_coords_diagonal_yaxis(prediction, state, distance, track_idx, ratio=1):
+    factor = ratio * (distance / (1 + ratio ** 2))
+    if track_idx > 4:
+        factor = factor * -1
+    return [idx + factor if residue == state else None for idx, residue in enumerate(prediction, 1)]
 
 
 def get_diagonal_trace(prediction, dataset, marker_size, sequence, alpha, color_palette):
     if prediction is None:
         return None
 
-    x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
+    x = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
     palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     traces = []
@@ -62,14 +60,9 @@ def get_diagonal_trace(prediction, dataset, marker_size, sequence, alpha, color_
         y = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
         if not any(y):
             continue
-
-        hovertext = ['Residue: {} ({}) | {}'.format(sequence[idx - 1], idx, state.name) for idx in x_diagonal]
-        color = palette.__getattr__(state.name).value
-        color = color.format(alpha)
-
-        traces.append(
-            create_cmap_trace(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext)
-        )
+        hovertext = ['Residue: {} ({}) | {}'.format(resid, idx, state.name) for idx, resid in enumerate(sequence, 1)]
+        color = palette.__getattr__(state.name).value.format(alpha)
+        traces.append(create_cmap_trace(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
 
@@ -84,21 +77,15 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
     palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
-    if track_idx > 4:
-        low_bound = True
-    else:
-        low_bound = False
+
+    x = transform_coords_diagonal_xaxis(x_diagonal, track_distance, track_idx)
 
     for state in states:
-        y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
-        if not any(y_diagonal):
+        y = transform_coords_diagonal_yaxis(prediction, state.value, track_distance, track_idx)
+        if not any(y):
             continue
-
-        y = [transform_coords_diagonal_axis(y, track_distance, low_bound=low_bound) for y in y_diagonal]
-        x = [transform_coords_diagonal_axis(x, track_distance, low_bound=low_bound, y_axis=False) for x in x_diagonal]
-        hovertext = ['%s' % state.name for idx in enumerate(x)]
-        color = palette.__getattr__(state.name).value
-        color = color.format(alpha)
+        hovertext = ['%s' % state.name for i in x]
+        color = palette.__getattr__(state.name).value.format(alpha)
 
         traces.append(create_cmap_trace(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 

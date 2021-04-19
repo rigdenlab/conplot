@@ -87,44 +87,44 @@ def populate_superimposed_heatmap(reference_cmap, secondary_cmap, heat, hover, v
 
     if verbose_labels is not None:
         for reference_distance in reference_cmap:
-            if tuple(reference_distance[:2]) in predicted_set.keys():
-                predicted_distance = predicted_set[tuple(reference_distance[:2])]
-            else:
-                predicted_distance = 9
-            error = abs((9 - reference_distance[3]) - (9 - predicted_distance))
-            heat[reference_distance[idx_x]][reference_distance[idx_y]] = error
-            heat[reference_distance[idx_y]][reference_distance[idx_x]] = error
-            map_a_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(reference_distance[3]))
-            map_b_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(predicted_distance))
-            hover_label_a = HoverTemplates.DISTOGRAM_SUPERIMPOSE_VERBOSE. \
-                format(reference_distance[idx_y], reference_distance[idx_x], map_a_distance, map_b_distance,
-                       error, verbose_labels[reference_distance[idx_y] - 1],
-                       verbose_labels[reference_distance[idx_x] - 1])
-            hover_label_b = HoverTemplates.DISTOGRAM_SUPERIMPOSE_VERBOSE. \
-                format(reference_distance[idx_x], reference_distance[idx_y], map_a_distance, map_b_distance,
-                       error, verbose_labels[reference_distance[idx_x] - 1],
-                       verbose_labels[reference_distance[idx_y] - 1])
-            hover[reference_distance[idx_x]][reference_distance[idx_y]] = hover_label_a
-            hover[reference_distance[idx_y]][reference_distance[idx_x]] = hover_label_b
+            residues = tuple(reference_distance[:2])
+            predicted_bin = predicted_set[residues] if residues in predicted_set.keys() else 9
+            reference_bin = reference_distance[3]
+            error = abs((9 - reference_bin) - (9 - predicted_bin))
+            resid_y = reference_distance[idx_y]
+            resid_x = reference_distance[idx_x]
+            heat[resid_x][resid_y] = error
+            heat[resid_y][resid_x] = error
+            map_a_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(reference_bin))
+            map_b_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(predicted_bin))
+            hover_label_a = HoverTemplates.DISTOGRAM_SUPERIMPOSE_VERBOSE.format(resid_y, resid_x, map_a_distance,
+                                                                                map_b_distance, error,
+                                                                                verbose_labels[resid_y - 1],
+                                                                                verbose_labels[resid_x - 1])
+            hover_label_b = HoverTemplates.DISTOGRAM_SUPERIMPOSE_VERBOSE.format(resid_x, resid_y, map_a_distance,
+                                                                                map_b_distance, error,
+                                                                                verbose_labels[resid_x - 1],
+                                                                                verbose_labels[resid_y - 1])
+            hover[resid_x][resid_y] = hover_label_a
+            hover[resid_y][resid_x] = hover_label_b
     else:
         for reference_distance in reference_cmap:
-            if tuple(reference_distance[:2]) in predicted_set.keys():
-                predicted_distance = predicted_set[tuple(reference_distance[:2])]
-            else:
-                predicted_distance = 9
-            error = abs((9 - reference_distance[3]) - (9 - predicted_distance))
-            heat[reference_distance[idx_x]][reference_distance[idx_y]] = error
-            heat[reference_distance[idx_y]][reference_distance[idx_x]] = error
-            map_a_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(reference_distance[3]))
-            map_b_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(predicted_distance))
-            hover_label_a = HoverTemplates.DISTOGRAM_SUPERIMPOSE.format(reference_distance[idx_y],
-                                                                        reference_distance[idx_x], map_a_distance,
+            residues = tuple(reference_distance[:2])
+            predicted_bin = predicted_set[residues] if residues in predicted_set.keys() else 9
+            reference_bin = reference_distance[3]
+            error = abs((9 - reference_bin) - (9 - predicted_bin))
+            resid_y = reference_distance[idx_y]
+            resid_x = reference_distance[idx_x]
+            heat[resid_x][resid_y] = error
+            heat[resid_y][resid_x] = error
+            map_a_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(reference_bin))
+            map_b_distance = DistanceLabels.__getitem__(DistanceLabels, 'BIN_{}'.format(predicted_bin))
+            hover_label_a = HoverTemplates.DISTOGRAM_SUPERIMPOSE.format(resid_y,  resid_x, map_a_distance,
                                                                         map_b_distance, error)
-            hover_label_b = HoverTemplates.DISTOGRAM_SUPERIMPOSE.format(reference_distance[idx_x],
-                                                                        reference_distance[idx_y], map_a_distance,
+            hover_label_b = HoverTemplates.DISTOGRAM_SUPERIMPOSE.format(resid_x, resid_y, map_a_distance,
                                                                         map_b_distance, error)
-            hover[reference_distance[idx_x]][reference_distance[idx_y]] = hover_label_a
-            hover[reference_distance[idx_y]][reference_distance[idx_x]] = hover_label_b
+            hover[resid_x][resid_y] = hover_label_a
+            hover[resid_y][resid_x] = hover_label_b
 
     return heat, hover
 

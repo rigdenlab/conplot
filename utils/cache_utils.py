@@ -20,7 +20,9 @@ class CacheKeys(Enum):
     SECONDARY_STRUCTURE = loaders.DatasetReference.SECONDARY_STRUCTURE.value
     CONSERVATION = loaders.DatasetReference.CONSERVATION.value
     DISORDER = loaders.DatasetReference.DISORDER.value
-    METADATA_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA-PROTECTED-TAG'
+    CMAP_DENSITY = '{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-DENSITY-TAG_{}'
+    CMAP_ERROR = '{}_{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-ERROR-TAG_{}'
+    PROTECETED_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
 def retrieve_density(session_id, density_cachekey, cache):
@@ -51,7 +53,7 @@ def remove_density(session_id, cache, fname):
         return
     density_list = decompress_data(density_list)
 
-    density_cachekey = '{}_{}'.format(fname, CacheKeys.METADATA_TAG.value)
+    density_cachekey = '{}_{}'.format(fname, CacheKeys.PROTECETED_TAG.value)
     for density in density_list:
         if density_cachekey in density:
             cache.hdel(session_id, density)
@@ -60,7 +62,7 @@ def remove_density(session_id, cache, fname):
 
 
 def is_valid_fname(fname):
-    if CacheKeys.METADATA_TAG.value in fname or fname in [x.value for x in CacheKeys]:
+    if CacheKeys.PROTECETED_TAG.value in fname or any([x.value for x in CacheKeys if x.value == fname]):
         return False
     return True
 

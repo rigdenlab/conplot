@@ -18,7 +18,7 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
     if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        cachekey = '{}_{}_{}'.format(fname, cache_utils.CacheKeys.METADATA_TAG.value, display_settings.factor).encode()
+        cachekey = cache_utils.CacheKeys.CMAP_DENSITY.value.format(fname, display_settings.factor).encode()
         if cachekey in session.keys():
             density = session[cachekey]
         elif cache.hexists(session_id, cachekey):

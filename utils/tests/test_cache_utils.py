@@ -78,9 +78,9 @@ class CacheUtilsTestCase(unittest.TestCase):
         self.assertDictEqual(expected, self.cache.hgetall(self.session_id))
 
     def test_9(self):
-        cachekey_1 = 'fname_1_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        cachekey_1 = cache_utils.CacheKeys.CMAP_DENSITY.value.format('fname_1', '2').encode()
         density_1 = [1, 2, 3, 3, 4, 5]
-        cachekey_2 = 'fname_2_{}_2'.format(cache_utils.CacheKeys.METADATA_TAG.value).encode()
+        cachekey_2 = cache_utils.CacheKeys.CMAP_DENSITY.value.format('fname_2', '2').encode()
         density_2 = [5, 6, 7, 8, 9, 0]
 
         cache_utils.store_density(self.session_id, cachekey_1, density_1, self.cache)
@@ -90,3 +90,11 @@ class CacheUtilsTestCase(unittest.TestCase):
         expected_cache = {b'id': cache_utils.compress_data(self.session_id)}
         cache_utils.remove_all_density(self.session_id, self.cache)
         self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))
+
+    def test_10(self):
+        self.assertTrue(cache_utils.is_valid_fname('fname_1'))
+        self.assertTrue(cache_utils.is_valid_fname('fname_1-METADATA-DENSITY'))
+        self.assertFalse(cache_utils.is_valid_fname('fname_CONPLOT-INTERNAL-USE-ONLY-METADATA_1'))
+        self.assertFalse(cache_utils.is_valid_fname('{}_CONPLOT-INTERNAL-USE-ONLY-METADATA_{}'))
+        self.assertFalse(cache_utils.is_valid_fname(cache_utils.CacheKeys.CMAP_DENSITY.value.format('fname_1', '2')))
+

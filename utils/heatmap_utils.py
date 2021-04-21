@@ -11,7 +11,7 @@ def init_heatmap(seq_length):
 def create_heatmap(session, display_settings, verbose_labels):
     heat, hover = init_heatmap(display_settings.seq_length)
     for idx, fname in enumerate(display_settings.cmap_selection):
-        if fname == '---':
+        if fname == '--- Empty ---':
             continue
         heat, hover = populate_heatmap(session[fname.encode()], idx, heat, hover, verbose_labels)
 
@@ -23,7 +23,7 @@ def create_heatmap(session, display_settings, verbose_labels):
 def superimpose_heatmaps(session, display_settings, verbose_labels):
     heat, hover = init_heatmap(display_settings.seq_length)
     for idx, fname in enumerate(display_settings.cmap_selection):
-        if fname == '---':
+        if fname == '--- Empty ---':
             continue
         heat, hover = populate_superimposed_heatmap(session[display_settings.cmap_selection[0].encode()],
                                                     session[display_settings.cmap_selection[1].encode()],

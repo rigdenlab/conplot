@@ -3,6 +3,7 @@ import components
 from dash.dash import no_update
 import dash_core_components as dcc
 from enum import Enum
+import itertools
 import json
 from loaders import DatasetReference, AdditionalDatasetReference, STATES
 from layouts import ContextReference
@@ -58,7 +59,7 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
 
 def add_additional_tracks(session_id, session, display_settings, figure, cache):
     for idx, fname in enumerate(display_settings.selected_tracks):
-        if fname == '---':
+        if fname == '--- Empty ---':
             continue
 
         dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname, display_settings,
@@ -97,7 +98,7 @@ def add_contact_trace(session, display_settings, figure, verbose_labels):
 
     else:
         for idx, fname in enumerate(display_settings.cmap_selection):
-            if fname == '---':
+            if fname == '--- Empty ---':
                 continue
 
             cmap = session[fname.encode()]
@@ -210,7 +211,7 @@ def process_args(session_id, session, trigger, selected_tracks, cmap_selection, 
                                               heatmap=heatmap, verbose_labels=verbose_labels)
 
     if verbose_labels:
-        fnames = [fname for fname in selected_tracks if fname != '---']
+        fnames = [fname for fname in selected_tracks if fname != '--- Empty ---']
         verbose_labels = get_verbose_labels(session_id, session, fnames, display_settings, cache)
     else:
         verbose_labels = None
@@ -219,32 +220,37 @@ def process_args(session_id, session, trigger, selected_tracks, cmap_selection, 
 
 
 def get_available_data(session):
-    available_tracks = []
+    available_tracks = ['{}{}'.format(session[DatasetReference.SEQUENCE.value.encode()],
+                                      cache_utils.MetadataTags.HYDROPHOBICITY.value)]
+
+    available_cmaps = []
+    cmap_fname_list = session[DatasetReference.CONTACT_MAP.value.encode()]
+    for cmap_fname in cmap_fname_list:
+        available_cmaps.append(cmap_fname)
+        available_tracks.append('{}{}'.format(cmap_fname, cache_utils.MetadataTags.DENSITY.value))
+
+    if len(cmap_fname_list) > 1:
+        cmap_combinations = ['{} | {}{}'.format(*sorted(x), cache_utils.MetadataTags.DIFF.value)
+                             for x in itertools.combinations(cmap_fname_list, 2)]
+        available_tracks += cmap_combinations
+
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
             available_tracks += session[dataset.value.encode()]
 
-    available_cmaps = []
-    for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        available_cmaps.append(cmap_fname)
-        available_tracks.append('{}{}'.format(cmap_fname, cache_utils.MetadataTags.DENSITY))
-
-    available_tracks.append('{}{}'.format(session[DatasetReference.SEQUENCE.value.encode()],
-                                          cache_utils.MetadataTags.HYDROPHOBICITY))
-
-    return available_tracks, available_cmaps
+    return available_tracks, sorted(available_cmaps)
 
 
 def get_user_selection(cmap_selection, available_cmaps, track_selection, available_tracks):
     if len(cmap_selection) == 0:
-        cmap_selection = ['---'] * 2
+        cmap_selection = ['--- Empty ---'] * 2
     else:
-        cmap_selection = [fname if fname in available_cmaps else '---' for fname in cmap_selection]
+        cmap_selection = [fname if fname in available_cmaps else '--- Empty ---' for fname in cmap_selection]
 
     if len(track_selection) == 0:
-        track_selection = ['---'] * 9
+        track_selection = ['--- Empty ---'] * 9
     else:
-        track_selection = [track if track in available_tracks else '---' for track in track_selection]
+        track_selection = [track if track in available_tracks else '--- Empty ---' for track in track_selection]
 
     return track_selection, cmap_selection
 
@@ -259,9 +265,9 @@ def get_default_layout(session):
             tracks.append(session[dataset.value][0])
 
     if not any(tracks):
-        return ['---'] * 9, (cmap_fname, cmap_fname), selected_palettes
+        return ['--- Empty ---'] * 9, (cmap_fname, cmap_fname), selected_palettes
     else:
-        missing_tracks = ['---' for missing in range(0, 5 - len(tracks))]
+        missing_tracks = ['--- Empty ---' for missing in range(0, 5 - len(tracks))]
         tracks += missing_tracks
         return tracks[1:][::-1] + tracks, (cmap_fname, cmap_fname), selected_palettes
 

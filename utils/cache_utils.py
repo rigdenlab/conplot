@@ -1,5 +1,4 @@
 from enum import Enum
-from fast_enum import FastEnum
 import json
 import gzip
 import loaders
@@ -26,9 +25,12 @@ class CacheKeys(Enum):
     PROTECETED_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
-class MetadataTags(FastEnum):
+class MetadataTags(Enum):
     DENSITY = ' - density'
     HYDROPHOBICITY = ' - hydrophobicity'
+    DIFF = ' - diff'
+    SEPARATOR = '|'
+    HYPHEN = '---'
     TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
@@ -69,7 +71,7 @@ def remove_density(session_id, cache, fname):
 
 
 def is_valid_fname(fname):
-    if any([x for x in CacheKeys if x.value == fname]) or any([tag for tag in MetadataTags if tag in fname]):
+    if any([x for x in CacheKeys if x.value == fname]) or any([tag for tag in MetadataTags if tag.value in fname]):
         return False
     return True
 

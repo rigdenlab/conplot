@@ -177,6 +177,20 @@ class Density_GreyColorPalette(Enum):
     CONTACT_DENSITY_10 = 'rgb(0,0,0,{})'
 
 
+class Diff_GreyColorPalette(Enum):
+    CONTACT_DIFF_0 = 'rgba(255,255,255,{})'
+    CONTACT_DIFF_1 = 'rgba(229,229,229,{})'
+    CONTACT_DIFF_2 = 'rgba(204,204,204,{})'
+    CONTACT_DIFF_3 = 'rgba(179,179,179,{})'
+    CONTACT_DIFF_4 = 'rgba(153,153,153,{})'
+    CONTACT_DIFF_5 = 'rgba(127,127,127,{})'
+    CONTACT_DIFF_6 = 'rgba(102,102,102,{})'
+    CONTACT_DIFF_7 = 'rgba(77,77,77,{})'
+    CONTACT_DIFF_8 = 'rgba(51,51,51,{})'
+    CONTACT_DIFF_9 = 'rgba(25,25,25,{})'
+    CONTACT_DIFF_10 = 'rgb(0,0,0,{})'
+
+
 class Coverage_GreyColorPalette(Enum):
     MSA_COVERAGE_0 = 'rgba(255,255,255,{})'
     MSA_COVERAGE_1 = 'rgba(229,229,229,{})'
@@ -217,6 +231,20 @@ class Density_Viridis(Enum):
     CONTACT_DENSITY_8 = sequential.Viridis[7]
     CONTACT_DENSITY_9 = sequential.Viridis[8]
     CONTACT_DENSITY_10 = sequential.Viridis[9]
+
+
+class Diff_Viridis(Enum):
+    CONTACT_DIFF_0 = sequential.Viridis[0]
+    CONTACT_DIFF_1 = sequential.Viridis[0]
+    CONTACT_DIFF_2 = sequential.Viridis[1]
+    CONTACT_DIFF_3 = sequential.Viridis[2]
+    CONTACT_DIFF_4 = sequential.Viridis[3]
+    CONTACT_DIFF_5 = sequential.Viridis[4]
+    CONTACT_DIFF_6 = sequential.Viridis[5]
+    CONTACT_DIFF_7 = sequential.Viridis[6]
+    CONTACT_DIFF_8 = sequential.Viridis[7]
+    CONTACT_DIFF_9 = sequential.Viridis[8]
+    CONTACT_DIFF_10 = sequential.Viridis[9]
 
 
 class Coverage_Viridis(Enum):
@@ -261,6 +289,20 @@ class Density_BuRd(Enum):
     CONTACT_DENSITY_10 = diverging.RdYlBu[1]
 
 
+class Diff_BuRd(Enum):
+    CONTACT_DIFF_0 = diverging.RdYlBu[10]
+    CONTACT_DIFF_1 = diverging.RdYlBu[10]
+    CONTACT_DIFF_2 = diverging.RdYlBu[9]
+    CONTACT_DIFF_3 = diverging.RdYlBu[8]
+    CONTACT_DIFF_4 = diverging.RdYlBu[7]
+    CONTACT_DIFF_5 = diverging.RdYlBu[6]
+    CONTACT_DIFF_6 = diverging.RdYlBu[5]
+    CONTACT_DIFF_7 = diverging.RdYlBu[4]
+    CONTACT_DIFF_8 = diverging.RdYlBu[3]
+    CONTACT_DIFF_9 = diverging.RdYlBu[2]
+    CONTACT_DIFF_10 = diverging.RdYlBu[1]
+
+
 class Coverage_BuRd(Enum):
     MSA_COVERAGE_0 = diverging.RdYlBu[10]
     MSA_COVERAGE_1 = diverging.RdYlBu[10]
@@ -303,6 +345,20 @@ class Density_Inferno(Enum):
     CONTACT_DENSITY_10 = sequential.Inferno[9]
 
 
+class Diff_Inferno(Enum):
+    CONTACT_DIFF_0 = sequential.Inferno[0]
+    CONTACT_DIFF_1 = sequential.Inferno[0]
+    CONTACT_DIFF_2 = sequential.Inferno[1]
+    CONTACT_DIFF_3 = sequential.Inferno[2]
+    CONTACT_DIFF_4 = sequential.Inferno[3]
+    CONTACT_DIFF_5 = sequential.Inferno[4]
+    CONTACT_DIFF_6 = sequential.Inferno[5]
+    CONTACT_DIFF_7 = sequential.Inferno[6]
+    CONTACT_DIFF_8 = sequential.Inferno[7]
+    CONTACT_DIFF_9 = sequential.Inferno[8]
+    CONTACT_DIFF_10 = sequential.Inferno[9]
+
+
 class Coverage_Inferno(Enum):
     MSA_COVERAGE_0 = sequential.Inferno[0]
     MSA_COVERAGE_1 = sequential.Inferno[0]
@@ -329,6 +385,20 @@ class Heatmap_Hot(Enum):
     BIN_8 = 'rgb(255.0, 255.0, 54.18729918729921)'
     BIN_9 = 'rgb(255.0, 255.0, 156.56240156240156)'
     BIN_10 = 'rgb(255.0, 255.0, 255.0)'
+
+
+class Diff_Hot(Enum):
+    CONTACT_DIFF_10 = 'rgb(10.607999999999999, 0.0, 0.0)'
+    CONTACT_DIFF_9 = 'rgb(76.23763084702213, 0.0, 0.0)'
+    CONTACT_DIFF_8 = 'rgb(144.4924469279252, 0.0, 0.0)'
+    CONTACT_DIFF_7 = 'rgb(210.12207777494734, 0.0, 0.0)'
+    CONTACT_DIFF_6 = 'rgb(255.0, 23.37520639028961, 0.0)'
+    CONTACT_DIFF_5 = 'rgb(255.0, 91.62509548421984, 0.0)'
+    CONTACT_DIFF_4 = 'rgb(255.0, 157.24998884376814, 0.0)'
+    CONTACT_DIFF_3 = 'rgb(255.0, 225.49987793769836, 0.0)'
+    CONTACT_DIFF_2 = 'rgb(255.0, 255.0, 54.18729918729921)'
+    CONTACT_DIFF_1 = 'rgb(255.0, 255.0, 156.56240156240156)'
+    CONTACT_DIFF_0 = 'rgb(255.0, 255.0, 255.0)'
 
 
 class Density_Hot(Enum):
@@ -383,6 +453,14 @@ class MsaCoverage_ColorPalettes(Enum):
     PALETTE_5 = Coverage_Hot
 
 
+class Diff_ColorPalettes(Enum):
+    PALETTE_1 = Diff_GreyColorPalette
+    PALETTE_2 = Diff_Viridis
+    PALETTE_3 = Diff_BuRd
+    PALETTE_4 = Diff_Inferno
+    PALETTE_5 = Diff_Hot
+
+
 class Hydrophobicity_BlueGreyColorPalette(Enum):
     HYDROPATHY_10 = 'rgba(66,138,245,{})'
     HYDROPATHY_9 = 'rgba(72,137,234,{})'
@@ -418,6 +496,7 @@ class HydrophobicityColorPalettes(Enum):
 
 class DatasetColorPalettes(Enum):
     density = Density_ColorPalettes
+    diff = Diff_ColorPalettes
     custom = Custom_ColorPalettes
     heatmap = Heatmap_ColorPalettes
     hydrophobicity = HydrophobicityColorPalettes
@@ -430,6 +509,7 @@ class DatasetColorPalettes(Enum):
 
 class PaletteDefaultLayout(Enum):
     CONTACT_DENSITY = DatasetReference.CONTACT_DENSITY.value.encode()
+    CONTACT_DIFF = DatasetReference.CONTACT_DIFF.value.encode()
     CUSTOM = DatasetReference.CUSTOM.value.encode()
     HEATMAP = b'heatmap'
     HYDROPHOBICITY = DatasetReference.HYDROPHOBICITY.value.encode()

@@ -1,33 +1,82 @@
-from parsers import DatasetStates
 from loaders import AdditionalDatasetReference, DatasetReference
-from utils import create_cmap_trace, color_palettes, cache_utils
+import numpy as np
+from numba import njit
+from parsers import DatasetStates
 from sklearn.cluster import estimate_bandwidth
 from sklearn.neighbors import KernelDensity
-import numpy as np
+from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_predicted_reference_cmaps
+
+
+@njit()
+def calculate_mcc(tp, fp, tn, fn):
+    denominator = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
+    denominator = np.sqrt(denominator)
+    if denominator == 0:
+        return 1
+    numerator = (tp * tn - fp * fn) * 10
+    if numerator < 0:
+        return 10
+    mcc = 10 - (numerator / denominator)
+    return mcc
+
+
+def slice_cmap(cmap, seq_length, factor):
+    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
+        cmap.pop(-1)
+    return cmap[:int(round(seq_length / factor, 0))]
 
 
 def calculate_density(cmap, seq_length, factor):
-    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        cmap.pop(-1)
-    contact_list = cmap[:int(round(seq_length / factor, 0))]
+    contact_list = slice_cmap(cmap, seq_length, factor)
     return get_contact_density(contact_list, seq_length)
 
 
+def calculate_diff(cmap_1, cmap_2, display_settings):
+    size = display_settings.seq_length
+    cmap_1, cmap_2 = slice_predicted_reference_cmaps(cmap_1, cmap_2, display_settings)
+    cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
+    cmap_2_set = {resn: {(c[0], c[1]) for c in cmap_2 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
+    diff = []
+
+    for resn in cmap_1_set.keys():
+        tp = len(cmap_1_set[resn] & cmap_2_set[resn])
+        fp = len(cmap_2_set[resn] - cmap_1_set[resn])
+        fn = len(cmap_1_set[resn] - cmap_2_set[resn])
+        tn = size - sum((tp, fp, fn))
+        mcc = calculate_mcc(tp, fp, tn, fn)
+        diff.append(int(round(mcc, 0)))
+    return diff
+
+
+def get_diff_args(fname, factor):
+    cmap_1 = fname.split('|')[0].rstrip().lstrip()
+    cmap_2 = fname.split('|')[1].rstrip().lstrip()
+    cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1, cmap_2, factor).encode()
+    return cmap_1, cmap_2, cachekey
+
+
 def retrieve_dataset_prediction(session_id, session, fname, display_settings, cache):
-    if cache_utils.MetadataTags.HYDROPHOBICITY.value in fname:
+    if fname == session[DatasetReference.SEQUENCE.value.encode()]:
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
-    if cache_utils.MetadataTags.DENSITY.value in fname:
-        fname = fname[:-len(cache_utils.MetadataTags.DENSITY.value)]
+    if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
         cachekey = cache_utils.CacheKeys.CMAP_DENSITY.value.format(fname, display_settings.factor).encode()
-        if cachekey in session.keys():
-            density = session[cachekey]
-        elif cache.hexists(session_id, cachekey):
-            density = cache_utils.retrieve_density(session_id, cachekey, cache)
-        else:
+        density = lookup_data(session, session_id, cachekey, cache)
+        if not density:
             density = calculate_density(session[fname.encode()], display_settings.seq_length, display_settings.factor)
-            cache_utils.store_density(session_id, cachekey, density, cache)
+            cache_utils.store_data(session_id, cachekey, density, cache_utils.CacheKeys.CONTACT_DENSITY.value, cache)
+
         return DatasetReference.CONTACT_DENSITY.value, density
+
+    if cache_utils.MetadataTags.SEPARATOR.value in fname:
+        cmap_1, cmap_2, cachekey = get_diff_args(fname, display_settings.factor)
+        diff = lookup_data(session, session_id, cachekey, cache)
+        if not diff:
+            cmap_1 = session[cmap_1.encode()]
+            cmap_2 = session[cmap_2.encode()]
+            diff = calculate_diff(cmap_1, cmap_2, display_settings)
+            cache_utils.store_data(session_id, cachekey, diff, cache_utils.CacheKeys.CONTACT_DIFF.value, cache)
+        return DatasetReference.CONTACT_DIFF.value, diff
 
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and fname in session[dataset.value.encode()]:

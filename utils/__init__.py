@@ -170,6 +170,24 @@ def get_active_sessions(*args, **kwargs):
     return get_active_sessions(*args, **kwargs)
 
 
+def lookup_data(*args, **kwargs):
+    from utils.data_utils import lookup_data
+
+    return lookup_data(*args, **kwargs)
+
+
+def create_cmap_sets(*args, **kwargs):
+    from utils.cmap_utils import create_cmap_sets
+
+    return create_cmap_sets(*args, **kwargs)
+
+
+def slice_predicted_reference_cmaps(*args, **kwargs):
+    from utils.cmap_utils import slice_predicted_reference_cmaps
+
+    return slice_predicted_reference_cmaps(*args, **kwargs)
+
+
 def load_figure_json(*args, **kwargs):
     from utils.plot_utils import load_figure_json
 

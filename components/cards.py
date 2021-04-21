@@ -245,7 +245,6 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
         )
     elif selected_tracks is not None and len(selected_tracks) >= 9 \
             and selected_cmaps is not None and len(selected_cmaps) >= 2:
-        tracks = get_track_options(available_tracks)
         return html.Div([
             components.DisplayControlHeader(),
             html.Br(),
@@ -288,23 +287,23 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.H5("Active tracks", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('-4', tracks, selected_tracks[0]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('-4', available_tracks, selected_tracks[0]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('-3', tracks, selected_tracks[1]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('-3', available_tracks, selected_tracks[1]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('-2', tracks, selected_tracks[2]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('-2', available_tracks, selected_tracks[2]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('-1', tracks, selected_tracks[3]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('-1', available_tracks, selected_tracks[3]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('0', tracks, selected_tracks[4]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('0', available_tracks, selected_tracks[4]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('+1', tracks, selected_tracks[5]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('+1', available_tracks, selected_tracks[5]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('+2', tracks, selected_tracks[6]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('+2', available_tracks, selected_tracks[6]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('+3', tracks, selected_tracks[7]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('+3', available_tracks, selected_tracks[7]), outline=False),
                             html.Br(),
-                            dbc.Card(components.TrackLayoutSelector('+4', tracks, selected_tracks[8]), outline=False),
+                            dbc.Card(components.TrackLayoutSelector('+4', available_tracks, selected_tracks[8]), outline=False),
                             html.Br(),
                             html.Br(),
                             html.H5("Colour palettes", className="card-text", style={'text-align': "center"}),
@@ -312,21 +311,23 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.Br(),
                             ColorPaletteSelectionCard('density', selected_palettes[0]),
                             html.Br(),
-                            ColorPaletteSelectionCard('custom', selected_palettes[1]),
+                            ColorPaletteSelectionCard('diff', selected_palettes[1]),
                             html.Br(),
-                            ColorPaletteSelectionCard('heatmap', selected_palettes[2]),
+                            ColorPaletteSelectionCard('custom', selected_palettes[2]),
                             html.Br(),
-                            ColorPaletteSelectionCard('hydrophobicity', selected_palettes[3]),
+                            ColorPaletteSelectionCard('heatmap', selected_palettes[3]),
                             html.Br(),
-                            ColorPaletteSelectionCard('membranetopology', selected_palettes[4]),
+                            ColorPaletteSelectionCard('hydrophobicity', selected_palettes[4]),
                             html.Br(),
-                            ColorPaletteSelectionCard('msa', selected_palettes[5]),
+                            ColorPaletteSelectionCard('membranetopology', selected_palettes[5]),
                             html.Br(),
-                            ColorPaletteSelectionCard('conservation', selected_palettes[6]),
+                            ColorPaletteSelectionCard('msa', selected_palettes[6]),
                             html.Br(),
-                            ColorPaletteSelectionCard('disorder', selected_palettes[7]),
+                            ColorPaletteSelectionCard('conservation', selected_palettes[7]),
                             html.Br(),
-                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[8]),
+                            ColorPaletteSelectionCard('disorder', selected_palettes[8]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[9]),
                             html.Br(),
                         ])
                     ]
@@ -335,48 +336,6 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
         ])
     else:
         raise ValueError('This should not occur! Please report.')
-
-
-def get_track_options(available_tracks):
-    track_iterator = iter(available_tracks)
-
-    fname = next(track_iterator)
-    track_options = [{'label': '--- Empty ---', 'value': 'Empty_1'},
-                     {'label': '--- Seq. Hydrophobicity ---', 'value': 'Hydrophobicity_Header', 'disabled': True},
-                     {'label': fname, 'value': fname},
-                     {'label': '--- Contact Density ---', 'value': 'Density_Header', 'disabled': True}]
-
-    fname = next(track_iterator, None)
-    cmap_density = []
-    while fname and cache_utils.MetadataTags.DENSITY.value in fname:
-        cmap_density.append({'label': fname, 'value': fname})
-        fname = next(track_iterator, None)
-    if not cmap_density:
-        track_options.append({'label': '--- Empty ---', 'value': 'Empty_2'})
-    else:
-        track_options += sorted(cmap_density, key=lambda k: k['label'])
-
-    track_options.append({'label': '--- Contact Diff ---', 'value': 'Diff_Header', 'disabled': True})
-    cmap_diff = []
-    while fname and cache_utils.MetadataTags.DIFF.value in fname:
-        cmap_diff.append({'label': fname, 'value': fname})
-        fname = next(track_iterator, None)
-    if not cmap_diff:
-        track_options.append({'label': '--- Empty ---', 'value': 'Empty_3'})
-    else:
-        track_options += sorted(cmap_diff, key=lambda k: k['label'])
-
-    track_options.append({'label': '--- Other Tracks ---', 'value': 'AdditionalTracks_Header', 'disabled': True})
-    other_tracks = []
-    while fname:
-        other_tracks.append({'label': fname, 'value': fname})
-        fname = next(track_iterator, None)
-    if not other_tracks:
-        track_options.append({'label': '--- Empty ---', 'value': 'Empty_4'})
-    else:
-        track_options += sorted(other_tracks, key=lambda k: k['label'])
-    return track_options
-
 
 def ColorPaletteSelectionCard(dataset, selected_palette):
     available_palettes = []

@@ -130,3 +130,13 @@ def remove_dataset(trigger, cache, session_id, logger):
         cache_utils.remove_all_density(session_id, cache)
     elif dataset == loaders.DatasetReference.CONTACT_MAP.value:
         cache_utils.remove_density(session_id, cache, fname)
+
+
+def lookup_data(session, session_id, cachekey, cache):
+    if cachekey in session.keys():
+        data = session[cachekey]
+    elif cache.hexists(session_id, cachekey):
+        data = cache_utils.retrieve_data(session_id, cachekey, cache)
+    else:
+        return None
+    return data

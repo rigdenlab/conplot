@@ -13,6 +13,7 @@ class CacheKeys(Enum):
     DISPLAY_CONTROL_JSON = 'display_control_json'
     CONTACT_MAP = loaders.DatasetReference.CONTACT_MAP.value
     CONTACT_DENSITY = loaders.DatasetReference.CONTACT_DENSITY.value
+    CONTACT_DIFF = loaders.DatasetReference.CONTACT_DIFF.value
     CUSTOM = loaders.DatasetReference.CUSTOM.value
     SEQUENCE = loaders.DatasetReference.SEQUENCE.value
     SEQUENCE_HYDROPHOBICITY = loaders.DatasetReference.HYDROPHOBICITY.value
@@ -21,7 +22,7 @@ class CacheKeys(Enum):
     CONSERVATION = loaders.DatasetReference.CONSERVATION.value
     DISORDER = loaders.DatasetReference.DISORDER.value
     CMAP_DENSITY = '{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-DENSITY-TAG_{}'
-    CMAP_ERROR = '{}_{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-ERROR-TAG_{}'
+    CMAP_DIFF = '{}_{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-DIFF-TAG_{}'
     PROTECETED_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
@@ -34,14 +35,14 @@ class MetadataTags(Enum):
     TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
-def retrieve_density(session_id, density_cachekey, cache):
-    density = cache.hget(session_id, density_cachekey)
+def retrieve_data(session_id, cachekey, cache):
+    density = cache.hget(session_id, cachekey)
     return decompress_data(density)
 
 
-def store_density(session_id, density_cachekey, density, cache):
-    cache.hset(session_id, density_cachekey, compress_data(density))
-    store_fname(cache, session_id, density_cachekey.decode(), CacheKeys.CONTACT_DENSITY.value)
+def store_data(session_id, cachekey, data, dataset, cache):
+    cache.hset(session_id, cachekey, compress_data(data))
+    store_fname(cache, session_id, cachekey.decode(), dataset)
 
 
 def remove_all_density(session_id, cache):

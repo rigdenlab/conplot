@@ -219,26 +219,82 @@ def process_args(session_id, session, trigger, selected_tracks, cmap_selection, 
     return session, display_settings, verbose_labels, None
 
 
-def get_available_data(session):
-    available_tracks = ['{}{}'.format(session[DatasetReference.SEQUENCE.value.encode()],
-                                      cache_utils.MetadataTags.HYDROPHOBICITY.value)]
+def separate_pdb_cmaps(session, cmap_fname_list):
+    non_pdb_fnames = []
+    pdb_fnames = []
 
+    for fname in cmap_fname_list:
+        cmap = session[fname.encode()]
+        if cmap[-1] == 'PDB':
+            pdb_fnames.append(fname)
+        else:
+            non_pdb_fnames.append(fname)
+
+    return pdb_fnames, non_pdb_fnames
+
+
+def get_available_data(session):
+    available_tracks = [{'label': '--- Empty ---', 'value': 'Empty_1'},
+                        {'label': '--- Seq. Hydrophobicity ---', 'value': 'Hydrophobicity_Header', 'disabled': True},
+                        {'label': session[DatasetReference.SEQUENCE.value.encode()],
+                         'value': session[DatasetReference.SEQUENCE.value.encode()]},
+                        {'label': '--- Contact Density ---', 'value': 'Density_Header', 'disabled': True}]
+
+    available_cmaps, cmap_fname_list, cmap_density = get_cmap_density_tracks(session)
+
+    if not cmap_fname_list:
+        available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_2'})
+        available_tracks.append({'label': '--- Contact Diff ---', 'value': 'Diff_Header', 'disabled': True})
+        available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_3'})
+    else:
+        available_tracks += sorted(cmap_density, key=lambda k: k['label'])
+        available_tracks.append({'label': '--- Contact Diff ---', 'value': 'Diff_Header', 'disabled': True})
+        cmap_diff = get_cmap_diff_tracks(session, cmap_fname_list)
+        if not cmap_diff:
+            available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_3'})
+        else:
+            available_tracks += sorted(cmap_diff, key=lambda k: k['label'])
+
+    other_tracks = get_other_tracks(session)
+    if not other_tracks:
+        available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_4'})
+    else:
+        available_tracks += sorted(other_tracks, key=lambda k: k['label'])
+
+    return available_tracks, sorted(available_cmaps)
+
+
+def get_cmap_density_tracks(session):
+    cmap_density = []
     available_cmaps = []
     cmap_fname_list = session[DatasetReference.CONTACT_MAP.value.encode()]
     for cmap_fname in cmap_fname_list:
         available_cmaps.append(cmap_fname)
-        available_tracks.append('{}{}'.format(cmap_fname, cache_utils.MetadataTags.DENSITY.value))
+        cmap_density.append({'label': cmap_fname, 'value': cmap_fname})
+    return available_cmaps, cmap_fname_list, cmap_density
 
-    if len(cmap_fname_list) > 1:
-        cmap_combinations = ['{} | {}{}'.format(*sorted(x), cache_utils.MetadataTags.DIFF.value)
-                             for x in itertools.combinations(cmap_fname_list, 2)]
-        available_tracks += cmap_combinations
 
+def get_cmap_diff_tracks(session, cmap_fname_list):
+    pdb_fnames, non_pdb_fnames = separate_pdb_cmaps(session, cmap_fname_list)
+    cmap_diff = []
+    for combination in itertools.combinations(non_pdb_fnames, 2):
+        label = '{} | {}'.format(*combination)
+        cmap_diff.append({'label': label, 'value': label})
+    for pdb in pdb_fnames:
+        for permutation in itertools.permutations(cmap_fname_list, 2):
+            if pdb in permutation:
+                label = '{} | {}'.format(*permutation)
+                cmap_diff.append({'label': label, 'value': label})
+    return cmap_diff
+
+
+def get_other_tracks(session):
+    other_tracks = [{'label': '--- Other Tracks ---', 'value': 'AdditionalTracks_Header', 'disabled': True}]
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
-            available_tracks += session[dataset.value.encode()]
-
-    return available_tracks, sorted(available_cmaps)
+            for fname in session[dataset.value.encode()]:
+                other_tracks.append({'label': fname, 'value': fname})
+    return other_tracks
 
 
 def get_user_selection(cmap_selection, available_cmaps, track_selection, available_tracks):
@@ -250,7 +306,8 @@ def get_user_selection(cmap_selection, available_cmaps, track_selection, availab
     if len(track_selection) == 0:
         track_selection = ['--- Empty ---'] * 9
     else:
-        track_selection = [track if track in available_tracks else '--- Empty ---' for track in track_selection]
+        available_track_labels = [track['label'] for track in available_tracks]
+        track_selection = [track if track in available_track_labels else '--- Empty ---' for track in track_selection]
 
     return track_selection, cmap_selection
 

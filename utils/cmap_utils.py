@@ -51,20 +51,25 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
     return res1_list, res2_list, hover
 
 
-def create_cmap_sets(reference_cmap, predicted_cmap, display_settings):
+def slice_predicted_reference_cmaps(predicted_cmap, reference_cmap, display_settings):
     if display_settings.factor != 0:
         predicted_cmap = predicted_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
         if reference_cmap[-1] == 'PDB':
-            del reference_cmap[-1]
+            reference_cmap = reference_cmap[:-1]
             reference_cmap = [contact for contact in reference_cmap if contact[2] > 0]
         elif reference_cmap[-1] == 'DISTO':
-            del reference_cmap[-1]
+            reference_cmap = reference_cmap[:-1]
             reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
         else:
             reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
     elif reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
-        del reference_cmap[-1]
+        reference_cmap = reference_cmap[:-1]
 
+    return reference_cmap, predicted_cmap
+
+
+def create_cmap_sets(reference_cmap, predicted_cmap, display_settings):
+    reference_cmap, predicted_cmap = slice_predicted_reference_cmaps(predicted_cmap, reference_cmap, display_settings)
     predicted_set = {(x[0], x[1]): x[2] for x in predicted_cmap}
     reference_set = {(x[0], x[1]): x[2] for x in reference_cmap}
 

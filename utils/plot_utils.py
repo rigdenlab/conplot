@@ -227,9 +227,10 @@ def get_available_data(session):
     available_cmaps = []
     for cmap_fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
         available_cmaps.append(cmap_fname)
-        available_tracks.append(cmap_fname)
+        available_tracks.append('{}{}'.format(cmap_fname, cache_utils.MetadataTags.DENSITY))
 
-    available_tracks.append(session[DatasetReference.SEQUENCE.value.encode()])
+    available_tracks.append('{}{}'.format(session[DatasetReference.SEQUENCE.value.encode()],
+                                          cache_utils.MetadataTags.HYDROPHOBICITY))
 
     return available_tracks, available_cmaps
 

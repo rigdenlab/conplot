@@ -14,10 +14,11 @@ def calculate_density(cmap, seq_length, factor):
 
 
 def retrieve_dataset_prediction(session_id, session, fname, display_settings, cache):
-    if fname == session[DatasetReference.SEQUENCE.value.encode()]:
+    if cache_utils.MetadataTags.HYDROPHOBICITY in fname:
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
-    if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
+    if cache_utils.MetadataTags.DENSITY in fname:
+        fname = fname[:-len(cache_utils.MetadataTags.DENSITY)]
         cachekey = cache_utils.CacheKeys.CMAP_DENSITY.value.format(fname, display_settings.factor).encode()
         if cachekey in session.keys():
             density = session[cachekey]

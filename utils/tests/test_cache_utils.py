@@ -96,5 +96,7 @@ class CacheUtilsTestCase(unittest.TestCase):
         self.assertTrue(cache_utils.is_valid_fname('fname_1-METADATA-DENSITY'))
         self.assertFalse(cache_utils.is_valid_fname('fname_CONPLOT-INTERNAL-USE-ONLY-METADATA_1'))
         self.assertFalse(cache_utils.is_valid_fname('{}_CONPLOT-INTERNAL-USE-ONLY-METADATA_{}'))
+        self.assertFalse(cache_utils.is_valid_fname('fname - density'))
+        self.assertFalse(cache_utils.is_valid_fname('seq - hydrophobicity'))
         self.assertFalse(cache_utils.is_valid_fname(cache_utils.CacheKeys.CMAP_DENSITY.value.format('fname_1', '2')))
 

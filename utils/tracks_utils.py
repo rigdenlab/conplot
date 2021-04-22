@@ -1,28 +1,11 @@
 from loaders import AdditionalDatasetReference, DatasetReference
-import numpy as np
-from numba import njit
 from parsers import DatasetStates
-from sklearn.cluster import estimate_bandwidth
-from sklearn.neighbors import KernelDensity
-from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_cmap
-
-
-@njit()
-def calculate_mcc(tp, fp, tn, fn):
-    denominator = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
-    denominator = np.sqrt(denominator)
-    if denominator == 0:
-        return 1
-    numerator = (tp * tn - fp * fn) * 10
-    if numerator < 0:
-        return 10
-    mcc = 10 - (numerator / denominator)
-    return mcc
+from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_cmap, math_utils
 
 
 def calculate_density(cmap, seq_length, factor):
     contact_list = slice_cmap(cmap, seq_length, factor)
-    return get_contact_density(contact_list, seq_length)
+    return math_utils.get_contact_density(contact_list, seq_length)
 
 
 def calculate_diff(cmap_1, cmap_2, display_settings):
@@ -38,7 +21,7 @@ def calculate_diff(cmap_1, cmap_2, display_settings):
         fp = len(cmap_2_set[resn] - cmap_1_set[resn])
         fn = len(cmap_1_set[resn] - cmap_2_set[resn])
         tn = size - sum((tp, fp, fn))
-        mcc = calculate_mcc(tp, fp, tn, fn)
+        mcc = math_utils.calculate_mcc(tp, fp, tn, fn)
         diff.append(int(round(mcc, 0)))
     return diff
 
@@ -138,13 +121,3 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
     return traces
 
 
-def get_contact_density(contact_list, seq_length):
-    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
-    x = np.array([i for c in contact_list for i in np.arange(c[1], c[0] + 1)], dtype=np.int64)[:, np.newaxis]
-    bw = estimate_bandwidth(x)
-    kde = KernelDensity(bandwidth=bw).fit(x)
-    x_fit = np.arange(1, seq_length + 1)[:, np.newaxis]
-    density = np.exp(kde.score_samples(x_fit)).tolist()
-    density_max = max(density)
-    density = [int(round(float(i) / density_max, 1) * 10) for i in density]
-    return density

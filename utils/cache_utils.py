@@ -45,6 +45,7 @@ def store_data(session_id, cachekey, data, dataset, cache):
     store_fname(cache, session_id, cachekey.decode(), dataset)
 
 
+# TODO: Need to implement the same for contact diff
 def remove_all_density(session_id, cache):
     density_list = cache.hget(session_id, CacheKeys.CONTACT_DENSITY.value)
     if not density_list:

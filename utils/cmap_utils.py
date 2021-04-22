@@ -18,11 +18,7 @@ def create_cmap_trace(x, y, symbol, marker_size, color, hovertext=None):
 
 
 def create_cmap(cmap, idx, display_settings, verbose_labels=None):
-    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        del cmap[-1]
-
-    if display_settings.factor != 0:
-        cmap = cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
+    cmap = slice_cmap(cmap, display_settings.seq_length, display_settings.factor)
 
     if idx == 1:
         idx_x = 0
@@ -51,25 +47,23 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
     return res1_list, res2_list, hover
 
 
-def slice_predicted_reference_cmaps(predicted_cmap, reference_cmap, display_settings):
-    if display_settings.factor != 0:
-        predicted_cmap = predicted_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-        if reference_cmap[-1] == 'PDB':
-            reference_cmap = reference_cmap[:-1]
-            reference_cmap = [contact for contact in reference_cmap if contact[2] > 0]
-        elif reference_cmap[-1] == 'DISTO':
-            reference_cmap = reference_cmap[:-1]
-            reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-        else:
-            reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-    elif reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
-        reference_cmap = reference_cmap[:-1]
+def slice_cmap(cmap, seq_length, factor):
+    if cmap[-1] == 'PDB':
+        cmap = cmap[:-1]
+        cmap = [contact for contact in cmap if contact[2] > 0]
+        return cmap
+    elif cmap[-1] == 'DISTO':
+        cmap = cmap[:-1]
 
-    return reference_cmap, predicted_cmap
+    if factor != 0:
+        cmap = cmap[:int(round(seq_length / factor, 0))]
+
+    return cmap
 
 
 def create_cmap_sets(reference_cmap, predicted_cmap, display_settings):
-    reference_cmap, predicted_cmap = slice_predicted_reference_cmaps(predicted_cmap, reference_cmap, display_settings)
+    reference_cmap = slice_cmap(reference_cmap, display_settings.seq_length, display_settings.factor)
+    predicted_cmap = slice_cmap(predicted_cmap, display_settings.seq_length, display_settings.factor)
     predicted_set = {(x[0], x[1]): x[2] for x in predicted_cmap}
     reference_set = {(x[0], x[1]): x[2] for x in reference_cmap}
 

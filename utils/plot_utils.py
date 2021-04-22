@@ -249,12 +249,13 @@ def get_available_data(session):
     else:
         available_tracks += sorted(cmap_density, key=lambda k: k['label'])
         available_tracks.append({'label': '--- Contact Diff ---', 'value': 'Diff_Header', 'disabled': True})
-        cmap_diff = get_cmap_diff_tracks(session, cmap_fname_list)
+        cmap_diff = get_cmap_diff_tracks(cmap_fname_list)
         if not cmap_diff:
             available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_3'})
         else:
             available_tracks += sorted(cmap_diff, key=lambda k: k['label'])
 
+    available_tracks.append({'label': '--- Other Tracks ---', 'value': 'AdditionalTracks_Header', 'disabled': True})
     other_tracks = get_other_tracks(session)
     if not other_tracks:
         available_tracks.append({'label': '--- Empty ---', 'value': 'Empty_4'})
@@ -274,22 +275,16 @@ def get_cmap_density_tracks(session):
     return available_cmaps, cmap_fname_list, cmap_density
 
 
-def get_cmap_diff_tracks(session, cmap_fname_list):
-    pdb_fnames, non_pdb_fnames = separate_pdb_cmaps(session, cmap_fname_list)
+def get_cmap_diff_tracks(cmap_fname_list):
     cmap_diff = []
-    for combination in itertools.combinations(non_pdb_fnames, 2):
+    for combination in itertools.combinations(cmap_fname_list, 2):
         label = '{} | {}'.format(*combination)
         cmap_diff.append({'label': label, 'value': label})
-    for pdb in pdb_fnames:
-        for permutation in itertools.permutations(cmap_fname_list, 2):
-            if pdb in permutation:
-                label = '{} | {}'.format(*permutation)
-                cmap_diff.append({'label': label, 'value': label})
     return cmap_diff
 
 
 def get_other_tracks(session):
-    other_tracks = [{'label': '--- Other Tracks ---', 'value': 'AdditionalTracks_Header', 'disabled': True}]
+    other_tracks = []
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and session[dataset.value.encode()]:
             for fname in session[dataset.value.encode()]:

@@ -4,7 +4,7 @@ from numba import njit
 from parsers import DatasetStates
 from sklearn.cluster import estimate_bandwidth
 from sklearn.neighbors import KernelDensity
-from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_predicted_reference_cmaps
+from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_cmap
 
 
 @njit()
@@ -20,12 +20,6 @@ def calculate_mcc(tp, fp, tn, fn):
     return mcc
 
 
-def slice_cmap(cmap, seq_length, factor):
-    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        cmap.pop(-1)
-    return cmap[:int(round(seq_length / factor, 0))]
-
-
 def calculate_density(cmap, seq_length, factor):
     contact_list = slice_cmap(cmap, seq_length, factor)
     return get_contact_density(contact_list, seq_length)
@@ -33,7 +27,8 @@ def calculate_density(cmap, seq_length, factor):
 
 def calculate_diff(cmap_1, cmap_2, display_settings):
     size = display_settings.seq_length
-    cmap_1, cmap_2 = slice_predicted_reference_cmaps(cmap_1, cmap_2, display_settings)
+    cmap_1 = slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
+    cmap_2 = slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)
     cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     cmap_2_set = {resn: {(c[0], c[1]) for c in cmap_2 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     diff = []
@@ -59,6 +54,7 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
     if fname == session[DatasetReference.SEQUENCE.value.encode()]:
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
+    # TODO: If it is a PDB lookup data should not care about the L factor since it will always be the same
     if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
         cachekey = cache_utils.CacheKeys.CMAP_DENSITY.value.format(fname, display_settings.factor).encode()
         density = lookup_data(session, session_id, cachekey, cache)

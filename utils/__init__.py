@@ -182,10 +182,10 @@ def create_cmap_sets(*args, **kwargs):
     return create_cmap_sets(*args, **kwargs)
 
 
-def slice_predicted_reference_cmaps(*args, **kwargs):
-    from utils.cmap_utils import slice_predicted_reference_cmaps
+def slice_cmap(*args, **kwargs):
+    from utils.cmap_utils import slice_cmap
 
-    return slice_predicted_reference_cmaps(*args, **kwargs)
+    return slice_cmap(*args, **kwargs)
 
 
 def load_figure_json(*args, **kwargs):

@@ -1,5 +1,8 @@
 import unittest
 from utils import tracks_utils
+from collections import namedtuple
+
+DisplayControlSettings = namedtuple('DisplayControlSettings', ('factor', 'seq_length'))
 
 
 class TrackUtilsTestCase(unittest.TestCase):
@@ -16,3 +19,47 @@ class TrackUtilsTestCase(unittest.TestCase):
 
         density = tracks_utils.calculate_density(dummy_cmap, 168, 20)
         self.assertListEqual(density, expected_density)
+
+    def test_2(self):
+        dummy_cmap_1 = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
+                        (143, 141), (148, 146)]
+        dummy_cmap_2 = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
+                        (143, 141), (148, 146)]
+        expected_diff = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1]
+        dummy_display_settings = DisplayControlSettings(factor=0, seq_length=168)
+        diff = tracks_utils.calculate_diff(dummy_cmap_1, dummy_cmap_2, dummy_display_settings)
+        self.assertListEqual(diff, expected_diff)
+
+    def test_3(self):
+        dummy_cmap_1 = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
+                        (143, 141), (148, 146)]
+        dummy_cmap_2 = [(150, 148), (53, 50), (147, 145), (141, 139), (143, 141), (148, 146), (120, 12), (25, 35)]
+        expected_diff = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1, 3, 1, 3, 0, 0, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1]
+        dummy_display_settings = DisplayControlSettings(factor=0, seq_length=168)
+        diff = tracks_utils.calculate_diff(dummy_cmap_1, dummy_cmap_2, dummy_display_settings)
+        self.assertListEqual(diff, expected_diff)
+
+    def test_4(self):
+        dummy_cmap_1 = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
+                        (143, 141), (148, 146), (10, 55), (5, 145)]
+        dummy_cmap_2 = [(150, 148), (53, 50), (147, 145), (141, 139), (143, 141), (148, 146), (120, 12), (25, 35)]
+        expected_diff = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 1, 1, 3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 3, 1, 10, 1, 3, 1, 0, 3, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+                         1, 1, 1, 1, 1, 1, 1, 1, 1]
+        dummy_display_settings = DisplayControlSettings(factor=20, seq_length=168)
+
+        diff = tracks_utils.calculate_diff(dummy_cmap_1, dummy_cmap_2, dummy_display_settings)
+        self.assertListEqual(diff, expected_diff)

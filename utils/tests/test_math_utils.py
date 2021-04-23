@@ -17,3 +17,18 @@ class MathUtilsTestCase(unittest.TestCase):
         density = math_utils.get_contact_density(dummy_cmap, 168)
         print(density)
         self.assertListEqual(density, expected_density)
+
+    def test_2(self):
+        expected_output = 3.0210772833723656
+        output = math_utils.calculate_mcc(5, 2, 120, 2)
+        self.assertEqual(output, expected_output)
+
+    def test_3(self):
+        expected_output = 1
+        output = math_utils.calculate_mcc(0, 0, 120, 2)
+        self.assertEqual(output, expected_output)
+
+    def test_4(self):
+        expected_output = 10
+        output = math_utils.calculate_mcc(12, 1, 0, 2)
+        self.assertEqual(output, expected_output)

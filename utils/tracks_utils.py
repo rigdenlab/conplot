@@ -10,6 +10,7 @@ def calculate_density(cmap, seq_length, factor):
 
 def calculate_diff(cmap_1, cmap_2, display_settings):
     size = display_settings.seq_length
+    # TODO Check if cmap_1 AND cmap_2 contain residue distance predicitons. If so, calculate RMSD instead of MCC
     cmap_1 = slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
     cmap_2 = slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)
     cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}

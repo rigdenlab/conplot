@@ -1,5 +1,6 @@
 from conkit.misc.bandwidth import bandwidth_factory
-from numba import njit
+import math
+from numba import njit, vectorize
 import numpy as np
 from sklearn.neighbors import KernelDensity
 
@@ -7,7 +8,7 @@ from sklearn.neighbors import KernelDensity
 @njit()
 def calculate_mcc(tp, fp, tn, fn):
     denominator = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
-    denominator = np.sqrt(denominator)
+    denominator = math.sqrt(denominator)
     if denominator == 0:
         return 1
     numerator = (tp * tn - fp * fn) * 10
@@ -15,6 +16,20 @@ def calculate_mcc(tp, fp, tn, fn):
         return 10
     mcc = 10 - (numerator / denominator)
     return mcc
+
+
+@vectorize('float64(int64, int64)')
+def get_difference(expected, observed):
+    difference = expected - observed
+    difference_squared = difference ** 2
+    return difference_squared
+
+
+@njit()
+def calculate_rmsd(expected_array, observed_array):
+    squared_differences = get_difference(expected_array, observed_array)
+    rmsd = np.sum(squared_differences) / observed_array.shape[0]
+    return rmsd
 
 
 def get_contact_density(contact_list, seq_length):

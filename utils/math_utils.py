@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.neighbors import KernelDensity
 
 
-@njit(fastmath=True)
+@njit()
 def calculate_mcc(tp, fp, tn, fn):
     denominator = (tp + fp) * (tp + fn) * (tn + fp) * (tn + fn)
     denominator = np.sqrt(denominator)

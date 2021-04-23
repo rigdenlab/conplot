@@ -1,8 +1,8 @@
 import unittest
-from utils import tracks_utils
+from utils import math_utils
 
 
-class TrackUtilsTestCase(unittest.TestCase):
+class MathUtilsTestCase(unittest.TestCase):
 
     def test_1(self):
         dummy_cmap = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
@@ -11,8 +11,9 @@ class TrackUtilsTestCase(unittest.TestCase):
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 4, 7, 10, 10, 7, 4, 1, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
                             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 4, 6, 7, 6, 5, 6, 6, 5, 5, 4, 4, 3, 2, 1, 0, 0,
-                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 2, 5, 8, 10, 9, 8, 8, 8, 8, 8, 7, 6, 4, 2, 1, 0,
+                            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-        density = tracks_utils.calculate_density(dummy_cmap, 168, 20)
+        density = math_utils.get_contact_density(dummy_cmap, 168)
+        print(density)
         self.assertListEqual(density, expected_density)

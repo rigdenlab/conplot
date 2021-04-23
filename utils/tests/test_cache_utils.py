@@ -83,8 +83,10 @@ class CacheUtilsTestCase(unittest.TestCase):
         cachekey_2 = cache_utils.CacheKeys.CMAP_DENSITY.value.format('fname_2', '2').encode()
         density_2 = [5, 6, 7, 8, 9, 0]
 
-        cache_utils.store_data(self.session_id, cachekey_1, density_1, self.cache)
-        cache_utils.store_data(self.session_id, cachekey_2, density_2, self.cache)
+        cache_utils.store_data(self.session_id, cachekey_1, density_1,
+                               cache_utils.CacheKeys.CONTACT_DENSITY.value, self.cache)
+        cache_utils.store_data(self.session_id, cachekey_2, density_2,
+                               cache_utils.CacheKeys.CONTACT_DENSITY.value, self.cache)
         output = cache_utils.retrieve_data(self.session_id, cachekey_2, self.cache)
         self.assertListEqual(output, density_2)
         expected_cache = {b'id': cache_utils.compress_data(self.session_id)}

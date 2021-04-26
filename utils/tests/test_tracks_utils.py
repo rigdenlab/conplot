@@ -1,3 +1,4 @@
+import os
 import unittest
 from utils import tracks_utils
 from collections import namedtuple
@@ -7,6 +8,7 @@ DisplayControlSettings = namedtuple('DisplayControlSettings', ('factor', 'seq_le
 
 class TrackUtilsTestCase(unittest.TestCase):
 
+    @unittest.skipIf('THIS_IS_GH_ACTIONS' in os.environ, "not implemented in Github Actions")
     def test_1(self):
         dummy_cmap = [(52, 50), (53, 51), (145, 143), (142, 140), (150, 148), (53, 50), (147, 145), (141, 139),
                       (143, 141), (148, 146)]

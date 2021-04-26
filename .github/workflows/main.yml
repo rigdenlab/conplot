@@ -39,6 +39,7 @@ jobs:
           redis-version: 5
       - name: Run tests.py
         env:
+          THIS_IS_GH_ACTIONS: 1
           KEYDB_URL: $ {{ secrets.KEYDB_URL }}
         run: |
           python tests.py

@@ -90,7 +90,7 @@ class CacheUtilsTestCase(unittest.TestCase):
         output = cache_utils.retrieve_data(self.session_id, cachekey_2, self.cache)
         self.assertListEqual(output, density_2)
         expected_cache = {b'id': cache_utils.compress_data(self.session_id)}
-        cache_utils.remove_all(self.session_id, self.cache, cache_utils.CacheKeys.CONTACT_DENSITY.value)
+        cache_utils.remove_all(self.session_id, cache_utils.CacheKeys.CONTACT_DENSITY.value, self.cache)
         self.assertDictEqual(expected_cache, self.cache.hgetall(self.session_id))
 
     def test_10(self):

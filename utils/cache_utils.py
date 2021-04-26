@@ -45,9 +45,8 @@ def store_data(session_id, cachekey, data, dataset, cache):
     store_fname(cache, session_id, cachekey.decode(), dataset)
 
 
-# TODO: Need to implement the same for contact diff
-def remove_all_density(session_id, cache):
-    density_list = cache.hget(session_id, CacheKeys.CONTACT_DENSITY.value)
+def remove_all(session_id, dataset, cache):
+    density_list = cache.hget(session_id, dataset)
     if not density_list:
         return
 
@@ -55,7 +54,7 @@ def remove_all_density(session_id, cache):
     for density in density_list:
         cache.hdel(session_id, density)
 
-    cache.hdel(session_id, CacheKeys.CONTACT_DENSITY.value)
+    cache.hdel(session_id, dataset)
 
 
 def remove_density(session_id, cache, fname):
@@ -70,6 +69,20 @@ def remove_density(session_id, cache, fname):
             cache.hdel(session_id, density)
     density_list = [density for density in density_list if density_cachekey not in density]
     cache.hset(session_id, CacheKeys.CONTACT_DENSITY.value, compress_data(density_list))
+
+
+def remove_diff(session_id, cache, fname):
+    diff_list = cache.hget(session_id, CacheKeys.CONTACT_DIFF.value)
+    if not diff_list:
+        return
+    diff_list = decompress_data(diff_list)
+    print(diff_list)
+
+    for diff in diff_list:
+        if fname in diff:
+            cache.hdel(session_id, diff)
+    diff_list = [diff for diff in diff_list if fname not in diff]
+    cache.hset(session_id, CacheKeys.CONTACT_DIFF.value, compress_data(diff_list))
 
 
 def is_valid_fname(fname):
@@ -161,7 +174,8 @@ def clear_cache(session_id, cache):
     remove_datasets(session_id, cache)
     remove_figure(session_id, cache)
     remove_sequence(session_id, cache)
-    remove_all_density(session_id, cache)
+    remove_all(session_id, cache, CacheKeys.CONTACT_DENSITY.value)
+    remove_all(session_id, cache, CacheKeys.CONTACT_DIFF.value)
 
 
 def remove_datasets(session_id, cache):

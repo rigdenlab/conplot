@@ -12,8 +12,8 @@ def check_sequence_mismatch(session_id, cache, seq_length):
         cmap_fnames = decompress_data(cache.hget(session_id, cache_utils.CacheKeys.CONTACT_MAP.value))
         for cmap_fname in cmap_fnames:
             cmap_data = decompress_data(cache.hget(session_id, cmap_fname))
-            if cmap_data[-1] == 'PDB' or cmap_data[-1] == 'DISTO':
-                cmap_data.pop()
+            if cmap_data[0] == 'PDB' or cmap_data[0] == 'DISTO':
+                cmap_data = cmap_data[1:]
             cmap_max_register = max((max(cmap_data, key=itemgetter(0))[0], max(cmap_data, key=itemgetter(1))[0]))
             if cmap_max_register > seq_length:
                 mismatched.append(cmap_fname)
@@ -42,8 +42,8 @@ def check_dataset_mismatch(session_id, cache, data, dataset):
             return seq_fname
         else:
             return False
-    elif data[-1] == 'PDB' or data[-1] == 'DISTO':
-        max_register = max((max(data[:-1], key=itemgetter(0))[0], max(data[:-1], key=itemgetter(1))[0]))
+    elif data[0] == 'PDB' or data[0] == 'DISTO':
+        max_register = max((max(data[1:], key=itemgetter(0))[0], max(data[1:], key=itemgetter(1))[0]))
     else:
         max_register = max((max(data, key=itemgetter(0))[0], max(data, key=itemgetter(1))[0]))
 
@@ -127,9 +127,11 @@ def remove_dataset(trigger, cache, session_id, logger):
         cache_utils.remove_fname(cache, session_id, fname, dataset)
 
     if dataset == loaders.DatasetReference.SEQUENCE.value:
-        cache_utils.remove_all_density(session_id, cache)
+        cache_utils.remove_all(session_id, cache, cache_utils.CacheKeys.CONTACT_DENSITY.value)
+        cache_utils.remove_all(session_id, cache, cache_utils.CacheKeys.CONTACT_DIFF.value)
     elif dataset == loaders.DatasetReference.CONTACT_MAP.value:
         cache_utils.remove_density(session_id, cache, fname)
+        cache_utils.remove_diff(session_id, cache, fname)
 
 
 def lookup_data(session, session_id, cachekey, cache):

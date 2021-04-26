@@ -1,18 +1,26 @@
+import numpy as np
 from loaders import AdditionalDatasetReference, DatasetReference
 from parsers import DatasetStates
-from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, slice_cmap, math_utils
+from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, cmap_utils, math_utils
 
 
 def calculate_density(cmap, seq_length, factor):
-    contact_list = slice_cmap(cmap, seq_length, factor)
+    contact_list = cmap_utils.slice_cmap(cmap, seq_length, factor)
     return math_utils.get_contact_density(contact_list, seq_length)
 
 
-def calculate_diff(cmap_1, cmap_2, display_settings):
-    size = display_settings.seq_length
-    # TODO Check if cmap_1 AND cmap_2 contain residue distance predicitons. If so, calculate RMSD instead of MCC
-    cmap_1 = slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
-    cmap_2 = slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)
+DISTANCE_BINS = {0: 0, 1: 5, 2: 7, 3: 9, 4: 11, 5: 13, 6: 15, 7: 17, 8: 19, 9: 20}
+
+
+def get_distance_array(cmap, seq_length):
+    array = np.full((seq_length, seq_length), 20)
+    for contact in cmap:
+        array[seq_length - contact[0], contact[1] - 1] = DISTANCE_BINS[contact[3]]
+        array[seq_length - contact[1], contact[0] - 1] = DISTANCE_BINS[contact[3]]
+    return array
+
+
+def get_cmap_mcc(cmap_1, cmap_2, size):
     cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     cmap_2_set = {resn: {(c[0], c[1]) for c in cmap_2 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     diff = []
@@ -24,7 +32,26 @@ def calculate_diff(cmap_1, cmap_2, display_settings):
         tn = size - sum((tp, fp, fn))
         mcc = math_utils.calculate_mcc(tp, fp, tn, fn)
         diff.append(int(round(mcc, 0)))
+
     return diff
+
+
+def get_cmap_rmsd(cmap_1, cmap_2, seq_length):
+    cmap_1_array = get_distance_array(cmap_1, seq_length)
+    cmap_2_array = get_distance_array(cmap_2, seq_length)
+    rmsd = math_utils.calculate_rmsd(cmap_1_array, cmap_2_array, seq_length)
+    return rmsd.astype(int).tolist()
+
+
+def calculate_diff(cmap_1, cmap_2, display_settings):
+    if cmap_utils.contains_distances(cmap_1) and cmap_utils.contains_distances(cmap_2):
+        cmap_1 = cmap_utils.slice_cmap(cmap_1, display_settings.seq_length, 0)
+        cmap_2 = cmap_utils.slice_cmap(cmap_2, display_settings.seq_length, 0)
+        return get_cmap_rmsd(cmap_1, cmap_2, display_settings.seq_length)
+    else:
+        cmap_1 = cmap_utils.slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
+        cmap_2 = cmap_utils.slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)
+        return get_cmap_mcc(cmap_1, cmap_2, display_settings.seq_length)
 
 
 def get_diff_args(fname, factor):
@@ -48,6 +75,7 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
 
         return DatasetReference.CONTACT_DENSITY.value, density
 
+    # TODO: If looking for diff for distance predictions, we also don't care about L factor (using all)
     if cache_utils.MetadataTags.SEPARATOR.value in fname:
         cmap_1, cmap_2, cachekey = get_diff_args(fname, display_settings.factor)
         diff = lookup_data(session, session_id, cachekey, cache)
@@ -120,5 +148,3 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
         traces.append(create_cmap_trace(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
-
-

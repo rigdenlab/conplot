@@ -25,10 +25,20 @@ def get_difference(expected, observed):
     return difference_squared
 
 
+@vectorize('float64(int64, float64)')
+def populate_rmsd(seq_length, sum_squared_differences):
+    rmsd = np.round(math.sqrt(sum_squared_differences / seq_length), 0)
+    if rmsd > 10:
+        return 10
+    return rmsd
+
+
 @njit()
-def calculate_rmsd(expected_array, observed_array):
+def calculate_rmsd(expected_array, observed_array, seq_length):
     squared_differences = get_difference(expected_array, observed_array)
-    rmsd = np.sum(squared_differences) / observed_array.shape[0]
+    seq_length_array = np.full(seq_length, seq_length)
+    sum_squared_differences = np.sum(squared_differences, axis=0)
+    rmsd = populate_rmsd(seq_length_array, sum_squared_differences)
     return rmsd
 
 

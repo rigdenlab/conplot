@@ -2,7 +2,7 @@ import io
 import base64
 import numpy as np
 from utils.exceptions import InvalidFormat
-from utils import get_unique_distances
+from parsers import get_unique_distances
 
 
 def parse_array(array):

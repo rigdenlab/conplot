@@ -46,13 +46,13 @@ def store_data(session_id, cachekey, data, dataset, cache):
 
 
 def remove_all(session_id, dataset, cache):
-    density_list = cache.hget(session_id, dataset)
-    if not density_list:
+    cachekey_list = cache.hget(session_id, dataset)
+    if not cachekey_list:
         return
 
-    density_list = decompress_data(density_list)
-    for density in density_list:
-        cache.hdel(session_id, density)
+    cachekey_list = decompress_data(cachekey_list)
+    for cachekey in cachekey_list:
+        cache.hdel(session_id, cachekey)
 
     cache.hdel(session_id, dataset)
 
@@ -174,8 +174,8 @@ def clear_cache(session_id, cache):
     remove_datasets(session_id, cache)
     remove_figure(session_id, cache)
     remove_sequence(session_id, cache)
-    remove_all(session_id, cache, CacheKeys.CONTACT_DENSITY.value)
-    remove_all(session_id, cache, CacheKeys.CONTACT_DIFF.value)
+    remove_all(session_id, CacheKeys.CONTACT_DENSITY.value, cache)
+    remove_all(session_id, CacheKeys.CONTACT_DIFF.value, cache)
 
 
 def remove_datasets(session_id, cache):

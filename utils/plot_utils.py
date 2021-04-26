@@ -159,7 +159,7 @@ def lookup_input_errors(session_id, session, cmap_selection, superimpose, heatma
         reference_cmap = session[cmap_selection[0].encode()]
         predicted_cmap = session[cmap_selection[1].encode()]
         error = no_update, components.InvalidSuperposeHeatmapModal(), no_update, no_update
-        if not isinstance(reference_cmap[-1], str) or not isinstance(predicted_cmap[-1], str):
+        if not isinstance(reference_cmap[0], str) or not isinstance(predicted_cmap[0], str):
             return None, None, None, error
 
     return None
@@ -225,7 +225,7 @@ def separate_pdb_cmaps(session, cmap_fname_list):
 
     for fname in cmap_fname_list:
         cmap = session[fname.encode()]
-        if cmap[-1] == 'PDB':
+        if cmap[0] == 'PDB':
             pdb_fnames.append(fname)
         else:
             non_pdb_fnames.append(fname)

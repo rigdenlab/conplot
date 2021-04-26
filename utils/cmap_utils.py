@@ -47,13 +47,17 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
     return res1_list, res2_list, hover
 
 
+def contains_distances(cmap):
+    if len(cmap[-1]) > 3:
+        return True
+    return False
+
+
 def slice_cmap(cmap, seq_length, factor):
-    if cmap[-1] == 'PDB':
-        cmap = cmap[:-1]
-        cmap = [contact for contact in cmap if contact[2] > 0]
-        return cmap
-    elif cmap[-1] == 'DISTO':
-        cmap = cmap[:-1]
+    if cmap[0] == 'PDB':
+        return [contact for contact in cmap[1:] if contact[2] > 0]
+    elif cmap[0] == 'DISTO':
+        cmap = cmap[1:]
 
     if factor != 0:
         cmap = cmap[:int(round(seq_length / factor, 0))]

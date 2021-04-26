@@ -134,6 +134,12 @@ def retrieve_sequence_fname(*args, **kwargs):
     return retrieve_sequence_fname(*args, **kwargs)
 
 
+def contains_distances(*args, **kwargs):
+    from utils.cmap_utils import contains_distances
+
+    return contains_distances(*args, **kwargs)
+
+
 def CacheKeys(*args, **kwargs):
     from utils.cache_utils import CacheKeys
 
@@ -272,13 +278,4 @@ def get_unique_contacts(elements):
     unique = list({key(el): el for el in elements}.values())
     output = [(*contact[0], contact[1]) for contact in unique]
     output = sorted(output, key=itemgetter(2), reverse=True)
-    return output
-
-
-def get_unique_distances(elements):
-    key = itemgetter(0)
-    unique_contacts = list({key(el): el for el in elements}.values())
-    output = [(*contact[0], *contact[1:]) for contact in unique_contacts]
-    output = sorted(output, key=itemgetter(2), reverse=True)
-    output.append('DISTO')
     return output

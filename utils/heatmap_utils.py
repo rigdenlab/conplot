@@ -1,10 +1,12 @@
 import plotly.graph_objects as go
+import numpy as np
 from utils import color_palettes, DistanceLabels, HoverTemplates
 
 
 def init_heatmap(seq_length):
-    heat = [[0 for x in range(seq_length + 1)] for y in range(seq_length + 1)]
-    hover = [[None for x in range(seq_length + 1)] for y in range(seq_length + 1)]
+    shape = (seq_length + 1, seq_length + 1)
+    heat = np.zeros(shape).tolist()
+    hover = np.full(shape, None).tolist()
     return heat, hover
 
 
@@ -41,8 +43,8 @@ def populate_heatmap(cmap, idx, distances, hover, verbose_labels=None):
         idx_x = 0
         idx_y = 1
 
-    if cmap[-1] == 'DISTO' or cmap[-1] == 'PDB':
-        cmap = cmap[:-1]
+    if cmap[0] == 'DISTO' or cmap[0] == 'PDB':
+        cmap = cmap[1:]
 
         if verbose_labels is not None:
             for contact in cmap:
@@ -81,8 +83,8 @@ def populate_heatmap(cmap, idx, distances, hover, verbose_labels=None):
 def populate_superimposed_heatmap(reference_cmap, secondary_cmap, heat, hover, verbose_labels=None):
     idx_x = 1
     idx_y = 0
-    reference_ftype = reference_cmap.pop(-1)
-    secondary_ftype = secondary_cmap.pop(-1)
+    reference_cmap = reference_cmap[1:]
+    secondary_cmap = secondary_cmap[1:]
     predicted_set = {(x[0], x[1]): x[3] for x in secondary_cmap}
 
     if verbose_labels is not None:

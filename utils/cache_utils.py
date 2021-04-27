@@ -76,7 +76,6 @@ def remove_diff(session_id, cache, fname):
     if not diff_list:
         return
     diff_list = decompress_data(diff_list)
-    print(diff_list)
 
     for diff in diff_list:
         if fname in diff:

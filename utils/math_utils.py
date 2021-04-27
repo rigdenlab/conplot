@@ -42,6 +42,17 @@ def calculate_rmsd(expected_array, observed_array, seq_length):
     return rmsd
 
 
+def convolution_smooth_values(x, window=5):
+    box = np.ones(window) / window
+    x_smooth = np.convolve(x, box, mode='same')
+    return x_smooth
+
+
+def cumsum_smooth(x, window=5):
+    cumsum_vec = np.cumsum(np.insert(x, 0, 0))
+    return (cumsum_vec[window:] - cumsum_vec[:-window]) / window
+
+
 def get_contact_density(contact_list, seq_length):
     """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit"""
     x = np.array([i for c in contact_list for i in np.arange(c[1], c[0] + 1)], dtype=np.int64)[:, np.newaxis]

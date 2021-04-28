@@ -27,7 +27,7 @@ def get_difference(expected, observed):
 
 @vectorize('float64(int64, float64)')
 def populate_rmsd(seq_length, sum_squared_differences):
-    rmsd = np.round(math.sqrt(sum_squared_differences / seq_length), 0)
+    rmsd = math.sqrt(sum_squared_differences / seq_length)
     if rmsd > 10:
         return 10
     return rmsd
@@ -45,7 +45,7 @@ def calculate_rmsd(expected_array, observed_array, seq_length):
 def convolution_smooth_values(x, window=5):
     box = np.ones(window) / window
     x_smooth = np.convolve(x, box, mode='same')
-    return x_smooth
+    return np.round(x_smooth, 0)
 
 
 def cumsum_smooth(x, window=5):

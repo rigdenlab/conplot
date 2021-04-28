@@ -20,7 +20,7 @@ def get_distance_array(cmap, seq_length):
     return array
 
 
-def get_cmap_mcc(cmap_1, cmap_2, size):
+def get_cmap_mcc(cmap_1, cmap_2, size, smooth=True):
     cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     cmap_2_set = {resn: {(c[0], c[1]) for c in cmap_2 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
     diff = []
@@ -31,23 +31,26 @@ def get_cmap_mcc(cmap_1, cmap_2, size):
         fn = len(cmap_1_set[resn] - cmap_2_set[resn])
         tn = size - sum((tp, fp, fn))
         mcc = math_utils.calculate_mcc(tp, fp, tn, fn)
-        diff.append(int(round(mcc, 0)))
+        diff.append(mcc)
 
-    return diff
+    if smooth:
+        return math_utils.convolution_smooth_values(diff).astype(int).tolist()
+
+    return [int(round(mcc, 0)) for mcc in diff]
 
 
-def get_cmap_rmsd(cmap_1, cmap_2, seq_length):
+def get_cmap_rmsd(cmap_1, cmap_2, seq_length, smooth=True):
     cmap_1_array = get_distance_array(cmap_1, seq_length)
     cmap_2_array = get_distance_array(cmap_2, seq_length)
     rmsd = math_utils.calculate_rmsd(cmap_1_array, cmap_2_array, seq_length)
-    return rmsd.astype(int).tolist()
+    if smooth:
+        return math_utils.convolution_smooth_values(rmsd).astype(int).tolist()
+    return np.round(rmsd, 0).astype(int).tolist()
 
 
 def calculate_diff(cmap_1, cmap_2, display_settings):
     if cmap_utils.contains_distances(cmap_1) and cmap_utils.contains_distances(cmap_2):
-        cmap_1 = cmap_utils.slice_cmap(cmap_1, display_settings.seq_length, 0)
-        cmap_2 = cmap_utils.slice_cmap(cmap_2, display_settings.seq_length, 0)
-        return get_cmap_rmsd(cmap_1, cmap_2, display_settings.seq_length)
+        return get_cmap_rmsd(cmap_1[1:], cmap_2[1:], display_settings.seq_length)
     else:
         cmap_1 = cmap_utils.slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
         cmap_2 = cmap_utils.slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)

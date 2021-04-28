@@ -2,6 +2,19 @@ Changelog
 =========
 
 
+0.4.1
+-----
+
+Added
+~~~~~
+- Added contact diff track with smoothed values (MCC for contacts and RMSD for distograms)
+
+Changed
+~~~~~
+- Increased contrast in sequence hydrophobicity color palettes
+- Use AMISE to estimate bandwidth use to calculate contact density
+
+
 0.4
 -----
 

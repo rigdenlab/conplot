@@ -127,8 +127,8 @@ def remove_dataset(trigger, cache, session_id, logger):
         cache_utils.remove_fname(cache, session_id, fname, dataset)
 
     if dataset == loaders.DatasetReference.SEQUENCE.value:
-        cache_utils.remove_all(session_id, cache, cache_utils.CacheKeys.CONTACT_DENSITY.value)
-        cache_utils.remove_all(session_id, cache, cache_utils.CacheKeys.CONTACT_DIFF.value)
+        cache_utils.remove_all(session_id, cache_utils.CacheKeys.CONTACT_DENSITY.value, cache)
+        cache_utils.remove_all(session_id, cache_utils.CacheKeys.CONTACT_DIFF.value, cache)
     elif dataset == loaders.DatasetReference.CONTACT_MAP.value:
         cache_utils.remove_density(session_id, cache, fname)
         cache_utils.remove_diff(session_id, cache, fname)

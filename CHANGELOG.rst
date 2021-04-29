@@ -12,7 +12,7 @@ Added
 Changed
 ~~~~~
 - Increased contrast in sequence hydrophobicity color palettes
-- Use AMISE to estimate bandwidth use to calculate contact density
+- Use AMISE to estimate bandwidth required to calculate contact density
 
 
 0.4

@@ -210,3 +210,10 @@ def is_redis_available(cache):
 
 def get_active_sessions(cache):
     return cache.dbsize()
+
+
+def get_cachekey(session, fname, factor):
+    if 'PDB' == session[fname.encode()][0]:
+        return CacheKeys.CMAP_DENSITY.value.format(fname, fname).encode()
+    else:
+        return CacheKeys.CMAP_DENSITY.value.format(fname, factor).encode()

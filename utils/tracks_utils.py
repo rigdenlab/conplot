@@ -60,17 +60,17 @@ def calculate_diff(cmap_1, cmap_2, display_settings):
 def get_diff_args(fname, factor):
     cmap_1 = fname.split('|')[0].rstrip().lstrip()
     cmap_2 = fname.split('|')[1].rstrip().lstrip()
+    # TODO: If looking for diff for distance predictions, we also don't care about L factor (using all)
     cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1, cmap_2, factor).encode()
     return cmap_1, cmap_2, cachekey
 
 
-def retrieve_dataset_prediction(session_id, session, fname, display_settings, cache):
+def get_dataset_prediction(session_id, session, fname, display_settings, cache):
     if fname == session[DatasetReference.SEQUENCE.value.encode()]:
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
-    # TODO: If it is a PDB lookup data should not care about the L factor since it will always be the same
     if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        cachekey = cache_utils.CacheKeys.CMAP_DENSITY.value.format(fname, display_settings.factor).encode()
+        cachekey = cache_utils.get_cachekey(session, fname, display_settings.factor)
         density = lookup_data(session, session_id, cachekey, cache)
         if not density:
             density = calculate_density(session[fname.encode()], display_settings.seq_length, display_settings.factor)
@@ -78,7 +78,6 @@ def retrieve_dataset_prediction(session_id, session, fname, display_settings, ca
 
         return DatasetReference.CONTACT_DENSITY.value, density
 
-    # TODO: If looking for diff for distance predictions, we also don't care about L factor (using all)
     if cache_utils.MetadataTags.SEPARATOR.value in fname:
         cmap_1, cmap_2, cachekey = get_diff_args(fname, display_settings.factor)
         diff = lookup_data(session, session_id, cachekey, cache)

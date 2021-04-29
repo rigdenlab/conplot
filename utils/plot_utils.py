@@ -30,11 +30,10 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
                    contact_marker_size=5, track_marker_size=5, track_separation=2, transparent=True, superimpose=False,
                    heatmap=False, verbose_labels=False):
     session = cache.hgetall(session_id)
-    session, display_settings, verbose_labels, error = process_args(session_id, session, trigger, selected_tracks,
-                                                                    cmap_selection, factor, contact_marker_size,
-                                                                    track_separation, transparent, selected_palettes,
-                                                                    superimpose, track_marker_size, heatmap,
-                                                                    verbose_labels, cache)
+    session, display_settings, error = process_args(session_id, session, trigger, selected_tracks, cmap_selection,
+                                                    factor, contact_marker_size, track_separation, transparent,
+                                                    selected_palettes, superimpose, track_marker_size, heatmap,
+                                                    verbose_labels, cache)
 
     if error is not None:
         return error
@@ -42,8 +41,11 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
     display_card = get_display_control_card(display_settings)
     figure = create_figure(display_settings.axis_range)
 
-    add_contact_trace(session, display_settings, figure, verbose_labels)
-    add_additional_tracks(session_id, session, display_settings, figure, cache)
+    verbose_labels, additional_traces = add_additional_tracks(session_id, session, display_settings, figure, cache)
+    contact_traces = add_contact_trace(session, display_settings, figure, verbose_labels)
+
+    figure.add_traces(contact_traces)
+    figure.add_traces(additional_traces)
 
     figure.update_xaxes(spikemode="across", showspikes=False)
     figure.update_yaxes(spikemode="across", showspikes=False)
@@ -58,45 +60,56 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
 
 
 def add_additional_tracks(session_id, session, display_settings, figure, cache):
+    prediction_labels = {}
+    traces = []
     for idx, fname in enumerate(display_settings.selected_tracks):
         if fname == '--- Empty ---':
             continue
 
-        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname, display_settings,
-                                                                       cache)
+        dataset, prediction = tracks_utils.get_dataset_prediction(session_id, session, fname, display_settings, cache)
+        if display_settings.verbose_labels and fname not in prediction_labels:
+            prediction_labels[fname] = [STATES[dataset][x] for x in prediction]
         palette_idx = [x.name for x in color_palettes.DatasetColorPalettes].index(dataset)
         palette = display_settings.selected_palettes[palette_idx]
 
         if idx == 4:
-            traces = tracks_utils.get_diagonal_trace(prediction, dataset, display_settings.track_marker_size,
-                                                     session[display_settings.seq_fname.encode()],
-                                                     display_settings.alpha, palette)
+            traces += tracks_utils.get_diagonal_trace(prediction, dataset, display_settings.track_marker_size,
+                                                      session[display_settings.seq_fname.encode()],
+                                                      display_settings.alpha, palette)
         else:
-            traces = tracks_utils.get_traces(prediction, dataset, idx, display_settings.track_separation,
-                                             display_settings.track_marker_size, display_settings.alpha, palette)
+            traces += tracks_utils.get_traces(prediction, dataset, idx, display_settings.track_separation,
+                                              display_settings.track_marker_size, display_settings.alpha, palette)
 
-        for trace in traces:
-            figure.add_trace(trace)
+    if display_settings.verbose_labels:
+        verbose_labels = []
+        sequence = session[display_settings.seq_fname.encode()]
+        all_predictions = list(prediction_labels.values())
+        label_template = '------<br>Residue {} ({})' + '<br>{}' * len(all_predictions)
+        for idx, residue_info in enumerate(zip(sequence, *all_predictions), 1):
+            verbose_labels.append(label_template.format(idx, *residue_info))
+
+        return verbose_labels, traces
+
+    return None, traces
 
 
 def add_contact_trace(session, display_settings, figure, verbose_labels):
     if display_settings.superimpose and display_settings.heatmap:
         heat, hover, colorscale = heatmap_utils.superimpose_heatmaps(session, display_settings, verbose_labels)
-        figure.add_trace(heatmap_utils.create_heatmap_trace(hovertext=hover, distances=heat, colorscale=colorscale))
+        return heatmap_utils.create_heatmap_trace(hovertext=hover, distances=heat, colorscale=colorscale)
 
     elif display_settings.heatmap:
         heat, hover, colorscale = heatmap_utils.create_heatmap(session, display_settings, verbose_labels)
-        figure.add_trace(heatmap_utils.create_heatmap_trace(hovertext=hover, distances=heat, colorscale=colorscale))
+        return heatmap_utils.create_heatmap_trace(hovertext=hover, distances=heat, colorscale=colorscale)
 
     elif display_settings.superimpose:
         reference_cmap = session[display_settings.cmap_selection[0].encode()]
         predicted_cmap = session[display_settings.cmap_selection[1].encode()]
 
-        traces = cmap_utils.create_superimposed_cmap(reference_cmap, predicted_cmap, display_settings, verbose_labels)
-        for trace in traces:
-            figure.add_trace(trace)
+        return cmap_utils.create_superimposed_cmap(reference_cmap, predicted_cmap, display_settings, verbose_labels)
 
     else:
+        traces = []
         for idx, fname in enumerate(display_settings.cmap_selection):
             if fname == '--- Empty ---':
                 continue
@@ -104,7 +117,9 @@ def add_contact_trace(session, display_settings, figure, verbose_labels):
             cmap = session[fname.encode()]
             size = display_settings.contact_marker_size
             x, y, hover = cmap_utils.create_cmap(cmap, idx, display_settings, verbose_labels)
-            figure.add_trace(cmap_utils.create_cmap_trace(x, y, 'circle', size, 'black', hover))
+            traces.append(cmap_utils.create_cmap_trace(x, y, 'circle', size, 'black', hover))
+
+        return traces
 
 
 def get_display_control_card(display_settings):
@@ -153,14 +168,14 @@ def lookup_input_errors(session_id, session, cmap_selection, superimpose, heatma
         error = components.PlotPlaceHolder(), \
                 components.MissingInputModal(*[missing.name for missing in missing_data]), \
                 components.DisplayControlCard(), True
-        return None, None, None, error
+        return None, None, error
 
     if superimpose and heatmap:
         reference_cmap = session[cmap_selection[0].encode()]
         predicted_cmap = session[cmap_selection[1].encode()]
         error = no_update, components.InvalidSuperposeHeatmapModal(), no_update, no_update
         if not isinstance(reference_cmap[0], str) or not isinstance(predicted_cmap[0], str):
-            return None, None, None, error
+            return None, None, error
 
     return None
 
@@ -210,13 +225,7 @@ def process_args(session_id, session, trigger, selected_tracks, cmap_selection, 
                                               cmap_selection=cmap_selection, available_cmaps=available_cmaps,
                                               heatmap=heatmap, verbose_labels=verbose_labels)
 
-    if verbose_labels:
-        fnames = [fname for fname in selected_tracks if fname != '--- Empty ---']
-        verbose_labels = get_verbose_labels(session_id, session, fnames, display_settings, cache)
-    else:
-        verbose_labels = None
-
-    return session, display_settings, verbose_labels, None
+    return session, display_settings, None
 
 
 def separate_pdb_cmaps(session, cmap_fname_list):
@@ -337,23 +346,3 @@ def create_figure(axis_range):
             plot_bgcolor='rgba(0,0,0,0)'
         )
     )
-
-
-def get_verbose_labels(session_id, session, fnames, display_settings, cache):
-    sequence = session[display_settings.seq_fname.encode()]
-    all_predictions = []
-    for fname in set(fnames):
-        dataset, prediction = tracks_utils.retrieve_dataset_prediction(session_id, session, fname,
-                                                                       display_settings, cache)
-        dataset_dict = STATES[dataset]
-        prediction = [dataset_dict[x] for x in prediction]
-        all_predictions.append(prediction)
-
-    labels = []
-    for idx, residue in enumerate(sequence, 1):
-        current_label = '------<br>Residue {} ({})'.format(idx, residue)
-        for prediction in all_predictions:
-            current_label += '<br>{}'.format(prediction[idx - 1])
-        labels.append(current_label)
-
-    return labels

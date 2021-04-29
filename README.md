@@ -66,7 +66,7 @@ Please note that ConPlot requires at least `python 3.6`.
 $   git clone https://github.com/rigdenlab/conplot
 $   cd conplot
 $   python3.6 -m pip install -r requirements.txt
-$   echo "KEYDB_URL=redis://localhost:6379" > .env
+$   echo "KEYDB_URL=0://localhost:6379" > .env
 ```
 
 With that last command you will also have created an environment variable called `KEYDB_URL` with 

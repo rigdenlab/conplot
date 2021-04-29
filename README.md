@@ -59,21 +59,21 @@ Once you have installed `redis`, you will need to start the service by running:
 $   sudo service redis start
 ```
 
-You will also need to create a environment variable called `KEYDB_URL` with 
-the URL to connect to the redis server you just started on your machine:
-
-```bash
-$   KEYDB_URL=redis://localhost:6379
-```
-
-After this, all you need to do is clone this repository, install the requirements 
-and start the Flask development server on your machine. Please note that ConPlot 
-requires at least `python 3.6`.
+Now you'll need to clone this repository, install the requirements and setup environment variables. 
+Please note that ConPlot requires at least `python 3.6`.
 
 ```bash
 $   git clone https://github.com/rigdenlab/conplot
 $   cd conplot
 $   python3.6 -m pip install -r requirements.txt
+$   echo "KEYDB_URL=redis://localhost:6379" > .env
+```
+
+With that last command you will also have created an environment variable called `KEYDB_URL` with 
+the URL to connect to the redis server you previously started on your machine. The only thing 
+left to do is to start the Flask development server on your machine:
+
+```bash
 $   python3.6 app.py
 ```
 

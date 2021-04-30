@@ -24,7 +24,7 @@ def serve_layout():
     except (keydb.ConnectionError, TypeError, KeyError) as e:
         app.logger.error('Redis connection error! {}'.format(e))
         return layouts.RedisConnectionError()
-    session_id = session_utils.initiate_session(cache, app.logger)
+    session_id = session_utils.initiate_session(cache, app.logger, keydb_timeout)
     return layouts.Base(session_id)
 
 
@@ -44,6 +44,7 @@ if 'PRODUCTION_SERVER' in os.environ:
         'requests_pathname_prefix': '/conplot/',
     })
 keydb_pool = keydb_utils.create_pool(os.environ.get('KEYDB_URL'))
+keydb_timeout = os.environ.get('KEYDB_TIMEOUT')
 app.layout = serve_layout
 
 
@@ -407,7 +408,7 @@ def javascript_exe_button(n_clicks, session_id):
 
     elif 'new-session' in trigger['prop_id'] or session_utils.is_expired_session(session_id, cache, app.logger):
         cache = keydb.KeyDB(connection_pool=keydb_pool)
-        new_session_id = session_utils.initiate_session(cache, app.logger)
+        new_session_id = session_utils.initiate_session(cache, app.logger, keydb_timeout)
         return "location.reload();", no_update, new_session_id
 
     else:

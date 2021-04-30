@@ -67,11 +67,15 @@ $   git clone https://github.com/rigdenlab/conplot
 $   cd conplot
 $   python3.6 -m pip install -r requirements.txt
 $   echo "KEYDB_URL=0://localhost:6379" > .env
+$   echo "KEYDB_TIMEOUT=3600" >> .env 
 ```
 
-With that last command you will also have created an environment variable called `KEYDB_URL` with 
-the URL to connect to the redis server you previously started on your machine. The only thing 
-left to do is to start the Flask development server on your machine:
+With the last two commands you will also have created an `.env` file with a variable named 
+`KEYDB_URL` pointing to the redis server and a `KEYDB_TIMEOUT` variable with the session 
+timeout value. This is the time at which a session expires after inactivity. By default in 
+`www.conplot.org` this has a value of 3600 minutes, but if running locally you can set this 
+time to any other value. The only thing left to do is to start the Flask development 
+server on your machine:
 
 ```bash
 $   python3.6 app.py

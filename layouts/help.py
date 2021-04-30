@@ -24,7 +24,7 @@ def Body(cache):
             components.TutorialTwoModal(),
             components.TutorialThreeModal(),
             components.TutorialFourModal(),
-            #components.TutorialFiveModal(),
+            # components.TutorialFiveModal(),
             components.CustomFormatDescriptionModal(),
             dbc.Row([
                 dbc.Col([
@@ -262,19 +262,30 @@ def Body(cache):
                                     'memory server used by ConPlot.']),
                             dbc.Col([
                                 html.Plaintext('$   sudo apt update\n$   sudo apt install redis-server\n$   sudo '
-                                               'service redis start\n$   KEYDB_URL=redis://localhost:6379')
+                                               'service redis start')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
-                            html.P('With the above commands you will have installed Redis and started the server. You '
-                                   'will also have created a environment variable called "KEYDB_URL" containing '
-                                   'the URL to connect to your redis server. ConPlot will need to read this '
-                                   'environment variable to access the redis database. After this, all you need to do '
-                                   'is clone ConPlot repository, install the requirements and start the Flask '
-                                   'development server on your machine. Please note that ConPlot requires at least '
-                                   'python 3.6 installed:'),
+                            html.P('Once you have installed `redis`, you will need to start the service by running:'),
+                            dbc.Col([
+                                html.Plaintext('$   sudo service redis start')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P('Now you will need to clone the repository, install the requirements and '
+                                   'setup environment variables. Please note that ConPlot requires at least '
+                                   'python 3.6.'),
                             dbc.Col([
                                 html.Plaintext('$   git clone https://github.com/rigdenlab/conplot\n'
                                                '$   cd conplot\n$   python3.6 -m pip install -r requirements\n$   '
-                                               'python3.6 app.py')
+                                               'echo "KEYDB_URL=0://localhost:6379" > .env\n$   echo "KEYDB_TIME'
+                                               'OUT=3600" >> .env')
+                            ], style={'background-color': '#EAEAEA'}, align='center'),
+                            html.P('With the last two commands you will also have created an .env file with a '
+                                   'variable named KEYDB_URL pointing to the redis server and a KEYDB_TIMEOUT '
+                                   'variable with the session timeout value. This is the time at which a session '
+                                   'expires after inactivity. By default in www.conplot.org this has a value of 3600 '
+                                   'minutes, but if running locally you can set this time to any other value. '
+                                   'The only thing left to do is to start the Flask development server on your '
+                                   'machine:'),
+                            dbc.Col([
+                                html.Plaintext('$   python3.6 app.py')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P(['Now you will be able to access the app on ',
                                     html.A(html.U('http://127.0.0.1:8050/home'),

@@ -346,7 +346,7 @@ def ColorPaletteSelectionCard(dataset, selected_palette):
 
 
 def HalfSquareSelectionCard(square_idx, selection, available_cmaps):
-    cmap_options = [{'label': '--- Empty ---', 'value': '---'}]
+    cmap_options = [{'label': '--- Empty ---', 'value': '--- Empty ---'}]
     cmap_options += [{'label': fname, 'value': fname} for fname in available_cmaps]
 
     return dbc.Card(components.HalfSquareSelector(square_idx, cmap_options, selection), outline=False)

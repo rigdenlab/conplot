@@ -173,8 +173,8 @@ def lookup_input_errors(session_id, session, cmap_selection, superimpose, heatma
     if superimpose and heatmap:
         reference_cmap = session[cmap_selection[0].encode()]
         predicted_cmap = session[cmap_selection[1].encode()]
-        error = no_update, components.InvalidSuperposeHeatmapModal(), no_update, no_update
         if not isinstance(reference_cmap[0], str) or not isinstance(predicted_cmap[0], str):
+            error = no_update, components.InvalidSuperposeHeatmapModal(), no_update, no_update
             return None, None, error
 
     return None

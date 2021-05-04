@@ -326,6 +326,15 @@ def AdditionalFormatsHelpList():
                  html.A(html.U('here'), href=UrlIndex.CONSURF_CITATION.value),
                  '.'],
                 style={"font-size": "110%", 'text-align': "justify"}),
+        html.Li(['A3M file. This is a multiple sequence alignment file that should have been obtained using the '
+                 'sequence of interest as a query. ConPlot will parse the file and calculate the MSA coverage along '
+                 'the query sequence, normalise these values (1-10) and create a track where each residue '
+                 'is coloured according to the number of sequences aligned in that particular position These '
+                 'files are used in most contact prediction pipelines, and visualising the MSA coverage can help you '
+                 'understand the quality of the information used to obtain your predictions. Several alignment tools '
+                 'will create MSA files in this format, like for example HHBLITS, which you can use '
+                 'online ', html.A(html.U('here'), href=UrlIndex.HHBLITS_URL.value), '.'],
+                style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['CUSTOM file. These files are plain text files that can be created manually '
                  'by users to include additional tracks of information to the plot. These '
                  'files enable limitless personalisation of the contact map plot, as it '

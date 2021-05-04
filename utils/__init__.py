@@ -106,6 +106,7 @@ class UrlIndex(Enum):
     IUPRED_CITATION = 'https://doi.org/10.1093/nar/gky384'
     CONSURF_WEB = 'https://consurf.tau.ac.il/'
     CONSURF_CITATION = 'https://doi.org/10.1093/nar/gkw408'
+    HHBLITS_URL = 'https://toolkit.tuebingen.mpg.de/tools/hhblits'
     GDPR_WEBSITE = 'https://gdpr-info.eu'
     DOCKER_HUB = 'https://hub.docker.com/r/filosanrod/conplot'
     CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'

@@ -168,6 +168,11 @@ def Body(cache):
                             dbc.Alert(['TIPS: ',
                                        html.Ul([
                                            html.Br(),
+                                           html.Li(['Remember that the ', html.I('L/N'),
+                                                    ' selector will not affect any data being shown for PDB files. '
+                                                    'Similarly, data will also not be affected if the ',
+                                                    html.I('Create heatmap'), ' switch is turned on.'
+                                                    ]),
                                            html.Li(['If you have just created a plot with the ',
                                                     html.I('Generate Plot'),
                                                     ' button and you can see individual squared tiles in the diagonal '

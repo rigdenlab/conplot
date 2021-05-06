@@ -57,11 +57,16 @@ def calculate_diff(cmap_1, cmap_2, display_settings):
         return get_cmap_mcc(cmap_1, cmap_2, display_settings.seq_length)
 
 
-def get_diff_args(fname, factor):
-    cmap_1 = fname.split('|')[0].rstrip().lstrip()
-    cmap_2 = fname.split('|')[1].rstrip().lstrip()
-    # TODO: If looking for diff for distance predictions, we also don't care about L factor (using all)
-    cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1, cmap_2, factor).encode()
+def get_diff_args(session, fname, factor):
+    cmap_1_fname = fname.split('|')[0].rstrip().lstrip()
+    cmap_1 = session[cmap_1_fname.encode()]
+    cmap_2_fname = fname.split('|')[1].rstrip().lstrip()
+    cmap_2 = session[cmap_2_fname.encode()]
+    if cmap_utils.contains_distances(cmap_1) and cmap_utils.contains_distances(cmap_2):
+        cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1_fname, cmap_2_fname, '1').encode()
+    else:
+        cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1_fname, cmap_2_fname, factor).encode()
+
     return cmap_1, cmap_2, cachekey
 
 
@@ -79,11 +84,9 @@ def get_dataset_prediction(session_id, session, fname, display_settings, cache):
         return DatasetReference.CONTACT_DENSITY.value, density
 
     if cache_utils.MetadataTags.SEPARATOR.value in fname:
-        cmap_1, cmap_2, cachekey = get_diff_args(fname, display_settings.factor)
+        cmap_1, cmap_2, cachekey = get_diff_args(session, fname, display_settings.factor)
         diff = lookup_data(session, session_id, cachekey, cache)
         if not diff:
-            cmap_1 = session[cmap_1.encode()]
-            cmap_2 = session[cmap_2.encode()]
             diff = calculate_diff(cmap_1, cmap_2, display_settings)
             cache_utils.store_data(session_id, cachekey, diff, cache_utils.CacheKeys.CONTACT_DIFF.value, cache)
         return DatasetReference.CONTACT_DIFF.value, diff

@@ -38,7 +38,7 @@ container:
 ```bash
 $   docker pull filosanrod/conplot:latest
 $   docker run --name redis_db -d redis:latest
-$   docker run --name conplot_app --link redis_db:redis -e KEYDB_URL="redis://redis_db:6379" -p 80:80 -d filosanrod/conplot:latest gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
+$   docker run --name conplot_app --link redis_db:redis -e KEYDB_TIMEOUT=3600 -e KEYDB_URL="redis://redis_db:6379" -p 80:80 -d filosanrod/conplot:latest gunicorn app:server --preload --workers=6 --timeout 120 --graceful-timeout 120 --max-requests 5 --log-level=info -b :80
 ```
 
 After you set up running the docker container, you will be able to access the app on `http://0.0.0.0:80/home`.

@@ -253,11 +253,11 @@ def Body(cache):
                                     '. To use it, you will need to link it with a Redis container:']),
                             dbc.Col([
                                 html.Plaintext('$   docker pull filosanrod/conplot:latest\n$   docker run --name '
-                                               'redis_db -d redis:latest \n$   docker run --name conplot_app'
-                                               '\n    -d filosanrod/conplot:latest gunicorn app:server -p 80:80 -b :80 \ '
-                                               '\n    --link redis_db:redis -e KEYDB_URL="redis://redis_db:6379" \ \n'
-                                               '    --preload --workers=6 --timeout 120 --graceful-timeout 120 \ \n'
-                                               '    --max-requests 5 --log-level=info')
+                                               'redis_db -d redis:latest \n$   docker run --name conplot_app \ \n    '
+                                               '-d filosanrod/conplot:latest gunicorn app:server -p 80:80 -b :80 \ '
+                                               '\n    -e KEYDB_TIMEOUT=3600 -e KEYDB_URL="redis://redis_db:6379" \ \n'
+                                               '    --link redis_db:redis --preload --workers=6 --timeout 120 \ \n'
+                                               '    --graceful-timeout 120 --max-requests 5 --log-level=info')
                             ], style={'background-color': '#EAEAEA'}, align='center'),
                             html.P(['After you set up running the docker container, you will be able to access the '
                                     'app on http://0.0.0.0:80/home.',

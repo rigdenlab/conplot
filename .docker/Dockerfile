@@ -5,4 +5,5 @@ RUN mkdir /opt/conplot
 RUN curl https://codeload.github.com/rigdenlab/conplot/tar.gz/master | tar zx -C /opt/conplot/
 WORKDIR /opt/conplot/conplot-master
 RUN python3.9 -m pip install --upgrade pip
+RUN python3.9 -m pip install gevent
 RUN python3.9 -m pip install -r requirements.txt

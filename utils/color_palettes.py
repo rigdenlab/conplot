@@ -461,37 +461,52 @@ class Diff_ColorPalettes(Enum):
     PALETTE_5 = Diff_Hot
 
 
-class Hydrophobicity_BlueGreyColorPalette(Enum):
-    HYDROPATHY_10 = 'rgba(66,138,245,{})'
-    HYDROPATHY_9 = 'rgba(72,137,234,{})'
-    HYDROPATHY_8 = 'rgba(79,136,222,{})'
-    HYDROPATHY_7 = 'rgba(85,136,211,{})'
-    HYDROPATHY_6 = 'rgba(92,135,199,{})'
-    HYDROPATHY_5 = 'rgba(98,134,188,{})'
-    HYDROPATHY_4 = 'rgba(104,133,176,{})'
-    HYDROPATHY_3 = 'rgba(111,132,165,{})'
-    HYDROPATHY_2 = 'rgba(117,132,153,{})'
-    HYDROPATHY_1 = 'rgba(124,131,142,{})'
-    HYDROPATHY_0 = 'rgba(130,130,130,{})'
+class Hydrophobicity_BlueColorPalette(Enum):
+    HYDROPATHY_10 = sequential.ice[1].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_9 = sequential.ice[1].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_8 = sequential.ice[2].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_7 = sequential.ice[3].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_6 = sequential.ice[4].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_5 = sequential.ice[5].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_4 = sequential.ice[6].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_3 = sequential.ice[7].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_2 = sequential.ice[8].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_1 = sequential.ice[9].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_0 = sequential.ice[9].replace(')', ', {})').replace('rgb', 'rgba')
 
 
-class Hydrophobicity_GreenGreyColorPalette(Enum):
-    HYDROPATHY_10 = 'rgba(59,237,74,{})'
-    HYDROPATHY_9 = 'rgba(66,226,80,{})'
-    HYDROPATHY_8 = 'rgba(73,216,85,{})'
-    HYDROPATHY_7 = 'rgba(80,205,91,{})'
-    HYDROPATHY_6 = 'rgba(87,194,96,{})'
-    HYDROPATHY_5 = 'rgba(95,184,102,{})'
-    HYDROPATHY_4 = 'rgba(102,173,108,{})'
-    HYDROPATHY_3 = 'rgba(109,162,113,{})'
-    HYDROPATHY_2 = 'rgba(116,151,119,{})'
-    HYDROPATHY_1 = 'rgba(123,141,124,{})'
-    HYDROPATHY_0 = 'rgba(130,130,130,{})'
+class Hydrophobicity_GreenColorPalette(Enum):
+    HYDROPATHY_10 = 'rgba(8, 28, 21,{})'
+    HYDROPATHY_9 = 'rgba(8, 28, 21,{})'
+    HYDROPATHY_8 = 'rgba(27, 67, 50,{})'
+    HYDROPATHY_7 = 'rgba(45, 106, 79,{})'
+    HYDROPATHY_6 = 'rgba(64, 145, 108,{})'
+    HYDROPATHY_5 = 'rgba(82, 183, 136,{})'
+    HYDROPATHY_4 = 'rgba(116, 198, 157,{})'
+    HYDROPATHY_3 = 'rgba(149, 213, 178,{})'
+    HYDROPATHY_2 = 'rgba(183, 228, 199,{})'
+    HYDROPATHY_1 = 'rgba(216, 243, 220,{})'
+    HYDROPATHY_0 = 'rgba(216, 243, 220,{})'
+
+
+class Hydrophobicity_RedColorPalette(Enum):
+    HYDROPATHY_10 = sequential.amp[9].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_9 = sequential.amp[9].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_8 = sequential.amp[8].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_7 = sequential.amp[7].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_6 = sequential.amp[6].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_5 = sequential.amp[5].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_4 = sequential.amp[4].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_3 = sequential.amp[3].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_2 = sequential.amp[2].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_1 = sequential.amp[1].replace(')', ', {})').replace('rgb', 'rgba')
+    HYDROPATHY_0 = sequential.amp[1].replace(')', ', {})').replace('rgb', 'rgba')
 
 
 class HydrophobicityColorPalettes(Enum):
-    PALETTE_1 = Hydrophobicity_BlueGreyColorPalette
-    PALETTE_2 = Hydrophobicity_GreenGreyColorPalette
+    PALETTE_1 = Hydrophobicity_BlueColorPalette
+    PALETTE_2 = Hydrophobicity_RedColorPalette
+    PALETTE_3 = Hydrophobicity_GreenColorPalette
 
 
 class DatasetColorPalettes(Enum):

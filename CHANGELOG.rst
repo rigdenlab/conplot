@@ -13,6 +13,7 @@ Changed
 ~~~~~
 - Increased contrast in sequence hydrophobicity color palettes
 - Use AMISE to estimate bandwidth required to calculate contact density
+- Updated track selector layout
 
 
 0.4

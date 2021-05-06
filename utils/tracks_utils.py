@@ -44,8 +44,11 @@ def get_cmap_rmsd(cmap_1, cmap_2, seq_length, smooth=True):
     cmap_2_array = get_distance_array(cmap_2, seq_length)
     rmsd = math_utils.calculate_rmsd(cmap_1_array, cmap_2_array, seq_length)
     if smooth:
-        return math_utils.convolution_smooth_values(rmsd).astype(int).tolist()
-    return np.round(rmsd, 0).astype(int).tolist()
+        rmsd = math_utils.convolution_smooth_values(rmsd) * 2
+        return rmsd.astype(int).tolist()
+    else:
+        rmsd = np.round(rmsd, 0) * 2
+        return rmsd.astype(int).tolist()
 
 
 def calculate_diff(cmap_1, cmap_2, display_settings):

@@ -99,8 +99,8 @@ class TrackUtilsTestCase(unittest.TestCase):
             [4, 3, 0, 0]
         ]
 
-        expected = [7, 4, 10, 10]
-        expected_smooth = [2, 4, 6, 6, 5]
+        expected = [5, 4, 5, 5]
+        expected_smooth = [4, 6, 8, 8, 6]
         output = tracks_utils.get_cmap_rmsd(cmap_1, cmap_2, 4, smooth=False)
         output_smooth = tracks_utils.get_cmap_rmsd(cmap_1, cmap_2, 4, smooth=True)
         self.assertListEqual(output, expected)

@@ -28,8 +28,8 @@ def get_difference(expected, observed):
 @vectorize('float64(int64, float64)')
 def populate_rmsd(seq_length, sum_squared_differences):
     rmsd = math.sqrt(sum_squared_differences / seq_length)
-    if rmsd > 10:
-        return 10
+    if rmsd > 5:
+        return 5
     return rmsd
 
 

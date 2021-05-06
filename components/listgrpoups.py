@@ -219,9 +219,8 @@ def AdjustPlotHelpList():
                      html.Li(['Create Heatmap Switch: If this switch is activated, a heatmap will be created with the '
                               'provided residue contact information. By default, if a contact map is uploaded, the '
                               'intensity of the colours in this heatmap will correspond with the confidence of each '
-                              'contact. Alternatively, if a residue-residue distance prediction file has been uploaded '
-                              '(', html.I('CASPRR_MODE2'),
-                              ' format), the heatmap will correspond with the predicted distances for each residue '
+                              'contact. Alternatively, if a residue-residue distance prediction file has been '
+                              'uploaded, the heatmap will correspond with the predicted distances for each residue '
                               'pair oin this file. Please note that when this mode is active, the ', html.I('L/N'),
                               ' selector and the ', html.I('Size'),
                               ' selector will be disabled. You can read more about how to visualise residue-residue '

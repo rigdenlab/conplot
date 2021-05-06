@@ -33,7 +33,7 @@ END
         output = PDBParser(dummy_prediction)
 
         self.assertEqual(7, len(output))
-        self.assertEqual('PDB', output.pop(-1))
+        self.assertEqual('PDB', output.pop(0))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])
         self.assertListEqual(expected_score, [contact[2] for contact in output])

@@ -1,4 +1,4 @@
-from utils import get_unique_distances
+from parsers import get_unique_distances
 from utils.exceptions import InvalidFormat
 
 

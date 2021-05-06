@@ -5,7 +5,7 @@ from fast_enum import FastEnum
 
 
 def conplot_version():
-    return 'v0.4'
+    return 'v0.4.1'
 
 
 def get_base_url():
@@ -106,6 +106,7 @@ class UrlIndex(Enum):
     IUPRED_CITATION = 'https://doi.org/10.1093/nar/gky384'
     CONSURF_WEB = 'https://consurf.tau.ac.il/'
     CONSURF_CITATION = 'https://doi.org/10.1093/nar/gkw408'
+    HHBLITS_URL = 'https://toolkit.tuebingen.mpg.de/tools/hhblits'
     GDPR_WEBSITE = 'https://gdpr-info.eu'
     DOCKER_HUB = 'https://hub.docker.com/r/filosanrod/conplot'
     CONPLOT_DOCKER = 'https://github.com/rigdenlab/conplot-docker'
@@ -132,6 +133,12 @@ def retrieve_sequence_fname(*args, **kwargs):
     from utils.callback_utils import retrieve_sequence_fname
 
     return retrieve_sequence_fname(*args, **kwargs)
+
+
+def contains_distances(*args, **kwargs):
+    from utils.cmap_utils import contains_distances
+
+    return contains_distances(*args, **kwargs)
 
 
 def CacheKeys(*args, **kwargs):
@@ -168,6 +175,24 @@ def get_active_sessions(*args, **kwargs):
     from utils.cache_utils import get_active_sessions
 
     return get_active_sessions(*args, **kwargs)
+
+
+def lookup_data(*args, **kwargs):
+    from utils.data_utils import lookup_data
+
+    return lookup_data(*args, **kwargs)
+
+
+def create_cmap_sets(*args, **kwargs):
+    from utils.cmap_utils import create_cmap_sets
+
+    return create_cmap_sets(*args, **kwargs)
+
+
+def slice_cmap(*args, **kwargs):
+    from utils.cmap_utils import slice_cmap
+
+    return slice_cmap(*args, **kwargs)
 
 
 def load_figure_json(*args, **kwargs):
@@ -254,13 +279,4 @@ def get_unique_contacts(elements):
     unique = list({key(el): el for el in elements}.values())
     output = [(*contact[0], contact[1]) for contact in unique]
     output = sorted(output, key=itemgetter(2), reverse=True)
-    return output
-
-
-def get_unique_distances(elements):
-    key = itemgetter(0)
-    unique_contacts = list({key(el): el for el in elements}.values())
-    output = [(*contact[0], *contact[1:]) for contact in unique_contacts]
-    output = sorted(output, key=itemgetter(2), reverse=True)
-    output.append('DISTO')
     return output

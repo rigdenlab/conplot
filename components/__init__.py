@@ -11,6 +11,7 @@ class UserReadableTrackNames(Enum):
     heatmap = 'Heatmap'
     hydrophobicity = 'Hydrophobicity'
     density = 'Contact density'
+    diff = 'Contact diff'
 
 
 class EmailIssueReference(Enum):

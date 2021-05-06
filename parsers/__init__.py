@@ -1,4 +1,5 @@
 from enum import Enum
+from operator import itemgetter
 
 
 def ConsurfParser(*args, **kwargs):
@@ -257,6 +258,20 @@ class DensityStates(Enum):
     CONTACT_DENSITY_10 = 10
 
 
+class DiffStates(Enum):
+    CONTACT_DIFF_0 = 0
+    CONTACT_DIFF_1 = 1
+    CONTACT_DIFF_2 = 2
+    CONTACT_DIFF_3 = 3
+    CONTACT_DIFF_4 = 4
+    CONTACT_DIFF_5 = 5
+    CONTACT_DIFF_6 = 6
+    CONTACT_DIFF_7 = 7
+    CONTACT_DIFF_8 = 8
+    CONTACT_DIFF_9 = 9
+    CONTACT_DIFF_10 = 10
+
+
 class MsaStates(Enum):
     MSA_COVERAGE_0 = 0
     MSA_COVERAGE_1 = 1
@@ -279,4 +294,13 @@ class DatasetStates(Enum):
     custom = CustomStates
     hydrophobicity = HydrophobicityStates
     density = DensityStates
+    diff = DiffStates
     msa = MsaStates
+
+
+def get_unique_distances(elements):
+    key = itemgetter(0)
+    unique_contacts = list({key(el): el for el in elements}.values())
+    output = ['DISTO']
+    output += sorted([(*contact[0], *contact[1:]) for contact in unique_contacts], key=itemgetter(2), reverse=True)
+    return output

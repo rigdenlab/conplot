@@ -1,6 +1,5 @@
 from enum import Enum
 import base64
-from parsers import HydrophobicityStates
 
 
 class DatasetReference(Enum):
@@ -8,6 +7,7 @@ class DatasetReference(Enum):
     HYDROPHOBICITY = 'hydrophobicity'
     CONTACT_MAP = 'contact'
     CONTACT_DENSITY = 'density'
+    CONTACT_DIFF = 'diff'
     MEMBRANE_TOPOLOGY = 'membranetopology'
     SECONDARY_STRUCTURE = 'secondarystructure'
     CONSERVATION = 'conservation'
@@ -129,6 +129,19 @@ STATES = {
         8: 'CONTACT_DENSITY_8',
         9: 'CONTACT_DENSITY_9',
         10: 'CONTACT_DENSITY_10',
+    },
+    DatasetReference.CONTACT_DIFF.value:{
+        0: 'CONTACT_DIFF_0',
+        1: 'CONTACT_DIFF_1',
+        2: 'CONTACT_DIFF_2',
+        3: 'CONTACT_DIFF_3',
+        4: 'CONTACT_DIFF_4',
+        5: 'CONTACT_DIFF_5',
+        6: 'CONTACT_DIFF_6',
+        7: 'CONTACT_DIFF_7',
+        8: 'CONTACT_DIFF_8',
+        9: 'CONTACT_DIFF_9',
+        10: 'CONTACT_DIFF_10',
     },
     DatasetReference.MSA.value: {
         0: 'MSA_COVERAGE_0',

@@ -191,48 +191,38 @@ def AdjustPlotHelpList():
                  'series of input menus:',
                  html.Ul([
                      html.Li(['L/N selector: Change the values of ', html.I('N'),
-                              ' with this selector to choose how many contacts should be '
-                              'included in the plot (L is the number of residues in the '
-                              'protein sequence, residues are sorted by their probability '
-                              'score). If you set ', html.I('N'),
-                              ' to 0, then all contacts in the file will be displayed. Please '
-                              'note that only numerical values between 0 and 10 are recommended.']),
-                     html.Li('Size selector: Change the size of the contact markers in the '
-                             'plot. ConPlot will set a default value depending on the size of '
-                             'the protein you are working with, but you can still change this '
-                             'if you would like to make the markers smaller or bigger. Please '
+                              ' with this selector to choose how many contacts should be included in the plot (L is '
+                              'the number of residues in the  protein sequence, residues are sorted by their '
+                              'probability score). If you set ', html.I('N'),
+                              ' to 0, then all contacts in the file will be displayed. Please note that only numerical '
+                              'values between 0 and 10 are recommended. Additionally, please remember that contact '
+                              'data shown for PDB files is unaltered by this selector.']),
+                     html.Li('Size selector: Change the size of the contact markers in the plot. ConPlot will set a '
+                             'default value depending on the size of the protein you are working with, but you can '
+                             'still change this if you would like to make the markers smaller or bigger. Please '
                              'note that only numerical values between 1 and 15 are recommended.'),
-                     html.Li(['Map A and Map B selectors: These two selectors let you choose '
-                              'which contact data should be displayed on the plot. By '
-                              'default, ', html.I('Map A'),
-                              ' refers to the top half triangle of the map, and ',
-                              html.I('Map B'), ' to the lower one. If the ',
-                              html.I('Superimpose Maps'),
-                              ' switch is activated, then the roles of these two dropdown '
-                              'menus change: ', html.I('Map A'),
-                              ' is now used to select the reference map, which will be '
-                              'compared with the secondary map selected with the ',
-                              html.I('Map B'), ' selector.']),
-                     html.Li(['Superimpose Maps Switch: As explained above, if this switch '
-                              'is activated ', html.I('Map A'),
-                              ' will be used as a reference map to be compared with ',
-                              html.I('Map B'),
-                              '. In this mode, contacts will be coloured according to their '
-                              'presence in the reference map and the secondary map. Contacts '
-                              'that appear on both the reference and the secondary map will be '
-                              'coloured in black -match-, those that only appear in the '
-                              'reference in grey -absent-, and those that only appear in the '
-                              'secondary map in red -mismatch-. Please note that you can only '
-                              'use this mode if you select two different contact map files in ',
+                     html.Li(['Map A and Map B selectors: These two selectors let you choose which contact data should '
+                              'be displayed on the plot. By ' 'default, ', html.I('Map A'),
+                              ' refers to the top half triangle of the map, and ', html.I('Map B'),
+                              ' to the lower one. If the ', html.I('Superimpose Maps'),
+                              ' switch is activated, then these roles change: ',  html.I('Map A'),
+                              ' is now used to select the reference map, which will be compared with the secondary map '
+                              'selected with the ', html.I('Map B'), ' selector.']),
+                     html.Li(['Superimpose Maps Switch: As explained above, if this switch is activated ',
+                              html.I('Map A'), ' will be used as a reference map to be compared with ', html.I('Map B'),
+                              '. In this mode, contacts will be coloured according to their presence in the reference '
+                              'map and the secondary map. Contacts that appear on both the reference and the secondary '
+                              'map will be coloured in black -match-, those that only appear in the reference in grey '
+                              '-absent-, and those that only appear in the secondary map in red -mismatch-. Please '
+                              'note that you can only use this mode if you select two different contact map files in ',
                               html.I('Map A'), ' and ', html.I('Map B'), ' selectors.']),
                      html.Li(['Create Heatmap Switch: If this switch is activated, a heatmap will be created with the '
                               'provided residue contact information. By default, if a contact map is uploaded, the '
                               'intensity of the colours in this heatmap will correspond with the confidence of each '
-                              'contact. Alternatively, if a residue-residue distance prediction file has been uploaded '
-                              '(', html.I('CASPRR_MODE2'),
-                              ' format), the heatmap will correspond with the predicted distances for '
-                              'each residue pair oin this file. Please note that when this mode is active, the ',
-                              html.I('L/N'), ' selector and the ', html.I('Size'),
+                              'contact. Alternatively, if a residue-residue distance prediction file has been '
+                              'uploaded, the heatmap will correspond with the predicted distances for each residue '
+                              'pair oin this file. Please note that when this mode is active, the ', html.I('L/N'),
+                              ' selector and the ', html.I('Size'),
                               ' selector will be disabled. You can read more about how to visualise residue-residue '
                               'distance predictions at ',
                               html.I('Tutorial 4. Residue-Residue distance predictions'), '.']),
@@ -242,9 +232,8 @@ def AdjustPlotHelpList():
                              'would normally be displayed.')
                  ])],
                 style={"font-size": "110%", 'text-align': "justify"}),
-        html.Li(['Section 2: Adjust additional tracks. In this section you will find selectors '
-                 'that will let you control aspects about how the additional tracks are being '
-                 'displayed in the plot:',
+        html.Li(['Section 2: Adjust additional tracks. In this section you will find selectors that will let you '
+                 'control aspects about how the additional tracks are being displayed in the plot:',
                  html.Ul([
                      html.Li('Size selector: Change the size of the tiles used to create the '
                              'tracks on the diagonal of the plot. By changing this value, '
@@ -325,6 +314,15 @@ def AdditionalFormatsHelpList():
                  ', and you can read more about it in the original publication ',
                  html.A(html.U('here'), href=UrlIndex.CONSURF_CITATION.value),
                  '.'],
+                style={"font-size": "110%", 'text-align': "justify"}),
+        html.Li(['A3M file. This is a multiple sequence alignment file that should have been obtained using the '
+                 'sequence of interest as a query. ConPlot will parse the file and calculate the MSA coverage along '
+                 'the query sequence, normalise these values (1-10) and create a track where each residue '
+                 'is coloured according to the number of sequences aligned in that particular position These '
+                 'files are used in most contact prediction pipelines, and visualising the MSA coverage can help you '
+                 'understand the quality of the information used to obtain your predictions. Several alignment tools '
+                 'will create MSA files in this format, like for example HHBLITS, which you can use '
+                 'online ', html.A(html.U('here'), href=UrlIndex.HHBLITS_URL.value), '.'],
                 style={"font-size": "110%", 'text-align': "justify"}),
         html.Li(['CUSTOM file. These files are plain text files that can be created manually '
                  'by users to include additional tracks of information to the plot. These '

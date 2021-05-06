@@ -24,7 +24,7 @@ class MappredParserTestCase(unittest.TestCase):
 
         output = MappredParser(dummy_prediction)
 
-        self.assertEqual('DISTO', output.pop(-1))
+        self.assertEqual('DISTO', output.pop(0))
         self.assertEqual(4, len(output))
         self.assertListEqual(expected_res1, [contact[0] for contact in output])
         self.assertListEqual(expected_res2, [contact[1] for contact in output])

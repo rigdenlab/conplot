@@ -24,7 +24,7 @@ def serve_layout():
     except (keydb.ConnectionError, TypeError, KeyError) as e:
         app.logger.error('Redis connection error! {}'.format(e))
         return layouts.RedisConnectionError()
-    session_id = session_utils.initiate_session(cache, app.logger)
+    session_id = session_utils.initiate_session(cache, app.logger, keydb_timeout)
     return layouts.Base(session_id)
 
 
@@ -44,6 +44,7 @@ if 'PRODUCTION_SERVER' in os.environ:
         'requests_pathname_prefix': '/conplot/',
     })
 keydb_pool = keydb_utils.create_pool(os.environ.get('KEYDB_URL'))
+keydb_timeout = os.environ.get('KEYDB_TIMEOUT')
 app.layout = serve_layout
 
 
@@ -407,7 +408,7 @@ def javascript_exe_button(n_clicks, session_id):
 
     elif 'new-session' in trigger['prop_id'] or session_utils.is_expired_session(session_id, cache, app.logger):
         cache = keydb.KeyDB(connection_pool=keydb_pool)
-        new_session_id = session_utils.initiate_session(cache, app.logger)
+        new_session_id = session_utils.initiate_session(cache, app.logger, keydb_timeout)
         return "location.reload();", no_update, new_session_id
 
     else:
@@ -454,7 +455,7 @@ def create_ConPlot(plot_click, refresh_click, factor, contact_marker_size, track
     if any([True for x in (factor, contact_marker_size, track_marker_size, track_separation) if x is None or x < 0]):
         app.logger.info('Session {} invalid display control value detected'.format(session_id))
         return no_update, components.InvalidInputModal(), no_update, no_update
-    elif superimpose and ('---' in cmap_selection or len(set(cmap_selection)) == 1):
+    elif superimpose and ('--- Empty ---' in cmap_selection or len(set(cmap_selection)) == 1):
         return no_update, components.InvalidMapSelectionModal(), no_update, no_update
 
     app.logger.info('Session {} creating conplot'.format(session_id))

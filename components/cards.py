@@ -1,3 +1,4 @@
+from utils import cache_utils
 import components
 import dash_core_components as dcc
 import dash_bootstrap_components as dbc
@@ -286,23 +287,23 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.H5("Active tracks", className="card-text", style={'text-align': "center"}),
                             html.Hr(),
                             html.Br(),
-                            TrackSelectionCard('-4', selected_tracks[0], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('-4', available_tracks, selected_tracks[0]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('-3', selected_tracks[1], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('-3', available_tracks, selected_tracks[1]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('-2', selected_tracks[2], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('-2', available_tracks, selected_tracks[2]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('-1', selected_tracks[3], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('-1', available_tracks, selected_tracks[3]), outline=False),
                             html.Br(),
-                            TrackSelectionCard(' 0', selected_tracks[4], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('0', available_tracks, selected_tracks[4]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('+1', selected_tracks[5], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('+1', available_tracks, selected_tracks[5]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('+2', selected_tracks[6], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('+2', available_tracks, selected_tracks[6]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('+3', selected_tracks[7], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('+3', available_tracks, selected_tracks[7]), outline=False),
                             html.Br(),
-                            TrackSelectionCard('+4', selected_tracks[8], available_tracks=available_tracks),
+                            dbc.Card(components.TrackLayoutSelector('+4', available_tracks, selected_tracks[8]), outline=False),
                             html.Br(),
                             html.Br(),
                             html.H5("Colour palettes", className="card-text", style={'text-align': "center"}),
@@ -310,21 +311,23 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
                             html.Br(),
                             ColorPaletteSelectionCard('density', selected_palettes[0]),
                             html.Br(),
-                            ColorPaletteSelectionCard('custom', selected_palettes[1]),
+                            ColorPaletteSelectionCard('diff', selected_palettes[1]),
                             html.Br(),
-                            ColorPaletteSelectionCard('heatmap', selected_palettes[2]),
+                            ColorPaletteSelectionCard('custom', selected_palettes[2]),
                             html.Br(),
-                            ColorPaletteSelectionCard('hydrophobicity', selected_palettes[3]),
+                            ColorPaletteSelectionCard('heatmap', selected_palettes[3]),
                             html.Br(),
-                            ColorPaletteSelectionCard('membranetopology', selected_palettes[4]),
+                            ColorPaletteSelectionCard('hydrophobicity', selected_palettes[4]),
                             html.Br(),
-                            ColorPaletteSelectionCard('msa', selected_palettes[5]),
+                            ColorPaletteSelectionCard('membranetopology', selected_palettes[5]),
                             html.Br(),
-                            ColorPaletteSelectionCard('conservation', selected_palettes[6]),
+                            ColorPaletteSelectionCard('msa', selected_palettes[6]),
                             html.Br(),
-                            ColorPaletteSelectionCard('disorder', selected_palettes[7]),
+                            ColorPaletteSelectionCard('conservation', selected_palettes[7]),
                             html.Br(),
-                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[8]),
+                            ColorPaletteSelectionCard('disorder', selected_palettes[8]),
+                            html.Br(),
+                            ColorPaletteSelectionCard('secondarystructure', selected_palettes[9]),
                             html.Br(),
                         ])
                     ]
@@ -333,14 +336,6 @@ def DisplayControlCard(available_tracks=None, selected_tracks=None, selected_cma
         ])
     else:
         raise ValueError('This should not occur! Please report.')
-
-
-def TrackSelectionCard(track_idx, track_value, available_tracks):
-    track_options = [{'label': '---', 'value': '---'}]
-    track_options += [{'label': fname, 'value': fname} for fname in available_tracks]
-
-    return dbc.Card(components.TrackLayoutSelector(track_idx, track_options, track_value), outline=False)
-
 
 def ColorPaletteSelectionCard(dataset, selected_palette):
     available_palettes = []
@@ -351,7 +346,7 @@ def ColorPaletteSelectionCard(dataset, selected_palette):
 
 
 def HalfSquareSelectionCard(square_idx, selection, available_cmaps):
-    cmap_options = [{'label': '---', 'value': '---'}]
+    cmap_options = [{'label': '--- Empty ---', 'value': '--- Empty ---'}]
     cmap_options += [{'label': fname, 'value': fname} for fname in available_cmaps]
 
     return dbc.Card(components.HalfSquareSelector(square_idx, cmap_options, selection), outline=False)

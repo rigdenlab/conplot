@@ -1,59 +1,123 @@
-from parsers import DatasetStates
-from loaders import AdditionalDatasetReference, DatasetReference
-from utils import create_cmap_trace, color_palettes, cache_utils
-from sklearn.cluster import estimate_bandwidth
-from sklearn.neighbors import KernelDensity
 import numpy as np
+from loaders import AdditionalDatasetReference, DatasetReference
+from parsers import DatasetStates
+from utils import create_cmap_trace, color_palettes, cache_utils, lookup_data, cmap_utils, math_utils
 
 
 def calculate_density(cmap, seq_length, factor):
-    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        cmap.pop(-1)
-    contact_list = cmap[:int(round(seq_length / factor, 0))]
-    return get_contact_density(contact_list, seq_length)
+    contact_list = cmap_utils.slice_cmap(cmap, seq_length, factor)
+    return math_utils.get_contact_density(contact_list, seq_length)
 
 
-def retrieve_dataset_prediction(session_id, session, fname, display_settings, cache):
+DISTANCE_BINS = {0: 0, 1: 5, 2: 7, 3: 9, 4: 11, 5: 13, 6: 15, 7: 17, 8: 19, 9: 20}
+
+
+def get_distance_array(cmap, seq_length):
+    array = np.full((seq_length, seq_length), 20)
+    for contact in cmap:
+        array[seq_length - contact[0], contact[1] - 1] = DISTANCE_BINS[contact[3]]
+        array[seq_length - contact[1], contact[0] - 1] = DISTANCE_BINS[contact[3]]
+    return array
+
+
+def get_cmap_mcc(cmap_1, cmap_2, size, smooth=True):
+    cmap_1_set = {resn: {(c[0], c[1]) for c in cmap_1 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
+    cmap_2_set = {resn: {(c[0], c[1]) for c in cmap_2 if resn in (c[0], c[1])} for resn in range(1, size + 1)}
+    diff = []
+
+    for resn in cmap_1_set.keys():
+        tp = len(cmap_1_set[resn] & cmap_2_set[resn])
+        fp = len(cmap_2_set[resn] - cmap_1_set[resn])
+        fn = len(cmap_1_set[resn] - cmap_2_set[resn])
+        tn = size - sum((tp, fp, fn))
+        mcc = math_utils.calculate_mcc(tp, fp, tn, fn)
+        diff.append(mcc)
+
+    if smooth:
+        return math_utils.convolution_smooth_values(diff).astype(int).tolist()
+
+    return [int(round(mcc, 0)) for mcc in diff]
+
+
+def get_cmap_rmsd(cmap_1, cmap_2, seq_length, smooth=True):
+    cmap_1_array = get_distance_array(cmap_1, seq_length)
+    cmap_2_array = get_distance_array(cmap_2, seq_length)
+    rmsd = math_utils.calculate_rmsd(cmap_1_array, cmap_2_array, seq_length)
+    if smooth:
+        rmsd = math_utils.convolution_smooth_values(rmsd) * 2
+        return rmsd.astype(int).tolist()
+    else:
+        rmsd = np.round(rmsd, 0) * 2
+        return rmsd.astype(int).tolist()
+
+
+def calculate_diff(cmap_1, cmap_2, display_settings):
+    if cmap_utils.contains_distances(cmap_1) and cmap_utils.contains_distances(cmap_2):
+        return get_cmap_rmsd(cmap_1[1:], cmap_2[1:], display_settings.seq_length)
+    else:
+        cmap_1 = cmap_utils.slice_cmap(cmap_1, display_settings.seq_length, display_settings.factor)
+        cmap_2 = cmap_utils.slice_cmap(cmap_2, display_settings.seq_length, display_settings.factor)
+        return get_cmap_mcc(cmap_1, cmap_2, display_settings.seq_length)
+
+
+def get_diff_args(session, fname, factor):
+    cmap_1_fname = fname.split('|')[0].rstrip().lstrip()
+    cmap_1 = session[cmap_1_fname.encode()]
+    cmap_2_fname = fname.split('|')[1].rstrip().lstrip()
+    cmap_2 = session[cmap_2_fname.encode()]
+    if cmap_utils.contains_distances(cmap_1) and cmap_utils.contains_distances(cmap_2):
+        cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1_fname, cmap_2_fname, '1').encode()
+    else:
+        cachekey = cache_utils.CacheKeys.CMAP_DIFF.value.format(cmap_1_fname, cmap_2_fname, factor).encode()
+
+    return cmap_1, cmap_2, cachekey
+
+
+def get_dataset_prediction(session_id, session, fname, display_settings, cache):
     if fname == session[DatasetReference.SEQUENCE.value.encode()]:
         return DatasetReference.HYDROPHOBICITY.value, session[DatasetReference.HYDROPHOBICITY.value.encode()]
 
     if fname in session[DatasetReference.CONTACT_MAP.value.encode()]:
-        cachekey = '{}_{}_{}'.format(fname, cache_utils.CacheKeys.METADATA_TAG.value, display_settings.factor).encode()
-        if cachekey in session.keys():
-            density = session[cachekey]
-        elif cache.hexists(session_id, cachekey):
-            density = cache_utils.retrieve_density(session_id, cachekey, cache)
-        else:
+        cachekey = cache_utils.get_cachekey(session, fname, display_settings.factor)
+        density = lookup_data(session, session_id, cachekey, cache)
+        if not density:
             density = calculate_density(session[fname.encode()], display_settings.seq_length, display_settings.factor)
-            cache_utils.store_density(session_id, cachekey, density, cache)
+            cache_utils.store_data(session_id, cachekey, density, cache_utils.CacheKeys.CONTACT_DENSITY.value, cache)
+
         return DatasetReference.CONTACT_DENSITY.value, density
+
+    if cache_utils.MetadataTags.SEPARATOR.value in fname:
+        cmap_1, cmap_2, cachekey = get_diff_args(session, fname, display_settings.factor)
+        diff = lookup_data(session, session_id, cachekey, cache)
+        if not diff:
+            diff = calculate_diff(cmap_1, cmap_2, display_settings)
+            cache_utils.store_data(session_id, cachekey, diff, cache_utils.CacheKeys.CONTACT_DIFF.value, cache)
+        return DatasetReference.CONTACT_DIFF.value, diff
 
     for dataset in AdditionalDatasetReference:
         if dataset.value.encode() in session.keys() and fname in session[dataset.value.encode()]:
             return dataset.value, session[fname.encode()]
 
 
-def transform_coords_diagonal_axis(coord, distance, low_bound=False, ratio=1, y_axis=True):
-    if coord is None:
-        return None
+def transform_coords_diagonal_xaxis(indices, distance, track_idx, ratio=1):
+    factor = distance / (1 + ratio ** 2)
+    if track_idx < 4:
+        factor = factor * -1
+    return [idx + factor for idx in indices]
 
-    if y_axis:
-        factor = ratio * (distance / (1 + ratio ** 2))
-        if low_bound:
-            factor = factor * -1
-    else:
-        factor = distance / (1 + ratio ** 2)
-        if not low_bound:
-            factor = factor * -1
 
-    return coord + factor
+def transform_coords_diagonal_yaxis(prediction, state, distance, track_idx, ratio=1):
+    factor = ratio * (distance / (1 + ratio ** 2))
+    if track_idx > 4:
+        factor = factor * -1
+    return [idx + factor if residue == state else None for idx, residue in enumerate(prediction, 1)]
 
 
 def get_diagonal_trace(prediction, dataset, marker_size, sequence, alpha, color_palette):
     if prediction is None:
         return None
 
-    x_diagonal = [idx for idx in range(1, len(prediction) + 1)]
+    x = [idx for idx in range(1, len(prediction) + 1)]
     states = DatasetStates.__getattr__(dataset).value
     palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     traces = []
@@ -62,14 +126,9 @@ def get_diagonal_trace(prediction, dataset, marker_size, sequence, alpha, color_
         y = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
         if not any(y):
             continue
-
-        hovertext = ['Residue: {} ({}) | {}'.format(sequence[idx - 1], idx, state.name) for idx in x_diagonal]
-        color = palette.__getattr__(state.name).value
-        color = color.format(alpha)
-
-        traces.append(
-            create_cmap_trace(x_diagonal, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext)
-        )
+        hovertext = ['Residue: {} ({}) | {}'.format(resid, idx, state.name) for idx, resid in enumerate(sequence, 1)]
+        color = palette.__getattr__(state.name).value.format(alpha)
+        traces.append(create_cmap_trace(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
 
@@ -84,34 +143,16 @@ def get_traces(prediction, dataset, track_idx, track_separation, marker_size, al
     palette = color_palettes.DatasetColorPalettes.__getattr__(dataset).value.__getattr__(color_palette).value
     track_origin = abs(4 - track_idx)
     track_distance = track_separation * track_origin
-    if track_idx > 4:
-        low_bound = True
-    else:
-        low_bound = False
+
+    x = transform_coords_diagonal_xaxis(x_diagonal, track_distance, track_idx)
 
     for state in states:
-        y_diagonal = [idx if residue == state.value else None for idx, residue in enumerate(prediction, 1)]
-        if not any(y_diagonal):
+        y = transform_coords_diagonal_yaxis(prediction, state.value, track_distance, track_idx)
+        if not any(y):
             continue
-
-        y = [transform_coords_diagonal_axis(y, track_distance, low_bound=low_bound) for y in y_diagonal]
-        x = [transform_coords_diagonal_axis(x, track_distance, low_bound=low_bound, y_axis=False) for x in x_diagonal]
-        hovertext = ['%s' % state.name for idx in enumerate(x)]
-        color = palette.__getattr__(state.name).value
-        color = color.format(alpha)
+        hovertext = ['%s' % state.name for i in x]
+        color = palette.__getattr__(state.name).value.format(alpha)
 
         traces.append(create_cmap_trace(x, y, 'diamond', marker_size=marker_size, color=color, hovertext=hovertext))
 
     return traces
-
-
-def get_contact_density(contact_list, seq_length):
-    """Credits to Felix Simkovic; code taken from GitHub rigdenlab/conkit/core/contactmap.py"""
-    x = np.array([i for c in contact_list for i in np.arange(c[1], c[0] + 1)], dtype=np.int64)[:, np.newaxis]
-    bw = estimate_bandwidth(x)
-    kde = KernelDensity(bandwidth=bw).fit(x)
-    x_fit = np.arange(1, seq_length + 1)[:, np.newaxis]
-    density = np.exp(kde.score_samples(x_fit)).tolist()
-    density_max = max(density)
-    density = [int(round(float(i) / density_max, 1) * 10) for i in density]
-    return density

@@ -13,6 +13,7 @@ class CacheKeys(Enum):
     DISPLAY_CONTROL_JSON = 'display_control_json'
     CONTACT_MAP = loaders.DatasetReference.CONTACT_MAP.value
     CONTACT_DENSITY = loaders.DatasetReference.CONTACT_DENSITY.value
+    CONTACT_DIFF = loaders.DatasetReference.CONTACT_DIFF.value
     CUSTOM = loaders.DatasetReference.CUSTOM.value
     SEQUENCE = loaders.DatasetReference.SEQUENCE.value
     SEQUENCE_HYDROPHOBICITY = loaders.DatasetReference.HYDROPHOBICITY.value
@@ -20,29 +21,40 @@ class CacheKeys(Enum):
     SECONDARY_STRUCTURE = loaders.DatasetReference.SECONDARY_STRUCTURE.value
     CONSERVATION = loaders.DatasetReference.CONSERVATION.value
     DISORDER = loaders.DatasetReference.DISORDER.value
-    METADATA_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA-PROTECTED-TAG'
+    CMAP_DENSITY = '{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-DENSITY-TAG_{}'
+    CMAP_DIFF = '{}_{}_CONPLOT-INTERNAL-USE-ONLY-METADATA-DIFF-TAG_{}'
+    PROTECETED_TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
 
 
-def retrieve_density(session_id, density_cachekey, cache):
-    density = cache.hget(session_id, density_cachekey)
+class MetadataTags(Enum):
+    DENSITY = ' - density'
+    HYDROPHOBICITY = ' - hydrophobicity'
+    DIFF = ' - diff'
+    SEPARATOR = '|'
+    HYPHEN = '---'
+    TAG = 'CONPLOT-INTERNAL-USE-ONLY-METADATA'
+
+
+def retrieve_data(session_id, cachekey, cache):
+    density = cache.hget(session_id, cachekey)
     return decompress_data(density)
 
 
-def store_density(session_id, density_cachekey, density, cache):
-    cache.hset(session_id, density_cachekey, compress_data(density))
-    store_fname(cache, session_id, density_cachekey.decode(), CacheKeys.CONTACT_DENSITY.value)
+def store_data(session_id, cachekey, data, dataset, cache):
+    cache.hset(session_id, cachekey, compress_data(data))
+    store_fname(cache, session_id, cachekey.decode(), dataset)
 
 
-def remove_all_density(session_id, cache):
-    density_list = cache.hget(session_id, CacheKeys.CONTACT_DENSITY.value)
-    if not density_list:
+def remove_all(session_id, dataset, cache):
+    cachekey_list = cache.hget(session_id, dataset)
+    if not cachekey_list:
         return
 
-    density_list = decompress_data(density_list)
-    for density in density_list:
-        cache.hdel(session_id, density)
+    cachekey_list = decompress_data(cachekey_list)
+    for cachekey in cachekey_list:
+        cache.hdel(session_id, cachekey)
 
-    cache.hdel(session_id, CacheKeys.CONTACT_DENSITY.value)
+    cache.hdel(session_id, dataset)
 
 
 def remove_density(session_id, cache, fname):
@@ -51,7 +63,7 @@ def remove_density(session_id, cache, fname):
         return
     density_list = decompress_data(density_list)
 
-    density_cachekey = '{}_{}'.format(fname, CacheKeys.METADATA_TAG.value)
+    density_cachekey = '{}_{}'.format(fname, CacheKeys.PROTECETED_TAG.value)
     for density in density_list:
         if density_cachekey in density:
             cache.hdel(session_id, density)
@@ -59,8 +71,21 @@ def remove_density(session_id, cache, fname):
     cache.hset(session_id, CacheKeys.CONTACT_DENSITY.value, compress_data(density_list))
 
 
+def remove_diff(session_id, cache, fname):
+    diff_list = cache.hget(session_id, CacheKeys.CONTACT_DIFF.value)
+    if not diff_list:
+        return
+    diff_list = decompress_data(diff_list)
+
+    for diff in diff_list:
+        if fname in diff:
+            cache.hdel(session_id, diff)
+    diff_list = [diff for diff in diff_list if fname not in diff]
+    cache.hset(session_id, CacheKeys.CONTACT_DIFF.value, compress_data(diff_list))
+
+
 def is_valid_fname(fname):
-    if CacheKeys.METADATA_TAG.value in fname or fname in [x.value for x in CacheKeys]:
+    if any([x for x in CacheKeys if x.value == fname]) or any([tag for tag in MetadataTags if tag.value in fname]):
         return False
     return True
 
@@ -148,7 +173,8 @@ def clear_cache(session_id, cache):
     remove_datasets(session_id, cache)
     remove_figure(session_id, cache)
     remove_sequence(session_id, cache)
-    remove_all_density(session_id, cache)
+    remove_all(session_id, CacheKeys.CONTACT_DENSITY.value, cache)
+    remove_all(session_id, CacheKeys.CONTACT_DIFF.value, cache)
 
 
 def remove_datasets(session_id, cache):
@@ -184,3 +210,10 @@ def is_redis_available(cache):
 
 def get_active_sessions(cache):
     return cache.dbsize()
+
+
+def get_cachekey(session, fname, factor):
+    if 'PDB' == session[fname.encode()][0]:
+        return CacheKeys.CMAP_DENSITY.value.format(fname, fname).encode()
+    else:
+        return CacheKeys.CMAP_DENSITY.value.format(fname, factor).encode()

@@ -18,11 +18,7 @@ def create_cmap_trace(x, y, symbol, marker_size, color, hovertext=None):
 
 
 def create_cmap(cmap, idx, display_settings, verbose_labels=None):
-    if cmap[-1] == 'PDB' or cmap[-1] == 'DISTO':
-        del cmap[-1]
-
-    if display_settings.factor != 0:
-        cmap = cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
+    cmap = slice_cmap(cmap, display_settings.seq_length, display_settings.factor)
 
     if idx == 1:
         idx_x = 0
@@ -39,10 +35,9 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
         for contact in cmap:
             res1_list.append(contact[idx_x])
             res2_list.append(contact[idx_y])
-            res_x_label = verbose_labels[contact[idx_x] - 1]
-            res_y_label = verbose_labels[contact[idx_y] - 1]
-            hover.append(HoverTemplates.CMAP_VERBOSE.format(contact[idx_x], contact[idx_y], contact[2], res_x_label,
-                                                            res_y_label))
+            xlabel = verbose_labels[contact[idx_x] - 1]
+            ylabel = verbose_labels[contact[idx_y] - 1]
+            hover.append(HoverTemplates.CMAP_VERBOSE.format(contact[idx_x], contact[idx_y], contact[2], xlabel, ylabel))
     else:
         for contact in cmap:
             res1_list.append(contact[idx_x])
@@ -52,45 +47,39 @@ def create_cmap(cmap, idx, display_settings, verbose_labels=None):
     return res1_list, res2_list, hover
 
 
-def superimpose_cmaps(reference_cmap, predicted_cmap, display_settings):
-    if display_settings.factor != 0:
-        predicted_cmap = predicted_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-        if reference_cmap[-1] == 'PDB':
-            del reference_cmap[-1]
-            reference_cmap = [contact for contact in reference_cmap if contact[2] > 0]
-        elif reference_cmap[-1] == 'DISTO':
-            del reference_cmap[-1]
-            reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-        else:
-            reference_cmap = reference_cmap[:int(round(display_settings.seq_length / display_settings.factor, 0))]
-    elif reference_cmap[-1] == 'PDB' or reference_cmap[-1] == 'DISTO':
-        del reference_cmap[-1]
+def contains_distances(cmap):
+    if len(cmap[-1]) > 3:
+        return True
+    return False
 
-    reference_contacts = [contact[:2] for contact in reference_cmap]
-    predicted_contacts = [contact[:2] for contact in predicted_cmap]
 
-    matched = []
-    mismatched = []
-    reference = []
+def slice_cmap(cmap, seq_length, factor):
+    if cmap[0] == 'PDB':
+        return [contact for contact in cmap[1:] if contact[2] > 0]
+    elif cmap[0] == 'DISTO':
+        cmap = cmap[1:]
 
-    for contact in reference_cmap:
-        if contact[:2] in predicted_contacts:
-            matched.append(contact)
-        else:
-            reference.append(contact)
+    if factor != 0:
+        cmap = cmap[:int(round(seq_length / factor, 0))]
 
-    for contact in predicted_cmap:
-        if contact[:2] not in reference_contacts:
-            mismatched.append(contact)
+    return cmap
 
-    return reference, matched, mismatched
+
+def create_cmap_sets(reference_cmap, predicted_cmap, display_settings):
+    reference_cmap = slice_cmap(reference_cmap, display_settings.seq_length, display_settings.factor)
+    predicted_cmap = slice_cmap(predicted_cmap, display_settings.seq_length, display_settings.factor)
+    predicted_set = {(x[0], x[1]): x[2] for x in predicted_cmap}
+    reference_set = {(x[0], x[1]): x[2] for x in reference_cmap}
+
+    return reference_set, predicted_set
 
 
 def create_superimposed_cmap(reference_cmap, predicted_cmap, display_settings, verbose_labels):
     traces = []
-    ref, match, mismatch = superimpose_cmaps(reference_cmap, predicted_cmap, display_settings)
-    predicted_set = {(x[0], x[1]): x[2] for x in predicted_cmap}
-    reference_set = {(x[0], x[1]): x[2] for x in reference_cmap}
+    reference_set, predicted_set = create_cmap_sets(reference_cmap, predicted_cmap, display_settings)
+    ref = reference_set.keys() - predicted_set.keys()
+    mismatch = predicted_set.keys() - reference_set.keys()
+    match = reference_set.keys() & predicted_set.keys()
 
     x, y, hover = process_superimposed_cmap(ref, reference_set, predicted_set, verbose_labels)
     traces.append(create_cmap_trace(x, y, 'circle', display_settings.contact_marker_size, 'grey', hover))
@@ -112,16 +101,8 @@ def process_superimposed_cmap(contacts, reference_set, predicted_set, verbose_la
 
     if verbose_labels is not None:
         for contact in contacts:
-
-            if tuple(contact[:2]) in predicted_set.keys():
-                pred_confidence = predicted_set[tuple(contact[:2])]
-            else:
-                pred_confidence = 0
-            if tuple(contact[:2]) in reference_set.keys():
-                ref_confidence = reference_set[tuple(contact[:2])]
-            else:
-                ref_confidence = 0
-
+            pred_confidence = predicted_set[contact] if contact in predicted_set.keys() else 0
+            ref_confidence = reference_set[contact] if contact in reference_set.keys() else 0
             res1_list.append(contact[0])
             res2_list.append(contact[1])
             res_1_label = verbose_labels[contact[0] - 1]
@@ -132,15 +113,8 @@ def process_superimposed_cmap(contacts, reference_set, predicted_set, verbose_la
             hover_2.append(HoverTemplates.CMAP_SUPERIMPOSE_VERBOSE.format(*label))
     else:
         for contact in contacts:
-            if tuple(contact[:2]) in predicted_set.keys():
-                pred_confidence = predicted_set[tuple(contact[:2])]
-            else:
-                pred_confidence = 0
-            if tuple(contact[:2]) in reference_set.keys():
-                ref_confidence = reference_set[tuple(contact[:2])]
-            else:
-                ref_confidence = 0
-
+            pred_confidence = predicted_set[contact] if contact in predicted_set.keys() else 0
+            ref_confidence = reference_set[contact] if contact in reference_set.keys() else 0
             res1_list.append(contact[0])
             res2_list.append(contact[1])
             label = (contact[0], contact[1], ref_confidence, pred_confidence)

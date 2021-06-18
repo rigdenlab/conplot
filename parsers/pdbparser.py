@@ -41,9 +41,9 @@ def remove_atoms(chain):
             chain.detach_child(residue.id)
             continue
         for atom in residue.copy():
-            if atom.is_disordered():
-                chain[residue.id].detach_child(atom.id)
-            elif residue.resname == "GLY" and atom.id == "CA":
+            # if atom.is_disordered():
+            #    chain[residue.id].detach_child(atom.id)
+            if residue.resname == "GLY" and atom.id == "CA":
                 continue
             elif atom.id != "CB":
                 chain[residue.id].detach_child(atom.id)

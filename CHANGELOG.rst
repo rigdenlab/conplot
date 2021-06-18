@@ -1,6 +1,13 @@
 Changelog
 =========
 
+0.4.2
+-----
+
+Changed
+~~~~~
+- Bug fixes related to distance predictions parsers and data storage
+
 
 0.4.1
 -----

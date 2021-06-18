@@ -14,7 +14,7 @@ def CASPRR2Parser(input, input_format=None):
 
         line = line.lstrip().rstrip().split()
 
-        if not line or len(line) < line_size or not line[res_1_idx].isdigit() or not line[res_2_idx].isdigit():
+        if not line or len(line) != line_size or not line[res_1_idx].isdigit() or not line[res_2_idx].isdigit():
             continue
 
         res_1 = int(line[res_1_idx])
@@ -34,4 +34,6 @@ def CASPRR2Parser(input, input_format=None):
         raise InvalidFormat('Unable to parse CASPRR_MODE_2 file')
     else:
         unique_contacts = get_unique_distances(output)
+        if any([p for p in unique_contacts[1:] if p[3] > 9 or p[4] > 1]):
+            raise InvalidFormat('Unable to parse CASPRR_MODE_2 file')
         return unique_contacts

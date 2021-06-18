@@ -170,7 +170,8 @@ def lookup_input_errors(session_id, session, cmap_selection, superimpose, heatma
                 components.DisplayControlCard(), True
         return None, None, error
 
-    if superimpose and heatmap:
+    cmap_fname_list = session[DatasetReference.CONTACT_MAP.value.encode()]
+    if superimpose and heatmap and not any(selection not in cmap_fname_list for selection in cmap_selection):
         reference_cmap = session[cmap_selection[0].encode()]
         predicted_cmap = session[cmap_selection[1].encode()]
         if not isinstance(reference_cmap[0], str) or not isinstance(predicted_cmap[0], str):

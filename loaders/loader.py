@@ -10,7 +10,7 @@ def Loader(raw_file, input_format):
 
     if raw_file is not None:
         try:
-            if input_format != ContactInformationFormats.trROSETTA_NPZ.name:
+            if input_format != ContactInformationFormats.ROSETTA_NPZ.name:
                 decoded = decode_raw_file(raw_file)
                 data_raw = ParserFormats.__dict__[input_format](decoded, input_format)
             else:

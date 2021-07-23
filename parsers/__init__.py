@@ -123,7 +123,7 @@ class ParserFormats(Enum):
     COLSTATS = CCMpredParser
     PDB = PDBParser
     CASPRR_MODE_2 = CASPRR2Parser
-    trROSETTA_NPZ = NpzParser
+    ROSETTA_NPZ = NpzParser
     MAPPRED = MappredParser
     A3M = A3mParser
 
@@ -150,7 +150,7 @@ class ContactInformationFormats(Enum):
     MAPALIGN = 18
     ALEIGEN = 19
     PDB = 20
-    trROSETTA_NPZ = 21
+    ROSETTA_NPZ = 21
     MAPPRED = 22
 
 
@@ -182,7 +182,7 @@ class StructuralInformationFormats(Enum):
 
 class DistanceInformationFormats(Enum):
     CASPRR_MODE_2 = 1
-    trROSETTA_NPZ = 2
+    ROSETTA_NPZ = 2
     MAPPRED = 3
 
 

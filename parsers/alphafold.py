@@ -46,6 +46,6 @@ def AlphafoldParser(input, input_format=None):
         raise InvalidFormat('Unable to parse alphafold pkl file')
     else:
         unique_contacts = get_unique_distances(output)
-        if any([p for p in unique_contacts[1:] if p[3] > 9 or p[4] > 1]):
+        if any([p for p in unique_contacts[1:] if p[3] > 9 or p[4] > 1.01]):
             raise InvalidFormat('Unable to parse alphafold pkl file')
         return unique_contacts

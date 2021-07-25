@@ -42,7 +42,7 @@ def create_ConPlot(session_id, cache, trigger, selected_tracks, cmap_selection, 
     figure = create_figure(display_settings.axis_range)
 
     verbose_labels, additional_traces = add_additional_tracks(session_id, session, display_settings, figure, cache)
-    contact_traces = add_contact_trace(session, display_settings, figure, verbose_labels)
+    contact_traces = add_contact_trace(session, display_settings, verbose_labels)
 
     figure.add_traces(contact_traces)
     figure.add_traces(additional_traces)
@@ -93,7 +93,7 @@ def add_additional_tracks(session_id, session, display_settings, figure, cache):
     return None, traces
 
 
-def add_contact_trace(session, display_settings, figure, verbose_labels):
+def add_contact_trace(session, display_settings, verbose_labels):
     if display_settings.superimpose and display_settings.heatmap:
         heat, hover, colorscale = heatmap_utils.superimpose_heatmaps(session, display_settings, verbose_labels)
         return heatmap_utils.create_heatmap_trace(hovertext=hover, distances=heat, colorscale=colorscale)

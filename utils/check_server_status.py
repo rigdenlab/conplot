@@ -14,7 +14,8 @@ def create_argument_parser():
 def get_logs_24h(container_name):
     yesterday = round(datetime.now().timestamp() - 86400)
     client = docker.from_env()
-    logs = client.logs(container_name, since=yesterday)
+    container = client.containers.get(container_name)
+    logs = container.logs(since=yesterday)
     return logs
 
 
